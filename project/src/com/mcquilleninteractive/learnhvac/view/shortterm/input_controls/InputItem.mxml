@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox 	xmlns:mx="http://www.adobe.com/2006/mxml" 
+			xmlns:validator="com.mcquilleninteractive.learnhvac.view.validators.*"
+			width="335" 
+			height="55"
+			paddingTop="5"
+			paddingLeft="6" 
+			horizontalScrollPolicy="off"
+			verticalScrollPolicy="off"
+			creationComplete="onCreationComplete()">
+	
+
+	
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.cairngorm.CairngormError
+			import mx.events.ValidationResultEvent
+			import mx.validators.NumberValidator
+			import com.mcquilleninteractive.learnhvac.event.LongTermImportEvent
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+   			import com.adobe.cairngorm.control.CairngormEvent
+   			import com.adobe.cairngorm.control.CairngormEventDispatcher
+   			import com.mcquilleninteractive.learnhvac.event.SysVarInfoPopupEvent
+			import mx.managers.DragManager
+      	  	import mx.core.DragSource
+       		import mx.controls.Image	
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+       		
+       		[Embed(source='assets/DawaAssets.swf', symbol='mcInfoIconUp')]
+			[Bindable]
+			private var InfoIconUp:Class
+	       		
+			[Embed (source = '/assets/img/brick.png')]
+ 			[Bindable]
+ 			public var icoSysVar : Class;   			
+ 			
+			[Embed (source = '/assets/img/long_term_import_icon.png')]
+ 			[Bindable]
+ 			public var iconLTImport : Class;      		
+ 			
+ 			[Embed (source = '/assets/img/long_term_import_icon_disabled.png')]
+ 			[Bindable]
+ 			public var iconLTImportDisabled : Class;      		 			
+ 			
+			[Embed (source = '/assets/img/long_term_export_icon.png')]
+ 			[Bindable]
+ 			public var iconLTExport : Class;      
+ 			
+ 			[Bindable]
+			public var _importEnabled:Boolean = false
+			
+			
+			private var v:NumberValidator= new NumberValidator()
+			public  var isDirty:Boolean = false; //flag for user change to input value
+			
+			[Bindable]
+			private var sysVarEnabled:Boolean = true
+			
+ 			
+			public function onCreationComplete():void
+			{
+				CairngormEventDispatcher.getInstance().addEventListener(SetUnitsEvent.EVENT_SET_UNITS_TO_IP, onUnitsChange, false, 0,true)
+				CairngormEventDispatcher.getInstance().addEventListener(SetUnitsEvent.EVENT_SET_UNITS_TO_SI, onUnitsChange, false, 0,true)
+				CairngormEventDispatcher.getInstance().addEventListener(LongTermImportEvent.RUN_CHANGED, onLTRunToImportChanged, false, 0,true)
+			}
+			
+			public function onLTRunToImportChanged(event:LongTermImportEvent):void
+			{
+				if (event.runToImport==ScenarioModel.LT_IMPORT_NONE)
+				{
+				
+					imgLTImportIcon.source = new iconLTImportDisabled()
+					imgLTImportIcon.invalidateProperties()
+					imgLTImportIcon.toolTip = "This variable will be imported from the Long Term Simulation, but no long-term run has been selected."
+				}
+				else
+				{
+					
+					imgLTImportIcon.source = new iconLTImport()
+					imgLTImportIcon.invalidateProperties()
+					imgLTImportIcon.toolTip = "This variable is imported from the Long Term Simulation"
+				}
+			}
+			
+			override public function set data(value:Object):void
+      		{
+				super.data = value
+      			if (value!=null)
+      			{
+	      			if (value.disabled)
+	      			{
+	      				txtInputItem.toolTip = "This input field has been disabled in this Scenario"
+	      			}
+	      			sysVarEnabled = !value.disabled	
+	      			setBackground()
+      			}
+      			else
+      			{
+      				Logger.warn("#InputItem: " + InputItem + " passed a null data value. parent: " + this.parent)
+      				 
+      			}      			
+      		}
+      		
+      		public function refresh():void
+      		{
+      			//called when we want to make sure that validator and background are correct
+      			//(e.g. after SI to IP change, or converse
+      			// NOTE: User will lose yellow background when this switch is performed.
+      			
+      			numV.validate()
+      			
+	      		if (this.data!=null) 
+	      		{
+      				this.data.lastValue = this.data.currValue
+      				setBackground()
+      			}
+      		}
+      		
+      		private function setBackground():void
+      		{
+      			// set background to yellow if value is different
+	      		// from last update to SPARK
+	      		
+	      		if (data.lastValue==null || data.currValue==null) return
+	      			
+	      		if (data.lastValue!=data.currValue)
+				{
+					txtInputItem.setStyle("backgroundColor",0xFFFF99)
+					isDirty = true
+				}
+				else
+				{
+					txtInputItem.setStyle("backgroundColor",0xFFFFFF)
+					isDirty = false
+				}
+      		}
+      		
+      		private function onUnitsChange(event:SetUnitsEvent):void
+			{
+				//give the updates a sec to finish before resetting validator and bg
+				this.callLater(refresh)
+			}
+      		
+      	
+			public function resetBg():void
+			{
+				//called by parent when update has been made and all inputs are current
+				txtInputItem.setStyle("backgroundColor",0xFFFFFF)
+				isDirty=false
+			}
+								
+			public function outFocusHandler(event:Event):void
+			{
+				var txtValue:Number = Number(txtInputItem.text)
+				data.currValue = txtValue
+				
+			}
+			
+			public function showInfoPanel():void
+			{
+				//TEMP
+				numV.validate()
+				
+				var cgEvent:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.EVENT_SHOW_INFO)
+				cgEvent.sysVarDescription = data.description
+				cgEvent.lowValue = data.low_value
+				cgEvent.highValue = data.high_value
+				cgEvent.sysVarDisplayName = data.display_name
+				cgEvent.sysVarName = data.name
+				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+			}
+			
+			public function hideInfoPanel():void
+			{
+				var cgEvent:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.EVENT_HIDE_INFO)
+				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+			}
+									
+			public function onDrag(event:MouseEvent):void
+			{
+				 // Get the drag initiator component from the event object.
+            	 var dragInitiator:Image = event.currentTarget as Image;
+    
+            	 // Create a DragSource object.
+            	 var dragSource:DragSource = new DragSource();
+                
+            	 var itemArr:Array = [data]
+            	 Logger.debug("#InputPanel: onDrag: itemArr = " + itemArr)
+                        
+            	 dragSource.addData(itemArr, "items")
+                        
+             	// Create a copy of the graph image to use as a drag proxy.
+             	var dragProxy:Image = new Image();
+            	dragProxy.source = icoSysVar
+            	//dragProxy.x = inputsAndFaults.mouseX - 7
+            	//dragProxy.y = inputsAndFaults.mouseY - 7
+    
+             	// Call the DragManager doDrag() method to start the drag. 
+             	DragManager.doDrag(dragInitiator, dragSource, event, dragProxy, 0, 0, 1);
+			
+			}
+		
+ 			
+		]]>
+	</mx:Script>
+	
+	<!-- trying to get two-way binding -->
+	
+	<mx:NumberValidator id="numV" 
+        source="{txtInputItem}" property="text" 
+        minValue="{data.low_value}" maxValue="{data.high_value}"
+        lowerThanMinError="The minimum allowed value is {data.low_value}"
+        exceedsMaxError="The maximum allowed value is {data.high_value}"
+        />
+       
+	<mx:Text width="135" height="50" id="lblVarName" text="{data.display_name}" toolTip="{data.display_name}" fontSize="10"/>
+	<mx:TextInput 	id="txtInputItem"
+					width="65" 
+					height="20"
+					text="{data.currValue}"  
+					enabled="{sysVarEnabled}"
+					focusOut="outFocusHandler(event)"/>
+	
+	<mx:Text width="30" height="35" fontSize="10"  id="lblUnits" text="{data.units}" />
+	<mx:Spacer width="15"/>
+	<mx:VBox>
+	
+		<mx:Button 	id="btnInfo" 
+				upSkin="{InfoIconUp}" 
+				overSkin="{InfoIconUp}"
+				downSkin="{InfoIconUp}" 
+				mouseOver="showInfoPanel()"
+				mouseOut="hideInfoPanel()"
+				/>	
+		<mx:Image source="{icoSysVar}" 
+			  mouseDown = "onDrag(event)"
+			  toolTip="Drag icon to watch panel"
+			  />
+		
+	</mx:VBox>
+	<mx:VBox>
+		<mx:Image id="imgLTImportIcon" 
+					source="{this.iconLTImportDisabled}" 
+			  		toolTip="This variable will be imported from the Long Term Simulation, but no long-term run has been selected."
+			  		visible="{this.data.isImportedFromLongTermSim}"
+			  />
+		<mx:Image id="imgLTExportIcon" 
+					source="{iconLTExport}" 
+			  		toolTip="This variable is exported to the Long Term Simulation"
+			  		visible="{this.data.isExportedToLongTermSim}"
+			  />
+		
+	</mx:VBox>
+	
+			  
+	
+</mx:HBox>

@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 	xmlns:mx="http://www.adobe.com/2006/mxml" 
+			xmlns:util="com.adobe.ac.util.*" 
+			xmlns:head="com.mcquilleninteractive.learnhvac.view.layout.*"
+			xmlns:importControls = "com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.*"
+			initialize="onInitialize(event)"
+			creationComplete="onCreationComplete()"
+		    verticalGap="0"
+		    styleName="glassPods"	
+			horizontalScrollPolicy="off"
+			verticalScrollPolicy="off"
+		    
+			>
+				
+	<mx:Script>
+		<![CDATA[
+			
+		import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel;				
+		import com.mcquilleninteractive.learnhvac.command.LoadScenarioCommand;
+		import mx.collections.SortField
+		import mx.collections.Sort
+		import com.mcquilleninteractive.learnhvac.event.VisualizationEvent
+		import com.adobe.cairngorm.model.ModelLocator
+		import mx.collections.ArrayCollection
+		import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+		import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel
+		import com.mcquilleninteractive.learnhvac.model.SystemVariable
+		import com.mcquilleninteractive.learnhvac.util.Logger
+		import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent
+		import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
+		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
+		import com.mcquilleninteractive.learnhvac.event.AHUEvent
+		import com.mcquilleninteractive.learnhvac.event.AutoEvent
+		import com.mcquilleninteractive.learnhvac.event.ResetInputsToInitialValuesEvent
+		import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel
+		import com.adobe.cairngorm.control.CairngormEventDispatcher
+		import com.adobe.cairngorm.control.CairngormEvent
+		import mx.controls.Alert
+		import mx.collections.ListCollectionView
+		import mx.binding.utils.BindingUtils
+		import mx.events.ItemClickEvent;
+        import mx.controls.TabBar;
+				
+	
+		private var INPUTS_PANEL : Number = 0
+		private var FAULTS_PANEL : Number = 1
+		private var LONG_TERM_INPUT_PANEL : Number = 2
+		private var faultLists:Array 
+		private var inputLists:Array
+		private var viewState : Number = INPUTS_PANEL
+		private var inputPanelsArr:ArrayCollection
+		private var faultPanelsArr:ArrayCollection
+		private var currSysNodeIndex:Number;
+		private var longTermImportsAC:ArrayCollection = new ArrayCollection() //holds sysVars that are being imported from E+
+		
+		public var inputsErrorMsg:String = "";
+		
+		[Bindable]
+		private var _listPadding:Number = 36;
+		 			
+		public function onInitialize(event:Event):void
+		{		
+		}
+		
+		public function onCreationComplete():void
+		{
+			Logger.debug("#InputPanel: onCreationComplete()")
+			inputLists = []
+			inputLists[ScenarioModel.SN_CC] = lstInputItemsCC
+			inputLists[ScenarioModel.SN_HC] = lstInputItemsHC
+			inputLists[ScenarioModel.SN_FAN] = lstInputItemsFan
+			inputLists[ScenarioModel.SN_VAV] = lstInputItemsVAV
+			inputLists[ScenarioModel.SN_MIXINGBOX] = lstInputItemsMX
+			inputLists[ScenarioModel.SN_FILTER] = lstInputItemsFlt
+			inputLists[ScenarioModel.SN_SYSTEM] = lstInputItemsSYS
+			inputLists[ScenarioModel.SN_SPARK] = lstInputItemsSPK
+			inputLists[ScenarioModel.SN_DIFFUSER] = lstInputItemsDIF
+			inputLists[ScenarioModel.SN_BOILER] = lstInputItemsBOI
+			inputLists[ScenarioModel.SN_CHILLER] = lstInputItemsCHL
+			inputLists[ScenarioModel.SN_COOLINGTOWER] = lstInputItemsCTW
+			inputLists[ScenarioModel.SN_PLANT] = lstInputItemsPLT
+			
+			faultLists = []			
+			faultLists[ScenarioModel.SN_CC] = lstFaultItemsCC
+			faultLists[ScenarioModel.SN_HC] = lstFaultItemsHC
+			faultLists[ScenarioModel.SN_FAN] = lstFaultItemsFan
+			faultLists[ScenarioModel.SN_VAV] = lstFaultItemsVAV
+			faultLists[ScenarioModel.SN_MIXINGBOX] = lstFaultItemsMX
+			faultLists[ScenarioModel.SN_FILTER] = lstFaultItemsFlt
+			faultLists[ScenarioModel.SN_SYSTEM] = lstFaultItemsSYS
+			faultLists[ScenarioModel.SN_SPARK] = lstFaultItemsSPK
+			faultLists[ScenarioModel.SN_DIFFUSER] = lstFaultItemsDIF
+			faultLists[ScenarioModel.SN_BOILER] = lstFaultItemsBOI
+			faultLists[ScenarioModel.SN_CHILLER] = lstFaultItemsCHL
+			faultLists[ScenarioModel.SN_COOLINGTOWER] = lstFaultItemsCTW
+			faultLists[ScenarioModel.SN_PLANT] = lstFaultItemsPLT
+			
+			CairngormEventDispatcher.getInstance().addEventListener(AHUEvent.EVENT_AHU_STARTED, onAHUStart, false, 0,true)
+			CairngormEventDispatcher.getInstance().addEventListener(AHUEvent.EVENT_AHU_STOPPED, onAHUStop, false, 0,true)
+			CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0,true)
+			
+			//listen for my own automation events
+			CairngormEventDispatcher.getInstance().addEventListener(AutoEvent.EVENT_INPUT_PANEL, onAuto, false, 0,true)
+			
+		}
+		
+		public function onScenarioLoaded(event:ScenarioLoadedEvent):void
+		{
+			Logger.debug("#InputPanel: scenario loaded...now building input panels.")
+			buildInputPanels()
+		}
+
+		
+
+		
+		public function onAuto(event:AutoEvent):void
+		{
+			if (event.type == AutoEvent.EVENT_INPUT_PANEL)
+			{
+				Logger.debug("#InputPanel: Auto: trying to apply cmd: " + event.cmd)
+				try
+				{
+					this[event.cmd].apply(this, event.args)
+				}
+				catch(e:Error)
+				{
+					Logger.error("#Auto: couldn't apply function : " + event.cmd + " to Input panel")
+				}
+			}
+			
+		}
+		
+		
+		public function clearInputPanel():void
+		{
+			Logger.debug("#InputPanel: clearInputPanel()")
+			//clear out all inputs
+			for (var listName:String in inputLists)
+			{
+				List(inputLists[listName]).dataProvider = null
+			}
+			for (listName in faultLists)
+			{
+				List(faultLists[listName]).dataProvider = null
+			}
+		}
+		
+		public function onAHUStart(event:AHUEvent):void
+		{
+			Logger.debug("#InputPanel: onAHUStart: event: " + event)
+			btnUpdate.enabled = true	
+		}
+		
+		public function onAHUStop(event:AHUEvent):void
+		{
+			Logger.debug("#InputPanel: onAHUStop: event: " + event)
+			btnUpdate.enabled = false
+		}
+		
+		public function filterInputPanel(item:Object):Boolean {
+			return 	item.typeID=="INPUT" && 
+					item.applicationID=="PUBLIC" && 
+					item.is_fault == false
+		}
+		
+		public function filterFaultPanel(item:Object):Boolean {
+			return 	item.typeID=="INPUT" && 
+					item.applicationID=="PUBLIC" && 
+					item.is_fault == true
+		}
+		
+		public function buildInputPanels():void
+		{
+		    var model : LHModelLocator = LHModelLocator.getInstance()
+			
+       	  	Logger.debug("#InputPanel: buildInputPanels() called.")
+       	  	inputPanelsArr = new ArrayCollection()
+       	  	faultPanelsArr = new ArrayCollection()
+			
+			for each (var sysNode:SystemNodeModel in model.scenarioModel.sysNodesArr)
+			{
+			
+				//assign each systemNodeModel's sysVarsArr to a respective list control
+				var sysNodeID:String = sysNode.id
+				var inputList:List = this["lstInputItems"+sysNodeID]
+				
+				//add filter function for input panel
+				var sysVarArrView:ListCollectionView = new ListCollectionView(sysNode.sysVarsArr)
+				sysVarArrView.filterFunction = filterInputPanel
+				inputList.dataProvider = sysVarArrView
+				sysVarArrView.refresh()
+				inputPanelsArr.addItem(inputList)
+				
+				//add filter function for fault panel
+				var faultList:List = this["lstFaultItems"+sysNodeID]
+				var sysVarFaultArrView:ListCollectionView = new ListCollectionView(sysNode.sysVarsArr)
+				sysVarFaultArrView.filterFunction = filterFaultPanel
+				faultList.dataProvider = sysVarFaultArrView
+				
+				//sort by subsection
+				var faultListSort:Sort = new Sort()
+				faultListSort.fields = [new SortField("subsection")]
+				sysVarFaultArrView.refresh()
+				faultPanelsArr.addItem(faultList)
+				
+			}
+			
+			//build comboBox
+			cboSysNode.dataProvider = model.scenarioModel.sysNodesArr
+			
+		}
+		
+		protected function comboNodeSelect(event:Event):void
+		{
+			
+			var selectedIndex:Number = event.target.selectedIndex;
+			if (selectedIndex == currSysNodeIndex) return;
+			currSysNodeIndex = selectedIndex
+			Logger.debug("updating input panel view: " + cboSysNode.selectedItem.id, this)
+			setInputPanelView(cboSysNode.selectedItem.id)		
+		}
+		
+		
+		/** updates the input panel to show the inputs for specified sysNode
+		 *  this function is used by exterior controls that want to change the state of the input panel */
+		public function updateInputPanelView(newSysNode:String):void
+		{
+			if (cbxSyncToNav.selected)
+			{	
+				setInputPanelView(newSysNode)				
+			}									
+			Logger.debug("updateInputPanelView() newSysNode: " + newSysNode, this)
+			//turn on panel for currently selected tab
+							
+			
+		}
+		
+		protected function setInputPanelView(newSysNode:String):void
+		{		
+			//turn off all panels
+			for (var name:String in inputLists) inputLists[name].visible = false
+			for (name in faultLists) faultLists[name].visible = false
+		
+			if (viewState == FAULTS_PANEL)
+			{
+				faultLists[newSysNode].visible = true
+			}
+			else if (viewState== INPUTS_PANEL)
+			{
+				inputLists[newSysNode].visible = true	
+			}						
+		}
+		
+		public function onCurrNodeIndexChange():void
+		{
+			Logger.debug("#InputPanel: onCurrNodeIndexChange() called")
+			if (cbxSyncToNav.selected)
+			{
+				//update the combo box
+				cboSysNode.selectedIndex = LHModelLocator.getInstance().scenarioModel.currNodeIndex
+				//update the subpanels
+				updateInputPanelView(LHModelLocator.getInstance().scenarioModel.currNode)
+			}
+		}
+		
+		public function tabClickHandler(event:ItemClickEvent):void{
+			
+			Logger.debug("#tabClick() viewState = " + viewState)
+			
+			
+			switch (event.label)
+			{
+				case "RUN OPTIONS":
+					viewState = LONG_TERM_INPUT_PANEL
+					optionsPanel.visible = true
+					inputsAndFaults.visible = false
+					break
+					
+				case "INPUTS":
+					Logger.debug("changing to inputs view")
+					viewState = INPUTS_PANEL
+					optionsPanel.visible = false
+					inputsAndFaults.visible = true
+					inputPanelsArr.getItemAt(currSysNodeIndex).visible = true
+					faultPanelsArr.getItemAt(currSysNodeIndex).visible = false
+					break
+					
+				case "FAULTS":
+					Logger.debug("changing to faults view")
+					viewState = FAULTS_PANEL
+					optionsPanel.visible = false
+					inputsAndFaults.visible = true
+					inputPanelsArr.getItemAt(currSysNodeIndex).visible = false
+					faultPanelsArr.getItemAt(currSysNodeIndex).visible = true
+					break
+										
+				
+					
+				default:
+					
+			}						
+			
+		}
+	
+		
+		
+		public function resetToInitial():void{
+			Logger.debug("#InputPanel: resetToInitial()");
+			var cgEvent : ResetInputsToInitialValuesEvent = new ResetInputsToInitialValuesEvent();
+			CairngormEventDispatcher.getInstance().dispatchEvent( cgEvent );			
+		}
+		
+		/* Returns an error message if there are errors, otherwise returns empty string 
+		
+			param actionType: "forStartup" or "forUpdate"
+	
+		*/
+		
+		public function areInputsValid(actionType:String):Boolean
+		{
+		
+			var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+			inputsErrorMsg = "" 
+			
+			//Check individual panels to make sure each entered value is within limits
+			for (var i:Number = 0; i<inputLists.numChildren; i++)
+			{
+				var inputVariableList:List = List(inputLists.getChildAt(i))
+				
+				var sysVarsArr:ListCollectionView = ListCollectionView(inputVariableList.dataProvider)
+				for each (var sysVar:SystemVariable in sysVarsArr)
+				{
+					if (sysVar.isValid()==false)
+					{
+						Logger.debug("#InputPanel: Found error with sysVar: " + sysVar.name)
+						if (inputsErrorMsg == "")
+						{
+							inputsErrorMsg = "Some of your input values are out-of-bounds. Please check the following components and make sure their values are within the minimum and maximum allowed: \n "
+						}
+						inputsErrorMsg = inputsErrorMsg + "\n  - " + inputVariableList.name
+						break
+					}
+				}
+			}
+			if (inputsErrorMsg!="") return false //show this first set of problems if they exist
+			
+			//Inow check inter-variable conditions...these were defined by B.Coffey
+			//Check wet-bulb vs. dry-bulb
+			var tAirOut:SystemVariable = scenarioModel.getSysVar("TAirOut")
+			var twAirOut:SystemVariable = scenarioModel.getSysVar("TwAirOut")
+			if (twAirOut.baseSIValue >= tAirOut.baseSIValue)
+			{
+				inputsErrorMsg = inputsErrorMsg + "\n - Outside air wet-bulb temp cannot be greater than outside air dry-bulb temp."
+			}
+		
+			if (inputsErrorMsg!="") return false //show this first set of problems if they exist
+			
+			//only check the following on updates, not on simulation starts
+			if (actionType=="forUpdate")
+			{
+				//check CC status vs. outside air temp
+				var mxTOut:SystemVariable = scenarioModel.getSysVar("MXTOut")
+				if ( tAirOut.baseSIValue > (mxTOut.baseSIValue + 10) ||  tAirOut.baseSIValue < (mxTOut.baseSIValue-10))
+				{
+					inputsErrorMsg = inputsErrorMsg + "\n - Please use smaller changes in outside temperature (e.g. if you wish to view a 40C change, please do so in 10C steps and provide the simulation with a few seconds to catch up so that it does not crash - it sometimes does not behave so well under such physically impossible conditions)."
+				}
+				
+				if (inputsErrorMsg!="") return false //show this first set of problems if they exist
+			}
+				
+			return true
+			
+		}
+		
+		public function onUpdateSimulation():void
+		{
+			if (areInputsValid("forStartup")==true)
+			{
+				var cgEvent : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.EVENT_UPDATE_AHU);
+				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent);
+			}
+			else
+			{
+				mx.controls.Alert.show(inputsErrorMsg, "Input Errors");
+			}
+		}
+				
+
+		]]>
+	</mx:Script>
+	
+	<head:GlassHeaders headerTitle="SIMULATION CONTROLS"/>
+	
+	<mx:TabBar itemClick="tabClickHandler(event);"  
+		styleName="tabNavigator"
+		paddingBottom="0"
+		borderStyle="none" 
+	   
+		>
+		<mx:dataProvider>
+           	<mx:String>RUN OPTIONS</mx:String>
+       		<mx:String>INPUTS</mx:String>
+           	<mx:String>FAULTS</mx:String>
+        </mx:dataProvider>
+   	</mx:TabBar>
+   	 
+   	 
+	<mx:Canvas 		 height="453" 
+					 width="100%" 
+					 horizontalScrollPolicy="off" 
+					 verticalScrollPolicy="off"
+					 paddingBottom="10">
+   	 
+   	
+	<importControls:STOptions id="optionsPanel" visible="true"/> 
+   	 
+				     
+	<mx:Canvas id="inputsAndFaults"
+					 height="453" 
+					 width="100%" 
+					 horizontalScrollPolicy="off" 
+					 verticalScrollPolicy="off"
+					 paddingBottom="10"
+					 visible = "false"
+					 >
+					 
+				<mx:HBox 
+					id="headerControls"
+					paddingTop="7"
+					paddingLeft="5" 
+				    borderStyle="none"
+					width="100%" 
+					height="35"
+					backgroundColor="0xFFFFFF" >
+					
+					<mx:ComboBox id="cboSysNode"
+							paddingLeft="10"
+							labelField="name" 
+							rowCount="9"
+							change="comboNodeSelect(event)" 
+							/>
+					
+					<mx:Spacer width="85"/>
+					<mx:Label id="lblSyncToNav" text="Sync to nav:" toolTip="When you navigate to a part of the HVAC system, make this panel automatically switch to the relevant values."/>
+					<mx:CheckBox id="cbxSyncToNav" toolTip="When you navigate to a part of the HVAC system, make this panel automatically switch to the relevant values."/>
+				</mx:HBox>	 
+					 
+				<!-- SYS Inputs-->
+				<mx:List 	id="lstInputItemsSYS" 
+						y="{_listPadding}"
+						name="System"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>			
+				
+				<!-- MX Inputs-->
+				<mx:List 	id="lstInputItemsMX"
+						y="{_listPadding}"
+						name="Mixing Box"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%"  
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>		
+						
+				<!-- Fan Inputs-->
+				<mx:List 	id="lstInputItemsFan"
+						y="{_listPadding}"
+						name="Fan"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>	
+							
+				<!-- Flt Inputs-->
+				<mx:List 	id="lstInputItemsFlt"
+						y="{_listPadding}"
+						name="Filter"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>
+				
+				
+				<!-- Heating Coil Inputs-->
+				<mx:List 	id="lstInputItemsHC"
+						y="{_listPadding}"
+						paddingTop="0"
+						name="Heating Coil"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						width="100%" 
+						height="418" 
+   					    visible="false"
+   					    styleName="inputList"
+   					    selectable="false"
+						/>
+						
+				<!-- Cooling Coil Inputs-->
+				<mx:List 	id="lstInputItemsCC"
+						y="{_listPadding}"
+						name="Cooling Coil"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%"  
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>			
+			
+				<!-- VAV Inputs-->
+				<mx:List 	id="lstInputItemsVAV"
+						y="{_listPadding}"
+						name="VAV"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>		
+				
+				<!-- DIF Inputs-->
+				<mx:List 	id="lstInputItemsDIF"
+						y="{_listPadding}"
+						name="Diffuser"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="380"
+   					    visible="false"
+   					    styleName="inputList"
+						/>	
+			
+				<!-- PLT Inputs-->
+				<mx:List 	id="lstInputItemsPLT"
+						y="{_listPadding}"
+						name="Diffuser"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>	
+						
+				<!-- BOI Inputs-->
+				<mx:List 	id="lstInputItemsBOI"
+						y="{_listPadding}"
+						name="Diffuser"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>		
+							
+				<!-- CHL Inputs-->
+				<mx:List 	id="lstInputItemsCHL"
+						y="{_listPadding}"
+						name="Diffuser"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>									
+			
+				
+				
+				<!-- CTW Inputs-->
+				<mx:List 	id="lstInputItemsCTW"
+						y="{_listPadding}"
+						name="Diffuser"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>	
+						
+				<!-- SPK Inputs-->
+				<mx:List 	id="lstInputItemsSPK"
+						y="{_listPadding}"
+						name="Spark"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%"  
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>
+				
+				
+						
+				<!-- ************  -->
+				<!-- FAULT PANELS  -->
+				<!-- ************  -->
+				
+				<!-- SYS Faults-->
+				<mx:List 	id="lstFaultItemsSYS"
+						y="{_listPadding}"
+						name="System"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%"  
+						height="418"
+   					    visible="false"
+   					    styleName="faultList"
+						/>	
+					
+				<!-- MX Faults-->
+				<mx:List 	id="lstFaultItemsMX"
+						y="{_listPadding}"
+						name="Mixing Box"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%"  
+						height="418"
+   					    visible="false"
+   					    styleName="faultList"
+						/>			
+						
+				<!-- Fan Faults-->
+				<mx:List 	id="lstFaultItemsFan"
+						y="{_listPadding}"
+						name="Fan"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="faultList"
+						/>
+						
+				<!-- Flt Faults-->
+				<mx:List 	id="lstFaultItemsFlt"
+						y="{_listPadding}"
+						name="Filter"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%"  
+						height="418"
+   					    visible="false"
+   					    styleName="faultList"
+						/>
+							
+					
+				<!-- Heating Coil Faults-->
+				<mx:List 	id="lstFaultItemsHC"
+						y="{_listPadding}"
+						name="Heating Coil"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    borderStyle="none"
+   					    styleName="faultList"
+						/>
+						
+				<!-- Cooling Coil Faults-->
+				<mx:List 	id="lstFaultItemsCC"
+						y="{_listPadding}"
+						name="Cooling Coil"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="faultList"
+						/>			
+					
+				<!-- VAV Faults-->
+				<mx:List 	id="lstFaultItemsVAV"
+						y="{_listPadding}"
+						name="VAV"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%"  
+						height="418"
+   					    visible="false"
+   					    styleName="faultList" 
+						/>		
+				
+				<!-- DIF Faults-->
+				<mx:List 	id="lstFaultItemsDIF"
+						y="{_listPadding}"
+						name="Diffuser"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="faultList"
+						/>		
+						
+				<!-- PLT Faults-->
+				<mx:List 	id="lstFaultItemsPLT"
+						y="{_listPadding}"
+						name="Diffuser"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="410"
+   					    visible="false"
+   					    styleName="faultList"
+						/>		
+						
+				<!-- BOI Faults-->
+				<mx:List 	id="lstFaultItemsBOI"
+						y="{_listPadding}"
+						name="Diffuser"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="faultList"
+						/>
+						
+				<!-- CHL Faults-->
+				<mx:List 	id="lstFaultItemsCHL"
+						y="{_listPadding}"
+						name="Diffuser"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="faultList"
+						/>				
+						
+				<!-- CTW Faults-->
+				<mx:List id="lstFaultItemsCTW"
+						y="{_listPadding}"
+						name="Diffuser"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="faultList"
+						/>	
+												
+				<!-- SPK Faults-->
+				<mx:List id="lstFaultItemsSPK"
+						y="{_listPadding}"
+						name="Spark"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%"  
+						height="418"
+   					    visible="false"
+   					    styleName="faultList"
+						/>
+					
+			
+		</mx:Canvas>
+	</mx:Canvas>
+	
+	
+	<mx:Spacer height="5"/>
+	<mx:HBox width="100%">
+	
+		<mx:Spacer width="5"/>
+		
+		<mx:Button id="btnUpdate"
+			label="Update"
+			height="25"
+			width="110"
+			click="onUpdateSimulation()"
+			toolTip="Update inputs values for simulation"
+			enabled="false"
+			/>
+			
+		<mx:Spacer width="100%"/>
+		<mx:LinkButton id="btnReset"
+			label="Reset Values"
+			click="resetToInitial()"
+			toolTip="Reset to initial values"
+		/>
+			
+		
+		<mx:Spacer width="5"/>
+		
+	</mx:HBox>
+								
+	
+	
+</mx:VBox>

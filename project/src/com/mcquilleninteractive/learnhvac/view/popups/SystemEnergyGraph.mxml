@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<util:DragPanel xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:util="com.mcquilleninteractive.learnhvac.util.*" 
+	title="SYSTEM ENERGY"  
+    preinitialize="onPreInit()"  
+    close="onClose()"
+    minWidth="350"
+    minHeight="200"
+	width="450" height="250" xmlns:popups="com.mcquilleninteractive.learnhvac.view.popups.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import mx.collections.ArrayCollection;
+			
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.mcquilleninteractive.learnhvac.util.ColorSetting
+			import com.mcquilleninteractive.learnhvac.util.Logger
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			
+			[Bindable]
+			private var powerTotalsAC:ArrayCollection 
+			private var _sysVarBOIfuel:SystemVariable 
+			private var _sysVarCHLcomppow:SystemVariable 
+			private var _sysVarFanpowerTot:SystemVariable 
+			private var _sysVarCHLpumppow:SystemVariable 
+			private var _valuesArr:Array 
+			
+			public function onPreInit():void
+			{	
+				_valuesArr = [{group:"System Energy Use", BOIfuel:12, CHLcomppow:5, FanpowerTot:2, CHLpumppow: 3}]							
+				powerTotalsAC = new ArrayCollection(_valuesArr)
+				
+				//add listeners		
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
+	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0, true)
+	   			dispatcher.addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged, false, 0, true)	
+				dispatcher.addEventListener(ScenarioModel.SHORT_TERM_OUTPUT_LOADED, onShortTermOutputLoaded, false, 0, true)
+				
+				
+				//when this graph is first shown, a scenario will already have been loaded, so call onScenarioLoaded once to get it set up correctly
+				onScenarioLoaded(null)
+			}
+			
+			public function onScenarioLoaded(event:CairngormEvent):void
+			{
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				
+				//the number and type of sysVar isn't going to change much, so I'm not going to use 
+				//binding, I'm just going to keep a ref and then update when the outputs are loaded
+				_sysVarBOIfuel = scenModel.getSysVar("BOIfuel")
+				_sysVarCHLcomppow = scenModel.getSysVar("CHLcomppow")
+				_sysVarFanpowerTot = scenModel.getSysVar("FanpowerTot")
+				_sysVarCHLpumppow = scenModel.getSysVar("CHLpumppow")				
+				
+				getRelevantValues()
+				
+			}
+			
+			public function onUnitsChanged(event:CairngormEvent):void
+			{
+				getRelevantValues()				
+			}
+			
+			public function onShortTermOutputLoaded(event:CairngormEvent):void
+			{
+				getRelevantValues()
+			}
+			
+			private function getRelevantValues():void
+			{
+				_valuesArr[0].BOIfuel = _sysVarBOIfuel.currValue
+				_valuesArr[0].CHLcomppow = _sysVarCHLcomppow.currValue
+				_valuesArr[0].FanpowerTot = _sysVarFanpowerTot.currValue
+				_valuesArr[0].CHLpumppow = _sysVarCHLpumppow.currValue
+				powerTotalsAC.refresh()
+			}
+			
+			private function onClose():void
+			{
+				Logger.debug("closing window: " + this, this)
+				removeListeners()
+			}
+			
+			private function removeListeners():void
+			{
+				Logger.debug("removing listeners.", this)
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
+				dispatcher.removeEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded)
+	   			dispatcher.removeEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged)	
+				dispatcher.removeEventListener(ScenarioModel.SHORT_TERM_OUTPUT_LOADED, onShortTermOutputLoaded)
+			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	<mx:SolidColor id="bioFuelFill" color="{ColorSetting.heatingColor}"/>
+	<mx:SolidColor id="chlCompPowerFill" color="{ColorSetting.coolingColor}"/>
+	<mx:SolidColor id="towerFanPowerFill" color="{ColorSetting.ltCoolingColor}"/>
+	<mx:SolidColor id="supplyFanPowerFill" color="{ColorSetting.fansColor}"/>
+	<mx:SolidColor id="chlWaterLoopFill" color="{ColorSetting.dkPumpsColor}"/>
+	<mx:SolidColor id="hotWaterLoopFill" color="{ColorSetting.pumpsColor}"/>
+	<mx:SolidColor id="condWaterLoopFill" color="{ColorSetting.ltPumpsColor}"/>
+	
+	<mx:HBox width="100%" height="100%">
+		
+		
+		 <mx:ColumnChart id="chart" type="stacked" 
+		 	width="100%" height="100%" 
+		 	dataProvider="{powerTotalsAC}"
+		    maxColumnWidth="30"
+		    minWidth="150"
+		    minHeight="150"
+		    showDataTips="true">
+	        
+	        <mx:series>
+	        
+	       		<mx:ColumnSeries xField="group" yField="BOIfuel" fill="{bioFuelFill}" displayName="BOI Fuel Consump." color="{ColorSetting.heatingColor}"  />
+	            <mx:ColumnSeries xField="group" yField="CHLcomppow" fill="{chlCompPowerFill}" displayName="CHL Comp. Power" color="{ColorSetting.ltCoolingColor}" />
+	            <mx:ColumnSeries xField="group" yField="CHLcomppow"  fill="{towerFanPowerFill}" displayName="Tower Fan Power" color="{ColorSetting.coolingColor}" /> 
+	            <mx:ColumnSeries xField="group" yField="FanpowerTot" fill="{supplyFanPowerFill}" displayName="Supply Fan Power"  color="{ColorSetting.fansColor}"  />
+	            <mx:ColumnSeries xField="group" yField="CHLpumppow" fill="{chlWaterLoopFill}" displayName="Chilled Water Loop Pump Power" color="{ColorSetting.dkPumpsColor}"  />
+	            <mx:ColumnSeries xField="group" yField="CHLpumppow"  fill="{hotWaterLoopFill}" displayName="Hot Water Loop Pump Power" color="{ColorSetting.ltPumpsColor}" /> 
+	            <mx:ColumnSeries xField="group" yField="CHLpumppow" fill="{condWaterLoopFill}"  displayName="Condensor Water Loop Pump Power" color="{ColorSetting.ltPumpsColor}"  /> 
+	        
+	 
+	        </mx:series>
+	        
+	        <mx:horizontalAxis>
+	           <mx:CategoryAxis 
+	                categoryField="group"
+	           />
+	        </mx:horizontalAxis>
+	
+	               
+	        <mx:verticalAxis >
+	     		<mx:LinearAxis title="" id="yAxis" />
+			</mx:verticalAxis>
+	
+			<mx:verticalAxisRenderers>
+	    		<mx:AxisRenderer axis="{yAxis}" verticalAxisTitleAlignment="vertical" />
+			</mx:verticalAxisRenderers>
+	
+	    </mx:ColumnChart>
+	
+		<popups:SystemEnergyGraphLegend  width="220"  />
+	
+	</mx:HBox>
+	
+</util:DragPanel>

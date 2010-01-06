@@ -1,0 +1,506 @@
+/* CSS file */
+
+
+
+/* ELEMENTS (Flex classes) */
+TitleWindow 
+{
+	closeButtonSkin: Embed("assets/img/close_off.png");
+    closeButtonDisabledSkin: Embed("assets/img/close_disabled.png");
+    closeButtonDownSkin: Embed("assets/img/close_over.png");
+    closeButtonOverSkin: Embed("assets/img/close_over.png");
+    closeButtonUpSkin: Embed("assets/img/close_off.png");
+}
+
+DateField 
+{
+	skin: Embed("assets/img/calendar.png");
+	/* null the skins defined in default.css */
+	upSkin: ClassReference(null);
+	overSkin: ClassReference(null);
+	downSkin: ClassReference(null);
+	disabledSkin: ClassReference(null);
+}
+
+Alert
+{
+	color : #0f3177;
+	title-style-name : “alertTitle”;
+	header-height:19;
+	border-thickness: 1;
+	drop-shadow-enabled: true;
+	drop-shadow-color :#000000;
+	background-color: #ffffff;
+	corner-radius :6;
+	border-style :solid;
+	header-colors : #799dc2, #427dba;
+	footer-colors : #799dc2, #ffffff;
+	border-color : #5970a0;
+}
+
+.alertTitle
+{
+	font-family :Verdana;
+	font-size :10;
+	font-weight :bold;
+	text-align :left;
+	color :#ffffff;
+}
+
+	
+
+
+
+
+/* -----------------*/
+/*    Classes       */
+/* -----------------*/
+
+/* analysis section */
+
+.analysisEnergySectionHeader
+{
+	fontSize: 10;
+	fontWeight: bold;
+}
+
+
+.appTabBar
+{
+	tabWidth: 135px;
+	tabStyleName: "appTab";
+	selectedTabStyleName: "appTabSelected";
+}
+
+.appTab
+{
+	fontFamily: Arial;
+    fontSize: 10;
+   	borderColor:#000;
+    color: #FFFFFF;
+    cornerRadius:0;
+    backgroundColor:#607681;
+  	highlightAlphas: 0.3, 0.2;
+   	fillAlphas: 0.1, 0.2, 0.3, 0.2;	
+   	textRollOverColor: #ffffff;
+}
+
+.appTabSelected
+{
+	fontFamily: Arial;
+    fontSize: 10;
+    color: #FFFFFF;
+    cornerRadius:0;
+  	highlightAlphas: 0.3, 0.2;
+   	fillAlphas: 0.1, 0.2, 0.3, 0.2;	
+   	backgroundColor: #607681;
+}
+
+
+.appControlBar
+{
+	background-color:#000;
+}
+
+.appMenuBar
+{
+	color:#FFF;
+	background-color:#444;
+}
+.btnBottomBar
+{
+    color: #000;
+    textRollOverColor: #3333ff;
+	fillAlphas: 1, 1, 1, 1;
+}
+
+.btnLogout
+{
+	fontFamily: Arial;
+    fontSize: 10;
+   	borderColor:#000;
+    color: #FFFFFF;
+    textSelectedColor: #ffffff;
+    textRollOverColor: #ffffff;
+    cornerRadius:0;
+    paddingLeft:0;
+    paddingRight:0;
+    background:#000000;
+  	highlightAlphas: 0.0, 0.0;
+   	fillAlphas: 1, 1, 0.3, 0.2;
+   	fillColors: #000000, #000000, #000000, #000000;
+}
+
+.btnTool
+{
+	fontFamily: Arial;
+    fontSize: 10;
+   	themeColor:#009DFF;
+   	borderColor: #000000;
+    color: #FFFFFF;
+    textSelectedColor: #ffffff;
+    textRollOverColor: #ffffff;
+    cornerRadius:0;
+    paddingLeft:0;
+    paddingRight:0;
+    background:#000;
+   	highlightAlphas: 0.1, 0;
+   	fillAlphas: 0.1, 0.2, 0.3, 0.2;	
+}
+
+.btnNodeNav
+{
+   cornerRadius: 0;
+   color: #ffffff;
+   iconColor: #ffffff;
+   highlightAlphas: 0, 0;
+   fillAlphas: 1, 1, 1, 1;
+   borderColor: #000000;
+   fillColors: #282828, #282828, #000000, #000000;
+   backgroundAlpha: 0;
+   alternatingItemColors: #333333, #3a3a3a;
+}
+
+.btnNavIcon
+{
+	fillAlphas: 0,0,.4,.1;
+	borderStyle: none;
+	borderColor: #000;
+   	themeColor: #009DFF;
+    cornerRadius: 0;
+    paddingLeft: 0;
+    paddingRight: 0;
+   	highlightAlphas: 0,0,0,0;
+}
+
+.btnNav
+{
+	fontFamily: Arial;
+    fontSize: 10;
+   	themeColor:#009DFF;
+   	borderColor:#000;
+    color: #FFFFFF;
+    textSelectedColor: #ffffff;
+    textRollOverColor: #ffffff;
+    cornerRadius:0;
+    paddingLeft:0;
+    paddingRight:0;
+    background:#000;
+  	highlightAlphas: 0.3, 0.2;
+   	fillAlphas: 0.1, 0.2, 0.3, 0.2;
+}
+
+
+.btnNavLive
+{
+	fontFamily: Arial;
+    fontSize: 10;
+    color: #FFFFFF;
+    borderStyle: none;
+    textSelectedColor: #ffffff;
+    textRollOverColor: #ffffff;
+    cornerRadius:0;
+    paddingLeft:0;
+    paddingRight:0;
+  	highlightAlphas: 0.3, 0.2;
+   	fillAlphas: 1, 1, 0, 0;
+   	fillColors: #607681,#607681;
+   	disabledColor: #FFF
+}
+
+.controlBar
+{
+	backgroundColor: #607681;
+}
+
+.debugPanel
+{
+	fontFamily: "Courier New", Courier, monospace;
+	fontSize: 12px;
+}
+
+.inputList 
+{
+	borderStyle: inset;
+}
+.faultList
+{
+	borderStyle: inset;
+}
+
+.fseTabs {
+    cornerRadius: 6;
+    highlightAlphas: 0.4, 0;
+    fillAlphas: 0,0;
+    borderColor: #FFFFFF;
+    themeColor: #ffffff;    
+    paddingLeft: 10;
+    paddingRight: 10;
+    backgroundAlpha: 1;
+    backgroundColor: #FFFFFF;
+    color: #0B333C;
+    textRollOverColor: #0B333C;
+    fontSize: 9;
+}
+
+.fseVerticalScrollBar {
+    downArrowUpSkin: Embed(source="/assets/img/downArrow.png");
+    downArrowOverSkin: Embed(source="/assets/img/downArrow.png");
+    downArrowDownSkin: Embed(source="/assets/img/downArrow.png");
+    upArrowUpSkin: Embed(source="/assets/img/upArrow.png");
+    upArrowOverSkin: Embed(source="/assets/img/upArrow.png");
+    upArrowDownSkin: Embed(source="/assets/img/upArrow.png");
+    thumbDownSkin: Embed(source="/assets/img/thumb.png",
+        scaleGridLeft="7", scaleGridTop="5", scaleGridRight="8", scaleGridBottom="7");
+    thumbUpSkin: Embed(source="/assets/img/thumb.png",
+        scaleGridLeft="7", scaleGridTop="5", scaleGridRight="8", scaleGridBottom="7");
+    thumbOverSkin: Embed(source="/assets/img/thumb.png",
+        scaleGridLeft="7", scaleGridTop="5", scaleGridRight="8", scaleGridBottom="7");
+    trackSkin: Embed(source="/assets/img/scrolltrack.png",
+        scaleGridLeft="7", scaleGridTop="4", scaleGridRight="8", scaleGridBottom="6" );    
+    
+}
+
+.glassLabels {
+    color: #FFFFFF;
+    fontSize: 12;
+    fontWeight: bold;
+    paddingLeft: 0;
+    paddingTop: 0;
+    fontFamily: Myriad;
+}
+
+
+.glassPanel {
+    backgroundSize: "100%";
+    backgroundImage: Embed(source="/assets/header.swf#glassHeader");
+    paddingTop: 7;
+    paddingLeft: 10;
+}
+
+.glassPods {
+    borderStyle: applicationControlBar;
+    fillColors: #FFFFFF, #FFFFFF;
+    fillAlphas: 0, 0.25;
+    highlightAlphas: 0, 0;
+    backgroundColor: #ffffff;
+    backgroundAlpha: .2;
+    borderThickness: 0;
+    dropShadowEnabled: true;
+    cornerRadius: 8;
+    paddingRight: 0;
+    paddingLeft: 0;
+    paddingTop: 0;
+    paddingBottom: 0;
+    horizontalScrollBarStyleName: fseVerticalScrollBar;
+    verticalScrollBarStyleName: fseVerticalScrollBar;
+}
+
+
+.longTermOptionsLabel
+{
+	
+}
+
+.longTermOptionsSectionHeader
+{
+	font-weight: bold;
+}
+
+
+.longTermOptionsCurrValue
+{
+	backgroundColor:#F1F1F1;
+	backgroundAlpha:1;
+	color:#000000;
+	border:0px;
+	margin-top:5px;
+}	
+
+.overlayTitle
+{
+	font-family: Arial, Helvetica, Sans;
+	font-weight: bold;
+	font-size: 10px;
+	color: #FFF;
+}
+
+.overlayValue
+{
+	font-family: Arial, Helvetica, Sans;
+	font-weight: bold;
+	font-size: 12px;
+	color: #FFF;
+}
+
+.runCombo
+{
+   cornerRadius: 0;
+   color: #ffffff;
+   iconColor: #ffffff;
+   highlightAlphas: 0, 0;
+   fillAlphas: 1, 1, 1, 1;
+   borderColor: #000000;
+   fillColors: #282828, #282828, #000000, #000000;
+   backgroundAlpha: 0;
+   alternatingItemColors: #333333, #3a3a3a;
+
+}
+
+.runModeTabBar
+{
+	tabWidth: 135px;
+	tabStyleName: "runModeTab";
+	selectedTabStyleName: "runModeTabSelected";
+	horizontalGap: 2;
+}
+
+.runModeTab
+{
+	fontFamily: Arial;
+    fontSize: 10;
+    borderColor: #92a8b3;
+    color: #FFFFFF;
+    cornerRadius:0;
+    backgroundColor:#92a8b3;
+  	highlightAlphas: 0.3, 0.2;
+   	fillAlphas: 0.1, 0.2, 0.3, 0.2;	
+   	textRollOverColor: #ffffff;
+}
+
+.runModeTabSelected
+{
+	fontFamily: Arial;
+    fontSize: 10;
+    color: #FFFFFF;
+    cornerRadius:0;
+}
+
+.schematicLabel
+{
+	font-family: arial;
+	font-weight: bold;
+	font-size: 10px;
+}	
+
+.selectedToggleButton
+{
+	backgroundColor: #3ba4f4;	
+}	
+
+
+
+
+.sectionToolBarButton
+{
+    cornerRadius:0;
+    paddingLeft:0;
+    paddingRight:0;
+  	highlightAlphas: 0, 0; 
+   	borderColor: #607681;
+  	fillAlphas: 0.1, 0.1, 0.2, 0.2;
+   	fillColors: #ffffff, #CCCCCC, #ffffff, #eeeeee;
+}
+
+
+
+
+
+.simControls
+{
+	backgroundColor: #111111;
+}
+
+
+.simTimerTitle
+{
+	font-family: arial;
+	fontSize: 8px;
+	color: #FFF;
+}
+
+
+.simTimer
+{
+
+	font-family: RussellSquare;	
+	fontSize: 12px;
+	color: #FFF;
+}
+
+.simTimeStepper
+{
+	showSeconds:false;	
+	useTwelveHourFormat:false;
+}
+
+.simDatePicker
+{
+}
+
+
+.simStatus
+{
+	font-family: RussellSquare;
+	fontSize: 12px;
+	color: #1d89dc;
+}
+
+.simTimePicker
+{
+	
+}
+
+.simDatePicker
+{
+	
+}
+
+
+
+.tabNavigator 
+{
+    paddingLeft: 5; 
+    tabWidth: 105; 
+    paddingRight: 5;
+    backgroundAlpha: 0; 
+    borderStyle: none; 
+    paddingBottom: 10; 
+    cornerRadius: 4;
+    tabStyleName: "fseTabs";
+}
+
+
+.timeStepperFormat
+{
+	showSeconds:false;	
+	useTwelveHourFormat:false;
+}
+
+
+@font-face {
+    src: url("../fonts/MyriadWebPro.ttf") ;
+    fontFamily: Myriad;
+    unicodeRange:
+           U+0041-U+005A, /* Upper-Case [A..Z] */
+           U+0061-U+007A, /* Lower-Case a-z */
+           U+0030-U+0039, /* Numbers [0..9] */ 
+           U+002E-U+002E; /* Period [.] */
+}
+
+@font-face {
+    src: url("../fonts/MyriadWebPro-Bold.ttf") ;
+    fontFamily: Myriad;
+    fontWeight: bold;
+    unicodeRange:
+           U+0041-U+005A; /* Upper-Case [A..Z] */
+}
+
+@font-face {   
+	src: url("/assets/fonts/russellsquare.swf");
+	fontFamily: "RussellSquare"; 
+}
+
+ 
+
+		

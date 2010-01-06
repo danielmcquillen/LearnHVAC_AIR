@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	label="LOADS" 
+	implements="com.mcquilleninteractive.learnhvac.view.longterm.ILongTermOptionsPanel"
+	paddingTop="10"
+	paddingLeft="10"
+	paddingRight="10"
+	width="100%" height="100%">
+	
+	
+	<mx:Script>
+			<![CDATA[
+				import com.mcquilleninteractive.learnhvac.model.LTSettingsModel;
+				
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO	
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import com.mcquilleninteractive.learnhvac.util.Conversions
+				
+			import mx.validators.Validator
+			
+			private var _elevationView:ElevationView
+			private var _zoneSelector:ZoneSelector;
+			
+			[Bindable]
+			private var _ltSettings:LTSettingsModel;
+						
+			[Bindable]
+			private var _loadUnits:String;
+						
+			[Bindable]
+			private var _peopleUnits:String;
+			
+			[Bindable]
+			private var _equipPeakLoad:Number;
+			
+			[Bindable]
+			private var _lightingPeakLoad:Number;
+			
+			
+			public var _errorMsg:String
+			public var _errorMsgArr:Array = []
+			public var _validatorsArr:Array = []
+			
+									
+			protected function onCC():void
+			{
+				_validatorsArr = [vldEquipPeakLoad, vldLightingPeakLoad, vldAreaPerPerson]				
+				_errorMsgArr["txtEquipPeakLoad"] = "Equipment Peak Load"
+				_errorMsgArr["txtLightingPeakLoad"] = "Lighting Peak Load"
+				_errorMsgArr["txtAreaPerPeson"] = "Area per Person"
+			}	
+			
+			public function setViewRefs(elevationView:ElevationView, zoneSelector:ZoneSelector):void
+			{				
+				_elevationView = elevationView
+				_zoneSelector = zoneSelector
+			}
+			
+			public function initializeValues():void
+			{				
+						
+			}
+			
+			
+			public function isValid():Boolean
+			{
+				var results:Array = Validator.validateAll(_validatorsArr)
+				if (results.length>0){
+					var _errorMsg:String = "Some of the values you've entered are incorrect. Please check the following fields:\n"
+					for (var i:uint=0; i<results.length; i++)
+					{
+						var s:String = _errorMsgArr[results[i].target.source.id] 
+						_errorMsg = _errorMsg + "\n" + s
+					}
+					return false
+				}			
+				return true
+			}
+			
+			
+			public function onScenarioLoaded():void
+			{				
+				_ltSettings = LHModelLocator.getInstance().scenarioModel.ltSettingsModel
+				
+				_equipPeakLoad = Conversions.roundToDecimals(_ltSettings.equipPeakLoad, 2)
+				_lightingPeakLoad =  Conversions.roundToDecimals(_ltSettings.lightingPeakLoad, 2)
+				
+				resetValues()
+			}
+			
+			
+			public function get errorMsg():String
+			{
+				return _errorMsg
+			}
+			
+			public function unitsUpdate():void
+			{				
+				resetValues()
+			}
+			
+			public function resetValues():void
+			{
+	
+				txtEquipPeakLoad.text = _ltSettings.equipPeakLoad.toString()
+				txtLightingPeakLoad.text = _ltSettings.lightingPeakLoad.toString()
+				txtAreaPerPerson.text = Conversions.roundToDecimals(_ltSettings.areaPerPerson, 2).toString()
+					
+				if (LHModelLocator.currUnits == "SI")
+				{
+					_loadUnits = "W / sq.m."
+					_peopleUnits = "sq.m / person"
+					vldEquipPeakLoad.minValue = 3.23
+					vldEquipPeakLoad.maxValue = 32.3
+					vldLightingPeakLoad.minValue = 5.38
+					vldLightingPeakLoad.maxValue = 53.8
+					vldAreaPerPerson.minValue = 0
+					vldAreaPerPerson.maxValue = 1000
+					
+				}
+				else
+				{
+					_loadUnits = "W / sq.ft."
+					_peopleUnits = "sq.ft. / person"
+					vldEquipPeakLoad.minValue = 0.3
+					vldEquipPeakLoad.maxValue = 3
+					vldLightingPeakLoad.minValue = 0.5
+					vldLightingPeakLoad.maxValue = 5
+					vldAreaPerPerson.minValue = 0
+					vldAreaPerPerson.maxValue = 1000
+				}	
+				
+				//clear validators				
+				Validator.validateAll(_validatorsArr)
+			}
+			
+			protected function onEquipPeakLoadChange():void
+			{
+				if (vldEquipPeakLoad.validate())
+					_ltSettings.equipPeakLoad = Number(txtEquipPeakLoad.text)		
+			}
+			
+			protected function 	onLightingPeakLoadChange():void
+			{
+				if (vldLightingPeakLoad.validate())
+					_ltSettings.lightingPeakLoad = Number(txtLightingPeakLoad.text)		
+			}
+				
+			]]>
+		</mx:Script>
+		
+	
+		
+	<mx:NumberValidator id="vldEquipPeakLoad"
+		source="{txtEquipPeakLoad}"
+		property="text" 
+		minValue="0" 
+		maxValue="10000"/>
+			
+	<mx:NumberValidator id="vldLightingPeakLoad" 
+		source="{txtLightingPeakLoad}"
+		property="text"
+		minValue="0"
+		maxValue="10000"/>
+		
+	<mx:NumberValidator id="vldAreaPerPerson"
+		source="{txtAreaPerPerson}"
+		property="text" 
+		minValue="0" 
+		maxValue="10000"/>
+	
+	
+
+   	<mx:Label text="Internal Loads" styleName="longTermOptionsSectionHeader"/>
+   
+	<mx:HBox>		
+		<mx:Label id="lblEquipLoad" text="Equipment Peak Load:" width="150" styleName="longTermOptionsLabel"/>
+		<mx:TextInput id="txtEquipPeakLoad"   
+			width="70" 
+			restrict="0-9" 
+			text="{_equipPeakLoad}" 
+			change="onEquipPeakLoadChange()"/>
+		<mx:Label text="{_loadUnits}" />
+	</mx:HBox>
+
+	<mx:HBox>
+		<mx:Label id="lblLightingLoad" text="Lighting Peak Load:" width="150" styleName="longTermOptionsLabel"/>
+		<mx:TextInput id="txtLightingPeakLoad"  
+			width="70" 
+			restrict="0-9" 
+			text="{_lightingPeakLoad}" 
+			change="onLightingPeakLoadChange()"/>
+		<mx:Label text="{_loadUnits}" />
+	</mx:HBox>
+	
+	<mx:HBox>
+		<mx:Label id="lblAreaPerPerson" text="Area per Person:" width="150" styleName="longTermOptionsLabel"/>			
+		<mx:TextInput 
+			id="txtAreaPerPerson"
+			width="70" 
+			text="{_ltSettings.areaPerPerson}"  
+			restrict="0-9"/>
+		<mx:Label text="{_peopleUnits}"/>
+	</mx:HBox>
+	
+	
+	
+</mx:VBox>
+	    	
+	

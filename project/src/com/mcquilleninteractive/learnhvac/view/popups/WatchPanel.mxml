@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<util:DragPanel xmlns:mx="http://www.adobe.com/2006/mxml"
+	 xmlns:util="com.mcquilleninteractive.learnhvac.util.*"    
+	 xmlns:controls="com.mcquilleninteractive.controls.*" 
+	 backgroundColor="#CCCCCC" 
+	 label="WatchPanel" 
+	 width="100%" 
+	 height="100%"
+	 creationComplete="onCreationComplete()"
+	 title="WATCH PANEL"
+	 >
+		<mx:Script>
+	
+		<![CDATA[
+		
+			import mx.events.DragEvent;
+			import mx.collections.ListCollectionView
+			import mx.collections.ArrayCollection
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+			import com.mcquilleninteractive.learnhvac.event.VisualizationEvent
+			import mx.collections.ListCollectionView
+			import mx.events.ItemClickEvent
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.model.SystemNodeModel
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import com.mcquilleninteractive.learnhvac.event.VisualizationEvent
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			import com.adobe.cairngorm.control.CairngormEvent
+			import mx.binding.utils.BindingUtils
+			import mx.managers.DragManager;
+            import mx.core.DragSource;
+            import mx.controls.Image        
+            import flash.events.KeyboardEvent;
+            
+			public var outputVarsView:ListCollectionView //view of data in a system node ... filters for OUTPUT variables
+			
+			[Embed (source = '/assets/img/sysvar_icon.png')]
+ 			[Bindable]
+ 			public var icoSysVar : Class;
+			
+			[Bindable]
+			public var watchNames : Array = []//keep this array of sysVarNames just to prevent multiple instances of same name
+			public var watchArr : ArrayCollection = new ArrayCollection()
+		
+			public function onCreationComplete():void
+			{
+				
+				//build comboBox
+		    	var model : LHModelLocator = LHModelLocator.getInstance()
+		    					
+				buildOutputGrid()
+			}
+			
+			public function buildOutputGrid():void
+			{
+				
+			}
+			
+						
+			public function doDragDrop(event:DragEvent):void
+			{
+				Logger.debug("#Watch panel: onDragDrop. event: " + event)
+				
+			}
+			
+			public function onKeyUp(event:KeyboardEvent):void
+			{
+				if (event.keyCode == Keyboard.DELETE)
+				{
+					 var removeItems:Array = dgWatchVariables.selectedIndices;
+                    // remove selected items
+                    for (var i:Number = 0; i < removeItems.length; i++) {
+                        dgWatchVariables.dataProvider.removeItemAt(removeItems[i]);
+                    }
+				}
+				
+			}
+			
+			
+			
+			
+			
+					
+		]]>
+		
+		
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%" backgroundColor="0xFFFFFF">
+		
+		
+		<mx:DataGrid id="dgWatchVariables"
+					 width="100%"
+					 height="100%"
+  				  	 paddingTop="0"
+  				  	 dragEnabled="false"
+  				  	 dropEnabled="true"
+  				  	 showDataTips="true"
+  				  	 dataTipField="display_name"
+  				  	 dragDrop="doDragDrop(event)"
+  				  	 keyUp="onKeyUp(event)" 
+  				  	 allowMultipleSelection="true"
+  				  	  >
+			<mx:columns>
+				<mx:DataGridColumn headerText="Name" dataField="name"  />
+				<mx:DataGridColumn headerText="Value" dataField="currValue" width="100" />
+				<mx:DataGridColumn headerText="Units" dataField="units" width="50" />
+			</mx:columns>	
+		</mx:DataGrid>
+		
+	</mx:VBox >
+	
+
+</util:DragPanel>

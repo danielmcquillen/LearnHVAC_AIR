@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+			xmlns:myComps="*"
+			xmlns="*" 
+			width="100%" 
+			height="100%"
+			verticalScrollPolicy="off"
+			horizontalScrollPolicy="off"
+			verticalCenter="0" 
+			horizontalCenter="0"
+			creationComplete="onCC()"
+			xmlns:view="com.mcquilleninteractive.learnhvac.view.*"
+		>
+
+	<mx:Script>
+	    <![CDATA[
+	    	import mx.events.ValidationResultEvent
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			import com.mcquilleninteractive.learnhvac.event.LoginEvent
+			import com.mcquilleninteractive.learnhvac.event.LogoutEvent
+			import com.mcquilleninteractive.learnhvac.event.ApplicationEvent
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import mx.controls.Alert
+			import com.mcquilleninteractive.learnhvac.util.Logger;
+	
+			[Bindable]
+			private var model : LHModelLocator = LHModelLocator.getInstance();
+			
+			
+			private var loggingInAsGuest:Boolean = false
+			
+			private function onCC() : void
+			{
+				CairngormEventDispatcher.getInstance().addEventListener(LogoutEvent.EVENT_LOGOUT, onLogout, false, 0,true)			
+			
+			}
+			
+			public function onLogout(cgEvent:LogoutEvent):void
+			{
+				username.text = ""
+				password.text = ""
+			}		
+	
+			// mutate the loginBtn's click event into a cairngorm event			
+			private function doLogin() : void {
+				// validate the fields
+				var noUsername : Boolean = vUsername.validate().type == ValidationResultEvent.INVALID;
+				var noPassword : Boolean = vPassword.validate().type == ValidationResultEvent.INVALID;
+				if (noUsername || noPassword) {
+					return;
+				}
+				else
+				{
+					// if everything validates, broadcast an event containing the username & password
+					var cgEvent : LoginEvent = new LoginEvent( username.text, 
+																password.text, 
+																loggingInAsGuest );
+					CairngormEventDispatcher.getInstance().dispatchEvent( cgEvent );
+
+					// now that the fields are sent in the event, blank out the login form fields
+					// otherwise they'll still be populated whenever the user returns here
+					// (if the user does not get the uid/passwd correct or when the user logs out)
+					vUsername.enabled = false;
+					username.text = "";
+					vUsername.enabled = true;
+					vPassword.enabled = false;
+					password.text = "";
+					vPassword.enabled = true;
+					}
+				}
+	    
+	    	private function onUsernameChange():void
+	    	{
+	    		if (username.text == "guest")
+	    		{
+	    			password.text = ""
+	    			password.enabled = false
+	    			vPassword.required = false
+	    			loggingInAsGuest = true
+	    			
+	    		}
+	    		else
+	    		{
+					vPassword.required = true
+	    			password. enabled = true
+	    			loggingInAsGuest = false
+	    		}
+	    		
+	    	}
+	    	
+	    
+	    
+	    
+	    ]]>
+	</mx:Script>
+	
+    <mx:StringValidator id="vUsername" source="{ username }" property="text" required="true"/>
+    <mx:StringValidator id="vPassword" source="{ password }" property="text" required="true"/>
+    
+	<mx:Canvas id="splashCanvas" 
+			width="100%" height="100%" 
+			horizontalScrollPolicy="off"
+			verticalScrollPolicy="off"
+			resize="splashScreen.setComponentSize(splashCanvas.width, splashCanvas.height)"  >
+		<myComps:SplashScreen id="splashScreen" x="0" y="0"   />
+	</mx:Canvas>
+    
+	<mx:Panel title="Login" horizontalCenter="0" verticalCenter="0"  width="350">
+	    		
+	    <mx:Canvas  width="100%"  height="190" horizontalScrollPolicy="off" verticalScrollPolicy="off" >
+	    
+	    	<mx:Form id="loginForm" defaultButton="{ btnLogin }" width="100%" height="100%">
+		    	
+		    	<mx:FormItem label="Username:" >
+		    		<mx:TextInput id="username"  change="onUsernameChange()" text="daniel" width="200"/>
+		    	</mx:FormItem>
+		    	<mx:FormItem label="Password:" >
+		    		<mx:TextInput id="password" displayAsPassword="true" text="cruz" width="200"/>
+		    	</mx:FormItem>
+		    	
+		    	<mx:Spacer height="10"/>
+		    	<mx:Canvas textAlign="right" width="280" >
+		    		<mx:Button width="100" height="30" id="btnLogin" label="Login" click="doLogin()" textAlign="center" right="0"/>
+		    	</mx:Canvas>
+		    	
+		    	<mx:Spacer height="10"/>
+		    	<mx:Text height="40" width="270" color="#777777" text="You may login as 'guest' (This will give you access to local scenarios only.)" />
+		    	
+	    	</mx:Form>
+	    	
+	    	
+	    </mx:Canvas>
+	   
+	</mx:Panel>
+	
+ 	
+</mx:Canvas>

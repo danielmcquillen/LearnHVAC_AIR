@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<overlay:OverlayBase  xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:overlay="com.mcquilleninteractive.learnhvac.view.shortterm.overlay.*"
+	width="670" height="500"
+	creationComplete="onCC()" >
+	<mx:Script>
+		<![CDATA[
+			
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+            import com.mcquilleninteractive.learnhvac.util.Logger
+            import mx.controls.Label 
+            import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+   			import com.adobe.cairngorm.control.CairngormEvent
+		            				 
+		    
+			public function onCC():void
+			{		
+				//add listener for scenarioLoaded event --> this will be used to update labels
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
+	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);	
+	   			
+	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
+   				if (LHModelLocator.getInstance().scenarioLoaded == true)
+   				{
+   					scenarioLoaded(null)
+   				}
+   				
+			}
+			
+			
+			
+			public function scenarioLoaded(event:CairngormEvent):void
+			{						
+								
+				scenModel = LHModelLocator.getInstance().scenarioModel
+				
+				//set visibility of labels			
+				lblTAirOut.visible=lblTAirOut_Title.visible=scenModel.getSysVar("TAirOut").visible		
+			
+   				
+			}
+			
+			
+			
+						
+					
+			
+		]]>
+	</mx:Script>
+	<mx:Label id="lblTAirOut_Title" text="Outside Air Dry Bulb Temp: " 
+					color="0xFFFFFF" x="20" y="30"/>
+	<overlay:ValueDisplayLabel id="lblTAirOut" 
+		sysVarName="TAirOut"
+		text="24" styleName="overlayValue"
+					color="0xFFFFFF" x="180" y="30" />
+	
+</overlay:OverlayBase>

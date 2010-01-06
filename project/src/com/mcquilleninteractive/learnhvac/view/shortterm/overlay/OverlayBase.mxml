@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+	
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import mx.containers.Canvas;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.util.Logger
+		
+			protected var currTempUnits:String = "" 
+   			protected var currFlowUnits:String = ""
+   			protected var currFuelUnits:String = ""
+   			protected var currPowerUnits:String = ""
+			protected var model:LHModelLocator
+			protected var scenModel:ScenarioModel
+			
+			
+			
+			
+			public function updateUnits():void
+			{						
+				if (model==null) model = LHModelLocator.getInstance()
+				if (model!=null) 
+				{
+					currTempUnits = LHModelLocator.currentTempUnits()
+					currFlowUnits = " " + model.scenarioModel.getSysVar("BOIwaterflow").units
+					currFuelUnits = " " + model.scenarioModel.getSysVar("BOIfuel").units
+				}
+				
+				
+								
+			}
+		
+			
+		]]>
+	</mx:Script>
+	
+	
+</mx:Canvas>

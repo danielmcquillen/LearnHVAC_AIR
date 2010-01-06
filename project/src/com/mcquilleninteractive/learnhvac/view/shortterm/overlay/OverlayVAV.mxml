@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<overlay:OverlayBase xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:overlay="com.mcquilleninteractive.learnhvac.view.shortterm.overlay.*"
+	creationComplete="onCC()"	
+	width="670" height="500">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+            import com.mcquilleninteractive.learnhvac.util.Logger
+            import mx.controls.Label 
+            import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+   			import com.adobe.cairngorm.control.CairngormEvent
+		    
+		    
+		    [Embed(source="assets/DawaAssets.swf", symbol="VAVLightOn")]
+            [Bindable]
+            public var VAVLightOn:Class;
+            
+		    [Embed(source="assets/DawaAssets.swf", symbol="VAVLightOff")]
+            [Bindable]
+            public var VAVLightOff:Class;
+		    
+		    private var unitsVAVDAMPTp:String 	 
+		    private var unitsFanmAirEnt:String 	 
+		    
+			public function onCC():void
+			{
+				//add listener for scenarioLoaded event --> this will be used to update labels
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
+	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded, false, 0, true)					
+				
+				//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
+   				if (LHModelLocator.getInstance().scenarioLoaded == true)
+   				{
+   					scenarioLoaded(null)
+   				}
+   				
+				
+				//draw lines for UI niceness
+				this.graphics.lineStyle(1,0xCCCCCC,1)
+				this.graphics.moveTo(375,295)
+				this.graphics.lineTo(375,240)
+				this.graphics.drawCircle(375,235,5)
+				
+			}
+			
+			
+			public function scenarioLoaded(event:CairngormEvent):void
+			{							
+				
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel	
+								
+				//listen for short term sim updates
+				CairngormEventDispatcher.getInstance().addEventListener(ScenarioModel.SHORT_TERM_OUTPUT_LOADED, onShortTermOutputLoaded, false, 0, true)
+																
+				onShortTermOutputLoaded(null) //show initial values
+				
+				//set visibility of labels				
+				lblVAVPos.visible = lblVAVPos_Title.visible = scenModel.getSysVar("VAVPos").visible
+				lblVAVDAMPTp.visible = lblVAVDAMPTp_Title.visible = scenModel.getSysVar("VAVDAMPTp").visible
+				lblVAVHCTAirLvg.visible = lblVAVHCTAirLvg_Title.visible = scenModel.getSysVar("VAVHCTAirLvg").visible
+				lblVAVHCTAirEnt.visible = lblVAVHCTAirEnt_Title.visible = scenModel.getSysVar("VAVHCTAirEnt").visible
+				lblFanmAirEnt.visible = lblFanmAirEnt_Title.visible = scenModel.getSysVar("FanmAirEnt").visible
+				lblVAVHCpos.visible = lblVAVHCpos_Title.visible = scenModel.getSysVar("VAVHCpos").visible
+				
+			}
+			
+			public function onShortTermOutputLoaded(cgEvent:CairngormEvent):void
+			{				
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+							
+				//enabled light
+       			setHeatingCoilEnabled(scenModel.getSysVar("VAVHCStatus").currValue)
+			
+			}
+			
+				
+			public function setHeatingCoilEnabled(value:Number):void
+			{
+				if (value==1)
+				{
+					lightOn.visible = true
+					lightOff.visible = false
+					lblReheatCoilStatus.text = "ON"
+				}
+				else
+				{
+					lightOff.visible = true
+					lightOn.visible = false
+					lblReheatCoilStatus.text = "OFF"
+				}
+			}
+			
+			
+		]]>
+	</mx:Script>
+	
+			
+	<mx:Label id="lblVAVPos_Title" text="Damper Position: " styleName="overlayTitle"
+			color="0xFFFFFF" x="100" y="148"  width="150" textAlign="right" />
+	<overlay:ValueDisplayLabel id="lblVAVPos" 
+		text="" 
+		styleName="overlayValue" 
+		sysVarName="VAVPos"
+	    usePercent="true"
+		color="0xFFFFFF" 
+		x="255" y="148" />
+			
+	<mx:Label id="lblVAVHCTAirLvg_Title" text="Air Temp: " styleName="overlayTitle"
+			color="0xFFFFFF" x="35" y="200"  width="100" textAlign="right" />
+	<overlay:ValueDisplayLabel 
+		id="lblVAVHCTAirLvg" 
+		text="0" 
+		styleName="overlayValue" 
+		sysVarName="VAVHCTAirLvg"
+		color="0xFFFFFF" 
+		x="35" y="220" 
+		width="100" 
+		textAlign="right"/>
+	
+			
+	<mx:Label id="lblVAVDAMPTp_Title" text="Air Flow: " styleName="overlayTitle"
+			color="0xFFFFFF" x="350" y="300"  width="100"  />
+	<overlay:ValueDisplayLabel id="lblVAVDAMPTp" text="0" 
+		styleName="overlayValue" 
+		sysVarName="VAVDAMPTp"
+		color="0xFFFFFF" 
+		x="293" y="320" 
+		width="100" 
+		textAlign="right"  />	
+			
+	<mx:Label id="lblVAVHCTAirEnt_Title" text="Air Temp: " styleName="overlayTitle"
+			color="0xFFFFFF" x="420" y="70"  width="100" textAlign="right" />
+	<overlay:ValueDisplayLabel id="lblVAVHCTAirEnt" 
+		text="0" styleName="overlayValue" 
+		sysVarName="VAVHCTAirEnt"
+		color="0xFFFFFF"
+		x="420" y="90"
+		width="100" 
+		textAlign="right"/>	
+			
+	<mx:Label id="lblFanmAirEnt_Title" text="Air Flow: " styleName="overlayTitle"
+			color="0xFFFFFF" x="420" y="120"  width="100" textAlign="right" />
+	<overlay:ValueDisplayLabel id="lblFanmAirEnt" 
+		text="0" 
+		styleName="overlayValue" 
+		sysVarName="FanmAirEnt"
+		color="0xFFFFFF" 
+		x="420" y="140" 
+		width="100" 
+		textAlign="right" />		
+	
+	<mx:Image id="lightOn" 
+				source="{VAVLightOn}"
+				visible="false"
+				toolTip="VAV Heating Coil is enabled" 
+				x="180" y="280"/>
+			
+	<mx:Image id="lightOff"
+				toolTip="VAV Heating Coil is disabled"  
+				source="{VAVLightOff}" 
+				x="180" y="280"/>
+				
+		
+			
+	<mx:Label id="lblTEMP_Title" 
+		text="Reheat Coil: " 
+		styleName="overlayTitle"
+		color="0xFFFFFF"
+		x="70" 
+		y="305"  
+		width="100" 
+		textAlign="right" />
+		
+	<mx:Label id="lblReheatCoilStatus" 
+		text="OFF" 
+		styleName="overlayTitle" 
+		color="0xFFFFFF" 
+		x="172" 
+		y="305"
+		width="100" 
+		textAlign="left"/>		
+		
+	<mx:Label id="lblVAVHCpos_Title"
+		text="Valve Pos.: "
+		styleName="overlayTitle"
+		toolTip="VAV Reheat Coil Valve Position (percent open)"
+		x="70" 
+		y="320"
+		width="100" 
+		textAlign="right"/>
+		
+	<overlay:ValueDisplayLabel 	
+		id="lblVAVHCpos"
+		sysVarName="VAVHCpos"
+		usePercent="true"
+		text=""
+		styleName="overlayValue"
+		toolTip="VAV Reheat Coil Valve Position (percent open)"
+		x="172"
+		y="320"
+		width="100" 
+		textAlign="left"/>
+	
+	
+	
+	
+</overlay:OverlayBase>

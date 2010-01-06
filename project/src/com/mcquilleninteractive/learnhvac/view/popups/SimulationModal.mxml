@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:myComps="*"
+	width="380"
+	height="170"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+    paddingLeft="20"
+    paddingTop="20"
+    paddingRight="20"
+    paddingBottom="10"
+    horizontalAlign="center"
+    initialize="onInit()"
+	>
+	
+	
+	<mx:Script>
+		<![CDATA[
+		
+		import com.mcquilleninteractive.learnhvac.util.Logger
+		import com.adobe.cairngorm.control.CairngormEventDispatcher
+		import mx.managers.PopUpManager
+		
+		public function onInit():void
+		{
+				
+		}	
+		
+
+		private function removeListeners():void
+		{
+		}
+		
+		]]>
+	</mx:Script>
+	
+	<mx:Canvas>
+		
+		<mx:Label id="lblStatus" x="0" y="5" text="Initializing scenario..." textAlign="center" width="100%" height="100%"/>
+		
+		<myComps:LoadingBarSmall x="220" y="30" />
+			
+	</mx:Canvas>	
+
+		
+</mx:Panel>

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:view="com.mcquilleninteractive.learnhvac.view.*" 
+	xmlns:head="com.mcquilleninteractive.learnhvac.view.layout.*"
+	xmlns:myComps="*"
+	creationComplete="onCC()"
+    show="onShow()"
+	width="100%" 
+	verticalGap="0"
+	height="100%" xmlns:longterm="com.mcquilleninteractive.learnhvac.view.longterm.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel;
+			import com.mcquilleninteractive.learnhvac.view.longterm.ILongTermOptionsPanel;
+			import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel;
+			import mx.collections.XMLListCollection;
+			import mx.collections.ArrayCollection;
+			import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent
+			import com.mcquilleninteractive.learnhvac.view.popups.RunningEPlusModal
+			import com.mcquilleninteractive.learnhvac.vo.WeatherFilesVO
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable	
+			import com.mcquilleninteractive.learnhvac.model.SparkRunsModel	
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent	
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+			import com.adobe.cairngorm.control.CairngormEvent
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			import mx.managers.PopUpManager
+			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
+			import mx.events.SliderEvent
+			import mx.validators.Validator
+			import mx.controls.Alert
+			import mx.controls.textClasses.TextRange       
+			import mx.events.ItemClickEvent
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import com.mcquilleninteractive.learnhvac.util.Conversions
+										 
+			private var _validators:Array
+			private var errorMsgArr:Array
+			private var weatherFiles:XML
+			
+			private var longTermInputPanelsArr:Array 
+						
+			[Bindable]
+			private var currElevationView:String  //remembers which side of building is shown in elevationView
+			
+			
+			[Embed(source='assets/img/black_arrow.png')]
+			[Bindable]
+			private var BlackArrow:Class
+			
+				
+			[Embed('assets/img/control_bar_divider.png')]
+			[Bindable]
+			private var ControlBarDivider:Class;
+					
+			
+			[Bindable]
+			public var elevationViewSetting:Array = [{data:"north", label:"north elevation"}, 
+														{data:"south", label:"south elevation"}, 
+														{data:"west",label:"west elevation"}, 
+														{data:"east", label:"east elevation"}];
+				
+			public function onCC():void
+			{
+				
+				longTermInputPanelsArr = [runOptions, buildingPropertyOptions, environmentOptions, loadOptions]
+				
+				for each (var options:ILongTermOptionsPanel in longTermInputPanelsArr)
+				{
+					options.setViewRefs(elevationView, zoneSelector)
+					options.initializeValues()
+				}
+													
+				// setup listeners
+				CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0,true)
+				CairngormEventDispatcher.getInstance().addEventListener(SetUnitsEvent.EVENT_SET_UNITS_TO_IP, updateUnits, false, 0,true)
+				CairngormEventDispatcher.getInstance().addEventListener(SetUnitsEvent.EVENT_SET_UNITS_TO_SI, updateUnits, false, 0,true)
+				CairngormEventDispatcher.getInstance().addEventListener(LongTermSimulationEvent.EVENT_CANCEL, onCancelEPlusRun, false, 0,true)			
+				
+				
+			}
+									
+			public function onElevationViewChange(event:Event):void
+			{
+				currElevationView = event.currentTarget.selectedItem.data	
+				buildingPropertyOptions.setElevationView(currElevationView)
+				
+				var _ltSettings:LTSettingsModel = LHModelLocator.getInstance().scenarioModel.ltSettingsModel
+
+				//draw floors
+				var width:Number = buildingPropertyOptions.getWidthForElevation()
+				var windowRatio:Number = buildingPropertyOptions.getWindowRatioForElevation()
+				
+				elevationView.drawFloors(width, _ltSettings.stories, _ltSettings.storyHeight, windowRatio, _ltSettings.windowStyle)
+			}						
+														
+			
+			public function onShow():void
+			{
+				// when this form is shown, grab the relevant vars from the model
+				// to display to user for reference. Note that the application should have
+				// shut the simulation down when the user navigated to this form,
+				// so the SPARK variables should not change.
+				
+				runOptions.resetValues()
+												
+			}
+			
+			
+			public function updateUnits(event:Event):void
+			{
+				//update displays for new units				
+				for each (var options:ILongTermOptionsPanel in longTermInputPanelsArr)
+				{
+					options.unitsUpdate()
+				}
+			}
+						
+			public function onScenarioLoaded(event:CairngormEvent):void
+			{			
+				for each (var options:ILongTermOptionsPanel in longTermInputPanelsArr)
+				{
+					options.onScenarioLoaded()
+				}			
+				
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				
+				zoneSelector.selectZone(scenModel.ltSettingsModel.zoneOfInterest)
+				elevationView.setFloorOfInterest(scenModel.ltSettingsModel.floorOfInterest)
+			}		
+				
+		
+						
+			private function runValidators():Boolean
+			{				
+				for each (var options:ILongTermOptionsPanel in longTermInputPanelsArr)
+				{
+					if (options.isValid()==false) 
+					{
+						mx.controls.Alert.show(options.errorMsg)
+						return false
+					}
+				}
+				
+				
+				return true
+			}
+			
+			
+			public function startSimulation():void
+			{	
+				//Don't start if short-term sim is running
+				if (LHModelLocator.getInstance().scenarioModel.ahuStatus == ScenarioModel.AHU_ON)
+				{
+					Alert.show("You can't run the short-term and long-term simulations as the same time. Please stop the short-term simulation before starting the long-term.")
+					return
+				}
+				
+				var success:Boolean = runValidators()
+				if (success)
+				{					
+					runEPlus()
+				}
+				else
+				{
+					Logger.error("validators didn't pass.", this)
+				}
+			}
+			
+			public function onCancelEPlusRun(event:LongTermSimulationEvent):void
+			{
+				//Nothing to do. Just allow user to start entering values again...
+			}
+			
+			protected function onZoneSelectorChange(event:Event):void
+			{
+				zoneSelector.setComponentSize(zsCanvas.width, zsCanvas.height)
+				zsCanvas.invalidateSize()
+			}
+			
+			public function runEPlus():void
+			{
+				Logger.debug("runEPlus()", this)
+																															
+				//launch event
+				var cgEvent:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.EVENT_RUN, this)
+				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+			}
+														
+			private function onElevationViewResize():void
+			{
+				elevationView.setComponentSize(evCanvas.width, evCanvas.height); 
+			}
+			
+			protected function onBuildingPropsChange(event:Event):void
+			{
+				onZoneSelectorResize()
+			}
+			
+			/* updates the size of the zoneSelector after a view has changes the zoneSelector properties 
+				(the options panels don't know what the zsCanvas height and width are  so this operation has to happen in this class) */
+			private function onZoneSelectorResize():void
+			{
+				zoneSelector.setComponentSize(zsCanvas.width, zsCanvas.height)
+				zsCanvas.invalidateProperties()
+			}
+			
+		]]>
+		
+		
+	</mx:Script>
+	
+	<longterm:LongTermControlBar width="100%" onStartLTSimulation="startSimulation()"/>
+				
+		
+	<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="5" paddingBottom="5" paddingTop="10" >
+	
+			
+		<!-- ******* LONG-TERM INPUT PANEL******** -->	
+		<mx:VBox width="450" height="100%"
+		    	styleName="glassPods"	
+	    		verticalGap="0"
+			>			
+			
+			<head:GlassHeaders headerTitle="SIMULATION CONTROLS"/>			
+		
+			<mx:TabNavigator id="tbnSetup"  creationPolicy="all"  
+				width="100%" 
+				height="100%" 
+				styleName="tabNavigator"  
+				backgroundAlpha="1" 
+				tabOffset="5"
+			    paddingTop="0"
+			    paddingLeft="0"
+				>		
+				<longterm:LTOptions id="runOptions"/>				
+				<longterm:EnvironmentOptions id="environmentOptions" />
+				<longterm:BuildingPropertyOptions id="buildingPropertyOptions" buildingPropsChange="onBuildingPropsChange(event)" />
+				<longterm:LoadOptions id="loadOptions" />	   		
+	   		 </mx:TabNavigator>
+	   		 
+	   	</mx:VBox>
+		
+	
+		<mx:Canvas width="100%" height="100%">
+		
+			<!-- ******* LOADING SCREEN ******** -->
+			<mx:Canvas id="loadingScreen" width="100%" height="100%" visible = "false">		
+				<mx:VBox id="loadingBar"  
+						x="250"
+						y="200"
+						textAlign="center">
+					<mx:Label textAlign="center" x="100" width="300"
+						text="Building Energy Plus files..." 
+						color="0xFFFFFF" fontWeight="bold"/>
+					<mx:Image source="@Embed('/assets/DawaAssets.swf', symbol='loadingBar')"/>
+				</mx:VBox>
+			</mx:Canvas>
+			
+			<!-- ******* THREE BUILDING SETUP VIEWS ******** -->
+							
+			<!--<mx:HDividedBox height="100%" width="100%">-->
+			<!--<mx:VDividedBox width="100%" height="100%">-->
+			<mx:VBox width="100%" height="100%">
+			
+					<mx:Canvas id="zsCanvas" 
+							width="100%" height="50%" 
+							minWidth="250"
+							minHeight="250" 
+							horizontalScrollPolicy="off"
+							verticalScrollPolicy="off"
+							resize="onZoneSelectorResize()"  >
+						<myComps:ZoneSelector id="zoneSelector" />		
+					</mx:Canvas>
+													
+					<mx:Canvas id="evCanvas"
+							width="100%"
+							height="50%"
+							minWidth="250"
+							minHeight="250"
+							horizontalScrollPolicy="off"
+							verticalScrollPolicy="off"
+							resize="onElevationViewResize()"  >
+						
+						<myComps:ElevationView id="elevationView"/>
+						
+						<mx:ComboBox id="cboElevationView" 
+								dataProvider="{elevationViewSetting}" 
+								change="onElevationViewChange(event)"
+								x="10" y="5"
+								/>
+								
+					</mx:Canvas>
+					
+			</mx:VBox>
+								
+		</mx:Canvas>
+
+	</mx:HBox>
+		
+</mx:VBox>

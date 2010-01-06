@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<util:DragPanel xmlns:mx="http://www.adobe.com/2006/mxml" 
+				xmlns:util="com.mcquilleninteractive.learnhvac.util.*"
+				title="DEBUG" 
+				creationComplete="onCreationComplete()"
+			    close="onPanelClose(event)"
+				>
+		
+		<mx:Script>
+			<![CDATA[
+				import com.mcquilleninteractive.learnhvac.model.EPlusData;
+				import com.mcquilleninteractive.learnhvac.vo.SparkInputVarsVO;
+				import com.mcquilleninteractive.learnhvac.event.DebugEvent;
+				import com.mcquilleninteractive.learnhvac.command.LongTermSimulationCommand;
+				import com.mcquilleninteractive.learnhvac.business.LongTermSimulationDelegate;
+				import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+				import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+				import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
+				import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel;
+				import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+				import com.mcquilleninteractive.learnhvac.event.AutoEvent
+				import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			
+				import mx.logging.Log
+				import mx.logging.LogEventLevel
+				import com.adobe.onair.logging.TextAreaTarget
+			
+				public var textAreaTarget:TextAreaTarget
+				
+				public function onCreationComplete():void
+				{
+					textAreaTarget = new TextAreaTarget(txtDebug);
+					textAreaTarget.includeDate = true
+					textAreaTarget.includeTime = true
+					textAreaTarget.includeLevel = true
+					textAreaTarget.level = LogEventLevel.DEBUG
+					Log.addTarget(textAreaTarget)
+					txtDebug.text += LHModelLocator.getInstance().buildVersion
+				}
+			
+				public function onPanelClose(evt:Event):void
+				{
+					Log.removeTarget(textAreaTarget)
+				}
+			
+				public function scrollDown():void
+				{
+					txtDebug.verticalScrollPosition = txtDebug.maxVerticalScrollPosition
+				}
+				
+				public function submitCommand():void
+				{
+					var cmd:String = txtCmd.text
+					var args:Array = cmd.split(":")
+					
+					txtCmd.text = ""
+					
+					var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+					var msg:String = "\n"
+					var sysNode:SystemNodeModel
+					var sysVar:SystemVariable
+					switch (args[0])
+					{
+						
+						case "help":
+							msg = "\n\nHELP\n======\n\nThis debugger has a few simple commands that help provide insight into the current state of SPARK (E+ info coming soon)" +
+									"\n  vars:all         - list all SPARK variables and their current values  (SI and IP)" +
+									"\n  vars:input       - list all input SPARK variables and their current values  (SI and IP)" + 
+									"\n  vars:output      - list all output SPARK variables and their current values  (SI and IP)" +
+									"\n  vars:[varname]   - list specific SPARK variables and current values  (SI and IP) e.g. vars:TAirOut"+
+									"\n\n  vars:LTtoST:[run1/run2]   - list specific SPARK variables and current values  (SI and IP) e.g. vars:TAirOut"+
+									"\n\n  load:eplus:[run1/run2]   - load long-term test data into 'run1' or 'run2'" +
+									"\n\n  testMode:[false/true]   - turn test mode on/off. In test mode, simulations use stored data (SPARK and E+ are not run)."
+							break
+						
+						case "testMode":
+						
+							if (args[1]=="true")
+							{							
+								LHModelLocator.testMode = true	
+							}
+							else
+							{
+								LHModelLocator.testMode = false
+							}
+						
+							break
+						
+						case "load":
+							if (args[1]=="eplus")
+							{
+								var evt:DebugEvent = new DebugEvent(DebugEvent.LOAD_TEST_EPLUS_DATA_EVENT)
+								if (args[2]=="run1")
+								{
+									evt.runID = EPlusRunsModel.RUN_1
+									CairngormEventDispatcher.getInstance().dispatchEvent(evt)
+								}
+								else if (args[2] == "run2")
+								{
+									evt.runID = EPlusRunsModel.RUN_2
+									CairngormEventDispatcher.getInstance().dispatchEvent(evt)
+								}
+								else
+								{
+									msg += "\nUnrecognized run : " + args[2]
+								}
+							}
+							break
+						
+						case "vars":
+						
+							msg = "\nSYSTEM VARIABLES: \n ===========================\n"
+							msg = "\nNAME                     SI                 IP\n\n"
+						
+							switch(args[1])
+							{
+								case "all" :
+									for each (sysNode in scenModel.sysNodesArr)
+									{
+										for each (sysVar in sysNode.sysVarsArr)
+										{
+											msg = msg + sysVar.name + addSpaces(sysVar.name, 25) + sysVar.baseSIValue + addSpaces(sysVar.baseSIValue.toString(),  20) + sysVar.IPValue + "\n"
+										}
+									}
+									break
+							
+								case "input":
+							
+									for each (sysNode in scenModel.sysNodesArr)
+									{
+										for each (sysVar in sysNode.sysVarsArr)
+										{
+											if (sysVar.typeID=="INPUT") msg = msg + sysVar.name + addSpaces(sysVar.name, 25) + sysVar.baseSIValue + addSpaces(sysVar.baseSIValue.toString(), 20) + sysVar.IPValue + "\n"
+										}
+									}
+									break
+								
+								case "output":
+								
+									for each (sysNode in scenModel.sysNodesArr)
+									{
+										for each (sysVar in sysNode.sysVarsArr)
+										{
+											if (sysVar.typeID=="OUTPUT") msg = msg + sysVar.name + addSpaces(sysVar.name, 25) + sysVar.baseSIValue + addSpaces(sysVar.baseSIValue.toString(), 20) + sysVar.IPValue + "\n"
+										}
+									}
+									break
+								
+								case "LTtoST":
+									
+									var rowIndex:Number = -1
+									
+									msg = "\n\nLT -> ST /n ------------ /n Long-term simulation variables imported into short-term sim:\n\n" 
+									if (args[2]=="run2")
+									{
+										var runID:String = EPlusRunsModel.RUN_2
+									}
+									else if (args[2]=="run1")
+									{
+										runID = EPlusRunsModel.RUN_1
+									}
+									
+									if (args[3]!=null)
+									{
+										rowIndex = Number(args[3])
+									}				
+									
+									//get SparkInputVarsVOs and show values of each for each date
+									var ePlusData:EPlusData = LHModelLocator.getInstance().scenarioModel.ePlusRunsModel.getEPlusData(runID)
+									var zoneDataArr:Array = ePlusData.zoneDataArr
+									var dateArr:Array = ePlusData.dataArr[ePlusData.dateTimeID]
+									var len:uint = zoneDataArr.length
+									
+									if (rowIndex >= 0)
+									{
+										var d:Date = new Date(dateArr[i])
+										msg += "\nDate: " + d.toDateString() + " " + d.toTimeString()
+										for (var j:uint=0;j<3;j++)
+										{
+											msg += "\n  Floor: " + (j+1).toString()
+											for (var k:uint=0;k<5;k++)
+											{
+												var vo:SparkInputVarsVO = zoneDataArr[i][j][k] as SparkInputVarsVO
+												msg += "\n    Zone: " + (k + 1).toString()
+												msg += "\n        equip.: " + vo._electricEquipmentHeatGain
+												msg += "\n      lighting: " + vo._lightingHeatGain
+												msg += "\n        people: " + vo._peopleHeatGain
+												msg += "\n        RmQSens: " + vo.getRmQSens()
+												msg += "\n        tAirOut: " + vo.tAirOut
+												msg += "\n        twAirOut: " + vo.twAirOut
+												
+											}
+										}
+											
+									}
+									else
+									{
+										for (var i:uint=0;i<len;i++)
+										{
+											d = new Date(dateArr[i])
+											msg += "\nDate: " + d.toDateString() + " " + d.toTimeString()
+											for (j=0;j<3;j++)
+											{
+												msg += "\n  Floor: " + (j+1).toString()
+												for (k=0;k<5;k++)
+												{
+													vo = zoneDataArr[i][j][k] as SparkInputVarsVO
+													msg += "\n    Zone: " + (k + 1).toString()
+													msg += "\n        equip.: " + vo._electricEquipmentHeatGain
+													msg += "\n      lighting: " + vo._lightingHeatGain
+													msg += "\n        people: " + vo._peopleHeatGain
+													msg += "\n        RmQSens: " + vo.getRmQSens()
+													msg += "\n        tAirOut: " + vo.tAirOut
+													msg += "\n        twAirOut: " + vo.twAirOut
+													
+												}
+											}
+										}
+									}						
+									break
+																		
+								default:
+								
+									sysVar = scenModel.getSysVar(args[1])
+									var s:String = sysVar.name + " (" + sysVar.typeID + ")  "
+									if (sysVar!=null)
+									{
+										msg = msg + s + addSpaces(s, 25) + sysVar.baseSIValue + addSpaces(sysVar.baseSIValue.toString(), 20) + sysVar.IPValue + "\n"
+									}	
+									else
+									{
+										msg = msg + "can't find variable named " + args[1]
+									}
+							}
+							
+													
+						case "inputPanel":
+							var autoEvent:AutoEvent = new AutoEvent(AutoEvent.EVENT_INPUT_PANEL, args[1], null)
+							CairngormEventDispatcher.getInstance().dispatchEvent(autoEvent)
+							break
+						
+					
+							
+							
+							break
+							
+						default:
+							msg = "\n unrecognized command"
+					}											
+				
+					txtDebug.text = txtDebug.text + msg
+				}
+				
+				
+				protected function addSpaces(string:String, tabPosition:Number):String
+				{
+					var numSpaces:int = tabPosition - string.length
+					var m:String = ""
+					for (var i:uint=0;i<numSpaces;i++)
+					{
+						m = m + " " 
+					}
+					return m
+				}
+			]]>
+		</mx:Script>
+		
+		<mx:TextArea id="txtDebug" 
+			width="100%" 
+			height="100%"
+		    liveScrolling="true"	
+		    updateComplete="scrollDown()"
+		    styleName="debugPanel"
+			 />
+			 
+		<mx:HBox width="100%">
+			<mx:TextInput id="txtCmd"
+				width="100%"
+				height="100%"
+				enter="submitCommand()"
+			/>
+		
+			<mx:Button id="btnCmd"
+				click="submitCommand()"
+				label="Enter"
+				width="70"
+			/>
+		</mx:HBox>
+		
+</util:DragPanel>

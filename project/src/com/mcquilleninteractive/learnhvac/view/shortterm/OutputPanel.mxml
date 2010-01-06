@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<util:DragPanel xmlns:mx="http://www.adobe.com/2006/mxml"
+	 xmlns:util="com.mcquilleninteractive.learnhvac.util.*"    
+	 xmlns:controls="com.mcquilleninteractive.controls.*" 
+	 backgroundColor="#CCCCCC" 
+	 label="OutputArea" 
+	 width="100%" 
+	 height="100%"
+	 creationComplete="onCreationComplete()"
+	 title="OUTPUT PANEL"
+	 >
+		<mx:Script>
+	
+		<![CDATA[
+		
+			import mx.events.DragEvent;
+			import mx.collections.ListCollectionView
+			import mx.collections.ArrayCollection
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+			import com.mcquilleninteractive.learnhvac.event.VisualizationEvent
+			import mx.collections.ListCollectionView
+			import mx.events.ItemClickEvent
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.model.SystemNodeModel
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			import com.adobe.cairngorm.control.CairngormEvent
+			import mx.binding.utils.BindingUtils
+			import mx.managers.DragManager;
+            import mx.core.DragSource;
+            import mx.controls.Image
+            
+			public var outputVarsView:ListCollectionView //view of data in a system node ... filters for OUTPUT variables
+			
+		
+			[Embed (source = '/assets/img/brick.png')]
+ 			[Bindable]
+ 			public var icoSysVar : Class;
+			
+			
+			public function onCreationComplete():void
+			{
+				
+   				CairngormEventDispatcher.getInstance().addEventListener(VisualizationEvent.EVENT_NAVIGATION_CHANGE_NODE, onCurrNodeIndexChange)
+   				
+				//build comboBox
+		    	var model : LHModelLocator = LHModelLocator.getInstance()
+		    	
+		    	//setup dataproviders
+				cboSysNode.dataProvider = model.scenarioModel.sysNodesArr
+				
+				buildOutputGrid()
+			}
+			
+			public function buildOutputGrid():void
+			{
+				updateOutputValueView(0)
+			}
+			
+			
+			public function filterOutputGrid (item:Object):Boolean {
+				return item.typeID=="OUTPUT" && item.applicationID=="PUBLIC" && item.is_fault == false
+			}
+			
+			public function updateOutputValueView(newIndex:Number):void
+			{
+				//update dg to selectedIndex
+				var sysVarsArr:ArrayCollection = LHModelLocator.getInstance().scenarioModel.sysNodesArr.getItemAt(newIndex).sysVarsArr
+				Logger.debug("#OP: updateOutputValueView() sysVarsArr.length: " + sysVarsArr.length)
+				outputVarsView = new ListCollectionView(sysVarsArr)
+				outputVarsView.filterFunction = filterOutputGrid
+				dgOutputVariables.dataProvider = outputVarsView
+				outputVarsView.refresh()
+				
+			}
+								
+			public function onCurrNodeIndexChange(event:CairngormEvent):void
+			{ 
+				//update the combo box
+				var newIndex:Number = LHModelLocator.getInstance().scenarioModel.currNodeIndex
+				cboSysNode.selectedIndex = newIndex
+				updateOutputValueView(newIndex)
+			}
+			
+			public function comboNodeSelect(event:Event):void
+			{
+				var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				var selectedIndex:Number = event.target.selectedIndex;
+				updateOutputValueView(selectedIndex)		
+			}
+			
+			public function onDragComplete(event:DragEvent):void
+			{
+				//do nothing.
+			}
+			
+			
+			public function onDrag(event:MouseEvent):void
+			{
+				try
+				{
+					Logger.debug("#OutputPanel: onDrag" )
+			 		// Get the drag initiator component from the event object.
+               		var dragInitiator:DataGrid = event.currentTarget as DataGrid;
+    
+                	// Create a DragSource object.
+                	var dragSource:DragSource = new DragSource();
+    
+    				var myArr:Array = [event.currentTarget.selectedItem]
+    	
+               	 	dragSource.addData(myArr, "items")
+               	 	
+               	 	Logger.debug("#OutputPanel: dragging. myArr= " + myArr.toString())
+    
+               	 	// Create a copy of the coin image to use as a drag proxy.
+                	var dragProxy:Image = new Image();
+                	dragProxy.source = icoSysVar
+    
+                	// Call the DragManager doDrag() method to start the drag. 
+                	dragProxy.x = mouseX - 25
+                	dragProxy.y = mouseY - 75
+             		DragManager.doDrag(dragInitiator, dragSource, event, dragProxy, 0, 0, 1);
+				}
+				catch(e:Error)
+				{
+					Logger.error("#OutputPanel: onDrag() error: " + e.message)
+				}
+			}
+					
+		]]>
+		
+		
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%" backgroundColor="0xFFFFFF">
+		
+		<mx:HBox paddingLeft="5" paddingTop="5">
+		
+			<mx:ComboBox id="cboSysNode"
+						paddingLeft="5"
+						labelField="name" 
+						rowCount="9"
+						change="comboNodeSelect(event)"/>	
+		</mx:HBox>
+		
+		<mx:DataGrid id="dgOutputVariables"
+					 width="100%"
+					 height="100%"
+  				  	 paddingTop="0"
+  				  	 mouseDown="onDrag(event)"
+  				  	 dragEnabled="true"
+  				  	 dropEnabled="false"
+	 				 dragComplete="onDragComplete(event)"
+  				  	  >
+			<mx:columns>
+				<mx:DataGridColumn headerText="Name" dataField="display_name" />
+				<mx:DataGridColumn headerText="Variable" dataField="name" />
+				<mx:DataGridColumn headerText="Value" dataField="currValue" width="100" />
+				<mx:DataGridColumn headerText="Units" dataField="units" width="50" />
+			</mx:columns>	
+		</mx:DataGrid>
+		
+	</mx:VBox >
+	
+
+</util:DragPanel>

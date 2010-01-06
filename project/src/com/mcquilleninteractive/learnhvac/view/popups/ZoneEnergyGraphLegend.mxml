@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <mx:Legend xmlns:mx="http://www.adobe.com/2006/mxml"
+ width="150" paddingBottom="20" >
+
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.util.ColorSetting;
+			import mx.collections.ArrayCollection;
+		
+			
+		]]>
+	</mx:Script>
+	
+	
+     <mx:LegendItem label="Equipment Power" fontWeight="bold">
+       <mx:fill>
+        <mx:SolidColor color="{ColorSetting.equipmentColor}"/>
+       </mx:fill>
+     </mx:LegendItem>
+	
+	
+	 <mx:LegendItem label="Lighting Power" fontWeight="bold">
+       <mx:fill>
+        <mx:SolidColor color="{ColorSetting.lightingColor}"/>
+       </mx:fill>
+     </mx:LegendItem>	
+	
+	 <mx:LegendItem label="Reheat Coil Power" fontWeight="bold">	 
+       <mx:fill>
+        <mx:SolidColor color="{ColorSetting.heatingColor}"/>
+       </mx:fill>
+     </mx:LegendItem>
+      
+    
+       
+        
+       
+       
+
+</mx:Legend>

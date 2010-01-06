@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+ 	xmlns:graphing="com.mcquilleninteractive.learnhvac.view.graphing.*"
+ 	width="100"  verticalGap="2">
+
+	<mx:Script>
+		<![CDATA[
+		
+			import com.mcquilleninteractive.learnhvac.view.analysis.EnergyOverview
+			import com.mcquilleninteractive.learnhvac.view.graphing.EnergyOverviewChart
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import com.mcquilleninteractive.learnhvac.util.ColorSetting
+			import mx.charts.LineChart
+			
+			public var chart:EnergyOverviewChart
+			
+			public function onLegendClick(event:Event):void
+			{
+				Logger.debug("#EULegend: click : " + event.currentTarget.label)
+				var item:EnergyUseLegendItem = EnergyUseLegendItem(event.currentTarget)
+				item.live = !(item.live)
+			
+				//update graph
+				chart.toggleDataFieldVisibility(item.dataField, item.live)
+			}
+			
+			
+			
+			
+		]]>
+	</mx:Script>
+
+        <graphing:EnergyUseLegendItem title="Total" dataField="total" itemColor="{ColorSetting.totalColor}" click="onLegendClick(event)" />
+        
+        <graphing:EnergyUseLegendItem title="Lighting" dataField="lighting" itemColor="{ColorSetting.lightingColor}" click="onLegendClick(event)" />
+         
+        <graphing:EnergyUseLegendItem title="Fans" dataField="fans"  itemColor="{ColorSetting.fansColor}"  click="onLegendClick(event)"/>
+      
+        <graphing:EnergyUseLegendItem  title="Cooling" dataField="cooling" itemColor="{ColorSetting.coolingColor}"  click="onLegendClick(event)"/>
+          
+       <graphing:EnergyUseLegendItem title="Heating" dataField="heating" itemColor="{ColorSetting.heatingColor}"   click="onLegendClick(event)"/>
+          
+        <graphing:EnergyUseLegendItem  title="Pumps" dataField="pumps" itemColor="{ColorSetting.pumpsColor}" click="onLegendClick(event)"/>
+                  
+       <graphing:EnergyUseLegendItem  title="Equipment" dataField="equipment"  itemColor="{ColorSetting.equipmentColor}" click="onLegendClick(event)"/>
+         
+
+</mx:VBox>

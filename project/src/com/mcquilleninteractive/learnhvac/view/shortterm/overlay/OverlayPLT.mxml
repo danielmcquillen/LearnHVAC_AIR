@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<overlay:OverlayBase  xmlns:mx="http://www.adobe.com/2006/mxml" 
+    	xmlns:overlay="com.mcquilleninteractive.learnhvac.view.shortterm.overlay.*"
+		width="670" height="500"  
+		creationComplete="onCC()"
+	    horizontalScrollPolicy="off"
+		>
+	
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+            import com.mcquilleninteractive.learnhvac.util.Logger
+            import mx.controls.Label 
+            import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+   			import com.adobe.cairngorm.control.CairngormEvent
+		            			        			
+		            			
+			public function onCC():void
+			{
+				
+				//add listener for scenarioLoaded event --> this will be used to update labels
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
+	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);
+	   					
+	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
+   				if (LHModelLocator.getInstance().scenarioLoaded == true)
+   				{
+   					scenarioLoaded(null)
+   				}
+				
+   								
+				//draw little helpful lines on overlay
+				var g:Graphics = this.graphics
+				g.lineStyle(1,0xFFFFFF,1)
+				
+				
+				//chilled water supply
+				g.moveTo(567,347)
+				g.lineTo(517,347)
+				g.drawCircle(512,347,5)
+				
+				//chilled water return
+				g.moveTo(565,395)
+				g.lineTo(540,375)
+				g.drawCircle(537,372,5)
+				
+				//supply air temp
+				g.moveTo(567,235)
+				g.lineTo(545,250)
+				
+				
+				//CC Value
+				g.moveTo(532,145)
+				g.lineTo(512,165)
+				
+				
+				//HC Value
+				g.moveTo(486,108)
+				g.lineTo(466,128)
+				
+				
+				//OA damper
+				g.lineStyle(1, 0x000000, 1)
+				g.moveTo(444,62)
+				g.lineTo(424,62)
+				
+				g.lineStyle(1, 0xFFFFFF, 1)
+				
+				//return air temp
+				g.moveTo(263,27)
+				g.lineTo(290,27)
+				
+				//cooling tower fan
+				g.moveTo(110,370)
+				g.lineTo(138,370)
+				
+				
+				//hot water supply temp
+				
+				g.moveTo(335,163)
+				g.lineTo(335,200)
+				g.drawCircle(335,205,5)
+				
+				//hot water return temp
+				g.moveTo(370,225)
+				g.lineTo(370,210)
+				g.drawCircle(370,205,5)
+				
+				//condensor supply temp
+				g.moveTo(360, 345)
+				g.lineTo(360,363)
+				g.drawCircle(360, 368, 5)
+				
+				//condensor return temp
+				g.moveTo(310, 345)
+				g.lineTo(310,370)
+				g.drawCircle(310, 375, 5)
+				
+			}
+			
+			public function scenarioLoaded(event:CairngormEvent):void
+			{						
+						
+				scenModel = LHModelLocator.getInstance().scenarioModel
+																						
+				//set visibility of labels			
+				lblMXTRet.visible=lblMXTRet_Title.visible=scenModel.getSysVar("MXTRet").visible
+				lblBOIfuel.visible=lblBOIfuel_Title.visible=scenModel.getSysVar("BOIfuel").visible
+				lblCHLcomppow.visible=lblCHLcomppow_Title.visible=scenModel.getSysVar("CHLcomppow").visible
+				lblCHLcondout.visible=lblCHLcondout_Title.visible=scenModel.getSysVar("CHLcondout").visible
+				lblCTWtout.visible=lblCTWtout_Title.visible=scenModel.getSysVar("CTWtout").visible
+				lblCHLevapin.visible=lblCHLevapin_Title.visible=scenModel.getSysVar("CHLevapin").visible
+				lblCHLevapout.visible=lblCHLevapout_Title.visible=scenModel.getSysVar("CHLevapout").visible
+				lblTAirSup.visible=lblTAirSup_Title.visible=scenModel.getSysVar("TAirSup").visible
+				lblCCposReal.visible=lblCCposReal_Title.visible=scenModel.getSysVar("CCposReal").visible
+				lblHCposReal.visible=lblHCposReal_Title.visible=scenModel.getSysVar("HCposReal").visible
+				lblMXOAPosDamperReal.visible=lblMXOAPosDamperReal_Title.visible=scenModel.getSysVar("MXOAPosDamperReal").visible
+				lblBOItout.visible=lblBOItout_Title.visible=scenModel.getSysVar("BOItout").visible
+				lblBOItin.visible=lblBOItin_Title.visible=scenModel.getSysVar("BOItin").visible
+			
+			}
+		]]>
+	</mx:Script>	
+	 
+	<!--  
+	<mx:Image source="assets/img/temp.png"/>
+	-->
+	
+	<mx:Label id="lblMXTRet_Title" 				 
+		x="110" y="20" 
+		text="Return air temp"  
+		styleName="overlayTitle"	
+		width="150" 
+		textAlign="right"/>
+		
+	<overlay:ValueDisplayLabel id="lblMXTRet" text="0" 
+		x="110" y="35" 
+		sysVarName="MXTRet"
+		styleName="overlayValue"
+		textAlign="right" 
+		width="150"/>
+		
+		
+	<mx:Text id="lblBOIfuel_Title" 				 
+		x="40" y="70" 
+		text="Boiler fuel consumption rate"  
+		styleName="overlayTitle"	
+		width="100" 
+		height="30"
+		textAlign="right"/>
+		
+	<overlay:ValueDisplayLabel id="lblBOIfuel" text="0" 
+		x="15" y="100" 
+		sysVarName="BOIfuel"
+		styleName="overlayValue"
+		textAlign="right" 
+		width="125"/>
+		
+		
+		
+	<mx:Text id="lblCHLcomppow_Title" 				 
+		x="405" y="420" 
+		text="Chiller compressor power consumption"  
+		styleName="overlayTitle"	
+		width="110" 
+		textAlign="left"/>
+		
+	<overlay:ValueDisplayLabel id="lblCHLcomppow" text="0" 
+		x="405" y="450" 
+		sysVarName="CHLcomppow"
+		styleName="overlayValue"
+		textAlign="left" 
+		width="110"/>
+	
+	<!-- Change to correct variable -->
+	
+	<mx:Text id="lblCHL_Title" 				 
+		x="-2" y="360" 
+		text="Cooling tower fan power consumption"  
+		styleName="overlayTitle"	
+		width="110" 
+		textAlign="right"/>
+		
+	<overlay:ValueDisplayLabel id="lblCHL" text="0" 
+		x="-2" y="390" 
+		sysVarName="CHLpumppow"
+		styleName="overlayValue"
+		textAlign="right" 
+		width="110"/>
+		
+		
+		
+	<mx:Text id="lblCHLcondout_Title" 				 
+		x="356" y="295" 
+		text="Condensor water return temp"  
+		styleName="overlayTitle"	
+		width="100" 
+		textAlign="left"/>
+		
+	<overlay:ValueDisplayLabel id="lblCHLcondout" text="0" 
+		x="356" y="325" 
+		sysVarName="CHLcondout"
+		styleName="overlayValue"
+		textAlign="left" 
+		width="98"/>
+	
+	
+		
+	<mx:Text id="lblCTWtout_Title" 				 
+		x="215" y="295" 
+		text="Condensor water supply temp"  
+		styleName="overlayTitle"	
+		width="100" 
+		textAlign="right"/>
+		
+	<overlay:ValueDisplayLabel id="lblCTWtout" text="0" 
+		x="215" y="325" 
+		sysVarName="CTWtout"
+		styleName="overlayValue"
+		textAlign="right" 
+		width="100"/>
+			
+	<mx:Text id="lblCHLevapin_Title" 				 
+		x="570" y="385" 
+		text="Chilled water return temp"  
+		styleName="overlayTitle"	
+		width="100" 
+		textAlign="left"/>
+		
+	<overlay:ValueDisplayLabel id="lblCHLevapin" text="0" 
+		x="570" y="415" 
+		sysVarName="CHLevapin"
+		styleName="overlayValue"
+		textAlign="left" 
+		width="100"/>
+		
+		
+		
+	<mx:Text id="lblCHLevapout_Title" 				 
+		x="570" y="325" 
+		text="Chilled water supply temp"  
+		styleName="overlayTitle"	
+		width="100" 
+		textAlign="left"/>
+		
+	<overlay:ValueDisplayLabel id="lblCHLevapout" text="0" 
+		x="570" y="355" 
+		sysVarName="CHLevapout"
+		styleName="overlayValue"
+		textAlign="left" 
+		width="100"/>
+		
+		
+	<mx:Text id="lblTAirSup_Title" 				 
+		x="570" y="225" 
+		text="Supply air temp: "  
+		styleName="overlayTitle"	
+		width="100" 
+		textAlign="left"/>
+		
+	<overlay:ValueDisplayLabel id="lblTAirSup" text="0" 
+		x="570" y="240" 
+		sysVarName="TAirSup"
+		styleName="overlayValue"
+		textAlign="left" 
+		width="100"/>
+	
+	
+	
+		
+	<mx:Text id="lblCCposReal_Title" 				 
+		x="538" y="133" 
+		text="CC Valve Position"  
+		styleName="overlayTitle"	
+		width="100" 
+		textAlign="left"/>
+		
+	<overlay:ValueDisplayLabel id="lblCCposReal" text="0" 
+		x="538" y="148" 
+		sysVarName="CCposReal"
+		styleName="overlayValue"
+		textAlign="left" 
+		usePercent="true"
+		width="100"/>
+		
+		
+	<mx:Text id="lblHCposReal_Title" 				 
+		x="491" y="97" 
+		text="HC Valve Position: "  
+		styleName="overlayTitle"	
+		width="100"
+		textAlign="left"/>
+		
+	<overlay:ValueDisplayLabel id="lblHCposReal" text="0" 
+		x="491" y="112" 
+		sysVarName="HCposReal"
+		styleName="overlayValue"
+		textAlign="left" 
+		usePercent="true"
+		width="100"/>
+		
+		
+		
+	<mx:Text id="lblMXOAPosDamperReal_Title" 				 
+		x="445" y="54" 
+		text="OA damper position"  
+		styleName="overlayTitle"	
+		width="150" 
+		textAlign="left"/>
+		
+	<overlay:ValueDisplayLabel id="lblMXOAPosDamperReal" text="0" 
+		x="445" y="69" 
+		sysVarName="MXOAPosDamperReal"
+		styleName="overlayValue"
+		textAlign="left" 
+		usePercent="true"
+		width="150"/>
+		
+		
+		
+	<mx:Text id="lblBOItout_Title" 				 
+		x="280" y="115" 
+		text="Hot water supply temp"  
+		styleName="overlayTitle"	
+		width="77" 
+		textAlign="right"/>
+		
+	<overlay:ValueDisplayLabel id="lblBOItout" text="0" 
+		x="255" y="145" 
+		sysVarName="BOItout"
+		styleName="overlayValue"
+		textAlign="right" 
+		width="100"/>
+		
+		
+	<mx:Text id="lblBOItin_Title" 				 
+		x="303" y="225" 
+		text="Hot water return temp"  
+		styleName="overlayTitle"	
+		width="75" 
+		textAlign="right"/>
+		
+	<overlay:ValueDisplayLabel id="lblBOItin" text="0" 
+		x="276" y="255" 
+		sysVarName="BOItin"
+		styleName="overlayValue"
+		textAlign="right" 
+		width="100"/>
+	
+
+</overlay:OverlayBase>

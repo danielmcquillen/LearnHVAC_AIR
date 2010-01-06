@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<overlay:OverlayBase  xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:overlay="com.mcquilleninteractive.learnhvac.view.shortterm.overlay.*"
+	width="670" height="500"
+	creationComplete="onCC()"
+	>
+
+	<mx:Script>
+		<![CDATA[
+			
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+            import com.mcquilleninteractive.learnhvac.util.Logger
+            import mx.controls.Label 
+            import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+   			import com.adobe.cairngorm.control.CairngormEvent
+   			import mx.core.UIComponent
+		            			
+		    
+		    //lines that help illustration location
+		    private var VAVHCmAirLvg_line:UIComponent
+		    private var VAVHCTAirLvg_line:UIComponent
+		    		    
+		            			
+			public function onCC():void
+			{
+				
+				//add listener for scenarioLoaded event --> this will be used to update labels
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
+	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);	
+	   			
+	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
+   				if (LHModelLocator.getInstance().scenarioLoaded == true)
+   				{
+   					scenarioLoaded(null)
+   				}
+	   			
+				//lines that show relation of labels to motion on screen 
+				VAVHCmAirLvg_line = new UIComponent()
+				var line1:Shape = new Shape()
+				line1.graphics.lineStyle(1,0xCCCCCC,1)
+				line1.graphics.moveTo(298,34)
+				line1.graphics.lineTo(340,34)
+				line1.graphics.lineTo(340,102)
+				line1.graphics.drawCircle(340,105,5)
+				this.addChild(VAVHCmAirLvg_line)
+				VAVHCmAirLvg_line.addChild(line1)	
+				
+				VAVHCTAirLvg_line = new UIComponent()
+				line1 = new Shape()
+				line1.graphics.lineStyle(1,0xCCCCCC,1)
+				line1.graphics.moveTo(255,80)
+				line1.graphics.lineTo(340,80)
+				line1.graphics.lineTo(340,102)
+				line1.graphics.drawCircle(340,105,5)
+				this.addChild(VAVHCTAirLvg_line)	
+				VAVHCTAirLvg_line.addChild(line1)	
+				
+   					
+			}
+			
+			public function scenarioLoaded(event:CairngormEvent):void
+			{						
+				
+				scenModel = LHModelLocator.getInstance().scenarioModel
+																										
+				//set visibility of labels	
+				lblVAVHCmAirLvg.visible=lblVAVHCmAirLvg_Title.visible=VAVHCmAirLvg_line.visible=scenModel.getSysVar("VAVHCmAirLvg").visible 
+				lblVAVHCTAirLvg.visible=lblVAVHCTAirLvg_Title.visible=VAVHCTAirLvg_line.visible=scenModel.getSysVar("VAVHCTAirLvg").visible 
+				lblTRoom.visible=lblTRoom_Title.visible=scenModel.getSysVar("TRoom").visible   	
+			   				
+			}
+
+			
+			
+		]]>
+	</mx:Script>
+
+	<mx:Label id="lblVAVHCmAirLvg_Title" text="Entering Air Mass flow rate: " styleName="overlayTitle"
+					 x="156" y="25" />
+	<overlay:ValueDisplayLabel id="lblVAVHCmAirLvg" 
+		sysVarName="VAVHCmAirLvg"
+		text="0" 
+		styleName="overlayValue"
+		x="157" y="45" />
+	<mx:Label id="lblVAVHCTAirLvg_Title" text="Entering Air Temp: " styleName="overlayTitle"
+					x="156" y="70" />
+	<overlay:ValueDisplayLabel id="lblVAVHCTAirLvg"
+		sysVarName="VAVHCTAirLvg"
+		text="0" 
+		styleName="overlayValue"
+		x="157" y="90" />
+
+	<mx:Label id="lblTRoom_Title" text="Room Temp: " styleName="overlayTitle"
+					x="300" y="270" />
+	<overlay:ValueDisplayLabel id="lblTRoom" 
+		sysVarName="TRoom"
+		text="0" 
+		styleName="overlayValue"
+		x="300" y="290" />
+
+	</overlay:OverlayBase>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<overlay:OverlayBase xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:overlay="com.mcquilleninteractive.learnhvac.view.shortterm.overlay.*"
+	width="670" height="500"
+	creationComplete="onCC()"
+	>
+	<mx:Script>
+		<![CDATA[
+			
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+            import com.mcquilleninteractive.learnhvac.util.Logger
+            import mx.controls.Label 
+            import com.mcquilleninteractive.learnhvac.model.SystemVariable
+            import com.mcquilleninteractive.learnhvac.event.ShowSchematicEvent
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+   			import com.adobe.cairngorm.control.CairngormEvent
+		    
+		    
+			[Embed(source='assets/DawaAssets.swf', symbol='CCValveOff')]
+			[Bindable]
+			private var CCValveOff:Class
+			
+			
+			[Embed(source='assets/DawaAssets.swf', symbol='CCValveOn')]
+			[Bindable]
+			private var CCValveOn:Class
+			
+		    
+		    		    
+			public function onCC():void
+			{
+				//add listener for scenarioLoaded event --> this will be used to update labels
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
+	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);	
+	   			
+	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
+   				if (LHModelLocator.getInstance().scenarioLoaded == true)
+   				{
+   					scenarioLoaded(null)
+   				}
+			}
+			
+									
+			
+			public function scenarioLoaded(event:CairngormEvent):void
+			{						
+				Logger.debug("scenarioLoaded()", this)	
+						
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+											
+				//set visibility of labels				
+				lblCCTAirEnt.visible=lblCCTAirEnt_Title.visible=scenModel.getSysVar("CCTAirEnt").visible
+				lblCCTAirLvg.visible=lblCCTAirLvg_Title.visible=scenModel.getSysVar("CCTAirLvg").visible
+				lblCHLevapout.visible=lblCHLevapout_Title.visible=scenModel.getSysVar("CHLevapout").visible
+				lblCCTLiqLvg.visible=lblCCTLiqLvg_Title.visible=scenModel.getSysVar("CCTLiqLvg").visible
+				lblCCpos.visible=lblCCpos_Title.visible=scenModel.getSysVar("CCpos").visible
+			
+			}
+			
+			public function onCCValveClick(event:Event):void
+			{
+				var cgEvent:ShowSchematicEvent = new ShowSchematicEvent(ShowSchematicEvent.EVENT_SHOW_CC_LIQUIDS_POPUP)
+				CairngormEventDispatcher.getInstance().dispatchEvent( cgEvent )
+			}
+		]]>
+	</mx:Script>
+	
+	
+	
+	<mx:Button 	id="btnCCValveSchematic"
+				x="233" y="401"
+				useHandCursor="true"
+			    click="onCCValveClick(event)"
+				upSkin="{CCValveOff}" 
+				overSkin="{CCValveOn}"
+				downSkin="{CCValveOn}" />
+	
+	<mx:Label id="lblCCpos_Title"  
+				x="110" y="360"
+				textAlign="right"
+				width="120" 
+				text="Valve Pos: " 
+				styleName="overlayTitle"
+			    color="0x000000"
+				/>
+			
+	<overlay:ValueDisplayLabel id="lblCCpos" 
+		sysVarName="CCpos"
+		usePercent="true"
+		x="110" y="380"
+		width="120" 
+		text="0" 
+		styleName="overlayValue" 
+		textAlign="right"
+	    color="0x000000"
+				/>	
+				
+	<mx:Label id="lblCCTAirEnt_Title" text="Entering Air Temp: " styleName="overlayTitle"
+			  x="130" y="120" width="150" textAlign="right"
+			  />
+	<overlay:ValueDisplayLabel id="lblCCTAirEnt"
+		sysVarName="CCTAirEnt"
+		text="0"
+		styleName="overlayValue"
+		x="130" 
+		y="140" 
+		width="150" 
+		textAlign="right"
+			/>
+					 
+	<mx:Label id="lblCCTAirLvg_Title" text="Leaving Air Temp: " styleName="overlayTitle"
+				x="500" y="150"/>
+	<overlay:ValueDisplayLabel id="lblCCTAirLvg"
+		sysVarName="CCTAirLvg"
+		text="0" 
+		styleName="overlayValue"
+		x="500" y="170" />
+					 
+	<mx:Label id="lblCHLevapout_Title" text="Entering Liq. Temp: " styleName="overlayTitle"
+			x="385" y="278"/>
+	<overlay:ValueDisplayLabel id="lblCHLevapout" 
+		sysVarName="CCTLiqEnt"
+		text="0" 
+		styleName="overlayValue"
+		x="385" y="298" />
+					 
+	<mx:Label id="lblCCTLiqLvg_Title" text="Leaving Liq. Temp: " styleName="overlayTitle"
+					   x="133" y="250" textAlign="right" width="150"/>
+	<overlay:ValueDisplayLabel id="lblCCTLiqLvg" 
+		sysVarName="CCTLiqLvg"
+		text="0" 
+		styleName="overlayValue"
+		x="133" y="270" 
+		width="150" textAlign="right" />
+					   
+</overlay:OverlayBase>

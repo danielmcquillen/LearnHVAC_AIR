@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<overlay:OverlayBase xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:overlay="com.mcquilleninteractive.learnhvac.view.shortterm.overlay.*"
+	width="670" height="500" 
+	creationComplete="onCC()">
+	
+	<mx:Script>
+		<![CDATA[
+						
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+            import com.mcquilleninteractive.learnhvac.util.Logger
+            import mx.controls.Label 
+            import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+   			import com.adobe.cairngorm.control.CairngormEvent
+		            			
+		    
+			public function onCC():void
+			{
+				//add listener for scenarioLoaded event --> this will be used to update labels
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
+	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);		
+	   			
+	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
+   				if (LHModelLocator.getInstance().scenarioLoaded == true)
+   				{
+   					scenarioLoaded(null)
+   				}
+					
+				//graphics to help indicate where values refer
+				this.graphics.lineStyle(1,0xCCCCCC,1)
+				
+				//temp out
+				this.graphics.moveTo(425,150)
+				this.graphics.lineTo(425,185)
+				this.graphics.drawCircle(425,190,5)
+				
+				this.graphics.moveTo(355,400)
+				this.graphics.lineTo(400,400)
+				this.graphics.drawCircle(405,400,5)
+				
+			}
+
+			public function scenarioLoaded(event:CairngormEvent):void
+			{					
+				
+				scenModel = LHModelLocator.getInstance().scenarioModel
+																							
+				//set visibility of labels		
+				lblCHLcondout.visible=lblCHLcondout_Title.visible=scenModel.getSysVar("CHLcondout").visible
+				lblCTWtout.visible=lblCTWtout_Title.visible=scenModel.getSysVar("CTWtout").visible
+				lblCHLcondflow.visible=lblCHLcondflow_Title.visible=scenModel.getSysVar("CHLcondflow").visible		
+								
+			}
+
+
+			
+		]]>
+	</mx:Script>
+	
+	
+	
+	<mx:Label id="lblCHLcondout_Title" text="Inlet Water Temp.: "  styleName="overlayTitle"
+					 x="200" y="395" textAlign="right" width="150"/>
+	<overlay:ValueDisplayLabel id="lblCHLcondout" text="0" 
+		sysVarName="CHLcondout"
+		styleName="overlayValue"
+		x="200" y="410"
+		textAlign="right" width="150"/>
+	
+	
+	<mx:Label id="lblCTWtout_Title" text="Outlet Water Temp.: "  styleName="overlayTitle"
+					 x="420" y="75" />
+	<overlay:ValueDisplayLabel id="lblCTWtout" 
+		sysVarName="CTWtout"
+		text="0" styleName="overlayValue"
+		x="420" y="90" />
+		
+		
+	<mx:Label id="lblCHLcondflow_Title" 
+		text="Outlet Water Flow Rate: "  
+		styleName="overlayTitle"
+		x="420" y="115" />
+	<overlay:ValueDisplayLabel id="lblCHLcondflow" 
+		sysVarName="CHLcondflow"
+		text="0" styleName="overlayValue"
+		x="420" y="130" />
+		
+</overlay:OverlayBase>

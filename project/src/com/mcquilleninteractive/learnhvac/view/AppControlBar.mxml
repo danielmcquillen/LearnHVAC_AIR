@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="onCC()"
+	paddingBottom="0"
+	paddingLeft="0"
+	paddingTop="0"
+	paddingRight="0"
+	height="35"
+	styleName="appControlBar"
+	xmlns:view="com.mcquilleninteractive.learnhvac.view.*">
+    
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.command.LoadScenarioDataCommand;
+			import flash.net.navigateToURL; 	//use these two if I'm using Flex way of opening browser
+    		import flash.net.URLRequest;
+			import com.mcquilleninteractive.learnhvac.event.AHUEvent;
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import mx.charts.chartClasses.ChartElement;
+			import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.view.popups.SettingsPanel
+			import com.mcquilleninteractive.learnhvac.event.GraphEvent
+			import com.mcquilleninteractive.learnhvac.event.ScenarioDataEvent
+			import com.mcquilleninteractive.learnhvac.event.ApplicationEvent
+			import com.mcquilleninteractive.learnhvac.util.Logger;            
+			import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel    
+			import com.mcquilleninteractive.learnhvac.model.SparkRunsModel
+			import com.mcquilleninteractive.learnhvac.util.DebugPanel;
+			import mx.managers.PopUpManager
+			import mx.binding.utils.BindingUtils;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+          	import mx.managers.PopUpManager;
+          	import mx.events.CloseEvent;
+          	import mx.events.MenuEvent;
+          	import mx.events.ItemClickEvent
+          	import mx.controls.Alert;
+          	
+          	          	
+			[Bindable]
+			public var model : LHModelLocator = LHModelLocator.getInstance();
+			
+			[Bindable]
+            [Embed(source="assets/img/weather_sun.png")]
+            private var SunIcon:Class;
+
+            [Bindable]
+            [Embed(source="assets/img/building.png")]
+            private var BuildingIcon:Class;
+
+            [Bindable]
+            [Embed(source="assets/img/chart_curve_add.png")]
+            private var ChartIcon:Class;
+            
+            [Bindable]
+            [Embed(source="assets/img/icon_help.png")]
+            private var InfoIcon:Class;
+       		
+       		[Bindable]
+            [Embed(source="assets/img/wrench_orange.png")]
+            private var SettingsIcon:Class;
+            
+            
+       		[Bindable]
+            [Embed(source="assets/img/bug.png")]
+            private var BugIcon:Class;
+						
+				
+			[Embed(source='assets/img/graph_icon_off.png')]
+			[Bindable]
+			private var GraphIcon:Class
+			
+			[Embed(source='assets/img/spc_icon.png')]
+			[Bindable]
+			private var SPCIcon:Class	
+			
+			
+			
+			private var settingsPopup:SettingsPanel
+			
+			public function onCC():void
+			{
+				 BindingUtils.bindSetter(screenChange, model, "viewing");
+			}
+	
+			
+			public function screenChange(index:Number):void
+			{
+				Logger.debug("#AppControlBar: screenChange called. index: " + index)
+				switch (index)
+				{
+					case LHModelLocator.PANEL_LONG_TERM_SIMULATION:
+					case LHModelLocator.PANEL_SHORT_TERM_SIMULATION:
+					case LHModelLocator.PANEL_ANALYSIS:
+						appTabBar.visible = true
+						appMenuBar.visible = true
+						break
+					case LHModelLocator.PANEL_SELECT_SCENARIO:
+						this.appTabBar.visible = false		
+						appMenuBar.visible = false			
+						break
+				}				
+			}
+			
+			public function onNewScenario():void
+			{
+				Alert.show("Are you sure you start a new Scenario?", "New Scenario", Alert.OK|Alert.CANCEL, null, onNewScenarioAlertListener)
+			}
+			
+			public function onNewScenarioAlertListener(evt:CloseEvent):void
+			{
+				if (evt.detail == Alert.OK)
+				{
+					var cgEvent:ApplicationEvent = new ApplicationEvent(ApplicationEvent.EVENT_SELECT_NEW_SCENARIO)
+					CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)				
+				}
+			}
+			
+			public function onLogout():void
+			{
+				Alert.show("Are you sure you want to log out?", "Logout", Alert.OK|Alert.CANCEL, null, onLogoutAlertListener)
+			}
+			
+			
+			
+			public function onLogoutAlertListener(evt:CloseEvent):void
+			{
+				if (evt.detail == Alert.OK)
+				{
+					Logger.debug("#LogoutCommand: user confirmed intention to log out. Launching app event...")
+					var cgEvent:LogoutEvent = new LogoutEvent()
+					CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+				}
+				else
+				{
+					//do nothing
+				}
+			}
+			
+			public function menuHandler(event:MenuEvent):void
+			{
+				var cmd:String = event.item.@data
+				switch(cmd)
+				{
+					case "newScenario":
+						onNewScenario()
+						break
+					case "loadEPlusInitial":
+						onLoadEPlus(EPlusRunsModel.RUN_1)
+						break
+					case "loadEPlusComparison":
+						onLoadEPlus(EPlusRunsModel.RUN_2)
+						break
+					case "loadSparkInitial":
+						onLoadSpark(SparkRunsModel.RUN_1)
+						break
+					case "loadSparkComparison":
+						onLoadSpark(SparkRunsModel.RUN_2)
+						break
+					case "saveEPlusInitial":
+						onSaveEPlus(EPlusRunsModel.RUN_1)
+						break
+					case "saveEPlusComparison":
+						onSaveEPlus(SparkRunsModel.RUN_2)
+						break
+					case "saveSparkInitial":
+						onSaveSpark(SparkRunsModel.RUN_1)
+						break
+					case "saveSparkComparison":
+						onSaveSpark(SparkRunsModel.RUN_2)
+						break
+					
+				}
+			}
+		
+			public function onTabClick(event:ItemClickEvent):void
+			{
+                // Access target TabBar control.
+                var tabBar:TabBar = TabBar(event.currentTarget);
+                var cmd:String = tabBar.dataProvider[event.index].data
+                switch(cmd)
+                {
+                	case "eplus":
+                		model.viewing = LHModelLocator.PANEL_LONG_TERM_SIMULATION
+                		break
+                	case "spark": 	             		
+						model.viewing = LHModelLocator.PANEL_SHORT_TERM_SIMULATION
+                		break
+                	case "analysis":
+						model.viewing = LHModelLocator.PANEL_ANALYSIS
+						
+                		break
+                		
+                }
+   			}
+		
+			
+		
+						
+			
+			public function onInformation():void
+			{
+				//var myBrowser:Browser = new mdm.Browser(0, 0, 400, 350,  "http://www.learnhvac.org/help/help_files.php", true)
+				var url:String = "http://www.learnhvac.org/help/help_files.php";
+            	var request:URLRequest = new URLRequest(url);
+            	try {            
+                	navigateToURL(request);
+            	}
+            	catch (e:Error) {
+                	// handle error here
+            	}
+				
+			}
+			
+			public function onSettings():void
+			{
+				//show modal dialog for settings
+				settingsPopup = SettingsPanel(PopUpManager.createPopUp(this.parent, SettingsPanel, true)); // popup modal dialog	
+				PopUpManager.centerPopUp(settingsPopup)
+			}
+			
+			private function closeDialog(event : CloseEvent) : void {
+             	PopUpManager.removePopUp(settingsPopup); // close this dialog
+          	}
+          	
+           	public function onLoadEPlus(runID:String):void
+          	{
+          		var cgEvent:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.LOAD_EPLUS_DATA_EVENT, runID)
+          		CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+          	}
+          	
+          	public function onLoadSpark(runID:String):void
+          	{
+          		var cgEvent:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.LOAD_SPARK_DATA_EVENT, runID)
+          		CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+          	}
+		
+          	public function onSaveEPlus(runID:String):void
+          	{
+          		var cgEvent:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.SAVE_EPLUS_DATA_EVENT, runID)
+				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+          	}
+          	
+          	public function onSaveSpark(runID:String):void
+          	{
+          		var cgEvent:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.SAVE_SPARK_DATA_EVENT, runID)
+				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+          	}
+          
+         	public function onDebug():void
+			{
+			 	var pnlDebug:DebugPanel = new DebugPanel()
+				PopUpManager.addPopUp(pnlDebug, this)
+				pnlDebug.width=400
+				pnlDebug.height=600
+				PopUpManager.centerPopUp(pnlDebug)
+					
+			}
+          	
+	          	
+	          	
+			private function onShowSetPointControl(event:Event):void
+			{
+				//setPointControl.visible=true
+			}	
+			
+			
+          	
+		]]>
+	</mx:Script>		
+				
+ 	<mx:MenuBar id="appMenuBar" labelField="@label"
+ 	 	height="30"
+ 	 	alpha="0.0" 
+ 	 	x="0" y="0"
+ 	 	visible="false"
+ 	 	menuStyleName="appMenuBar" 
+ 	 	itemClick="menuHandler(event);" 
+ 	 	color="#FFFFFF">
+ 	 
+		<mx:XMLList>
+    		<menuitem label="Scenario" >
+    		    <menuitem label="New Scenario" data="newScenario"/>
+   	 		</menuitem>
+
+   	 		<!--
+   	 		<menuitem label="Simulation Data" >
+   	    	 	<menuitem label="Long-Term" groupName="one">
+   	    	 		<menuitem label="load run1" data="loadEPlusInitial"/>
+   	    	 		<menuitem label="load run2" data="loadEPlusComparison"/>
+    				<menuitem label="save run1 data" data="saveEPlusInitial"/>
+    				<menuitem label="save run2 data" data="saveEPlusComparison"/>
+   	    	 	</menuitem>
+        		<menuitem label="Real-Time" groupName="two">
+   	    	 		<menuitem label="load run1 data" data="loadSparkInitial"/>
+   	    	 		<menuitem label="load run2 data" data="loadSparkComparison"/>
+    				<menuitem label="save run1 data" data="saveSparkInitial"/>
+    				<menuitem label="save run2 data" data="saveSparkComparison"/>
+        		</menuitem>
+     
+    		</menuitem>
+			-->
+			
+		</mx:XMLList>
+		
+	</mx:MenuBar>
+
+    <mx:HBox id="scenarioTabs"
+    		 	x="390"
+    		 	y="7"
+       		  	backgroundAlpha="0"
+    		 	height="30"
+    		 	horizontalScrollPolicy = "off"
+    		 	verticalScrollPolicy="off"
+    		  	verticalAlign="bottom"
+       		 	horizontalGap="0" 
+    		 	horizontalAlign="left"
+    		  	>
+    		  	
+		<mx:TabBar 
+			id="appTabBar"
+			styleName="appTabBar"
+			height="28"
+		    itemClick="onTabClick(event)"
+		    selectedIndex="0"
+			>
+			<mx:dataProvider>       
+				<mx:Object label="Real-time Sim."  
+						icon="{BuildingIcon}"
+						data="spark"/>
+				<mx:Object label="Long-term Sim." 
+						icon="{SunIcon}"
+						data="eplus"/>
+   				<mx:Object label="Analysis"  
+						icon="{ChartIcon}"
+   						data="analysis"/>                    
+			</mx:dataProvider>
+		</mx:TabBar>
+		
+   			 
+    </mx:HBox>
+        		
+            
+	<mx:HBox width="200" 
+		height="30"
+		id="barButtons"  
+		horizontalGap="0"  
+	    right="0"
+	    horizontalAlign="right"
+		horizontalScrollPolicy="off"
+		verticalScrollPolicy="off"
+		>
+		    		
+		
+			<mx:Button id="btnDebug" 
+       					width="35"
+       					height="100%"			
+       					styleName="btnNavIcon"		    
+			    		toolTip="Open debug window"
+						icon="{BugIcon}"
+						click="onDebug()" 	
+				/>
+		
+    		<mx:Button id="btnSettings" 
+       					width="35"
+       					height="100%"
+       					styleName="btnNavIcon"
+       					toolTip="Settings" 
+       					icon="{SettingsIcon}"
+       					click="onSettings()"
+       		/>
+       			 	
+       		<mx:Button id="btnInfo" 
+       					width="35"
+       					height="100%"
+       					styleName="btnNavIcon"
+       		   	 		toolTip="Open help files in your browser"
+       					icon="{InfoIcon}"
+       					click="onInformation()"
+       		/>
+       			 
+       		<mx:Button id="btnLogout" 
+       					width="60"
+       					height="100%"
+       					styleName="btnLogout"
+       					label="Logout"
+       					click="onLogout()" 
+       		/>
+	</mx:HBox>
+             					
+			
+</mx:Canvas>

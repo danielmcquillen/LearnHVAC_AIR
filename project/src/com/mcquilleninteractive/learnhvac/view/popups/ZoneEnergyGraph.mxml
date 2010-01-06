@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<util:DragPanel xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:util="com.mcquilleninteractive.learnhvac.util.*" 
+	title="ZONE ENERGY"    
+	preinitialize="onPreInit()" 
+    minWidth="350"
+    minHeight="200"
+	width="350" height="250" xmlns:popups="com.mcquilleninteractive.learnhvac.view.popups.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel;
+			import mx.collections.ArrayCollection;
+			import com.mcquilleninteractive.learnhvac.util.ColorSetting
+			
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import mx.collections.ArrayCollection;
+			
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.mcquilleninteractive.learnhvac.util.ColorSetting
+			import com.mcquilleninteractive.learnhvac.util.Logger
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+
+			[Bindable]
+			private var zoneTotalsAC:ArrayCollection 
+			
+			private var _sysVarVAVHCq:SystemVariable 
+			private var _ltSettings:LTSettingsModel 
+			private var _valuesArr:Array 
+			
+			/* Specs from Brian
+			
+				zone level
+				   * reheat coil power - ? (but for now, can use VAVHCq)
+				   * lighting power - lighting load * size of zone 
+				   * equipment power (ie. plug loads) - equipment load * size of zone
+
+			*/
+			
+			
+			public function onPreInit():void
+			{	
+				_valuesArr = [{group:"Zone Energy Use", VAVHCq:12, lightingPower:5, equipPower:2}]		
+									
+				zoneTotalsAC = new ArrayCollection(_valuesArr)
+			
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
+	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0, true)
+	   			dispatcher.addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged, false, 0, true)	
+				dispatcher.addEventListener(ScenarioModel.SHORT_TERM_OUTPUT_LOADED, onShortTermOutputLoaded, false, 0, true)
+				
+				//when this graph is first shown, a scenario will already have been loaded, so call onScenarioLoaded once to get it set up correctly
+				onScenarioLoaded(null)
+				
+			}
+			
+			public function onScenarioLoaded(event:CairngormEvent):void
+			{
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				_ltSettings = scenModel.ltSettingsModel
+				//the number and type of sysVar isn't going to change much, so I'm not going to use 
+				//binding, I'm just going to keep a ref and then update when the outputs are loaded
+				_sysVarVAVHCq = scenModel.getSysVar("VAVHCq")
+				
+				getRelevantValues()
+				
+			}
+			
+			public function onUnitsChanged(event:CairngormEvent):void
+			{
+				getRelevantValues()				
+			}
+			
+			public function onShortTermOutputLoaded(event:CairngormEvent):void
+			{
+				getRelevantValues()
+			}
+			
+			private function getRelevantValues():void
+			{
+				Logger.debug("Getting relevant values", this)
+				Logger.debug("_ltSettings:" + _ltSettings, this)
+				Logger.debug("zoneTotalsAC.getItemAt(0):" + zoneTotalsAC.getItemAt(0), this)
+				Logger.debug("zoneTotalsAC.getItemAt(0).VAVHCq:" + zoneTotalsAC.getItemAt(0).VAVHCq, this)
+				Logger.debug("_sysVarVAVHCq:" + _sysVarVAVHCq, this)
+				var obj:Object = zoneTotalsAC.getItemAt(0)
+				var zoneSize:Number = _ltSettings.getCurrentZoneSize()
+				
+				Logger.debug("setting VAVHCq = " + _sysVarVAVHCq.currValue, this)
+				obj.VAVHCq = _sysVarVAVHCq.currValue
+				obj.lightingPower = _ltSettings.lightingPeakLoad * zoneSize
+				obj.equipPower = _ltSettings.equipPeakLoad * zoneSize
+				zoneTotalsAC.refresh()
+			}
+			
+			private function onClose():void
+			{
+				Logger.debug("closing window.", this)
+				removeListeners()
+			}
+			
+			private function removeListeners():void
+			{
+				Logger.debug("removing listeners.", this)
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
+				dispatcher.removeEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded)
+	   			dispatcher.removeEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged)	
+				dispatcher.removeEventListener(ScenarioModel.SHORT_TERM_OUTPUT_LOADED, onShortTermOutputLoaded)
+			}
+			
+			
+			
+		]]>
+	</mx:Script>
+	
+	<mx:SolidColor id="reheatFill" color="{ColorSetting.heatingColor}"/>
+	<mx:SolidColor id="lightingFill" color="{ColorSetting.lightingColor}"/>
+	<mx:SolidColor id="equipFill" color="{ColorSetting.equipmentColor}"/>
+	
+	<mx:HBox width="100%" height="100%">
+		
+		
+		 <mx:ColumnChart id="chart" type="stacked" 
+		 	width="100%" height="100%" 
+		 	dataProvider="{zoneTotalsAC}"
+		    maxColumnWidth="30"
+		    minWidth="150"
+		    minHeight="150"
+		    showDataTips="true">
+	        
+	        <mx:series>
+	            <mx:ColumnSeries xField="group" yField="VAVHCq"  displayName="Reheat Coil Power" fill="{reheatFill}"  />
+	            <mx:ColumnSeries xField="group" yField="lightingPower"  displayName="Lighting Power" fill="{lightingFill}"  />
+	            <mx:ColumnSeries xField="group" yField="equipPower"  displayName="Equipment Power" fill="{equipFill}"  /> 
+	        </mx:series>
+	        
+	        <mx:horizontalAxis>
+	           <mx:CategoryAxis  categoryField="group"  />
+	        </mx:horizontalAxis>
+		               
+	        <mx:verticalAxis >
+	     		<mx:LinearAxis title="" id="yAxis" />
+			</mx:verticalAxis>
+	
+			<mx:verticalAxisRenderers>
+	    		<mx:AxisRenderer axis="{yAxis}" verticalAxisTitleAlignment="vertical" />
+			</mx:verticalAxisRenderers>
+	
+	    </mx:ColumnChart>
+	
+		<popups:ZoneEnergyGraphLegend width="160" />
+    
+	
+	</mx:HBox>
+	
+</util:DragPanel>

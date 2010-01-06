@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<overlay:OverlayBase  xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:overlay="com.mcquilleninteractive.learnhvac.view.shortterm.overlay.*"
+	width="670" height="500" 
+	creationComplete="onCC()">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
+						
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+            import com.mcquilleninteractive.learnhvac.util.Logger
+            import mx.controls.Label 
+            import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+   			import com.adobe.cairngorm.control.CairngormEvent
+		            			
+		    private var fuelUnits:String
+		    
+			public function onCC():void
+			{	
+	   								
+	   			//add listener for scenarioLoaded event --> this will be used to update labels
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
+	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);	
+	   			
+	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
+   				if (LHModelLocator.getInstance().scenarioLoaded == true)
+   				{
+   					scenarioLoaded(null)
+   				}			
+	   								
+	   								
+				//graphics to help indicate where values refer
+				this.graphics.lineStyle(1,0xCCCCCC,1)
+				
+				//temp out
+				this.graphics.moveTo(160,115)
+				this.graphics.lineTo(160,190)
+				this.graphics.drawCircle(160,195,5)
+				
+				//temp in
+				this.graphics.moveTo(165,415)
+				this.graphics.lineTo(165,365)
+				this.graphics.drawCircle(165,360,5)
+				
+				//fuel rate
+				this.graphics.moveTo(395,415)
+				this.graphics.lineTo(395,335)
+				this.graphics.drawCircle(395,330,5)
+								
+				
+			}
+						
+		
+			public function scenarioLoaded(event:CairngormEvent):void
+			{						
+				Logger.debug("scenarioLoaded()", this)							
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+											
+				//set visibility of labels				
+				lblBOIfuel.visible=lblBOIfuel_Title.visible=scenModel.getSysVar("BOIfuel").visible
+				lblBOItout.visible=lblBOItout_Title.visible=scenModel.getSysVar("BOItout").visible
+				lblBOIwaterflow.visible=lblBOIwaterflow_Title.visible=scenModel.getSysVar("BOIwaterflow").visible
+				lblBOItin.visible=lblBOItin_Title.visible=scenModel.getSysVar("BOItin").visible
+			
+			}
+			
+			
+			
+		]]>
+	</mx:Script>
+	
+	
+	
+	<mx:Label id="lblBOIfuel_Title" text="Fuel Consumption Rate: "  styleName="overlayTitle"
+					 x="395" y="420"/>
+	<overlay:ValueDisplayLabel id="lblBOIfuel" text="0" 
+		styleName="overlayValue"
+		x="395" y="435" 
+		textAlign="left" 
+		sysVarName="BOIfuel"
+		width="150"/>
+				
+	
+	
+	<mx:Label id="lblBOItout_Title" text="Temperature Out: "  styleName="overlayTitle"
+					 x="15" y="40" textAlign="right" width="150"/>
+	<overlay:ValueDisplayLabel id="lblBOItout" 
+		sysVarName="BOItout"
+		text="0" 
+		styleName="overlayValue"
+		x="15" y="55" 
+		textAlign="right"
+		 width="150"/>
+		
+	
+	<mx:Label id="lblBOIwaterflow_Title" text="Water Flow Rate: "  styleName="overlayTitle"
+					 x="15" y="75" textAlign="right" width="150"/>
+	<overlay:ValueDisplayLabel id="lblBOIwaterflow" text="0"
+		sysVarName="BOIwaterflow"
+		styleName="overlayValue"
+		x="15" y="90" 
+		textAlign="right"
+		width="150"/>	
+		
+	
+	<mx:Label id="lblBOItin_Title" text="Temperature In: "  styleName="overlayTitle"
+					 x="20" y="415" textAlign="right" width="150"/>
+	<overlay:ValueDisplayLabel id="lblBOItin" text="0" 
+		styleName="overlayValue"
+		sysVarName="BOItin"
+		x="20"
+		y="430" 
+		textAlign="right"
+		width="150"/>	
+		
+</overlay:OverlayBase>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:view="com.mcquilleninteractive.learnhvac.view.*"
+	xmlns:viewControllers="com.mcquilleninteractive.learnhvac.view.controllers.*"
+	paddingTop="5"
+	paddingBottom="5"
+	height="40" width="100%" 
+	styleName="controlBar"
+    horizontalGap="5"
+    creationComplete="onCC()"
+	verticalScrollPolicy="off">
+	
+	<mx:Metadata>
+		[Event(name="onStartLTSimulation", type="flash.events.Event")]		
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+		
+			public function onCC():void
+			{			
+			 	CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded)					
+			}
+			public function onScenarioLoaded(cgEvent:Event):void
+			{
+				lblScenarioName.text = LHModelLocator.getInstance().scenarioModel.name
+			}
+			
+			public function startSimulation():void
+			{	
+				dispatchEvent(new Event("onStartLTSimulation"))
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Spacer width="10"/>
+	
+	<mx:Button id="btnRunEPlus" 
+		label="Start LT Simulation" 
+		toolTip="Start long-term simulation"
+	    icon="@Embed('assets/img/lightning_icon.png')"
+		width="160"
+		height="30" 
+		styleName="btnBottomBar"
+		click="startSimulation()"
+	/>
+	
+		
+	<mx:Spacer 	width="100%" />		
+				
+	<mx:HBox width="400" 
+	    cornerRadius="5"
+		height="30"
+		id="hbScenarioName"
+		paddingTop="5"
+		horizontalScrollPolicy="off" 
+		verticalScrollPolicy="off" >
+		
+			<mx:Label text="Current scenario:" width="110" color="#FFFFFF"/>
+			<mx:Label id="lblScenarioName" width="220" color="#FFFFFF" />
+			
+	</mx:HBox>
+		
+				
+	
+</mx:HBox>

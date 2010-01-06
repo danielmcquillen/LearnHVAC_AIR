@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns:myComps="*"
+		xmlns:view="com.mcquilleninteractive.learnhvac.view.*"
+		xmlns:viz="com.mcquilleninteractive.learnhvac.view.visualization.*"
+		xmlns:overlay="com.mcquilleninteractive.learnhvac.view.shortterm.overlay.*"
+	 	width="670" height="500" backgroundColor="#333333"
+		creationComplete="onCreationComplete()"
+	    horizontalScrollPolicy="off"
+	    creationPolicy="all"
+		verticalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			
+		import com.mcquilleninteractive.particleengine.Particle;
+		import com.mcquilleninteractive.particleengine.ParticleEngine;
+		import com.adobe.cairngorm.control.CairngormEventDispatcher
+		import com.adobe.cairngorm.control.CairngormEvent
+		import com.mcquilleninteractive.learnhvac.util.Logger	
+		import com.mcquilleninteractive.learnhvac.view.event.SimNavEvent
+		import com.mcquilleninteractive.learnhvac.event.VisualizationEvent
+		import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
+		import com.mcquilleninteractive.learnhvac.event.AHUEvent
+		import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+		import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+        import mx.binding.utils.BindingUtils
+        import mx.binding.utils.ChangeWatcher
+		import mx.core.UIComponent
+		import mx.events.PropertyChangeEvent
+		import mx.events.FlexEvent
+		import flash.events.Event            
+		import mx.effects.Resize;
+
+		[Event(name="showSetPointControl",type="flash.events.Event")]
+		[Event(name="introAnimStarted",type="flash.events.Event")]
+		[Event(name="introAnimFinished",type="flash.events.Event")]
+				
+		private var currNode:String 
+		private var overlaysArr:Array
+		private var pe:ParticleEngine
+		private var peMasks:Array
+		private var cwArr:Array = [];
+		
+		
+		[Embed(source='assets/PIDControl.swf', symbol='setPointControl3D')]
+		[Bindable]
+     	private var SetPoint3DControlImage:Class
+		
+		
+		private function onCreationComplete():void
+		{
+			Logger.debug("#VisualizationPanel: onCreationComplete()")
+			
+			//listeners
+			CairngormEventDispatcher.getInstance().addEventListener(AHUEvent.EVENT_AHU_STARTED, onAHUEvent, false, 0,true)
+			CairngormEventDispatcher.getInstance().addEventListener(AHUEvent.EVENT_AHU_STOPPED, onAHUEvent, false, 0,true)
+			CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0,true)
+			miniNav.addEventListener(SimNavEvent.EVENT_NAVIGATION, simNavEvent)
+			
+			overlaysArr = []
+			
+			//setup array of overlays for all nodes
+			overlaysArr["overlayHC"] = overlayHC
+			overlaysArr["overlayCC"] = overlayCC
+			overlaysArr["overlayVAV"] = overlayVAV
+			overlaysArr["overlayDIF"] = overlayDIF
+			overlaysArr["overlayFlt"] = overlayFlt
+			overlaysArr["overlayFan"] = overlayFan
+			overlaysArr["overlayMX"] = overlayMX
+			overlaysArr["overlaySYS"] = overlaySYS
+			overlaysArr["overlayRF"] = overlayRF
+			overlaysArr["overlayBOI"] = overlayBOI
+			overlaysArr["overlayCHL"] = overlayCHL
+			overlaysArr["overlayCTW"] = overlayCTW
+			overlaysArr["overlayPLT"] = overlayPLT
+			
+			//add particle engine
+			peMasks = []
+			pe = new ParticleEngine()
+			peCanvas.addChild(pe)
+			pe.setScene(ScenarioModel.SN_ROOF)
+			peCanvas.opaqueBackground = null
+			
+			//add PE masks
+			//add masks
+			peMasks[ScenarioModel.SN_DIFFUSER] = new peMaskDIF()
+			peMasks[ScenarioModel.SN_HC] = new peMaskHC()
+			peMasks[ScenarioModel.SN_CC] = new peMaskCC()
+			peMasks[ScenarioModel.SN_FAN] = new peMaskFan()
+			peMasks[ScenarioModel.SN_FILTER] = new peMaskFlt()
+			peMasks[ScenarioModel.SN_MIXINGBOX] = new peMaskMX()
+			peMasks[ScenarioModel.SN_SYSTEM] = new peMaskSYS()
+			peMasks[ScenarioModel.SN_VAV] = new peMaskVAV()
+			//add masks as children of peCanvas but keep them invisible
+			for (var maskName:String in peMasks)
+			{
+				peMasks[maskName].visible = false
+				peMasks[maskName].cacheAsBitmap = true
+				peCanvas.addChild(peMasks[maskName])
+			}	
+							
+		}	
+		
+		public function onScenarioLoaded(evt:ScenarioLoadedEvent):void
+		{
+			Logger.debug("#VizPanel: onScenarioLoaded()")
+			LHModelLocator.getInstance().scenarioModel.ltSettingsModel.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onLTSettingsChange, false, 0,true)
+			currNode = ScenarioModel.SN_ROOF	
+			initBindings()
+			pe.initPE()
+			pe.setScene(currNode)
+			Logger.debug("#VizPanel: animPanel.playIntroAnim()")
+			playIntroAnim()
+		}
+		
+		/* The only reason we listen to changes to the LTSettings class
+		   is to watch for a zone change. If the zone is 5, we show the zone 5 system view hack image, otherwise we hide it*/
+		public function onLTSettingsChange(event:PropertyChangeEvent):void
+		{
+			if (event.property=="zoneOfInterest" && currNode==ScenarioModel.SN_SYSTEM)
+			{
+				imgCoreZoneSystemView.visible = (event.newValue==5)
+			}
+			
+		}
+		
+		public function onIntroAnimStarted():void
+		{
+			Logger.debug("#VizPanel: onIntroAnimStarted()")
+			dispatchEvent(new Event("introAnimStarted()"))
+		}
+		
+		public function onIntroAnimFinished():void
+		{
+			Logger.debug("#VizPanel: onIntroAnimFinished()")
+			dispatchEvent(new Event("introAnimFinished"))
+			
+			//make sure mixing box is in correct state
+			mixingBox.currentState=ScenarioModel.SN_ROOF
+		}
+		
+		
+		public function clearVizPanel():void
+		{
+			Logger.debug("#VizPanel: clearingVizPanel()")
+			currNode = ScenarioModel.SN_ROOF
+			if (pipeLiquidsHC!=null) pipeLiquidsHC.visible = false
+			if (pipeLiquidsCC!=null) pipeLiquidsCC.visible = false
+			if (vavDamper!=null)vavDamper.visible = false
+			if (btnSetPointControl3D!=null) btnSetPointControl3D.visible=false
+			if (mixingBox!=null) mixingBox.currentState = "hidden"
+			if (fan!=null) fan.visible = false
+	
+			//clear overlays
+			for (var overlay:String in overlaysArr)
+			{
+				if (overlaysArr[overlay]!=null)	UIComponent(overlaysArr[overlay]).visible = false 
+			}
+			
+			//clear PE
+			pe.stopPE()
+		}
+		
+		
+		
+		public function playIntroAnim():void
+		{
+			Logger.debug("#VizPanel: playIntroAnim()")
+			dispatchEvent(new Event("introAnimStarted"))
+			animPanel.playIntroAnim()
+		}
+		
+		private function initBindings():void
+		{
+			var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+			
+			while (cwArr.length>0)
+			{
+				ChangeWatcher(cwArr.pop()).unwatch()
+			}
+			
+			//setup any binding of viz objects to scenarioModel
+			//mixing box
+			cwArr.push(BindingUtils.bindSetter(setDampersOA, scenModel.getSysVar("MXOAPosDamperReal"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setDampersEA, scenModel.getSysVar("MXEAPosDamperReal"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setDampersRA, scenModel.getSysVar("MXRAPosDamperReal"), "currValue" ))
+			//damper			
+			cwArr.push(BindingUtils.bindSetter(setVAVDamper, scenModel.getSysVar("VAVPos"), "currValue" ))
+			//FPS bar 
+			cwArr.push(BindingUtils.bindSetter(onFPSBar, LHModelLocator.getInstance(), "showFramesPerSecondBar"))
+			
+		}
+		
+		public function onFPSBar(state:Boolean):void
+		{
+			animPanel.fpsVisible = state
+		}
+		
+		public function setDampersOA(value:Number):void
+		{
+			mixingBox.setDamper("OA", value)		
+		}
+		public function setDampersRA(value:Number):void
+		{
+			mixingBox.setDamper("RA", value)	
+		}
+		public function setDampersEA(value:Number):void
+		{
+			mixingBox.setDamper("EA", value)	
+		}
+		public function setVAVDamper(value:Number):void
+		{
+			Logger.debug("#VizPanel: setting vavDamper to : " + value)
+			Logger.debug("#VizPanel: vavDamper.visible : " + vavDamper.visible)
+			vavDamper.setDamper(value)
+		}
+		
+		public function onAHUEvent(evt:CairngormEvent):void
+		{
+			Logger.debug("#VizPanel: onAHUEvent received type: " +evt.type)
+			var event:AHUEvent = AHUEvent(evt)
+			switch (event.type)
+			{
+				case AHUEvent.EVENT_AHU_STARTED:
+					pe.startPE()
+					//start fan if it's visible in this node
+					if (currNode == ScenarioModel.SN_FAN || currNode == ScenarioModel.SN_ROOF || currNode == ScenarioModel.SN_SYSTEM)
+					{
+						fan.currentState = currNode + "_ON"	
+					}
+					break
+					
+				case AHUEvent.EVENT_AHU_STOPPED:
+					pe.stopPE()
+					//stop fan if it's visible in this node
+					if (currNode == ScenarioModel.SN_FAN || currNode == ScenarioModel.SN_ROOF || currNode == ScenarioModel.SN_SYSTEM)
+					{
+						fan.currentState = currNode + "_OFF"
+					}
+					break
+				
+				default:
+					Logger.error("#VizPanel: onAHUEvent: unrecognized event type: " + event.type)
+				
+			}
+		}
+		
+		public function simNavEvent(e:SimNavEvent):void
+		{
+			if (currNode == e.node) return
+			hideNode()
+			//move to new view	
+			currNode = e.node	
+			animPanel.navigateTo(currNode)
+		}
+					
+		public function showNode():void
+		{
+			Logger.debug("#VizPanel: showNode(). currNode:" + currNode)
+			
+			var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+			//Sets the current node's overlays after the animation has completed
+			var currOverlay:String = "overlay"+currNode
+			for (var overlay:String in overlaysArr)
+			{
+				if (overlay==currOverlay)
+				{
+					UIComponent(overlaysArr[overlay]).visible = true 
+					Logger.debug("#VizPanel: turning " + overlay + " currentState to showLabels")
+				}
+			}
+			
+			//Set other node-specific stuff
+			switch (currNode){
+				
+				case ScenarioModel.SN_HC:
+					pipeLiquidsHC.active = true
+					break
+					
+				case ScenarioModel.SN_CC:
+					Logger.debug("#Viz: setting CC pipeLiquids to disabled=false")
+					pipeLiquidsCC.active = true
+					break
+				
+				case ScenarioModel.SN_FAN:
+					//set fan according to AHU state
+					fan.visible = true
+					switch (scenModel.ahuStatus)
+					{
+						case ScenarioModel.AHU_OFF:
+							fan.currentState = "Fan_OFF"
+							break
+						case ScenarioModel.AHU_ON:
+							fan.currentState = "Fan_ON"
+							break
+					}
+					break
+				
+				case ScenarioModel.SN_FILTER:
+					break
+				
+				case ScenarioModel.SN_DIFFUSER:
+					break
+				
+				case ScenarioModel.SN_VAV:
+					vavDamper.visible = true
+					try
+					{
+						vavDamper.setDamper(scenModel.getSysVar("VAVPos").currValue )
+					}
+					catch (e:Error)
+					{
+						Logger.debug("#VizPanel: couldn't update VAV pos when first showing ... variable not found?")
+					}
+					break
+				
+				case ScenarioModel.SN_MIXINGBOX:
+					mixingBox.currentState=ScenarioModel.SN_MIXINGBOX
+					try
+					{
+						Logger.debug("#VizPanel: showNode() setting dampers to current values...")
+						Logger.debug("#VizPanel: showNode() MXOAPosDamperReal: " +scenModel.getSysVar("MXOAPosDamperReal").currValue )
+						
+						setDampersOA( scenModel.getSysVar("MXOAPosDamperReal").currValue )
+						setDampersEA( scenModel.getSysVar("MXEAPosDamperReal").currValue )
+						setDampersRA( scenModel.getSysVar("MXRAPosDamperReal").currValue )
+					}
+					catch (e:Error)
+					{
+						Logger.debug("#VizPanel: couldn't update MX when first showing ... msg: " + e.message)
+					}
+					break
+				
+				case ScenarioModel.SN_ROOF:
+					//set fan according to AHU state
+					fan.visible = true
+					switch (scenModel.ahuStatus)
+					{
+						case ScenarioModel.AHU_OFF:
+							fan.currentState = "RF_OFF"
+							break
+						case ScenarioModel.AHU_ON:
+							fan.currentState = "RF_ON"
+							break
+					}
+					mixingBox.currentState=ScenarioModel.SN_ROOF
+					break
+				
+				case ScenarioModel.SN_SYSTEM:
+				
+					if (scenModel.ltSettingsModel.zoneOfInterest==5) imgCoreZoneSystemView.visible = true
+				
+					fan.visible = true
+					//set fan according to AHU state
+					switch (scenModel.ahuStatus)
+					{
+						case ScenarioModel.AHU_OFF:
+							fan.currentState = "SYS_OFF"
+							break
+						case ScenarioModel.AHU_ON:
+							fan.currentState = "SYS_ON"
+							break
+					}
+					mixingBox.currentState=ScenarioModel.SN_SYSTEM
+					btnSetPointControl3D.visible = true
+					break
+				
+				default:
+					Logger.error("#VisualiazationPanel: setView() unrecognized node:" + currNode)
+						
+			}
+			
+			//set the particle engine and mask
+			pe.setScene(currNode)
+			if (currNode == ScenarioModel.SN_ROOF || 
+							currNode == ScenarioModel.SN_CHILLER ||
+							currNode == ScenarioModel.SN_COOLINGTOWER || 
+							currNode == ScenarioModel.SN_PLANT || 
+							currNode ==  ScenarioModel.SN_BOILER)
+			{
+				pe.mask == null
+			}
+			else
+			{
+				pe.mask = peMasks[currNode]
+			}
+			
+			//start PE if AHU is on
+			if (scenModel.ahuStatus==ScenarioModel.AHU_ON)
+			{
+				pe.startPE()
+			}
+			
+			//finally tell other windows to update by				
+			//rebroadcasting event within cairngorm framework
+			var cgEvent:CairngormEvent = new VisualizationEvent(VisualizationEvent.EVENT_NAVIGATION_CHANGE_NODE, currNode)
+			CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+	
+		}
+			
+		
+		public function hideNode():void
+		{
+			// Hide all visual items that need to be hidden when showing the animation moving between nodes
+			
+			//stop and hide PE
+			pe.stopPE()
+			
+			//hide overlays			
+			for (var overlay:String in overlaysArr)
+			{
+				UIComponent(overlaysArr[overlay]).visible = false 
+			}
+			
+			//hide node-specific stuff
+			switch (currNode){
+				
+				case ScenarioModel.SN_HC:
+					pipeLiquidsHC.active = false
+					break
+					
+				case ScenarioModel.SN_CC:
+					pipeLiquidsCC.active = false
+					break
+				
+				case ScenarioModel.SN_FAN:
+					fan.visible = false
+					break
+				
+				case ScenarioModel.SN_FILTER:
+					break
+				
+				case ScenarioModel.SN_DIFFUSER:
+					break
+				
+				
+				case ScenarioModel.SN_VAV:
+					vavDamper.visible = false
+					break
+				
+				
+				case ScenarioModel.SN_MIXINGBOX:
+					mixingBox.currentState = "hidden"
+					break
+				
+				case ScenarioModel.SN_BOILER:
+					break
+					
+				case ScenarioModel.SN_CHILLER:
+					break
+					
+				case ScenarioModel.SN_COOLINGTOWER:
+					break
+					
+				case ScenarioModel.SN_PLANT:
+					break
+					
+				
+				case ScenarioModel.SN_ROOF:
+					fan.visible = false
+					mixingBox.currentState = "hidden"
+					break
+				
+				case ScenarioModel.SN_SYSTEM:
+					fan.visible = false
+					imgCoreZoneSystemView.visible = false //will be showing if zone of interest is 5
+					mixingBox.currentState = "hidden"
+					btnSetPointControl3D.visible = false
+					break
+				
+				
+				default:
+					Logger.error("#VisualiazationPanel: setView() unrecognized node:" + currNode)
+			}
+			
+		}	
+		
+		private function onShowSetPointControl():void
+		{
+			var e:Event = new Event("showSetPointControl")
+			dispatchEvent(e)
+		}
+		
+         
+		
+			
+		]]>
+	</mx:Script>
+	
+
+    
+	<!-- anim -->
+	<myComps:AnimationPanel	id="animPanel"  
+		transitionFinished="showNode()" 
+		introAnimationStarted="onIntroAnimStarted()" 
+		introAnimationFinished="onIntroAnimFinished()" />
+		
+	<!-- HACK: this is the image to show when user views system view when zone of interest is 5 (core) -->
+	<mx:Image id="imgCoreZoneSystemView"
+		source="@Embed('assets/img/system_view_core_zone.png')"
+		visible="false"
+	/>
+	
+	<viz:PipeLiquidsHC id="pipeLiquidsHC" visible="false"/>
+	<viz:PipeLiquidsCC id="pipeLiquidsCC" visible="false"/>
+	<myComps:VAVDamper id="vavDamper" visible="false" />
+	<myComps:MixingBox id="mixingBox" />
+	<myComps:Fan id="fan" />
+	
+	<mx:Canvas id="peCanvas"
+		backgroundAlpha="0"
+		width="670" height="500" 
+		verticalScrollPolicy="off"
+		horizontalScrollPolicy="off"/>
+	
+    <mx:Button id="btnSetPointControl3D"
+				x="203"
+				y="287" 	
+				upSkin="{SetPoint3DControlImage}" 
+				overSkin="{SetPoint3DControlImage}"
+				downSkin="{SetPoint3DControlImage}" 
+			    mouseDown="onShowSetPointControl()"
+			    useHandCursor="true"
+			    visible = "false"
+			    toolTip="Launch Set Point Control"
+			    />
+	
+	<overlay:OverlayRF id="overlayRF" visible="false" />
+	<overlay:OverlayMX id="overlayMX" visible="false"/>
+	<overlay:OverlayFlt id="overlayFlt" visible="false"/>
+	<overlay:OverlayHC id="overlayHC" visible="false" />
+	<overlay:OverlayCC id="overlayCC" visible="false"/>
+	<overlay:OverlayFan id="overlayFan" visible="false"/>
+	<overlay:OverlayVAV id="overlayVAV" visible="false"/>	
+	<overlay:OverlayDIF id="overlayDIF" visible="false"/>	
+	<overlay:OverlaySYS id="overlaySYS" visible="false"/>	
+	<overlay:OverlayBOI id="overlayBOI" visible="false"/>	
+	<overlay:OverlayCHL id="overlayCHL" visible="false"/>
+	<overlay:OverlayCTW id="overlayCTW" visible="false"/>
+	<overlay:OverlayPLT id="overlayPLT" visible="false"/>
+	
+	<!-- nav -->
+	<myComps:MiniNav  id="miniNav" x="315" y="250"   />
+		
+	<!-- spark status indicator -->
+	<viz:SparkStatus id="sparkStatusIndicator" x="476" y="-1" />
+	
+	
+		
+</mx:Canvas>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Derrick Grigg
+    dgrigg@rogers.com
+    http://www.dgrigg.com
+    created on Nov 3, 2006
+    
+    Extends the mx.controls.DataGrid to allow the use of a custom dragImage
+    instead of the default 'row' dragImage.
+-->
+<mx:DataGrid xmlns:mx="http://www.adobe.com/2006/mxml">
+    <mx:Script>
+        <![CDATA[
+        import mx.controls.dataGridClasses.DataGridDragProxy;
+        import mx.core.IUIComponent;
+        
+        /**
+        * @public
+        * class to use as DragProxy image
+        */
+        [Bindable]
+        public var dragProxyImage: Class = DataGridDragProxy; //set the default value to the standard DataGridDragProxy class
+        
+        override protected function get dragImage():IUIComponent
+        {
+            var image:IUIComponent = new dragProxyImage();
+            image.owner = this;
+            return image;
+        }
+        ]]>
+    </mx:Script>
+</mx:DataGrid>

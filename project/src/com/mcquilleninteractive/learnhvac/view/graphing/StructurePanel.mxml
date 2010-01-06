@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+			xmlns:myComps="*"
+			xmlns:graphing="com.mcquilleninteractive.learnhvac.view.graphing.*"
+			title="System Variables"
+			creationComplete="onCC()" 
+			>
+
+	 	<mx:Script>
+	 		<![CDATA[
+	 		import com.mcquilleninteractive.learnhvac.model.SparkData;
+	 		import com.mcquilleninteractive.learnhvac.model.LHModelLocator	
+	 		import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel	
+	 		import com.mcquilleninteractive.learnhvac.model.SparkRunsModel	
+	 		import com.mcquilleninteractive.learnhvac.model.EPlusData	
+	 		import com.mcquilleninteractive.learnhvac.model.IGraphDataModel	
+	 		import com.mcquilleninteractive.learnhvac.util.Logger
+			import mx.collections.XMLListCollection
+			import com.adobe.cairngorm.control.CairngormEvent
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent		
+	 		import com.mcquilleninteractive.learnhvac.event.SparkEvent	
+			import mx.managers.DragManager
+			import mx.events.DragEvent
+			
+			
+			public function onCC():void
+			{
+				Logger.debug("StructurePanel created", this)
+				CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.SPARK_DATA_PARSED, onSparkDataParsed)
+				CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.EVENT_EPLUS_DATA_PARSED, onEPlusDataParsed)	
+				
+				sparkRun1.setType(SparkRunsModel.RUN_1)
+				sparkRun2.setType(SparkRunsModel.RUN_2)
+			}
+			
+			public function onSparkDataParsed(event:ScenarioDataLoadedEvent):void
+			{
+				
+				var graphDataModel:IGraphDataModel = event.graphDataModel
+				
+				//for now we're just expecting "run1" and "run2"
+				//but later we might want to support multiple models
+				
+				switch(event.graphDataModelID)
+				{
+					case SparkRunsModel.RUN_1:
+						sparkRun1.loadData(graphDataModel)
+						break
+					case SparkRunsModel.RUN_2:
+						sparkRun2.loadData(graphDataModel)
+						break
+				}	
+				
+			}
+			
+			
+			public function onEPlusDataParsed(evt:CairngormEvent):void
+			{
+				var event:ScenarioDataLoadedEvent = ScenarioDataLoadedEvent(evt)
+				var graphDataModel:IGraphDataModel = event.graphDataModel
+				
+				//for now we're just expecting "run1" and "run2"
+				//but later we might want to support multiple models
+				
+				switch(event.graphDataModelID)
+				{
+					case EPlusRunsModel.RUN_1:
+						eplusRun1.loadData(graphDataModel)
+						eplusRun1.setType(EPlusRunsModel.RUN_1)
+						break
+					case EPlusRunsModel.RUN_2:
+						eplusRun2.loadData(graphDataModel)
+						eplusRun2.setType(EPlusRunsModel.RUN_2)
+						break
+				}	
+				
+			}
+					
+				
+		 			
+	 		]]>
+	 	</mx:Script>
+	
+	 	<mx:Accordion id="accTreeHolder" height="100%" width="100%" creationPolicy="all">
+	 			
+	 		<graphing:DataStructure id="eplusRun1" label="Long-term Run 1" width="100%" height="100%"/>
+	 		<graphing:DataStructure id="eplusRun2" label="Long-term Run 2" width="100%" height="100%"/>
+	 		<graphing:DataStructure id="sparkRun1" label="Real-time Run 1" width="100%" height="100%"/>
+	 		<graphing:DataStructure id="sparkRun2" label="Real-time Run 2" width="100%" height="100%"/>
+	 				
+	 	</mx:Accordion>
+	 	
+	 	
+</mx:Panel>

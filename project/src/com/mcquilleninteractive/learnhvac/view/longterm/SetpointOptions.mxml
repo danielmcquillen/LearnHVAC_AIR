@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	label="Setpoints" 
+	paddingLeft="10" 
+	paddingRight="10" 
+	implements="com.mcquilleninteractive.learnhvac.view.longterm.ILongTermOptionsPanel"
+	toolTip="Zone heating and cooling setpoints" 
+	creationComplete="onCC()"
+	paddingTop="10"
+	paddingLeft="10"
+	paddingRight="10"
+	width="100%" height="100%">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO	
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import mx.validators.Validator
+							
+			private var _elevationView:ElevationView
+			private var _zoneSelector:ZoneSelector
+						
+			private var _errorMsg:String
+			private var _errorMsgArr:Array = []
+			private var _validatorsArr:Array 
+			
+			[Bindable]
+			private var _ltSettings:LTSettingsModel
+			
+			protected function onCC():void
+			{
+				_validatorsArr = [vldZoneHeatingSetpointTemp, vldZoneCoolingSetpointTemp]	
+			}	
+			
+						
+			public function setViewRefs(elevationView:ElevationView, zoneSelector:ZoneSelector):void
+			{				
+				_elevationView = elevationView
+				_zoneSelector = zoneSelector
+			}
+			
+			public function initializeValues():void
+			{	
+			}
+			
+			public function resetValues():void
+			{
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				var sysVar:SystemVariable = SystemVariable(scenModel.getSysVar("TRoomSP"))
+	
+				var tRoomSP:Number = sysVar.currValue
+				
+				txtZoneHeatingSetpointTemp.text = (tRoomSP-1).toString()
+				txtZoneCoolingSetpointTemp.text = (tRoomSP+1).toString()
+								
+				//set input limits (range depends on units)
+				if (LHModelLocator.currUnits)
+				{
+					vldZoneHeatingSetpointTemp.minValue = tRoomSP - 5
+					vldZoneHeatingSetpointTemp.maxValue = tRoomSP
+					vldZoneCoolingSetpointTemp.minValue = tRoomSP
+					vldZoneCoolingSetpointTemp.maxValue = tRoomSP + 5					
+					lblZoneHeatingMinMax.text = "( min:" + (tRoomSP - 5).toString() + " max:" + tRoomSP.toString() + ")"
+					lblZoneCoolingMinMax.text = "( min:" + tRoomSP.toString() + " max:" + (tRoomSP+5).toString() + ")"
+				}
+				else
+				{
+					vldZoneHeatingSetpointTemp.minValue = tRoomSP - 10
+					vldZoneHeatingSetpointTemp.maxValue = tRoomSP
+					vldZoneCoolingSetpointTemp.minValue = tRoomSP
+					vldZoneCoolingSetpointTemp.maxValue = tRoomSP + 10		
+					lblZoneHeatingMinMax.text = "( min:" + (tRoomSP - 10).toString() + " max:" + tRoomSP.toString() + ")"
+					lblZoneCoolingMinMax.text = "( min:" + tRoomSP.toString() + " max:" + (tRoomSP+10).toString() + ")"
+				}
+				
+				vldZoneHeatingSetpointTemp.validate()
+				vldZoneCoolingSetpointTemp.validate()
+				
+			}
+			
+		
+			
+			
+			public function isValid():Boolean
+			{
+				
+				//make sure heating setpoint is one degree less than cooling setpoint
+				if ( (Number(txtZoneCoolingSetpointTemp.text) - Number(txtZoneHeatingSetpointTemp.text)) < 1)
+				{
+						
+					_errorMsg = "Zone cooling setpoint must be at least one degree more than zone heating setpoint"
+					return false
+				}
+				
+				var results:Array = Validator.validateAll(_validatorsArr)
+				if (results.length>0){
+					var _errorMsg:String = "Some of the values you've entered are incorrect. Please check the following fields:\n"
+					for (var i:uint=0; i<results.length; i++)
+					{
+						var s:String = _errorMsgArr[results[i].target.source.id] 
+						_errorMsg = _errorMsg + "\n" + s
+					}
+					return false
+				}			
+				
+				return true
+				
+			}
+				
+			public function get errorMsg():String
+			{
+				return _errorMsg
+			}
+			
+				
+			public function unitsUpdate():void
+			{				
+				resetValues()
+			}
+				
+		]]>
+	</mx:Script>
+	
+		
+	<mx:NumberValidator id="vldZoneHeatingSetpointTemp" 
+		source="{txtZoneHeatingSetpointTemp}"
+		property="text" 
+		minValue="0" 
+		maxValue="0"/>
+			
+	<mx:NumberValidator id="vldZoneCoolingSetpointTemp" 
+		source="{txtZoneCoolingSetpointTemp}"
+		property="text"
+		minValue="0"
+		maxValue="0"/>
+			
+	
+	<mx:Label text="Zone setpoints" fontWeight="bold" />
+	
+	<mx:Text width="100%" height="100" text="The zone heating setpoint is the room temperature that the system is trying to maintain when in heating mode. The zone cooling setpoint is the room temperature that the system is trying to maintain when in cooling mode. The difference between them is often referred to as a deadband."/>
+			
+	<mx:Form>
+		
+		<mx:FormItem paddingTop="5" label="Zone Heating Setpoint">
+			<mx:HBox>
+				<mx:TextInput id="txtZoneHeatingSetpointTemp"  width="70" restrict="0-9.-" text="{_ltSettings.zoneHeatingSetpointTemp}"  />
+				<mx:Label text="" id="lblZoneHeatingSetpointTempUnits"/>
+			</mx:HBox>
+		</mx:FormItem>
+		<mx:Label text="" id="lblZoneHeatingMinMax"/>
+		
+		<mx:Spacer height="15"/>
+		<mx:FormItem paddingTop="5" label="Zone Cooling Setpoint">
+			<mx:HBox>
+				<mx:TextInput id="txtZoneCoolingSetpointTemp"  width="70" restrict="0-9.-" text="{_ltSettings.zoneCoolingSetpointTemp}"  />
+				<mx:Label text="" id="lblZoneCoolingSetpointTempUnits"/>
+			</mx:HBox>
+		</mx:FormItem>
+		<mx:Label text="" id="lblZoneCoolingMinMax"/>
+		
+		<mx:Spacer height="10"/>
+		
+	</mx:Form>
+	
+		
+</mx:VBox>

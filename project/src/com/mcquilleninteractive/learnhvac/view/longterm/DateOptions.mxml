@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	label="DD"
+	toolTip="Design Days" 
+	implements="com.mcquilleninteractive.learnhvac.view.longterm.ILongTermOptionsPanel"
+	width="100%" height="100%"
+	paddingTop="10"
+	paddingLeft="10"
+	paddingRight="10"
+	creationComplete="onCC()"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+		
+		
+			/**** TODO : REFACTOR THIS CLASS WHEN WE CHANGE UP THE SCENARIO.XML SO THAT DATES ARE READ INTO AND UPDATED IN LTSETTINGSMODEL */
+		
+			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel;
+			
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import mx.validators.Validator
+			
+			private var _elevationView:ElevationView
+			private var _zoneSelector:ZoneSelector
+			private var _validatorsArr:Array
+			public var _errorMsg:String
+			public var _errorMsgArr:Array = [];
+			
+			[Bindable]
+			private var _ltSettings:LTSettingsModel
+			
+			protected function onCC():void
+			{
+				_errorMsgArr["dfSDDStartDay"] = "SDD Start Day"
+				_errorMsgArr["dfSDDStopDay"] = "SDD Stop Day"
+				_errorMsgArr["dfWDDStartDay"] = "WDD Start Day"
+				_errorMsgArr["dfWDDStopDay"] = "WDD Stop Day"
+			}			
+			
+			public function setViewRefs(elevationView:ElevationView, zoneSelector:ZoneSelector):void
+			{
+				
+				_elevationView = elevationView
+				_zoneSelector = zoneSelector
+			}
+			
+			public function initializeValues():void
+			{	
+				
+				
+			}
+			
+			public function onScenarioLoaded():void
+			{				
+				_ltSettings = LHModelLocator.getInstance().scenarioModel.ltSettingsModel
+				resetValues()
+			}
+			
+						
+			public function isValid():Boolean
+			{				
+				/*
+				var results:Array = Validator.validateAll(_validatorsArr)
+				if (results.length>0){
+					var _errorMsg:String = "Some of the values you've entered are incorrect. Please check the following fields:\n"
+					for (var i:uint=0; i<results.length; i++)
+					{
+						var s:String = _errorMsgArr[results[i].target.source.id] 
+						_errorMsg = _errorMsg + "\n" + s
+					}
+					return false
+				}			
+				*/
+				return true
+			}
+			
+			public function get errorMsg():String
+			{
+				return _errorMsg
+			}
+			
+			public function unitsUpdate():void
+			{
+				//no need to do anything on this panel	
+			}
+			
+			public function resetValues():void
+			{
+				/*
+				try
+				{
+					var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+					//update date entry based on scenario info
+					
+				}
+				catch(err:Error)
+				{
+					Logger.error("#LongTermSimulation: onScenarioLoaded() couldn't set start and stop date. Err: " + err.message)
+				}	
+				*/
+			}
+			
+			
+		]]>
+	</mx:Script>
+	
+	
+
+	<mx:DateFormatter
+		id="monthDayFormatter"
+ 	   	formatString="MMM DD"
+   		/> 	   	   
+	 
+   	<mx:Label text="Design Day Properties" styleName="longTermOptionsSectionHeader"/>
+	
+	<mx:Text width="350"  text="NOTE: Winter Design Day and Summer Design Day dates are not configurables in this version of Learn HVAC. They are set to predetermined dates."/>
+   	  		
+   	<mx:Label text="Winter Design Day Dates" styleName="longTermOptionsSectionHeader"/>
+   	   	   	
+	<mx:HBox>
+   		<mx:Label text="WDD Start Date:"  width="150" styleName="longTermOptionsLabel"/>
+	    <mx:Label id="txtWDDStartDate"  text="{monthDayFormatter.format(_ltSettings.wddStartDate)}" width="60"/>				
+	</mx:HBox>
+	
+	<mx:HBox>
+   		<mx:Label text="WDD Stop Date:"  width="150" styleName="longTermOptionsLabel"/>
+	    <mx:Label id="txtWDDStopDate"  text="{monthDayFormatter.format(_ltSettings.wddStopDate)}" width="60"/>				
+	</mx:HBox>
+   		
+   	<mx:Label text="Summer Design Day Dates" paddingTop="5" styleName="longTermOptionsSectionHeader"/>
+   	
+	<mx:HBox >
+   		<mx:Label text="SDD Start Date:"  width="150" styleName="longTermOptionsLabel"/>
+		<mx:Label id="txtSDDStartDate"  text="{monthDayFormatter.format(_ltSettings.sddStartDate)}" width="60"/>		
+	</mx:HBox>
+	<mx:HBox  >
+   		<mx:Label text="SDD Stop Date:"  width="150" styleName="longTermOptionsLabel"/>
+		<mx:Label id="txtSDDStopDate"  text="{monthDayFormatter.format(_ltSettings.sddStopDate)}" width="60"/>			
+	</mx:HBox>
+	
+	
+</mx:VBox>

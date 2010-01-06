@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="420" height="480"
+	title="Settings"
+	horizontalScrollPolicy ="off"
+	creationComplete="onCreationComplete()"
+	initialize="onInitialize()"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.util.Logger            
+			import mx.events.ValidationResultEvent;
+          	import mx.managers.PopUpManager;
+			
+			public function onInitialize():void
+			{
+				
+			}
+			
+			public function onCreationComplete():void
+			{
+				init()
+			}
+			
+			private function init():void
+			{
+				var model:LHModelLocator  = LHModelLocator.getInstance()
+				sparkStartupDelay.text = model.sparkStartupDelay.toString()
+				sparkIntervalDelay.text = model.sparkIntervalDelay.toString()
+				rdoAnimation.selectedValue = model.animationSpeed
+				rdoUnits.selectedValue = LHModelLocator.currUnits
+				sparkMaxReadsPerStep.text = model.sparkMaxReadsPerStep.toString()	
+			}
+			
+			private function onCancel():void
+			{
+				PopUpManager.removePopUp(this)	
+			}
+			
+			private function onOK():void
+			{
+				//update settings to user choices
+				if (performValidation())
+				{	
+					var model:LHModelLocator  = LHModelLocator.getInstance()
+					var scenModel:ScenarioModel  = LHModelLocator.getInstance().scenarioModel
+					model.animationSpeed = rdoAnimation.selectedValue.toString()
+					model.sparkIntervalDelay = Number(sparkIntervalDelay.text)
+					model.sparkStartupDelay = Number(sparkStartupDelay.text)
+					model.sparkMaxReadsPerStep = Number( sparkMaxReadsPerStep.text )											
+					//LHModelLocator.getInstance().showFramesPerSecondBar = cboFPS.selected									
+					LHModelLocator.getInstance().logToFile = cboLogToFile.selected												
+																	
+					//only launch setUnitsEvent if different from current value
+					if (LHModelLocator.currUnits != rdoUnits.selectedValue)
+					{
+						var cgEvent:SetUnitsEvent = new SetUnitsEvent(rdoUnits.selectedValue.toString())
+						CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+					}
+					
+				}
+				
+				//then close popup	
+				PopUpManager.removePopUp(this)
+			}
+
+			private function onChange():void
+			{
+				btnOK.enabled = performValidation()
+				Logger.debug("#buton should be set to :" + performValidation().toString())
+			}
+			private function performValidation():Boolean {
+				
+                var startup:ValidationResultEvent = vStartupDelay.validate()
+                var interval:ValidationResultEvent = vIntervalDelay.validate()
+                var isValid:Boolean = (startup.type == ValidationResultEvent.VALID && interval.type==ValidationResultEvent.VALID)
+            	return isValid
+            }
+			
+		]]>
+	</mx:Script>
+		
+	<mx:NumberValidator id="vStartupDelay" 
+		source="{sparkStartupDelay}" property="text" 
+		minValue="1" maxValue="1000"
+   	 	lowerThanMinError="The minimum allowed value is 1"
+		exceedsMaxError="The maximum allowed value is 1000"
+   	 />
+   	 
+   	 <mx:NumberValidator id="vIntervalDelay" 
+		source="{sparkIntervalDelay}" property="text" 
+		minValue=".5" maxValue="60"
+   	 	lowerThanMinError="The minimum allowed value is .5"
+		exceedsMaxError="The maximum allowed value is 60"
+   	 />
+   	 
+	<mx:Form id="settingsForm" defaultButton="{btnOK}" width="100%">
+	
+	    	<mx:FormItem label="Units:">
+	    		<mx:RadioButtonGroup id="rdoUnits"/>
+        		<mx:RadioButton groupName="rdoUnits" id="unitsSI" value="{LHModelLocator.UNITS_SI}" 
+           			 label="SI units" width="150" />
+        		<mx:RadioButton groupName="rdoUnits" id="unitsIP" value="{LHModelLocator.UNITS_IP}" 
+          			 label="IP units" width="150" />
+	    	</mx:FormItem>
+	
+	    	<mx:FormItem label="Air Particle Animation:" >
+	    		<mx:RadioButtonGroup id="rdoAnimation"/>
+        		<mx:RadioButton groupName="rdoAnimation" id="animFull" value="{LHModelLocator.ANIMATION_SPEED_FULL}" 
+           			 label="Full" width="150" />
+        		<mx:RadioButton groupName="rdoAnimation" id="animNone" value="{LHModelLocator.ANIMATION_SPEED_NONE}" 
+          			  label="None" width="150" />
+	    	</mx:FormItem>
+	    	
+	    
+	    	<mx:FormItem label="Spark Startup Delay:">
+	    		<mx:HBox width="100%">
+	    			<mx:TextInput id="sparkStartupDelay" text="" width = "30" textAlign="right" change="onChange()" restrict="0-9"/>
+	    			<mx:Label text="seconds"/>
+	    		</mx:HBox>
+	    		
+	    	</mx:FormItem>
+	    	
+	    
+	    	<mx:FormItem label="Spark Interval Delay:">
+	    		<mx:HBox width="100%">
+	    			<mx:TextInput id="sparkIntervalDelay" text="" width="30" textAlign="right" change="onChange()" restrict="0-9"/>
+	    			<mx:Label text="seconds"/>
+	    		</mx:HBox>
+	    	</mx:FormItem>
+	    	
+	    	<mx:FormItem label="Number of tries per Interval:">
+	    		<mx:HBox width="100%">
+	    			<mx:TextInput id="sparkMaxReadsPerStep" text="" width="30" textAlign="right" change="onChange()" restrict="0-9"/>
+	    			<mx:Label text="tries"/>
+	    		</mx:HBox>
+	    	</mx:FormItem>
+	    	
+	    	<!--
+	    	<mx:FormItem label="Frames per second:" >
+        		<mx:CheckBox id="cboFPS" label="Show FPS bar" selected="{LHModelLocator.getInstance().showFramesPerSecondBar}" />
+	    	</mx:FormItem>
+			-->
+			
+			<mx:FormItem label="Write log messages to log.txt:" >
+				<mx:CheckBox id="cboLogToFile" label="Log to file" selected="{LHModelLocator.getInstance().logToFile}"/>
+	    	</mx:FormItem>
+	
+			<mx:Spacer height="10"/>
+	    	<mx:HBox width="100%"  horizontalAlign="right">
+	    		<mx:Button width="100" height="30" id="btnOK" label="OK" click="onOK()" textAlign="center" right="0"/>
+	    		<mx:Button width="100" height="30" id="btnCancel" label="Cancel" click="onCancel()" textAlign="center" right="0"/>
+	    		
+	    	</mx:HBox>
+	    	
+	    	</mx:Form>
+	
+	
+</mx:Panel>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:view="com.mcquilleninteractive.learnhvac.view.*" 
+	xmlns:graphing="com.mcquilleninteractive.learnhvac.view.graphing.*" 
+    backgroundColor="0xFFFFFF"
+    creationComplete="onCC()"
+	>
+	
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import mx.charts.series.LineSeries;
+			import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent
+ 			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+ 			import com.mcquilleninteractive.learnhvac.model.EPlusData
+ 			import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel
+ 			import com.mcquilleninteractive.learnhvac.util.Logger
+ 			import com.mcquilleninteractive.learnhvac.util.ColorSetting
+ 			
+ 			import mx.collections.ArrayCollection;
+	    	import com.adobe.cairngorm.control.CairngormEventDispatcher 
+	    	import mx.styles.StyleManager;
+			import mx.graphics.Stroke
+	    	
+			
+			private var _runID:String
+		
+			private var _visibleFieldsArr:Array = [];
+			
+	    	[Bindable]
+	    	private var dataAC:ArrayCollection
+	    	
+	    	
+	    	private function onCC():void
+	    	{
+	    		Logger.debug("#EnergyOverview: onCC() runID : " + _runID)
+	    		CairngormEventDispatcher.getInstance().addEventListener(LongTermSimulationEvent.EVENT_DONE, onLongTermSimDone)
+	    		
+	    		//hash manages which lines are drawn on chart
+		    	_visibleFieldsArr = [ 	{fieldName:"lighting", enabled:true, color:ColorSetting.lightingColor},
+							    		{fieldName:"cooling", enabled:true, color:ColorSetting.coolingColor},
+							    		{fieldName:"heating", enabled:true, color:ColorSetting.heatingColor},
+							    		{fieldName:"fans", enabled:true, color:ColorSetting.fansColor},
+							    		{fieldName:"equipment", enabled:true, color:ColorSetting.equipmentColor},
+							    		{fieldName:"pumps", enabled:true, color:ColorSetting.pumpsColor},
+							    		{fieldName:"total", enabled:true, color:ColorSetting.totalColor}
+							    	]
+							    	
+				if (_runID!="")
+				{
+					setChartData()
+				}
+	    		
+	    		
+	    	}
+	    	
+	    	public function set runID(id:String):void
+	    	{
+	    		Logger.debug("#EOChart runID() set to : " + id)
+	    		_runID = id	    		
+	    		setChartData()
+	    	}
+	    	
+	    	public function get runID():String 
+	    	{
+	    		return _runID
+	    	}
+	    	
+	    	/** adds or removes a data field from the graph AND the total line */
+	    	public function toggleDataFieldVisibility(fieldName:String, enabledState:Boolean):void
+	    	{
+	    		for (var i:uint=0;i<_visibleFieldsArr.length;i++)
+	    		{
+	    			if (_visibleFieldsArr[i].fieldName == fieldName)
+	    			{
+	    				_visibleFieldsArr[i].enabled = enabledState
+	    				Logger.debug("#EOChart: setting " + _visibleFieldsArr[i].fieldName + " to : " + enabledState.toString())
+	    			}
+	    		}
+	    	}
+	    	
+	    	
+	    	public function onLongTermSimDone(event:LongTermSimulationEvent):void
+	    	{
+	    		Logger.debug("#EOChart: onLongTermSimDone() ")
+	    		setChartData()
+	    	}
+	    	
+	    	public function setChartData():void
+	    	{
+	    		if (LHModelLocator.getInstance().scenarioModel!=null)
+	    		{
+	    			dataAC = LHModelLocator.getInstance().scenarioModel.ePlusRunsModel.getEPlusData(_runID).hourlyMeterDataAC
+	    	   		dataAC.refresh()
+	    		}
+	    		else
+	    		{
+	    			Logger.warn("#EOChart: setChartData() no scenario available to get chart data")
+	    		}
+	    	}
+	    	
+	    	public function updateChart():void
+	    	{
+	    		//update dataprovider for chart: create subTotal for fields displayed
+	    		var len:Number = dataAC.length
+	    		var numFields:Number = _visibleFieldsArr.length
+	    		for (i=0; i<len; i++)
+				{
+					var dataObj:Object = dataAC.getItemAt(i)	
+					var subTotal:Number = 0				
+					dataObj.total=0
+					for (var j:uint=0;j<numFields;j++)
+					{
+						if (_visibleFieldsArr[j].enabled==true && _visibleFieldsArr[j].fieldName!="total")
+						{
+							dataObj.total += dataObj[_visibleFieldsArr[j].fieldName]
+						}
+					}
+					
+    			}
+	    		
+	    		//update lines shown on chart
+	    		var seriesArr:Array = []
+	    		for (var i:uint=0;i<_visibleFieldsArr.length;i++)
+	    		{
+	    			if (_visibleFieldsArr[i].enabled==false) continue
+					var ls:LineSeries;
+                 	ls = new LineSeries();
+                 	ls.xField = "date";
+                 	ls.yField = _visibleFieldsArr[i].fieldName
+                 	ls.setStyle("lineStroke", new Stroke(_visibleFieldsArr[i].color, 2, 1)); 
+                 	ls.displayName = _visibleFieldsArr[i].fieldName    
+                 	seriesArr.push(ls)
+	    		}
+	    		energyUseChart.series = seriesArr
+                energyUseChart.invalidateSeriesStyles()		
+	    		
+	    		
+	    	}
+	    	
+	    	private function onRefresh():void
+	    	{
+	    		updateChart()
+	    	}
+	    											
+		]]>
+	</mx:Script>
+	
+		
+		
+	<mx:LineChart id="energyUseChart"
+	 	width="100%" height="100%" 
+	    showDataTips="true"
+	 	dataProvider="{dataAC}"
+	 	>
+		 	<mx:seriesFilters>
+       			<mx:Array/>
+     		</mx:seriesFilters>
+
+         <mx:series>
+            	<mx:LineSeries yField="fans" xField="date" displayName="Fans" >
+	            	<mx:lineStroke>
+	                    <mx:Stroke color="{ColorSetting.fansColor}" weight="2" />
+	                </mx:lineStroke>
+            	</mx:LineSeries>
+            	<mx:LineSeries yField="lighting" xField="date" displayName="Lighting" >
+	            	<mx:lineStroke>
+	                    <mx:Stroke color="{ColorSetting.lightingColor}" weight="2" />
+	                </mx:lineStroke>
+            	</mx:LineSeries>
+            	<mx:LineSeries yField="equipment" xField="date" displayName="Equipment" >
+	            	<mx:lineStroke>
+	                    <mx:Stroke color="{ColorSetting.equipmentColor}" weight="2" />
+	                </mx:lineStroke>
+            	</mx:LineSeries>
+            	<mx:LineSeries yField="cooling" xField="date" displayName="Cooling" >
+	            	<mx:lineStroke>
+	                    <mx:Stroke color="{ColorSetting.coolingColor}" weight="2" />
+	                </mx:lineStroke>
+            	</mx:LineSeries>
+            	<mx:LineSeries yField="heating" xField="date" displayName="Heating" >
+	            	<mx:lineStroke>
+	                    <mx:Stroke color="{ColorSetting.heatingColor}" weight="2" />
+	                </mx:lineStroke>
+            	</mx:LineSeries>
+            	<mx:LineSeries yField="pumps" xField="date" displayName="Pumps" >
+	            	<mx:lineStroke>
+	                    <mx:Stroke color="{ColorSetting.pumpsColor}" weight="2" />
+	                </mx:lineStroke>
+            	</mx:LineSeries>
+            	<mx:LineSeries yField="subTotal" xField="date" displayName="Total">
+	            	<mx:lineStroke>
+	                    <mx:Stroke color="#000000" weight="2" />
+	                </mx:lineStroke>
+            	</mx:LineSeries>
+	    </mx:series>
+        
+   		<!-- background elements -->
+    	<mx:backgroundElements>
+        	<mx:GridLines direction="horizontal"
+                horizontalTickAligned="true">
+            	<mx:horizontalFill>
+                	<mx:SolidColor color="0xF6F6F6"/>
+            	</mx:horizontalFill>
+            	<mx:horizontalAlternateFill>
+                	<mx:SolidColor color="0xFFFFFF" />
+            	</mx:horizontalAlternateFill>
+        	</mx:GridLines>
+    	</mx:backgroundElements>
+    	
+        <mx:horizontalAxis>
+            <mx:DateTimeAxis />
+        </mx:horizontalAxis>
+        
+        <mx:verticalAxis >
+     		<mx:LinearAxis title="Total Energy Use (W)" id="yAxis" />
+		</mx:verticalAxis>
+
+		<mx:verticalAxisRenderers>
+    		<mx:AxisRenderer axis="{yAxis}" verticalAxisTitleAlignment="vertical" />
+		</mx:verticalAxisRenderers>
+
+    </mx:LineChart>
+
+	<mx:VBox width="120" height="100%">
+		<graphing:EnergyUseLegend  chart="{this}"/>
+		<mx:LinkButton label="Refresh Chart" click="onRefresh()"/>
+	</mx:VBox>
+		
+
+		
+</mx:Panel>

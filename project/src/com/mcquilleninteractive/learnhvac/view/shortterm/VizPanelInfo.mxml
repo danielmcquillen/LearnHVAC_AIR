@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:yahoo="http://www.yahoo.com/astra/2006/mxml"
+	width="674" height="45"
+	creationComplete="onCreationComplete()"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	xmlns:shortterm="com.mcquilleninteractive.learnhvac.view.shortterm.*">
+
+	<mx:Metadata>
+		[Event(name="simNav", type="com.mcquilleninteractive.learnhvac.view.event.SimNavEvent")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import mx.messaging.AbstractConsumer;
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.view.event.SimNavEvent
+			
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
+			import com.mcquilleninteractive.learnhvac.event.ScenarioDataEvent
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			import mx.controls.Alert
+			
+			[Embed (source='assets/img/anim_panel_bottom_border.png')]
+			[Bindable]
+			private var imgBG:Class
+			
+			[Bindable]
+			private var scenarioModel:ScenarioModel
+
+			[Bindable]
+			private var _stories:Number = 3;
+			
+			[Bindable]
+			private var _zoneOfInterest:Number = 1;
+
+			[Bindable]
+			private var _floorOfInterest:String = ""
+			
+			private var currentYear:Number = new Date().fullYear
+			
+			
+			private function onCreationComplete():void
+			{
+				//CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded)
+			}
+			
+			private function onScenarioLoaded(event:ScenarioLoadedEvent):void
+			{
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				
+				
+				
+			}
+			
+			public function cboAhuNavChangeEvt(event:Event):void
+	        {
+				Logger.debug("cboAhuNavChangeEvt", this)
+	        	var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+	        	var newNode:String = scenModel.sysNodesForNavArr[event.currentTarget.selectedIndex].id
+	        	var evt:SimNavEvent = new SimNavEvent(SimNavEvent.EVENT_NAVIGATION, newNode)
+	        	dispatchEvent(evt)
+	        	
+	        }
+			
+			
+		]]>
+	</mx:Script>
+	<mx:Image source="{imgBG}"/>
+	
+	
+		
+	<mx:ComboBox 	id="cboAhuNav" 
+						x="20" y="8" 
+						change="cboAhuNavChangeEvt(event)"
+			    		rowCount = "12"
+						labelField="name" 
+				 />	
+					 
+				
+   <shortterm:SimTimer id="simTimer" x="360" y="2" />
+		
+		
+		
+	
+	
+	
+</mx:Canvas>

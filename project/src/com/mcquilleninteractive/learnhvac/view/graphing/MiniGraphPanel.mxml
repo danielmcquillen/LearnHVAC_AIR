@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<util:DragPanel xmlns:mx="http://www.adobe.com/2006/mxml" 
+		xmlns:util="com.mcquilleninteractive.learnhvac.util.*"
+		layout="absolute"
+	 	title="GRAPH" 
+		left="0" top="0" bottom="0" right="0" 
+		width="400" 
+	 	height="250"
+	 	dragEnter="onDragEnter(event)"
+	    dragExit="onDragExit(event)"
+	    dragDrop="onDragDrop(event)"
+	 	creationComplete="onCreationComplete()" 
+	 	close="onClose()"
+		>
+		
+	
+	<mx:Script>
+			<![CDATA[
+			
+				import mx.charts.ChartItem;
+				import com.adobe.cairngorm.control.CairngormEvent
+				import mx.managers.DragManager
+				import mx.events.DragEvent
+				import mx.core.DragSource
+				import mx.core.UIComponent
+				import com.mcquilleninteractive.learnhvac.util.Logger
+				import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+				import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+				import com.mcquilleninteractive.learnhvac.model.SystemVariable
+				import com.mcquilleninteractive.learnhvac.event.SparkEvent
+				import mx.charts.chartClasses.ChartBase;
+				import mx.collections.ArrayCollection
+				import mx.controls.Tree	
+				import mx.controls.Alert
+				import com.adobe.cairngorm.control.CairngormEventDispatcher
+				import com.mcquilleninteractive.learnhvac.event.AddVarToGraphEvent
+				import mx.containers.Panel
+				
+				[Event(name="panelClosed",type="flash.events.Event")]
+				
+				
+ 				[Embed (source = 'assets/img/clear_graph.png')]
+ 				[Bindable]
+ 				public var icoClear : Class;  
+				
+				[Embed (source = 'assets/img/arrow_refresh.png')]
+ 				[Bindable]
+ 				public var icoRefresh : Class;     
+ 				
+ 				protected var updateTimer:Timer	
+				
+				public var graphVars:Array // array of variables to graph on this chart
+				public var graphVarID:String // use this until we implement multiple vars (using graphVars)
+				
+				public var position:Number //1 for upper graph, 2 for lower graph
+				public var graphID:Number
+				
+				[Bindable]
+			    public var var1Color:Number = LHModelLocator.chart1Var1Color;
+
+			    [Bindable]
+    			public var var2Color:Number = LHModelLocator.chart1Var2Color;
+				
+
+				public function onCreationComplete():void
+				{
+					graphVars= new Array()
+					
+					//make sure graph is set to normal minimum
+					lineHorizontalAxis.minimum = 0
+					
+					updateTimer = new Timer(5000)
+					updateTimer.addEventListener(TimerEvent.TIMER, onUpdateTimer)
+					
+					var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
+					
+					dispatcher.addEventListener(SparkEvent.SPARK_ON, startTimer)
+					dispatcher.addEventListener(SparkEvent.SPARK_OFF, stopTimer)
+					dispatcher.addEventListener(SparkEvent.SPARK_CRASHED, stopTimer)
+					dispatcher.addEventListener(SparkEvent.SPARK_INTERVAL_TIMEOUT, stopTimer)
+					dispatcher.addEventListener(SparkEvent.SPARK_STARTUP_TIMEOUT, stopTimer)
+					
+				}
+				
+				public function startTimer(event:CairngormEvent):void
+				{
+					updateTimer.start()
+				}
+				
+				public function stopTimer(event:CairngormEvent):void
+				{
+					updateTimer.stop()
+				}
+				
+				protected function onClose():void
+				{
+					Logger.debug("#MiniGraphPanel: closing...")
+					
+					updateTimer.stop()
+					
+					var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
+					
+					dispatcher.removeEventListener(SparkEvent.SPARK_ON, startTimer)
+					dispatcher.removeEventListener(SparkEvent.SPARK_OFF, stopTimer)
+					dispatcher.removeEventListener(SparkEvent.SPARK_CRASHED, stopTimer)
+					dispatcher.removeEventListener(SparkEvent.SPARK_INTERVAL_TIMEOUT, stopTimer)
+					dispatcher.removeEventListener(SparkEvent.SPARK_STARTUP_TIMEOUT, stopTimer)
+				}
+				
+				protected function onUpdateTimer(event:TimerEvent):void
+				{
+					this.onRefreshData(null)
+				}
+
+
+								
+				public function clear():void
+				{
+					graphVars = []
+					graphTitle.text = ""
+					
+					//clear graph
+					lineHorizontalAxis.title = ""
+	    			v1.title = ""
+    				v2.title = ""
+    				lineChart.dataProvider = new ArrayCollection()
+				}
+				
+				// Called if the user drags a drag proxy onto the drop target.
+				public function onDragEnter(event:DragEvent):void
+				{
+					
+					lineChart.setStyle("borderThickness", 4);   
+					
+					mx.managers.DragManager.showFeedback(mx.managers.DragManager.COPY)
+					
+					var dropTarget:LineChart = event.currentTarget as LineChart;
+					
+					//TODO: Filter for only drags from OutputPanel or InputPanel
+					
+					/*
+					var dropTarget:Panel = event.currentTarget as Panel
+				    if( event.dragInitiator is Tree ) {
+						var ds:DragSource = event.dragSource
+        				if( !ds.hasFormat("treeItems") ) return; // no useful data
+         				var items:Array = ds.dataForFormat("treeItems") as Array
+         				for(var i:Number=0; i < items.length; i++) {
+             				var item:XML = XML(items[i])
+             				if( item.localName() != "dataPoint" ) return; // only want dataPoints
+         				}   
+     				}	 
+     				*/
+     				
+     				// if the tree passes or the dragInitiator is not a tree, accept the drop
+    				mx.managers.DragManager.acceptDragDrop(dropTarget);
+
+				}
+				
+							
+				// Called if the target accepts the dragged object and the user 
+           		// releases the mouse button while over the drop target. 
+				public function onDragDrop(event:DragEvent):void
+				{
+					Logger.debug("#MiniGraphPanel: onDragDrop. event: " + event)
+					for (var name:String in event)
+					{
+						Logger.debug("event["+name+"]: " +event[name])
+					}
+					
+					var dragSysVarArr:Array = event.dragSource.dataForFormat("items") as Array; 
+					
+					//only one id should be in array
+					var sysVarName:String = SystemVariable(dragSysVarArr[0]).name
+                
+                	Logger.debug("Dragged: " + sysVarName); 
+					
+					addVarToGraph(sysVarName)        			
+         			setGraphTitle()	
+					setAxisTitles()
+         			
+         			onDragExit(event)
+         			
+				}
+				
+				private function addVarToGraph(sysVarName:String):void
+				{
+					// Check if variable is already being graphed
+    				var exists:Boolean = false
+    				for (var i:Number=0; i<graphVars.length;i++)
+    				{
+    					if (graphVars[i]==sysVarName){
+    						exists=true
+    					}
+    				}
+    				if (exists){
+    					mx.controls.Alert.show("That variable is already on this graph.")
+    					return
+    				}
+    				
+    				//current biz logic: replace second variable when 3rd or more is dragged on
+    				if (graphVars.length>1)
+    				{
+    					graphVars[1] = sysVarName //replace second var
+    				}
+    				else
+    				{
+    					graphVars.push(sysVarName)
+    				}
+    				
+					var cgEvent:CairngormEvent = new AddVarToGraphEvent(AddVarToGraphEvent.EVENT_ADD_SPARK_VAR, graphVars, lineChart, AddVarToGraphEvent.GRAPH_TYPE_TIME_SERIES)
+    				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+				}
+				
+				// Called if the user drags the drag proxy away from the drop target
+				// or after the drop event is completed.
+				public function onDragExit(event:DragEvent):void 
+				{
+					lineChart.setStyle("borderThickness", 1);   
+    			}
+    			
+    		   			
+        			
+    			public function setGraphTitle():void
+    			{
+    				//change title
+    				if (graphVars[0])
+    				{
+    					var t:String = graphVars[0]
+         				if (graphVars.length>1){
+         					t = t + " and " + graphVars[1]
+         				}
+         				this.graphTitle.text = t + " vs. Time"
+    				}
+    			}
+    			
+    			public function setAxisTitles():void
+    			{
+    				lineHorizontalAxis.title = "Time (secs)"
+    				if (graphVars[0])
+    				{
+	    				v1.title = getVarTitle(graphVars[0])
+    					if (graphVars.length>1)
+    					{	
+    						var2Renderer.visible = true
+    						v2.title = getVarTitle(graphVars[1])
+    					}
+    				}
+    			}
+    				 
+    			
+				public function getVarTitle(varID:String):String
+				{
+    				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+					return varID + " " + scenModel.getSysVar(varID).units
+				}
+            
+            	public function chartParseFunction(s:String):Date
+            	{
+            		var newDate:Date = new Date(s)
+            		return newDate
+            	}
+
+				public function onRefreshData(event:Event):void
+				{
+					if (graphVars.length>0)
+					{
+						Logger.debug("#VizPanel: refreshing data. graphVars: " + graphVars)	
+						var cgEvent:AddVarToGraphEvent = new AddVarToGraphEvent(AddVarToGraphEvent.EVENT_ADD_SPARK_VAR, graphVars, lineChart, AddVarToGraphEvent.GRAPH_TYPE_TIME_SERIES)
+    					CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+					}
+					
+				} 
+				
+				public function onClearData(event:Event):void
+				{
+					clear()
+				}
+				
+				
+				public function handleLineChange(event:Event):void
+				{
+					var dp:Array = new Array();
+					for(var i:int=0; i < lineSeries1.selectedItems.length; i ++)
+					{
+						dp.push(lineSeries1.selectedItems[i].item);
+						for (var itemName:String in lineSeries1.selectedItems[i].item)
+						{
+							Logger.debug("#item["+itemName+"] : " + lineSeries1.selectedItems[i].item[itemName])
+						}
+					}
+					
+					var firstItem:ChartItem = lineSeries1.selectedItems[0] as ChartItem
+					
+					lineHorizontalAxis.baseAtZero = false
+					lineChart.dataProvider = dp
+					lineHorizontalAxis.minimum = firstItem.item.time
+				}
+				
+				
+				
+					 
+				
+			]]>
+	</mx:Script>
+		
+			
+	<mx:Stroke id="var1Stroke" 
+       	 	color="{var1Color}" 
+       	 	weight="8" 
+      	  	alpha=".75"
+       	 	caps="square"
+	/>
+
+	<mx:Stroke id="var2Stroke" 
+      	  	color="{var2Color}" 
+       	 	weight="8" 
+       	 	alpha=".75"
+        	caps="square"
+  	/>
+
+	<mx:Canvas width="100%" height="100%">
+		
+		
+		<mx:LineChart id="lineChart" 
+			showDataTips="true" 
+			width="100%" 
+			height="100%"
+			selectionMode="multiple" 
+			change="handleLineChange(event)"
+			dragEnter="onDragEnter(event)"
+		    dragExit="onDragExit(event)"
+		    dragDrop="onDragDrop(event)"
+		    y="15"
+		    paddingTop="15"
+		    
+			>
+			
+			<mx:horizontalAxis>
+   	 			<!--<mx:DateTimeAxis dataUnits="hours" parseFunction="chartParseFunction"/>-->
+   	    		<mx:LinearAxis id="lineHorizontalAxis" title="Time (secs)" baseAtZero="false" />
+       		</mx:horizontalAxis>
+            
+      		<mx:verticalAxisRenderers>
+      			<mx:AxisRenderer  id="var1Renderer" axis="{v1}" placement="left" >
+       	   	 		<mx:axisStroke>{var1Stroke}</mx:axisStroke>
+       			</mx:AxisRenderer>
+       			<mx:AxisRenderer id="var2Renderer" axis="{v2}" placement="right" visible="false">
+       	       		<mx:axisStroke>{var2Stroke}</mx:axisStroke>
+       			</mx:AxisRenderer>
+       		</mx:verticalAxisRenderers>
+            
+       		 <mx:series>
+       		     <mx:LineSeries id="lineSeries1"  xField="time" yField="valueVar1" displayName="" selectable="true">
+       	     		<mx:lineStroke> 
+       	         	<mx:Stroke 
+       	            		color="{var1Color}" 
+       	            	 	weight="3"
+       	    	      	 	caps="round"
+       	        			 /> 
+       	   	  		</mx:lineStroke> 
+       	    	 	<mx:verticalAxis>
+       	       			<mx:LinearAxis id = "v1"  />
+               		</mx:verticalAxis>
+            	</mx:LineSeries>
+            	<mx:LineSeries id="lineSeries2" yField="valueVar2" displayName="">
+              		<mx:lineStroke> 
+                		<mx:Stroke 
+                   			color="{var2Color}" 
+                   	 		weight="3"
+                 	 		caps="round"
+               		 	/> 
+          	  		</mx:lineStroke> 
+              		<mx:verticalAxis>
+              			<mx:LinearAxis id = "v2"  />
+               		</mx:verticalAxis>
+            	</mx:LineSeries>
+	     	</mx:series>
+            
+		</mx:LineChart>
+	
+		
+		<mx:HBox x="5" y="5"
+			width="100%"
+			height="20"
+			>
+			<mx:Label id="graphTitle" height="20" width="100%"/>
+			<mx:Button id="btnRefresh"
+			    fontSize="7"
+				height="20" width="20"
+			    icon="{icoRefresh}"
+			    toolTip="Refresh graph data"
+				click="onRefreshData(event)"
+			/>	
+			<mx:Button id="btnClear"
+			    fontSize="7"
+				height="20" width="20"
+			    icon="{icoClear}"
+			    toolTip="Clear graph data"
+				click="onClearData(event)"
+			/>			
+			
+			<mx:Spacer width="2"/>
+		</mx:HBox>
+		
+		
+		
+		
+	</mx:Canvas>
+			
+</util:DragPanel>

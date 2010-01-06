@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<services-config>
+		<services>
+		
+			<service 	id="remoting-service"
+                 		class="flex.messaging.services.RemotingService"
+                 		messageTypes="flex.messaging.messages.RemotingMessage">
+            
+            	<default-channels>
+        			<channel ref="LearnHVAC"/>
+    			</default-channels> 
+                
+				<destination id="UserService">
+					<channels>
+        				<channel ref="LearnHVAC"/>
+					</channels>
+					<properties>
+						<source>UserService</source>
+					</properties>
+				</destination>
+				
+				<destination id="ScenarioService">
+					<channels>
+        				<channel ref="LearnHVAC"/>
+					</channels>
+					<properties>
+						<source>UserService</source>
+					</properties>
+				</destination>
+						
+        	</service>
+        
+		</services>
+ 
+ 		<channels>
+ 		
+			<channel-definition id="LearnHVAC" class="mx.messaging.channels.AMFChannel">
+			
+				<endpoint uri="http://client.learnhvac.org/weborb" class="flex.messaging.endpoints.AMFEndpoint"/>
+				
+				<properties>
+ 					<polling-enabled>false</polling-enabled>
+				</properties>
+				
+			</channel-definition>
+			
+		</channels>
+		
+    	<logging>
+			<target class="flex.messaging.log.ConsoleTarget" level="Error"/>
+    	</logging>
+    	
+</services-config>

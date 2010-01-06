@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<overlay:OverlayBase xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:overlay="com.mcquilleninteractive.learnhvac.view.shortterm.overlay.*"
+	creationComplete="onCC()"
+	width="670" height="500">
+	<mx:Script>
+		<![CDATA[
+			
+				
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+            import com.mcquilleninteractive.learnhvac.util.Logger
+            import mx.controls.Label 
+            import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+   			import com.adobe.cairngorm.control.CairngormEvent
+		            					   
+		    private var unitsFannReal:String 	 
+		    private var unitsPAtm:String 	 
+		             					            			
+			public function onCC():void
+			{
+				//add listener for scenarioLoaded event --> this will be used to update labels
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
+	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);			
+   				
+   				//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
+   				if (LHModelLocator.getInstance().scenarioLoaded == true)
+   				{
+   					scenarioLoaded(null)
+   				}
+   				
+   				//draw lines for UI niceness
+   				
+   				//VAV valve pos
+				this.graphics.lineStyle(1,0xCCCCCC,1)
+				this.graphics.moveTo(525,270)
+				this.graphics.lineTo(525,230)
+								
+   				//VAV temp
+				this.graphics.lineStyle(1,0xCCCCCC,1)
+				this.graphics.moveTo(415,223)
+				this.graphics.lineTo(450,223)
+								
+				//Supply air temp
+				this.graphics.moveTo(600,85)
+				this.graphics.lineTo(600,160)
+				this.graphics.drawCircle(550,165,5)
+				
+				//return air damper
+				this.graphics.moveTo(215,80)
+				this.graphics.lineTo(225,90)
+				
+				//outside air damper
+				this.graphics.moveTo(225,65)
+				this.graphics.lineTo(235,75)
+				
+   				
+			}
+
+			public function scenarioLoaded(event:CairngormEvent):void
+			{		
+				
+				Logger.debug("scenarioLoaded()", this)	
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+			
+								
+				//set visibility of labels				
+				lblTAirOut.visible = lblTAirOut_Title.visible = scenModel.getSysVar("TAirOut").visible
+				lblTwAirOut.visible = lblTwAirOut_Title.visible = scenModel.getSysVar("TwAirOut").visible
+				lblHCposReal.visible = lblHCposReal_Title.visible= scenModel.getSysVar("HCposReal").visible
+				lblCCposReal.visible = lblCCposReal_Title.visible =  scenModel.getSysVar("CCposReal").visible
+				lblTRoom.visible = lblTRoom_Title.visible =  scenModel.getSysVar("TRoom").visible
+				lblMXEAPosDamperReal.visible = scenModel.getSysVar("MXEAPosDamperReal").visible
+				lblMXOAPosDamperReal.visible = scenModel.getSysVar("MXOAPosDamperReal").visible
+				lblMXRAPosDamperReal.visible = scenModel.getSysVar("MXRAPosDamperReal").visible			
+				lblTSupMea.visible= lblTSupMea_Title.visible =  scenModel.getSysVar("TsupMea").visible
+				lblVAVHCTAirLvg.visible = lblVAVHCTAirLvg_Title.visible = scenModel.getSysVar("VAVHCTAirLvg").visible
+				lblVAVDAMPos.visible = lblVAVDAMPos_Title.visible = scenModel.getSysVar("VAVDAMPos").visible
+				lblVAVHCpos.visible = lblVAVHCpos_Title.visible = scenModel.getSysVar("VAVHCpos").visible
+				
+			}
+			
+			
+			
+		]]>
+	</mx:Script>
+	
+	<!-- outside info-->
+	
+	<mx:Label 	id="lblTAirOut_Title"
+		text="DB Temp: "  
+		toolTip="Outdoor Air Dry Bulb Temperature"
+		styleName="overlayTitle" 
+		x="10" 
+		y="35"/>
+		
+	<overlay:ValueDisplayLabel 	
+		id="lblTAirOut" 
+		sysVarName="TAirOut"
+		text="0" 
+		styleName="overlayValue" 
+		toolTip="Outdoor Air Dry Bulb Temperature"
+		x="70"
+		y="35"/>
+			
+			
+	<mx:Label id="lblTwAirOut_Title" 
+		text="WB Temp: "  
+		toolTip="Outdoor Air Wet Bulb Temperature" 
+		styleName="overlayTitle" 
+		x="10" 
+		y="55"/>
+		
+	<overlay:ValueDisplayLabel 	
+		id="lblTwAirOut" 
+		sysVarName="TwAirOut"
+		text="0" 
+		styleName="overlayValue" 
+		toolTip="Outdoor Air Wet Bulb Temperature"
+		x="70" 
+		y="55"/>
+				
+	<!-- supply air temp -->
+
+	<mx:Label
+		id="lblTSupMea_Title"
+		text="Supply Air Temp: "
+		styleName="overlayTitle" 
+		textAlign="right"
+		width="150"
+		x="460" y="45"/>
+		
+	<overlay:ValueDisplayLabel 	
+		id="lblTSupMea" 
+		sysVarName="TAirSup"
+		text="0" 
+		styleName="overlayValue" 
+		textAlign="right"
+		width="150"
+		x="460" y="60"/>
+	
+			
+	
+	<!-- HC and CC -->
+	<mx:Label 	
+		id="lblValvePosition" 
+		text="Valve Pos." 
+		styleName="overlayTitle" 
+		x="363" y="35" color="0xCCCCCC"/>
+			 
+			 
+	<mx:Label 
+		id="lblHCposReal_Title" 
+		text="HC:" 
+		styleName="overlayTitle" 
+		toolTip="Heating Coil valve (percent open)"
+		width="60"
+		x="355"
+		y="55"/>
+		
+	<overlay:ValueDisplayLabel 	
+		id="lblHCposReal" 
+		sysVarName="HCposReal"
+		usePercent="true"
+		text="0 %" 
+		styleName="overlayValue" 
+		toolTip="Heating Coil valve (percent open)"
+		x="355" 
+		y="70"/>
+			 
+			 
+	<mx:Label 
+		id="lblCCposReal_Title" 
+		text="CC:" 
+		styleName="overlayTitle" 
+		width="60"
+		toolTip="Cooling Coil valve (percent open)"
+		x="405" y="55"/>
+		
+	<overlay:ValueDisplayLabel 	
+		id="lblCCposReal" 
+		sysVarName="CCposReal"
+		usePercent="true"
+		text="0 %" 
+		styleName="overlayValue" 
+		toolTip="Cooling Coil valve (percent open)"
+		x="405" y="70"/>
+		
+		
+		
+	<!-- ROOM -->
+			
+	<mx:Label 
+		id="lblTRoom_Title" 
+		text="Room Temp: " 
+		styleName="overlayTitle" 
+		x="250" 
+		y="275" 
+		width="150" 
+		textAlign="right" />
+		
+	<overlay:ValueDisplayLabel 	
+		id="lblTRoom" 
+		sysVarName="TRoom"
+		text="84" 
+		styleName="overlayValue"
+		x="248" 
+		y="290" 
+		width="150" 
+		textAlign="right"/>
+		
+			 
+	<!-- VAV -->
+	
+	<mx:Label
+		id="lblVAVHCTAirLvg_Title" 
+		text="VAV Output Temp "
+		styleName="overlayTitle" 
+		x="260" 
+		y="200" 
+		width="150" 
+		textAlign="right"/>
+		
+	<overlay:ValueDisplayLabel 	
+		id="lblVAVHCTAirLvg"
+		sysVarName="VAVHCTAirLvg"
+		text=""
+		styleName="overlayValue"
+		x="258" 
+		y="215"
+		width="150"
+		textAlign="right"/>
+			 			 
+			 			 
+	<mx:Label id="lblVAVDAMPos_Title"
+		text="Damper Pos.: "
+		styleName="overlayTitle"
+		toolTip="VAV Damper Position (percent open)"
+		x="395" 
+		y="275"
+		width="125" 
+		textAlign="right"/>
+		
+	<overlay:ValueDisplayLabel 	
+		id="lblVAVDAMPos"
+		sysVarName="VAVDAMPos"
+		usePercent="true"
+		text=""
+		styleName="overlayValue"
+		toolTip="VAV Damper Position (percent open)"
+		x="520"
+		y="275"
+		width="100" 
+		textAlign="left"/>
+		
+	<mx:Label id="lblVAVHCpos_Title"
+		text="Valve Pos.: "
+		styleName="overlayTitle"
+		toolTip="VAV Reheat Coil Valve Position (percent open)"
+		x="395" 
+		y="300"
+		width="125" 
+		textAlign="right"/>
+		
+	<overlay:ValueDisplayLabel 	
+		id="lblVAVHCpos"
+		sysVarName="VAVHCpos"
+		usePercent="true"
+		text=""
+		styleName="overlayValue"
+		toolTip="VAV Reheat Coil Valve Position (percent open)"
+		x="520"
+		y="300"
+		width="100" 
+		textAlign="left"/>
+		
+		
+		
+			 
+	<!-- Dampers -->
+	<overlay:ValueDisplayLabel 	
+		id="lblMXEAPosDamperReal"
+		sysVarName="MXEAPosDamperReal"
+		usePercent="true"
+		toolTip="Exhaust Air Damper Position (percent open)"
+		styleName="overlayValue"
+		x="100" y="70"
+		textAlign="right"/>
+			 	
+	<overlay:ValueDisplayLabel 	
+		id="lblMXRAPosDamperReal"
+		sysVarName="MXRAPosDamperReal"
+		usePercent="true"
+		toolTip="Return Air Damper Position (percent open)"
+		styleName="overlayValue"
+		x="190"
+		y="70"
+		textAlign="right"/>
+		
+	<overlay:ValueDisplayLabel 	
+		id="lblMXOAPosDamperReal"
+		sysVarName="MXOAPosDamperReal"
+		usePercent="true"
+		toolTip="Outdoor Air Damper Position (percent open)"
+		styleName="overlayValue"
+		x="205" y="45"
+		textAlign="right"/>
+		
+	
+</overlay:OverlayBase>

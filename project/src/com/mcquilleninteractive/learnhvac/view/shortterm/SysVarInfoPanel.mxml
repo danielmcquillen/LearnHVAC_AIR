@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="420" height="200" 
+	backgroundColor="0xffffce"
+    backgroundAlpha="0"
+    dropShadowColor="0x000000"
+	dropShadowEnabled="true"
+    horizontalScrollPolicy="off"
+    verticalScrollPolicy="off"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			[Embed (source = 'assets/DawaAssets.swf', symbol='SysVarInfoPopupBG')]
+ 			[Bindable]
+ 			public var popupBG : Class;       	
+			
+		]]>
+	</mx:Script>
+	
+		<mx:Image x="0" y="0"  source="{popupBG}"/>
+		
+		<mx:Label x="30" y="3" text="Name:"/>
+		<mx:Label x="100" y="3" id="sysVarDisplayName"  text=""/>
+		
+		<mx:Label x="30" y="20" text="Variable:"/>
+		<mx:Label x="100" y="20" id="sysVarName"  text=""/>
+		
+		<mx:Label x="30" y="40" id="description_Title"  text="Description:"/>
+		<mx:Text x="100" y="40" id="description" width="300" height="80"  />
+		
+		<mx:Label x="30" y="113" id="lowValue_Title" text="Low Value:"/>
+		<mx:Label x="100" y="113" id="lowValue" text="" width="80" fontWeight="bold"/>
+		
+		<mx:Label x="30" y="130" id="highValue_Title" text="High Value:"/>
+		<mx:Label x="100" y="130" id="highValue" text="" width="130" fontWeight="bold"/>
+
+</mx:Canvas>

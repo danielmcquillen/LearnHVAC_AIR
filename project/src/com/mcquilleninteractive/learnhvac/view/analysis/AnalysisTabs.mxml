@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	creationComplete="onCreationComplete()"
+	 >
+
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+          	import mx.events.ItemClickEvent
+            			
+				
+			public function onCreationComplete():void
+			{
+				
+			}
+			
+					
+			
+			public function onTabClick(event:ItemClickEvent):void
+			{
+				var tabBar:TabBar = TabBar(event.currentTarget);
+                var cmd:String = tabBar.dataProvider[event.index].data
+				      
+                if (cmd=="core")
+             	{
+             		LHModelLocator.getInstance().scenarioModel.analysisView = ScenarioModel.ANALYSIS_ALL_DATA
+             	}   
+             	else if (cmd=="meter")
+             	{
+             		LHModelLocator.getInstance().scenarioModel.analysisView = ScenarioModel.ANALYSIS_ENERGY
+             	}
+            
+               
+   			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	
+	<mx:TabBar 
+        id="runModeTabBar"
+        styleName="runModeTabBar"
+        height="28"
+        y="3"
+        itemClick="onTabClick(event)"
+        >
+        <mx:dataProvider>       
+            <mx:Object label="Core Data"	data="core"/>
+            <mx:Object label="Meter Data"	data="meter"/>                
+        </mx:dataProvider>
+   	</mx:TabBar>
+	
+	
+</mx:Canvas>

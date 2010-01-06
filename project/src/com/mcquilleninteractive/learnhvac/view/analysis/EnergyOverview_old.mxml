@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:view="com.mcquilleninteractive.learnhvac.view.*" 
+	xmlns:graphing="com.mcquilleninteractive.learnhvac.view.graphing.*" 
+    backgroundColor="0xFFFFFF"
+    
+	>
+	
+	<mx:Style>
+		
+		.monthLabel
+		{
+			fontWeight: bold;
+			fontSize: 10;	
+		}
+		
+		.energyConsumptionGrid
+		{
+		}
+		
+		.borderCell
+		{
+			borderStyle: solid;
+			borderSides: left;
+			borderColor: #CCC;	
+		}
+		
+		.rowBorder
+		{
+			borderStyle: solid;
+			borderSides: bottom;
+			borderColor: #DDD;		
+		}
+		
+		.lightRow
+		{
+			backgroundColor: #FFFFFF;
+		}
+		
+		.darkRow
+		{
+			backgroundColor: #F9F9F9;	
+		}
+		
+	</mx:Style>
+	
+	<mx:Script>
+		<![CDATA[
+			        		
+ 			import mx.collections.ArrayCollection;
+ 			 
+	    	[Bindable]
+	    	private var numMonthsAC:ArrayCollection = new ArrayCollection(new Array(12)); //simple array for repeater loop below 	
+   			
+   			[Bindable]
+	    	private var monthsAC:ArrayCollection = new ArrayCollection([{month:"JAN"},
+	    																{month:"FEB"},
+	    																{month:"MAR"},
+	    																{month:"APR"},
+	    																{month:"MAY"},
+	    																{month:"JUN"},
+	    																{month:"JUL"},
+	    																{month:"AUG"},
+	    																{month:"SEP"},
+	    																{month:"OCT"},
+	    																{month:"NOV"},
+	    																{month:"DEC"}]);
+	    	[Bindable]
+	    	private var testDataArr:Array = [
+	    		{month:"JAN",initial:0.1, compare:0.2},
+	    		{month:"FEB",initial:0.1, compare:0.2},
+	    		{month:"MAR",initial:0.1, compare:0.2},
+	    		{month:"APR",initial:0.1, compare:0.2},
+	    		{month:"MAY",initial:0.1, compare:0.2},
+	    		{month:"JUN",initial:0.1, compare:0.2},
+	    		{month:"JUL",initial:0.1, compare:0.2},
+	    		{month:"AUG",initial:0.1, compare:0.2},
+	    		{month:"SEP",initial:0.1, compare:0.2},
+	    		{month:"OCT",initial:0.1, compare:0.2},
+	    		{month:"NOV",initial:0.1, compare:0.2},
+	    		{month:"DEC",initial:0.1, compare:0.2}];
+	    
+	    	[Bindable]
+	    	private var spaceCoolingAC:ArrayCollection = new ArrayCollection(testDataArr.concat());
+	    	[Bindable]
+	    	private var heatRejRepeaterAC:ArrayCollection = new ArrayCollection(testDataArr.concat());										 	
+       		[Bindable]
+	    	private var ventilationRepeaterAC:ArrayCollection = new ArrayCollection(testDataArr.concat());														
+	    	[Bindable]
+	    	private var pumpAuxRepeaterAC:ArrayCollection = new ArrayCollection(testDataArr.concat());
+	    	[Bindable]
+	    	private var totalElectricAC:ArrayCollection = new ArrayCollection(testDataArr.concat());
+	    	[Bindable]
+	    	private var spaceHeatingAC:ArrayCollection = new ArrayCollection(testDataArr.concat());
+	    	[Bindable]
+	    	private var totalGasAC:ArrayCollection = new ArrayCollection(testDataArr.concat());
+	    	[Bindable]
+	    	private var spaceCoolingCostAC:ArrayCollection = new ArrayCollection(testDataArr.concat());
+	    	[Bindable]
+	    	private var heatRejectionCostAC:ArrayCollection = new ArrayCollection(testDataArr.concat());
+	    	[Bindable]
+	    	private var ventilationFansCostAC:ArrayCollection = new ArrayCollection(testDataArr.concat());
+	    	[Bindable]
+	    	private var pumpsAuxCostAC:ArrayCollection = new ArrayCollection(testDataArr.concat());
+	    	[Bindable]
+	    	private var spaceHeatingCostAC:ArrayCollection = new ArrayCollection(testDataArr.concat());
+	    	[Bindable]
+	    	private var totalGasCostAC:ArrayCollection = new ArrayCollection(testDataArr.concat()	);
+	    											
+		]]>
+	</mx:Script>
+		
+	<mx:Accordion id="accTreeHolder" height="100%" width="100%" creationPolicy="all">
+	 	 
+	<!-- ELECTRIC CONSUMPTION -->	
+	<mx:VBox label="Electric Consumption" width="100%" >
+		 
+		<mx:HBox id="electricConsumptionGraph" >
+			
+			<mx:Legend dataProvider="{spaceCoolingAC}"/>
+
+			<mx:ColumnChart id="spaceCoolingGraph" height="200" width="100%" 
+	            paddingLeft="5" paddingRight="5" 
+            	showDataTips="true" dataProvider="{spaceCoolingAC}">
+	                
+            	<mx:horizontalAxis>
+	                <mx:CategoryAxis categoryField="month"/>
+            	</mx:horizontalAxis>
+	                
+            	<mx:series>
+	                <mx:ColumnSeries xField="initial" yField="Gold" displayName="Initial"/>
+                	<mx:ColumnSeries xField="compare" yField="Silver" displayName="Compare"/>
+            	</mx:series>
+        	</mx:ColumnChart>
+	    	
+		</mx:HBox>      
+		
+		<mx:VBox id="electricConsumptionDisplay" paddingLeft="10" paddingTop="20" width="100%" >
+	
+			<mx:Label text="Electric Consumption (kWh x000)" styleName="analysisEnergySectionHeader"/>		
+		
+			<mx:Grid id="electricConsumption" width="100%" horizontalGap="0" verticalGap="0">
+		
+			<mx:GridRow id="energyConsumptionGrid">
+				<mx:GridItem width="200">
+				</mx:GridItem>
+		        <mx:Repeater id="monthsRep" dataProvider="{monthsAC}">
+					<mx:GridItem colSpan="2">
+						<mx:Label text="{monthsRep.currentItem.month}" styleName="monthLabel"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="rowBorder">
+				<mx:GridItem/>
+		        <mx:Repeater id="myRep" dataProvider="{numMonthsAC}"> 
+					<mx:GridItem width="60" styleName="borderCell">
+						<mx:Label text="Initial"/>
+					</mx:GridItem>
+					<mx:GridItem width="70">
+						<mx:Label text="Compare"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="lightRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Space cooling"/>
+				</mx:GridItem>
+				<mx:Repeater id="coolingRepeater" dataProvider="{spaceCoolingAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{coolingRepeater.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{coolingRepeater.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="darkRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Heat rejection"/>
+				</mx:GridItem>
+				<mx:Repeater id="heatRejRepeater" dataProvider="{spaceCoolingAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{heatRejRepeater.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{heatRejRepeater.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="lightRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Ventilation fans"/>
+				</mx:GridItem>
+				<mx:Repeater id="ventilationRepeater" dataProvider="{ventilationRepeaterAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{ventilationRepeater.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{ventilationRepeater.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="darkRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Pump &amp; Aux"/>
+				</mx:GridItem>
+				<mx:Repeater id="pumpAuxRepeater" dataProvider="{pumpAuxRepeaterAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{pumpAuxRepeater.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{pumpAuxRepeater.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			</mx:Grid>
+		
+		</mx:VBox>
+	
+	</mx:VBox>
+		
+	<!-- GAS CONSUMPTION -->
+	<mx:VBox label="Gas Consumption" width="100%" >
+	
+		<mx:VBox id="gasConsumptionDisplay" paddingLeft="10" paddingTop="20" width="100%" >
+	
+		<mx:Label text="Gas Consumption (Btu x000,000)" styleName="analysisEnergySectionHeader"/>			
+				
+		<mx:Grid id="gasConsumption" width="100%" horizontalGap="0" verticalGap="0">
+		
+			<mx:GridRow id="gasConsumptionHeader1">
+				<mx:GridItem width="200">
+				</mx:GridItem>
+		        <mx:Repeater id="gasMonthsRep" dataProvider="{monthsAC}">
+		         
+					<mx:GridItem colSpan="2">
+						<mx:Label text="{gasMonthsRep.currentItem.month}" styleName="monthLabel"/>
+					</mx:GridItem>
+				</mx:Repeater>
+									
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="rowBorder" id="gasConsumptionHeader2">
+				<mx:GridItem/>
+		        <mx:Repeater id="gasConsumptionSubHeaderRep" dataProvider="{numMonthsAC}"> 
+					<mx:GridItem width="60" styleName="borderCell">
+						<mx:Label text="Initial"/>
+					</mx:GridItem>
+					<mx:GridItem width="70">
+						<mx:Label text="Compare"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="lightRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Space heating"/>
+				</mx:GridItem>
+				<mx:Repeater id="spaceHeatingRepeater" dataProvider="{spaceHeatingAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{spaceHeatingRepeater.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{spaceHeatingRepeater.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="darkRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Total gas"/>
+				</mx:GridItem>
+				<mx:Repeater id="totalGasRepeater" dataProvider="{totalGasAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{totalGasRepeater.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{totalGasRepeater.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+		</mx:Grid>
+		
+		</mx:VBox>
+	
+	</mx:VBox>
+		
+	<!-- ENERGY COST -->
+	<mx:VBox label="Energy Cost" width="100%" >
+	
+		<mx:VBox id="energyCostDisplay" paddingLeft="10" paddingTop="20" width="100%" >
+	
+		<mx:Label text="Energy Cost ($/sf)" styleName="analysisEnergySectionHeader"/>			
+				
+		<mx:Grid id="energyCost" width="100%" horizontalGap="0" verticalGap="0">
+		
+			<mx:GridRow id="energyCostHeader1">
+				<mx:GridItem width="200">
+					</mx:GridItem>
+		        <mx:Repeater id="energyCostMonthsRep" dataProvider="{monthsAC}">
+		         
+					<mx:GridItem colSpan="2">
+						<mx:Label text="{energyCostMonthsRep.currentItem.month}" styleName="monthLabel"/>
+					</mx:GridItem>
+				</mx:Repeater>
+									
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="rowBorder" id="energyCostHeader2">
+				<mx:GridItem/>
+		        <mx:Repeater id="energyCostSubHeadRep" dataProvider="{numMonthsAC}"> 
+					<mx:GridItem width="60" styleName="borderCell">
+						<mx:Label text="Initial"/>
+					</mx:GridItem>
+					<mx:GridItem width="70">
+						<mx:Label text="Compare"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="lightRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Space cooling"/>
+				</mx:GridItem>
+				<mx:Repeater id="spaceCoolingCostRep" dataProvider="{spaceCoolingCostAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{spaceCoolingCostRep.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{spaceCoolingCostRep.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="darkRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Total gas"/>
+				</mx:GridItem>
+				<mx:Repeater id="heatRejectionCostRep" dataProvider="{heatRejectionCostAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{heatRejectionCostRep.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{heatRejectionCostRep.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="lightRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Space cooling"/>
+				</mx:GridItem>
+				<mx:Repeater id="ventilationFansCostRep" dataProvider="{ventilationFansCostAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{ventilationFansCostRep.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{ventilationFansCostRep.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="darkRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Total gas"/>
+				</mx:GridItem>
+				<mx:Repeater id="pumpsAuxCostRepeater" dataProvider="{pumpsAuxCostAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{pumpsAuxCostRepeater.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{pumpsAuxCostRepeater.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="lightRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Space heating"/>
+				</mx:GridItem>
+				<mx:Repeater id="spaceHeatingCostRep" dataProvider="{spaceHeatingCostAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{spaceHeatingCostRep.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{spaceHeatingCostRep.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+			<mx:GridRow styleName="darkRow">
+				<mx:GridItem backgroundColor="0xFFFFFF">
+					<mx:Label text="Total gas"/>
+				</mx:GridItem>
+				<mx:Repeater id="totalGasCostRep" dataProvider="{totalGasCostAC}">
+					<mx:GridItem styleName="borderCell">
+						<mx:Label text="{totalGasCostRep.currentItem.initial}"/>
+					</mx:GridItem>
+					<mx:GridItem>
+						<mx:Label text="{totalGasCostRep.currentItem.compare}"/>
+					</mx:GridItem>
+				</mx:Repeater>
+			</mx:GridRow>
+			
+		</mx:Grid>
+		</mx:VBox>
+	
+	</mx:VBox>
+	
+	</mx:Accordion>
+	
+</mx:Canvas>

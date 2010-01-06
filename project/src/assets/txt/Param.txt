@@ -1,0 +1,538 @@
+
+! Learn HVAC will include user variables here
+!
+! ##set1 Cool_SetPoint_F    LH_TRoomSP	! Note: this was set at top of file to 74 F 
+! ##set1 Bldg_Azimuth      LH_Orientation 
+
+
+
+!  Parameter File for Large Office Prototype
+! ******************************************
+! New Section to capture inputs from 
+! LH Configuration and/or fromSPARK 
+! ******************************************
+
+##set1 LH_CASE_NAME		Scenario1
+##set1 LH_Clim_Loc		SanFrancisco  	! The proper name for the weather file 
+##set1 LH_Orientation		45	      	! Say that Azimuth_Bldg = 45
+
+##set1 LH_Bldg_Len		150	      	! Say that Azimuth_Bldg = 45
+##set1 LH_Bldg_Wid		75	      	! Say that Azimuth_Bldg = 45
+##set1 LH_Nbr_Floors		45	      	! Say that Azimuth_Bldg = 45	
+
+##set1 LH_Boiler_Size
+##set1 LH_Chiller_Size
+##set1 LH_HtgCoil_UA
+##set1 LH_ClgCoil_UA
+##set1 LH_FanpowerTot
+
+##set1 LH_MXTOut				! not needed here for E+ will calculate
+##set1 LH_MXTwOut				! not needed here for E+ will calculate
+
+##set1 LH_VAVposMin		0.3		! Used by both E+ and by SPAK models
+
+##set1 LH_TRoomSP		74	      	! Set here for typical cooling setpoint	
+##set1 LH_TRoom					! Not needed here, for E+ will calculate
+##set1 LH_RmQSENS				! not needed here for E+ will calculate
+
+! ******************************************
+! New Section to capture inputs from SPARK 
+! (current state of SPARK) to start a new
+! comparison run of E+  
+! NOTE: Haven't begun to set this up yet
+! ******************************************
+
+##set1 LH_Boiler_Size
+##set1 LH_Chiller_Size
+##set1 LH_HtgCoil_UA
+##set1 LH_ClgCoil_UA
+##set1 LH_FanpowerTot
+
+##set1 LH_MXTOut
+##set1 LH_MXTwOut
+##set1 LH_VAVposMin
+
+##set1 LH_TRoomSP
+##set1 LH_TRoom
+##set1 LH_RmQSENS
+
+
+
+! ******************************************
+! "Regular" inc file begins here 
+! LH Configuration and/or fromSPARK 
+! ******************************************
+ 
+##set1 Start_Day         UseWeatherFile
+##set1 Aspect_Ratio   =  1.5
+##set1 Floor_Area_FT     460000
+##set1 Floors            12
+##set1 C_Height_Ft       10
+##set1 B_Height_Ft        8
+##set1 P_Width_Ft        15
+##set1 WinFrac           0.4
+
+##set1 Furn_Sqft         0.0465
+##set1 ACH               0.3
+##set1 ACH_Base          2
+
+##set1 Equip_Sqft        0.75
+##set1 Equip_Base_Sqft   0.45
+
+##set1 People_Sqft 417
+
+
+##if #[shell[] eqs old]
+	##set1 Lights_Sqft 1.5
+##elseif    #[shell[] eqs recent]
+	##set1 Lights_Sqft 1.5
+##elseif    #[shell[] eqs new]
+	##set1 Lights_Sqft 1.0
+##else
+     	Abort -- building shell shell[] undefined 
+
+##endif
+
+##if    #[region[] eqs Northeast]
+
+	##if    #[shell[] eqs old]
+
+		##if #[location[] eqs baltimore]
+			##set1 wall_r 6.5
+     			##set1 roof_r 7.01
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.79
+     			##set1 window_sc 1.0 
+
+ 		##elseif #[location[] eqs burlington]
+			##set1 wall_r 6.5
+     			##set1 roof_r 11.78
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.79
+     			##set1 window_sc 1.0 
+	
+		##elseif #[location[] eqs chicago]
+			##set1 wall_r 6.5
+     			##set1 roof_r 9.00
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.79
+     			##set1 window_sc 1.0
+
+		##elseif #[location[] eqs duluth]
+			##set1 wall_r 6.5
+     			##set1 roof_r 11.78
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.79
+     			##set1 window_sc 1.0 
+ 
+		##elseif #[location[] eqs fairbanks]
+			##set1 wall_r 6.5
+     			##set1 roof_r 15.52
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.79
+     			##set1 window_sc 1.0 
+
+		##endif
+
+	##elseif    #[shell[] eqs recent]
+
+		##if #[location[] eqs baltimore]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45
+
+		##elseif #[location[] eqs burlington]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45 
+	
+		##elseif #[location[] eqs chicago]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45
+
+		##elseif #[location[] eqs duluth]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 0.770
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.57
+ 
+		##elseif #[location[] eqs fairbanks]
+    			##set1 wall_r 13
+     			##set1 roof_r 20
+     			##set1 bwall_f 0.770
+     			##set1 window_r 2.22
+     			##set1 window_sc 0.0001 
+	
+		##endif	
+
+	##elseif    #[shell[] eqs new]
+
+		##if #[location[] eqs baltimore]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45
+
+ 		##elseif #[location[] eqs burlington]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45 
+	
+		##elseif #[location[] eqs chicago]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45
+
+		##elseif #[location[] eqs duluth]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 0.770
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.57
+ 
+		##elseif #[location[] eqs fairbanks]
+    			##set1 wall_r 13
+     			##set1 roof_r 20
+     			##set1 bwall_f 0.770
+     			##set1 window_r 2.17
+     			##set1 window_sc 0.0001
+
+		##endif
+	##endif
+
+
+##elseif    #[region[] eqs South]
+
+	##if    #[shell[] eqs old]
+
+		##if #[location[] eqs miami]
+			##set1 wall_r 6.5
+     			##set1 roof_r 5.11
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.91
+     			##set1 window_sc 1.0
+
+		##elseif #[location[] eqs houston]
+			##set1 wall_r 6.5
+     			##set1 roof_r 5.11
+     			##set1 bwall_f 1.940		
+     			##set1 window_r 0.91
+     			##set1 window_sc 1.0
+
+		##elseif #[location[] eqs memphis]
+			##set1 wall_r 6.5
+     			##set1 roof_r 5.31
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.91
+     			##set1 window_sc 1.0  
+
+		##elseif #[location[] eqs elpaso]
+			##set1 wall_r 6.5
+     			##set1 roof_r 5.11
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.91
+     			##set1 window_sc 1.0
+
+		##elseif #[location[] eqs albuquerque]
+			##set1 wall_r 6.5
+     			##set1 roof_r 6.47
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.79
+     			##set1 window_sc 1.0  
+
+		##endif
+
+	##elseif    #[shell[] eqs recent]
+
+		##if #[location[] eqs miami]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.82
+     			##set1 window_sc 0.29 
+
+		##elseif #[location[] eqs houston]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.82
+     			##set1 window_sc 0.29 
+
+		##elseif #[location[] eqs memphis]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45 
+
+		##elseif #[location[] eqs elpaso]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.29
+
+		##elseif #[location[] eqs albuquerque]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45
+ 
+		##endif
+
+	##elseif    #[shell[] eqs new]
+
+		##if #[location[] eqs miami]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.82
+     			##set1 window_sc 0.29
+
+		##elseif #[location[] eqs houston]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.82
+     			##set1 window_sc 0.29
+
+		##elseif #[location[] eqs memphis]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.29
+
+		##elseif #[location[] eqs elpaso]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.29
+
+		##elseif #[location[] eqs albuquerque]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45
+
+		##endif
+	##endif
+
+
+##elseif    #[region[] eqs Pacific]
+
+	##if    #[shell[] eqs old]
+
+		##if #[location[] eqs losangeles]
+			##set1 wall_r 6.5
+     			##set1 roof_r 5.11
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.91
+     			##set1 window_sc 1.0 
+
+		##elseif #[location[] eqs phoenix]
+			##set1 wall_r 6.5
+     			##set1 roof_r 5.11
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.91
+     			##set1 window_sc 1.0 
+
+		##elseif #[location[] eqs sanfrancisco]
+			##set1 wall_r 6.5
+     			##set1 roof_r 5.11
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.91
+     			##set1 window_sc 1.0 
+
+		##elseif #[location[] eqs salem]
+			##set1 wall_r 6.5
+     			##set1 roof_r 7.01
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.79
+     			##set1 window_sc 1.0 
+
+		##elseif #[location[] eqs boise]
+			##set1 wall_r 6.5
+     			##set1 roof_r 7.93
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.79
+     			##set1 window_sc 1.0 
+
+		##elseif #[location[] eqs helena]
+			##set1 wall_r 6.5
+     			##set1 roof_r 11.24
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.79
+     			##set1 window_sc 1.0 
+
+		##endif 
+
+	##elseif    #[shell[] eqs recent]
+
+		##if #[location[] eqs losangeles]
+    			##set1 wall_r 13
+     			##set1 roof_r 10
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.82
+     			##set1 window_sc 0.51
+
+		##elseif #[location[] eqs phoenix]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.82
+     			##set1 window_sc 0.29 
+
+		##elseif #[location[] eqs sanfrancisco]
+    			##set1 wall_r 13
+     			##set1 roof_r 10
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.82
+     			##set1 window_sc 0.45 
+
+		##elseif #[location[] eqs salem]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45 
+
+		##elseif #[location[] eqs boise]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45
+
+		##elseif #[location[] eqs helena]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45 
+
+		##endif
+
+ 
+	##elseif    #[shell[] eqs new]
+
+		##if #[location[] eqs losangeles]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.29
+ 
+		##elseif #[location[] eqs phoenix]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 0.82
+     			##set1 window_sc 0.29
+
+		##elseif #[location[] eqs sanfrancisco]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.29
+
+		##elseif #[location[] eqs salem]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45
+	
+		##elseif #[location[] eqs boise]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45
+
+ 		##elseif #[location[] eqs helena]
+    			##set1 wall_r 13
+     			##set1 roof_r 15
+     			##set1 bwall_f 1.940
+     			##set1 window_r 1.75
+     			##set1 window_sc 0.45 
+
+
+		##endif
+	##endif
+ 
+
+##endif
+
+
+##set1 Roof_Abs_Thm      0.8
+##set1 Roof_Abs_Slr      0.8
+##set1 Roof_Abs_vsb      0.8
+##set1 Wall_Abs_Thm       0.65
+##set1 Wall_Abs_Slr      0.65
+##set1 Wall_Abs_vsb      0.65
+##set1 Slab_u            6inSlab_097
+##set1 Wind_Type         Dbl_Clr_6
+##set1 Wind_Shade      "CONTROL ON INCIDENT SOLAR"
+##set1 Outside_Air_cfm       15
+
+##if    #[shell[] eqs old] 
+ ##set1 HVAC_System    CAV
+##elseif    #[shell[] eqs new] 
+ ##set1 HVAC_System    VAV
+##endif
+
+##set1 Termbox_Type    "SINGLE DUCT:VAV:REHEAT"
+##set1 Coil_Type    COIL:Water:SimpleHeating
+##set1 Coil_Heat    Water
+##set1 Coil_Gas_Eff    0.8
+##set1 Economizer_Y_N   ECONOMIZER
+
+! NOTE: next line is for "minimum system air flow ratio"
+! It is used in "system.inc"
+! But its value can be set here, since all "*.inc" files are concatenated
+! and are effectively the same file.
+
+##set1 Min_Air_Flow    LH_VAVposMin 	! Note: this was set at top of file to 0.3   
+
+! NOTE: Next line is the OLD line for Min Air Flow
+! ##set1 Min_Air_Flow    0.3		
+! Note: this is at least my interpretation that this is what is intended by this variable.
+! don't have access to the SPARK models.
+
+##set1 Chiller_COP    3
+##set1 Boiler_Eff    0.8
+##set1 Fan_Eff_Tot    0.81
+##set1 Fan_Eff_Mtr    0.9
+##set1 Pump_Eff_Mtr    0.9
+
+
+
+
+##set1 Cool_SetUp_F    90
+##set1 Heat_SetPoint_F     70
+##set1 Heat_SetBack_F    55
+##set1 Econo_Lockout    NO
+##set1 Economizer_T_F    68
+##set1 zhdsat_F    105
+##set1 Return_Fan    Yes
+##set1 Cooling_Coil    Simple
+##set1 fan_dp_inh2o    6.5
+##set1 pump_psi    26

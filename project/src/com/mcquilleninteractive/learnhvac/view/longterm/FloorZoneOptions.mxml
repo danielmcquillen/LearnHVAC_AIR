@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	label="Floor/Zone"
+	implements="com.mcquilleninteractive.learnhvac.view.longterm.ILongTermOptionsPanel"
+	width="100%" height="100%">
+	
+	<mx:Metadata>
+		[Event(name="zoneSelectorChange", type="flash.events.Event")]
+    </mx:Metadata>
+
+	
+		<mx:Script>
+			<![CDATA[
+			
+			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
+			import com.mcquilleninteractive.learnhvac.util.Logger
+						
+			import mx.validators.Validator   
+			import mx.events.ItemClickEvent
+				
+			private var _elevationView:ElevationView
+			private var _zoneSelector:ZoneSelector
+			private var _setupVO:LongTermSimulationVO
+			public var _errorMsg:String;
+									
+			[Bindable]
+			private var _maxStories:Number = 3
+			
+			public function set maxStories(v:Number):void
+			{
+				_maxStories = v
+				if (nsFloorOfInterest.value > _maxStories) nsFloorOfInterest.value = _maxStories
+			}
+			
+			public function get zoneOfInterest():Number
+			{
+				return Number(rbgZoneOfInterest.selectedValue)
+			}
+			
+			public function get floorOfInterest():Number
+			{
+				return nsFloorOfInterest.value
+			}
+			
+			public function setViewRefs(elevationView:ElevationView, zoneSelector:ZoneSelector):void
+			{
+				
+				_elevationView = elevationView
+				_zoneSelector = zoneSelector
+			}
+			
+			public function initializeValues():void
+			{	
+				resetValues()
+			}
+			
+			
+			public function isValid():Boolean
+			{
+				return true
+			}
+			
+			public function get errorMsg():String
+			{
+				return _errorMsg
+			}
+			
+			public function populateSetupVO(setupVO:LongTermSimulationVO):void
+			{	
+			
+			
+			}
+			
+			public function resetValues():void
+			{
+				rbgZoneOfInterest.selectedValue = 1
+				nsFloorOfInterest.value = 3
+			}
+			
+			public function unitsUpdate():void
+			{
+				
+			}
+			
+			public function onSetFloorOfInterest(event:Event):void
+			{
+				_elevationView.setFloorOfInterest(nsFloorOfInterest.value)
+			}
+				
+			public function handleZoneClick(event:ItemClickEvent):void
+			{
+				var zone:Number = Number(event.currentTarget.selectedValue)
+				_zoneSelector.selectZone(zone)
+			}
+				
+			]]>
+		</mx:Script>
+	
+	   		   		
+   				
+	<mx:Form id="floorZone">
+		<mx:FormHeading label="Floor of Interest"/>				
+		<mx:FormItem label="Floor:">
+			<mx:NumericStepper id="nsFloorOfInterest" 
+				minimum="1" 
+				maximum="{_maxStories}" 
+				stepSize="1" 
+				value="3" 
+				width="65"
+				change="onSetFloorOfInterest(event)"
+				/>
+		</mx:FormItem>
+		<mx:FormHeading label="Zone of Interest"/>				
+		<mx:HBox >
+			<mx:VBox paddingLeft="35" width="115">
+			<mx:RadioButtonGroup id="rbgZoneOfInterest" itemClick="handleZoneClick(event)"/>
+			<mx:RadioButton groupName="zoneOfInterest" value="1" label="Zone 1"/>
+			<mx:RadioButton groupName="zoneOfInterest" value="2" label="Zone 2"/>
+			<mx:RadioButton groupName="zoneOfInterest" value="3" label="Zone 3"/>
+			<mx:RadioButton groupName="zoneOfInterest" value="4" label="Zone 4"/>
+			<mx:RadioButton groupName="zoneOfInterest" value="5" label="Zone 5"/> 
+		</mx:VBox>	
+		</mx:HBox>
+		
+	</mx:Form>
+		
+		
+</mx:VBox>
+	

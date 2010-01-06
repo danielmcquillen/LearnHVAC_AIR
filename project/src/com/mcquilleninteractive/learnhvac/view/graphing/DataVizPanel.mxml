@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns:myComps="*"
+		xmlns:view="com.mcquilleninteractive.learnhvac.view.*"
+		xmlns:graphing="com.mcquilleninteractive.learnhvac.view.graphing.*"
+	 	width="100%" 
+	 	height="100%"
+	 	initialize="onInitialize()" 
+	 	>
+	<mx:Script>
+		<![CDATA[
+		
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			
+			public var position:Number 
+			
+			public function onInitialize():void
+			{
+			
+				if (position==1)
+				{
+					graphPanel.var1Color = LHModelLocator.chart1Var1Color
+					graphPanel.var2Color = LHModelLocator.chart1Var2Color
+				}
+				else
+				{	
+					graphPanel.var1Color = LHModelLocator.chart2Var1Color
+					graphPanel.var2Color = LHModelLocator.chart2Var2Color	
+				}
+				
+				CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.EVENT_EPLUS_DATA_PARSED, onEPlusDataParsed, false, 0,true)
+			}
+			
+			public function setGraphType (graphType:String) :void
+			{
+					
+				graphPanel.graphType = graphType
+				
+				if (graphType=="XY")
+				{
+					btnTS.setStyle("borderColor",0x000000)
+					btnXY.setStyle("borderColor",0xCC0000)
+				}
+				else if (graphType =="TS") 
+				{
+					btnTS.setStyle("borderColor",0xCC0000)
+					btnXY.setStyle("borderColor",0x000000)
+				}
+				
+				graphPanel.setGraphType(graphType)
+			
+			}
+			
+			public function onEPlusDataParsed(e:ScenarioDataLoadedEvent):void
+			{
+				
+			}
+			
+			public function clearGraph():void
+			{
+				graphPanel.clear()
+			}
+			
+		]]>
+	</mx:Script>		
+	<graphing:GraphPanel id="graphPanel" />
+	
+	<mx:HBox top="2" right="10">
+   		<mx:Button id="btnTS" width="25" height="25" label="TS" 
+   			paddingLeft="0" paddingRight="0" 
+   			borderColor="0xCC0000" 
+   			click="setGraphType('TS')"
+   			/>
+    	<mx:Button id="btnXY" width="25" height="25" label="XY"
+    		paddingLeft="0" paddingRight="0" 
+    		borderColor="0x333333" 
+    		click="setGraphType('XY')"
+    		/>
+    		
+    	<mx:Button id="btnClear" width="55" height="25" label="Clear"
+    		paddingLeft="0" paddingRight="0" 
+    		click="clearGraph()"
+    		/>
+  	</mx:HBox>
+  	
+</mx:Canvas>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<util:DragPanel xmlns:mx="http://www.adobe.com/2006/mxml" 
+				xmlns:util="com.mcquilleninteractive.learnhvac.util.*"
+				width="410" height="305" title="HEATING COIL VALVE INFO"
+     			horizontalScrollPolicy="off"  
+     			verticalScrollPolicy="off" 
+				creationComplete="onCreationComplete()"
+			    close="onPanelClose(event)"
+			   
+		>
+		
+	<mx:Script>
+		<![CDATA[
+			
+			
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator	
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel	
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import com.adobe.cairngorm.control.CairngormEventDispatcher	
+            import mx.binding.utils.BindingUtils
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
+		
+			
+			//for embedded .swfs
+			[Embed(source="assets/DawaDiagrams.swf", symbol="HCLiquidsDiagram")]
+
+       	 	[Bindable]
+       		public var LiquidsDiagram:Class;
+            
+            public var currTempUnits:String = ""
+            public var currFlowUnits:String = ""
+            
+            
+			public function onCreationComplete():void
+			{
+				//add listener for scenarioLoaded event --> this will be used to update labels
+   				CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0,true)
+				
+				//if scenario has been loaded when this component is created, then 
+				//run an initial update
+				var model:LHModelLocator = LHModelLocator.getInstance()
+				if (model.scenarioLoaded)
+				{
+					var e:Event = new Event("scenarioLoaded") //fake event
+					onScenarioLoaded(e);
+				}
+			}
+			
+			public function onUnitsChange(units:String):void
+			{
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				//don't need to lookup temp since we know the strings
+				if (units==LHModelLocator.UNITS_IP)
+				{
+					currTempUnits = " \u00B0F"
+				}
+				else
+				{
+					currTempUnits = " \u00B0C"
+				}
+				currFlowUnits = " " + scenModel.getSysVar("HCmLiqLvgValve").units
+			}
+			
+			
+			public function onScenarioLoaded(e:Event):void
+			{
+				
+				Logger.debug("#HCLiquidsPanel: trying to bind values...")
+				
+				//Bind the labels to the newly loaded variables
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				
+				//HC Liquid temps:
+				BindingUtils.bindSetter(function(currVal:Number):void{tPipe1.text=String(currVal)+currTempUnits}, scenModel.getSysVar("HCTLiqEnt"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{tPipe2.text=String(currVal)+currTempUnits}, scenModel.getSysVar("HCTLiqEnt"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{tPipe3.text=String(currVal)+currTempUnits}, scenModel.getSysVar("HCTLiqbypass"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{tPipe4.text=String(currVal)+currTempUnits}, scenModel.getSysVar("HCTLiqLvg"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{tPipe5.text=String(currVal)+currTempUnits}, scenModel.getSysVar("HCTLiqLvgValve"), "currValue" )
+				
+				//HC Liquid mass flow:
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe1.text=String(currVal)+currFlowUnits}, scenModel.getSysVar("HCmLiqLvgValve"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe2.text=String(currVal)+currFlowUnits}, scenModel.getSysVar("HCmLiqEnt"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe3.text=String(currVal)+currFlowUnits}, scenModel.getSysVar("HCmLiqbypass"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe4.text=String(currVal)+currFlowUnits}, scenModel.getSysVar("HCmLiqLvg"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe5.text=String(currVal)+currFlowUnits}, scenModel.getSysVar("HCmLiqLvgValve"), "currValue" )
+				
+				//valve pos
+				BindingUtils.bindSetter(function(currVal:Number):void{pos.text=String(uint(currVal*100))+" %"}, scenModel.getSysVar("HCpos"), "currValue" )
+				
+				  
+				    	 		
+			}
+			
+			public function onPanelClose(evt:Event):void
+			{
+				CairngormEventDispatcher.getInstance().removeEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded);
+				
+			}
+			
+		]]>
+	</mx:Script>	
+		
+	<mx:Canvas>
+		<mx:Image id="liquidsDiagram" source="{LiquidsDiagram}"/> 
+		
+	<mx:Label id="pos" x="150" y="43" text="0" 
+			styleName="schematicLabel" 
+			textAlign="center" width="60"
+		    fontSize="18"
+			/> 
+    	
+		<mx:Label x="150" y="65" text="open" 
+			styleName="schematicLabel" 
+			textAlign="center" width="60"
+			/> 
+			
+			
+    	<mx:Label id="tPipe1" x="68" y="177" text="0" styleName="schematicLabel"/>   
+    	<mx:Label id="mPipe1" x="68" y="201" text="0" styleName="schematicLabel"/> 
+    	
+    	<mx:Label id="tPipe2" x="259" y="177" text="0" styleName="schematicLabel"/>
+    	<mx:Label id="mPipe2" x="259" y="201" text="0" styleName="schematicLabel"/>
+    	
+    	<mx:Label id="tPipe3" x="259" y="110" text="0" styleName="schematicLabel"/>
+    	<mx:Label id="mPipe3" x="259" y="128" text="0" styleName="schematicLabel"/>
+    	
+    	<mx:Label id="tPipe4" x="259" y="47" text="0" styleName="schematicLabel"/>   
+    	<mx:Label id="mPipe4" x="259" y="74" text="0" styleName="schematicLabel"/>   
+    	
+    	<mx:Label id="tPipe5" x="68" y="47" text="0" styleName="schematicLabel"/>  
+    	<mx:Label id="mPipe5" x="68" y="74" text="0" styleName="schematicLabel"/> 
+    	
+    </mx:Canvas>
+    	
+    	
+</util:DragPanel>
+

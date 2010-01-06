@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <mx:Legend xmlns:mx="http://www.adobe.com/2006/mxml"
+ width="70" paddingBottom="20" >
+
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.util.ColorSetting;
+			import mx.collections.ArrayCollection;
+		
+			
+		]]>
+	</mx:Script>
+	
+	 <mx:LegendItem label="Condensor Water Loop Pump Power" fontWeight="bold">
+           <mx:fill>
+            <mx:SolidColor color="{ColorSetting.ltPumpsColor}"/>
+           </mx:fill>
+         </mx:LegendItem>
+		 <mx:LegendItem label="Hot Water Loop Pump Power" fontWeight="bold">
+           <mx:fill>
+            <mx:SolidColor color="{ColorSetting.pumpsColor}"/>
+           </mx:fill>
+         </mx:LegendItem>
+         <mx:LegendItem label="Chilled Water Loop Pump Power" fontWeight="bold">
+           <mx:fill>
+            <mx:SolidColor color="{ColorSetting.dkPumpsColor}"/>
+           </mx:fill>
+         </mx:LegendItem>
+          <mx:LegendItem label="Supply Fan Power" fontWeight="bold">
+           <mx:fill>
+            <mx:SolidColor color="{ColorSetting.fansColor}"/>
+           </mx:fill>
+         </mx:LegendItem>
+         <mx:LegendItem label="Tower Fan Power" fontWeight="bold">
+           <mx:fill>
+            <mx:SolidColor color="{ColorSetting.ltCoolingColor}"/>
+           </mx:fill>
+         </mx:LegendItem> 
+         <mx:LegendItem label="CHL Comp. Power" fontWeight="bold">
+           <mx:fill>
+            <mx:SolidColor color="{ColorSetting.coolingColor}"/>
+           </mx:fill>
+         </mx:LegendItem>
+        <mx:LegendItem label="BOI Fuel Consump." fontWeight="bold">
+           <mx:fill>
+            <mx:SolidColor color="{ColorSetting.heatingColor}"/>
+           </mx:fill>
+        </mx:LegendItem>
+       
+    
+       
+        
+       
+       
+
+</mx:Legend>

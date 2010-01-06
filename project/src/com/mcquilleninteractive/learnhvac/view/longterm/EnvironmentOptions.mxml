@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"  
+	label="ENVIRONMENT"  
+	implements="com.mcquilleninteractive.learnhvac.view.longterm.ILongTermOptionsPanel"
+	width="100%" height="100%"
+	paddingTop="10"
+	paddingLeft="10"
+	paddingRight="10"
+	creationComplete="onCC()">
+
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel;
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+			
+			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
+			import com.mcquilleninteractive.learnhvac.util.Logger
+						
+			import mx.validators.Validator			
+			import mx.collections.ArrayCollection
+			
+			public var _errorMsg:String
+			public var _errorMsgArr:Array = []
+			
+			private var _validatorsArr:Array;
+			
+			[Bindable]
+			private var _ltSettings:LTSettingsModel;
+			
+			[Bindable]
+			private var _inputsEnabled:Boolean
+			
+			private var _elevationView:ElevationView
+			private var _zoneSelector:ZoneSelector		
+			
+				
+							
+			protected function onCC():void
+			{
+				_validatorsArr = []				
+			}			
+			
+			public function initializeValues( ):void
+			{				
+				//do nothing				
+			}
+						
+			public function onScenarioLoaded():void
+			{				
+				_ltSettings = LHModelLocator.getInstance().scenarioModel.ltSettingsModel
+				_inputsEnabled = _ltSettings.buildingPropertiesEnabled
+				
+				cboRegion.dataProvider = _ltSettings.regionsAC
+				cboRegion.selectedIndex = _ltSettings.regionSelectedIndex
+				
+				switch(cboRegion.selectedItem.data)
+				{
+					case "Northeast":
+						cboCity.dataProvider = _ltSettings.northeastCitiesAC
+						break
+						
+					case "South":
+						cboCity.dataProvider = _ltSettings.southCitiesAC
+						break
+						
+					case "Pacific":
+						cboCity.dataProvider = _ltSettings.pacificCitiesAC
+						break
+					
+					default:
+						Logger.error("#LTS: onRegionChange() unrecognized data: " + cboRegion.selectedItem.data)
+				}
+				
+				cboCity.selectedIndex = _ltSettings.citySelectedIndex
+				
+			}
+				
+			public function resetValues():void
+			{				
+				//do nothing
+			}
+			
+			public function unitsUpdate():void
+			{
+				//do nothing
+			}
+			
+			public function setViewRefs(elevationView:ElevationView, zoneSelector:ZoneSelector):void
+			{
+				
+				_elevationView = elevationView
+				_zoneSelector = zoneSelector
+			}
+			
+			public function isValid():Boolean
+			{
+				//make sure city and state are selected 
+				if (cboCity.selectedLabel == "")
+				{
+					_errorMsg = "Please select a State and city on the Weather & Pos. tab"
+					return false
+				}
+				
+				var results:Array = Validator.validateAll(_validatorsArr)
+				if (results.length>0){
+					var _errorMsg:String = "Some of the values you've entered are incorrect. Please check the following fields:\n"
+					for (var i:uint=0; i<results.length; i++)
+					{
+						var s:String = _errorMsgArr[results[i].target.source.id] 
+						_errorMsg = _errorMsg + "\n" + s
+					}
+					return false
+				}			
+				
+				return true
+			}
+			
+			public function get errorMsg():String
+			{
+				return _errorMsg
+			}
+			
+					
+			public function onRegionChange():void
+			{
+				_ltSettings.regionSelectedIndex = cboRegion.selectedIndex
+				switch(cboRegion.selectedItem.data)
+				{
+					case "Northeast":
+						cboCity.dataProvider = _ltSettings.northeastCitiesAC
+						cboCity.selectedIndex = 0
+						break
+						
+					case "South":
+						cboCity.dataProvider = _ltSettings.southCitiesAC
+						cboCity.selectedIndex = 0
+						break
+						
+					case "Pacific":
+						cboCity.dataProvider = _ltSettings.pacificCitiesAC
+						cboCity.selectedIndex = 0
+						break
+					
+					default:
+						Logger.error("#LTS: onRegionChange() unrecognized data: " + cboRegion.selectedItem.data)
+				}
+			}
+			
+			public function onCityChange():void
+			{
+				_ltSettings.citySelectedIndex = cboCity.selectedIndex
+			}
+			
+			
+		]]>
+	</mx:Script>
+
+
+	<mx:HBox>
+		<mx:Label id="lblRegion" text="Region:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:ComboBox id="cboRegion" change="onRegionChange()" />	
+	</mx:HBox>
+	
+	
+	<mx:HBox>		
+		<mx:Label id="lblCity" text="City:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:ComboBox id="cboCity" change="onCityChange()"/>
+	</mx:HBox>
+				
+</mx:VBox>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<overlay:OverlayBase  xmlns:mx="http://www.adobe.com/2006/mxml" 
+    	xmlns:overlay="com.mcquilleninteractive.learnhvac.view.shortterm.overlay.*"
+		width="670" height="500"  
+		creationComplete="onCC()"
+	    horizontalScrollPolicy="off"
+		>
+	
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+            import com.mcquilleninteractive.learnhvac.util.Logger
+            import mx.controls.Label 
+            import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.adobe.cairngorm.control.CairngormEventDispatcher
+   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+   			import com.adobe.cairngorm.control.CairngormEvent
+		            			        			
+		            			
+			public function onCC():void
+			{
+				
+				//add listener for scenarioLoaded event --> this will be used to update labels
+				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
+	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);
+	   					
+	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
+   				if (LHModelLocator.getInstance().scenarioLoaded == true)
+   				{
+   					scenarioLoaded(null)
+   				}
+				
+   								
+				//draw little helpful lines on overlay
+				this.graphics.lineStyle(1,0xAAAAAA,1)
+				this.graphics.moveTo(137,195)
+				this.graphics.lineTo(150,195)
+				this.graphics.lineTo(150,205)
+				
+				this.graphics.moveTo(365,195)
+				this.graphics.lineTo(375,195)
+				this.graphics.lineTo(375,205)
+				
+				this.graphics.moveTo(605,155)
+				this.graphics.lineTo(605,165)
+				this.graphics.lineTo(590,165)
+				
+				
+			}
+			
+			public function scenarioLoaded(event:CairngormEvent):void
+			{						
+						
+				scenModel = LHModelLocator.getInstance().scenarioModel
+																						
+				//set visibility of labels			
+				lblTAirOut.visible=lblTAirOut_Title.visible=scenModel.getSysVar("TAirOut").visible
+				lblMXTRet.visible=lblMXTRet_Title.visible=scenModel.getSysVar("MXTRet").visible
+				lblMXTMixReal.visible=lblMXTMixReal_Title.visible=scenModel.getSysVar("MXTRet").visible
+				lblMXEAPosDamperReal.visible=lblMXEAPosDamperReal_Title.visible=scenModel.getSysVar("MXEAPosDamperReal").visible
+				lblMXRAPosDamperReal.visible=lblMXRAPosDamperReal_Title.visible=scenModel.getSysVar("MXRAPosDamperReal").visible
+				lblMXOAPosDamperReal.visible=lblMXOAPosDamperReal_Title.visible=scenModel.getSysVar("MXOAPosDamperReal").visible
+		
+			
+   				
+			}
+			
+			
+	
+		]]>
+	</mx:Script>	
+	
+	<mx:Label id="lblTAirOut_Title" text="Outside Air Dry Bulb Temp: "  styleName="overlayTitle"
+					 x="100" y="90" width="150" textAlign="right"/>
+	<overlay:ValueDisplayLabel id="lblTAirOut" text="0" 
+		sysVarName="TAirOut"
+		styleName="overlayValue"
+					 x="255" y="90"  textAlign="left" width="107"/>
+	
+	<!--				
+	<mx:Label id="lblMXTExhaust_Title" text="Exhaust Air&#13;Temp: "  styleName="overlayTitle"
+					  x="0" y="240" height="40" textAlign="right" width="70" />
+	<mx:Label id="lblMXTExhaust" text="0" styleName="overlayValue"
+					  x="0" y="275"
+					width="70" 
+					textAlign="right"
+					 />
+	-->				
+	
+	<mx:Label id="lblMXEAPosDamperReal_Title" text="Demanded&#13;position: " styleName="overlayTitle"
+					  x="30" y="150" height="40" textAlign="right" width="100" />	
+	<overlay:ValueDisplayLabel id="lblMXEAPosDamperReal" 		
+		sysVarName="MXEAPosDamperReal"
+		usePercent="true"
+		text="0" styleName="overlayValue"
+					  x="30" y="185"  textAlign="right" width="100"/>
+	
+								
+	<mx:Label id="lblMXRAPosDamperReal_Title" text="Demanded&#13;position: " styleName="overlayTitle"
+					  x="260" y="150" height="40" textAlign="right" width="100" />	
+	<overlay:ValueDisplayLabel id="lblMXRAPosDamperReal"
+		sysVarName="MXRAPosDamperReal"
+		usePercent="true"
+		 text="0" styleName="overlayValue"
+					  x="260" y="185"  textAlign="right" width="100"/>						
+								
+	<mx:Label id="lblMXOAPosDamperReal_Title" text="Demanded&#13;position: " styleName="overlayTitle"
+					  x="595" y="85" height="40" textAlign="left" width="100" />	
+	<overlay:ValueDisplayLabel id="lblMXOAPosDamperReal"
+		sysVarName="MXOAPosDamperReal"
+		usePercent="true"
+		text="0" styleName="overlayValue"
+					  x="595" y="125"  textAlign="left" width="100"/>		
+								
+								
+					
+	<mx:Label id="lblMXTRet_Title" text="Return Air Temp: " styleName="overlayTitle"
+					  x="72" y="440" textAlign="right" width="100" />
+	<overlay:ValueDisplayLabel id="lblMXTRet" 
+		sysVarName="MXTRet"
+		text="0" styleName="overlayValue" 
+					  x="72" y="460"  textAlign="right" width="100"/>
+					
+	<mx:Label id="lblMXTMixReal_Title" text="Mixed Air Temp: " styleName="overlayTitle"
+					   color="0x000000" x="455" y="297" textAlign="right"/>
+	<overlay:ValueDisplayLabel id="lblMXTMixReal"
+		sysVarName="MXTMixReal"
+		 text="0" styleName="overlayValue"
+					   color="0x000000" x="450" y="315"  textAlign="right"/>
+
+</overlay:OverlayBase>

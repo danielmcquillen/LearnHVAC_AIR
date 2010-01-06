@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	label="PROPERTIES"  	
+	implements="com.mcquilleninteractive.learnhvac.view.longterm.ILongTermOptionsPanel"
+	creationComplete="onCC()"
+	paddingTop="10"
+	paddingLeft="10"
+	paddingRight="10"
+	width="100%" height="100%">
+	
+	<mx:Metadata>
+		[Event(name="buildingPropsChange", type="flash.events.Event")]
+	</mx:Metadata>
+	
+		<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel;
+			import com.mcquilleninteractive.learnhvac.view.LongTermSimulation;
+			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
+			import com.mcquilleninteractive.learnhvac.util.Conversions
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import mx.events.ItemClickEvent
+			import mx.validators.Validator
+			import mx.events.SliderEvent
+			
+			
+			[Bindable]			
+			private var _ltSettings:LTSettingsModel
+			
+			private var _validatorsArr:Array
+									
+			[Embed(source='/assets/DawaAssets.swf', symbol='mcSliderDragger')]
+			[Bindable]
+			private var SliderDragger:Class;
+			
+			[Bindable]
+			private var _inputsEnabled:Boolean = true;
+					
+			private var _currElevationView:String
+			
+			public var _errorMsg:String
+			public var _errorMsgArr:Array = []
+						
+			private var _elevationView:ElevationView
+			private var _zoneSelector:ZoneSelector
+			
+			protected function onCC():void
+			{
+				_validatorsArr = [vldNorthAxis]				
+				_errorMsgArr["txtNorthAxis"] = "North Axis"
+				
+				
+			}	
+			
+			public function setElevationView(view:String):void
+			{
+				_currElevationView = view
+			}
+			
+		
+			
+			/* Enable or disable the fields in this options panel (based on instructor setting in scenario)
+			   If disabled, student uses this panel simply as an information display */
+			   
+			public function set inputsEnabled(v:Boolean):void
+			{
+				_inputsEnabled = v
+			}
+			
+			public function getWidthForElevation():Number
+			{
+				var width:Number
+				if (_currElevationView == LTSettingsModel.NORTH || _currElevationView == LTSettingsModel.SOUTH)
+				{
+					width = _ltSettings.buildingWidth	
+				}
+				else
+				{
+					width = _ltSettings.buildingLength	
+				}
+				return width
+			}
+			
+			public function getWindowRatioForElevation():Number
+			{
+				var windowRatio:Number 
+				switch (_currElevationView)
+				{
+					case LTSettingsModel.NORTH:
+						windowRatio = _ltSettings.windowRatioNorth
+						break
+					case LTSettingsModel.SOUTH:
+						windowRatio = _ltSettings.windowRatioSouth
+						break
+					case LTSettingsModel.EAST:
+						windowRatio = _ltSettings.windowRatioEast
+						break
+					case LTSettingsModel.WEST:
+						windowRatio = _ltSettings.windowRatioWest
+						break
+					default:
+						Logger.error("#LongTermSimulation: on_elevationViewChange() unrecognized _elevationView: " + _currElevationView)
+						return .5
+				}	
+				return windowRatio
+			}
+			
+						
+			public function unitsUpdate():void
+			{
+				resetValues()	
+			}
+			
+			public function setViewRefs(elevationView:ElevationView, zoneSelector:ZoneSelector):void
+			{
+				_elevationView = elevationView
+				_zoneSelector = zoneSelector
+			}
+			
+			public function initializeValues():void
+			{			
+			}
+			
+			public function onScenarioLoaded():void
+			{				
+				_ltSettings = LHModelLocator.getInstance().scenarioModel.ltSettingsModel
+				
+				cboMassLevel.dataProvider = _ltSettings.massLevelsAC
+				cboMassLevel.selectedIndex = _ltSettings.massLevelSelectedIndex
+				cboWindowType.dataProvider = _ltSettings.windowTypesAC
+				cboWindowType.selectedIndex = _ltSettings.windowTypeSelectedIndex
+				
+				
+				resetValues()	
+			}
+			
+			public function get errorMsg():String
+			{
+				return _errorMsg
+			}
+			
+				
+			public function resetValues():void
+			{
+				 
+				_ltSettings = LHModelLocator.getInstance().scenarioModel.ltSettingsModel
+				var currUnits:String = LHModelLocator.currUnits
+				
+				this._inputsEnabled = _ltSettings.buildingPropertiesEnabled
+											
+				//initialize sliders				
+				if (currUnits =="SI")
+				{										
+					sldStoryHeight.minimum = 2.5
+					sldStoryHeight.maximum = 6.0
+					lblStoryHeightLeftLabel.text = "2.5"
+					lblStoryHeightRightLabel.text = "6.0"
+										
+					sldBldgLength.minimum = 10
+					sldBldgLength.maximum = 100
+					lblBldgLengthLeftLabel.text = "10"
+					lblBldgLengthRightLabel.text = "100"
+					
+					sldBldgWidth.minimum = 10
+					sldBldgWidth.maximum = 100
+					lblBldgWidthLeftLabel.text = "10"
+					lblBldgWidthRightLabel.text = "100"
+					
+					lblStoryHeightUnits.text = "m."
+					lblBldgLengthUnits.text = "m."
+					lblBldgWidthUnits.text = "m."
+				
+				}
+				else
+				{
+					
+					sldStoryHeight.minimum = 8
+					sldStoryHeight.maximum = 20
+					lblStoryHeightLeftLabel.text = "8'"
+					lblStoryHeightRightLabel.text = "20'"
+										
+					sldBldgLength.minimum = 50
+					sldBldgLength.maximum = 300
+					lblBldgLengthLeftLabel.text = "50'"
+					lblBldgLengthRightLabel.text = "300'"
+					
+					sldBldgWidth.minimum = 50
+					sldBldgWidth.maximum = 300
+					lblBldgWidthLeftLabel.text = "50'"
+					lblBldgWidthRightLabel.text = "300'"
+										
+					lblStoryHeightUnits.text = "ft."
+					lblBldgLengthUnits.text = "ft."
+					lblBldgWidthUnits.text = "ft."
+				}				
+				
+				sldStoryHeight.invalidateProperties()
+				sldBldgWidth.invalidateProperties()
+				sldBldgLength.invalidateProperties()
+			
+			}
+			
+			
+			public function isValid():Boolean
+			{
+				var results:Array = Validator.validateAll(_validatorsArr)
+				if (results.length>0){
+					var _errorMsg:String = "Some of the values you've entered are incorrect. Please check the following fields:\n"
+					for (var i:uint=0; i<results.length; i++)
+					{
+						var s:String = _errorMsgArr[results[i].target.source.id] 
+						_errorMsg = _errorMsg + "\n" + s
+					}
+					return false
+				}			
+				return true
+			}
+			
+						
+					
+			public function axisChange(event:Event):void
+			{
+				var val:Number = Number(txtNorthAxis.text)
+				if (val<-45)
+				{
+					 val = -45
+					 txtNorthAxis.text = "-45"		
+				}
+				else if (val>45) 
+				{
+					val = 45
+					txtNorthAxis.text = "45"
+				}
+				_ltSettings.northAxis = Number(txtNorthAxis.text)
+				_zoneSelector.northAxis = _ltSettings.northAxis
+			}
+		
+		
+			private function sliderChange(event:SliderEvent):void
+			{
+				var val:Number = event.target.value	
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				
+				switch (event.target.id)
+				{
+					
+					case "sldStories":
+						_ltSettings.stories = val
+						_elevationView.drawFloors(getWidthForElevation(), _ltSettings.stories, _ltSettings.storyHeight, getWindowRatioForElevation(), _ltSettings.windowStyle)
+						if (_ltSettings.floorOfInterest > val) {
+							_ltSettings.floorOfInterest= val
+						}
+						_elevationView.setFloorOfInterest(_ltSettings.floorOfInterest)
+						break
+						
+					case "sldStoryHeight":
+						_ltSettings.storyHeight = val
+						//txtStoryHeight.text = String(val)
+						//bldgModel.changeStoryHeight(val)
+						_elevationView.drawFloors(getWidthForElevation(), _ltSettings.stories, _ltSettings.storyHeight, getWindowRatioForElevation(), _ltSettings.windowStyle)
+						break
+						
+					case "sldBldgWidth":
+						_ltSettings.buildingWidth = val
+						if (_currElevationView == LTSettingsModel.NORTH || _currElevationView == LTSettingsModel.SOUTH) 
+						{
+							_elevationView.drawFloors(getWidthForElevation(), _ltSettings.stories, _ltSettings.storyHeight, getWindowRatioForElevation(), _ltSettings.windowStyle)
+						
+						}
+						//bldgModel.changeWidth(val)						
+						_zoneSelector.drawZones( _ltSettings.buildingLength, _ltSettings.buildingWidth, _ltSettings.northAxis, 0)		
+						break
+						
+					case "sldBldgLength":
+						_ltSettings.buildingLength = val
+						if (_currElevationView == LTSettingsModel.EAST || _currElevationView == LTSettingsModel.WEST) 
+						{
+							_elevationView.drawFloors(getWidthForElevation(), _ltSettings.stories, _ltSettings.storyHeight, getWindowRatioForElevation(), _ltSettings.windowStyle)
+						}
+						//bldgModel.changeLength(val)
+						_zoneSelector.drawZones( _ltSettings.buildingLength, _ltSettings.buildingWidth, _ltSettings.northAxis, 0)		
+						break
+						
+					case "sldNorth":
+						_ltSettings.windowRatioNorth = val
+						txtNorth.text = String(val)
+						//bldgModel.changeRatio(LongTermSimulation.NORTH, val)
+						if (_currElevationView == LTSettingsModel.NORTH) {
+							_elevationView.setWindowRatio(val)
+						}
+						break
+						
+					case "sldSouth":
+						_ltSettings.windowRatioSouth = val
+						//bldgModel.changeRatio(LongTermSimulation.SOUTH,val)
+						if (_currElevationView == LTSettingsModel.SOUTH) _elevationView.setWindowRatio(val)
+						break
+						
+					case "sldEast":
+						_ltSettings.windowRatioEast = val
+						//bldgModel.changeRatio(LongTermSimulation.EAST,val)
+						if (_currElevationView == LTSettingsModel.EAST) _elevationView.setWindowRatio(val)
+						break
+					case "sldWest":
+						_ltSettings.windowRatioWest = val
+						//bldgModel.changeRatio(LongTermSimulation.WEST,val)
+						if (_currElevationView == LTSettingsModel.WEST) _elevationView.setWindowRatio(val)
+						break
+					
+					default:
+							
+				}
+				
+				dispatchEvent(new Event("buildingPropsChange"))
+			}
+			
+			
+			public function onWindowTypeChange():void
+			{				
+				_ltSettings.windowTypeSelectedIndex = cboWindowType.selectedIndex
+				_elevationView.setWindowStyle(cboWindowType.selectedItem.data)				
+			}
+				
+			
+			
+		
+			private function formatStoriesDataTip(val:Number):String
+			{
+				var displayVal:String = String(Math.round(val))
+				return displayVal
+			}		
+			private function formatStoryHeightDataTip(val:Number):String
+			{
+				var displayVal:String = String(Math.round(val*10)/10)
+				return displayVal
+			}			
+			private function formatBldgLengthDataTip(val:Number):String
+			{
+				var displayVal:String = String(Math.round(val))
+				return displayVal
+			}		
+			private function formatBldgWidthDataTip(val:Number):String
+			{
+				var displayVal:String = String(Math.round(val))
+				return displayVal
+			}	
+			
+			private function onMassLevelChange():void
+			{
+				_ltSettings.massLevelSelectedIndex = cboMassLevel.selectedIndex
+			}
+			
+		]]>
+	</mx:Script>
+
+
+	<mx:NumberValidator id="vldNorthAxis" 
+		source="{txtNorthAxis}"
+		property="text"
+		minValue="-360" 
+		maxValue="360"/>
+		
+    <mx:NumberFormatter id="numFormatter"
+            precision="2"
+            rounding="nearest" />
+
+	
+   	<mx:Text width="350"  text="If the instructor has disabled the building properties in this scenario, you will not be able to change them."/>
+   	
+   	
+	<mx:Label text="Building Dimensions" styleName="longTermOptionsSectionHeader"/>
+   	
+	<mx:HBox>
+		
+		<mx:Label id="lblStories" text="Stories:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:Label
+				id="txtStories"
+				text="{numFormatter.format(_ltSettings.stories)}"
+				width="55"
+				styleName="longTermOptionsCurrValue" 
+				textAlign="right"
+				height="20"
+				/>						
+		
+		<mx:Spacer width="25"/>
+		
+		<mx:Label text="3" width="25"  textAlign="right" visible="{_inputsEnabled}" />
+		<mx:HSlider 
+				id="sldStories"
+				dataTipOffset="2"
+				labelStyleName="sliderLable"
+				snapInterval="1"
+				dataTipFormatFunction="formatStoriesDataTip"
+				change="sliderChange(event)"
+				width="130"
+				height="25" 
+				minimum="3"
+				maximum="30"
+				value="{_ltSettings.stories}"
+				thumbDownSkin="{SliderDragger}" 
+				thumbOverSkin="{SliderDragger}"
+				thumbUpSkin="{SliderDragger}"
+				thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
+				visible="{_inputsEnabled}"
+				/>		
+		<mx:Label text="30" width="40" visible="{_inputsEnabled}"/>
+		
+			
+	</mx:HBox>
+	
+	
+	
+	<mx:HBox>
+		<mx:Label id="lblStoryHeight" text="Story Height:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:Label
+			    id="txtStoryHeight"							
+				text="{numFormatter.format(_ltSettings.storyHeight)}"
+				width="55"
+				styleName="longTermOptionsCurrValue" 
+				textAlign="right"
+				height="20"
+				paddingRight="0"/>
+		<mx:Label id="lblStoryHeightUnits" paddingLeft="0" text="ft." width="20"/>
+		<mx:Label id="lblStoryHeightLeftLabel" text="8'" width="25" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:HSlider 
+				id="sldStoryHeight"									
+				value="{_ltSettings.storyHeight}"
+				dataTipOffset="2"
+				snapInterval=".1"
+				dataTipFormatFunction="formatStoryHeightDataTip"
+				change="sliderChange(event)"
+				width="130"
+				height="25" 
+				minimum="8.5"
+				maximum="20"
+				visible="{_inputsEnabled}"
+				thumbDownSkin="{SliderDragger}" 
+				thumbOverSkin="{SliderDragger}"
+				thumbUpSkin="{SliderDragger}"
+				thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
+				/>	
+		<mx:Label text="50'" width="40" id="lblStoryHeightRightLabel" visible="{_inputsEnabled}"/>	
+		
+	</mx:HBox>
+						
+					
+					
+	<mx:HBox>
+		<mx:Label id="lblWidth" text="Bldg. Width:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:Label
+			    id="txtBldgWidth"
+				width="55" 
+				styleName="longTermOptionsCurrValue" 
+				text="{numFormatter.format(_ltSettings.buildingWidth)}" 
+				textAlign="right"
+				height="20"/>
+		<mx:Label id="lblBldgWidthUnits" paddingLeft="0" text="ft." width="20"/>
+		<mx:Label id="lblBldgWidthLeftLabel" text="50'" width="25" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:HSlider 
+			id="sldBldgWidth"
+				dataTipOffset="2"
+				dataTipFormatFunction="formatBldgWidthDataTip"
+				change="sliderChange(event)"
+				snapInterval="5"
+				width="130"
+				height="25"
+				value="{_ltSettings.buildingWidth}" 
+				minimum="50"
+				maximum="300"
+				visible="{_inputsEnabled}"
+				thumbDownSkin="{SliderDragger}" 
+				thumbOverSkin="{SliderDragger}"
+				thumbUpSkin="{SliderDragger}"
+				thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
+				/>	
+		<mx:Label id="lblBldgWidthRightLabel"  text="300'"  width="40" visible="{_inputsEnabled}" />
+		
+									
+	</mx:HBox>
+	
+	
+	
+	<mx:HBox>
+		<mx:Label id="lblLength" text="Bldg. Length:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:Label
+			    id="txtBldgLength"
+				width="55"
+				styleName="longTermOptionsCurrValue" 
+				text="{numFormatter.format(_ltSettings.buildingLength)}" 
+				textAlign="right"
+				height="20"/>
+		<mx:Label id="lblBldgLengthUnits" paddingLeft="0" text="ft." width="20"/>
+		<mx:Label id="lblBldgLengthLeftLabel"  text="50'" width="25" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:HSlider 
+				id="sldBldgLength"
+				dataTipOffset="2"
+				dataTipFormatFunction="formatBldgLengthDataTip"
+				change="sliderChange(event)"
+				snapInterval="5"
+				width="130"
+				height="25" 
+				value="{_ltSettings.buildingLength}" 
+				minimum="50"
+				maximum="300"
+				thumbDownSkin="{SliderDragger}" 
+				thumbOverSkin="{SliderDragger}"
+				thumbUpSkin="{SliderDragger}"
+				thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
+				visible="{_inputsEnabled}"/>	
+		<mx:Label id="lblBldgLengthRightLabel" text="300'" width="40" visible="{_inputsEnabled}"/>					
+		
+	</mx:HBox>
+						
+	<mx:Label text="Window-to-Wall ratio" styleName="longTermOptionsSectionHeader"/>
+					
+	<mx:HBox>
+		<mx:Label id="lblNorth" text="North:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:Label
+		    id="txtNorth"
+			width="55"
+			styleName="longTermOptionsCurrValue" 
+			text="{_ltSettings.windowRatioNorth}" 
+			textAlign="right"
+			height="20"
+			/>
+		<mx:Spacer width="25"/>
+		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:HSlider 
+			id="sldNorth"
+			dataTipOffset="2"
+			change="sliderChange(event)"
+			labelStyleName="sliderLable"
+			snapInterval=".01"
+			width="130"
+			height="25"
+			value="{_ltSettings.windowRatioNorth}"
+			minimum="0"
+			maximum="1"
+			thumbDownSkin="{SliderDragger}" 
+			thumbOverSkin="{SliderDragger}"
+			thumbUpSkin="{SliderDragger}"
+			thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
+			visible="{_inputsEnabled}"/>		
+		<mx:Label text="1" width="40"  paddingTop="5" visible="{_inputsEnabled}"/>
+		
+		
+	</mx:HBox>
+						
+						
+						
+	<mx:HBox>
+		<mx:Label id="lblSouth" text="South:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:Label
+		    id="txtSouth"
+			width="55"
+			styleName="longTermOptionsCurrValue" 
+			text="{_ltSettings.windowRatioSouth}" 
+			textAlign="right"
+			height="20"/>
+		<mx:Spacer width="25"/>
+		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:HSlider 
+			id="sldSouth"
+			dataTipOffset="2"
+			labelStyleName="sliderLable"
+			change="sliderChange(event)"
+			snapInterval=".01"
+			width="130"
+			height="25" 
+			value="{_ltSettings.windowRatioSouth}"
+			minimum="0"
+			maximum="1"
+			thumbDownSkin="{SliderDragger}" 
+			thumbOverSkin="{SliderDragger}"
+			thumbUpSkin="{SliderDragger}"
+			thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
+			visible="{_inputsEnabled}"/>		
+		<mx:Label text="1" width="40"  paddingTop="5" visible="{_inputsEnabled}"/>
+		
+		
+	</mx:HBox>
+
+
+	<mx:HBox>
+		<mx:Label id="lblEast" text="East:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:Label
+		    id="txtEast"
+			width="55"
+			styleName="longTermOptionsCurrValue" 
+			text="{_ltSettings.windowRatioEast}" 
+			textAlign="right"
+			height="20"/>
+		<mx:Spacer width="25"/>
+		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:HSlider 
+			id="sldEast"
+			dataTipOffset="2"
+			labelStyleName="sliderLable"
+			change="sliderChange(event)"
+			snapInterval=".01"
+			width="130"
+			height="25" 
+			minimum="0"
+			value="{_ltSettings.windowRatioEast}"
+			maximum="1"
+			thumbDownSkin="{SliderDragger}" 
+			thumbOverSkin="{SliderDragger}"
+			thumbUpSkin="{SliderDragger}"
+			thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
+			visible="{_inputsEnabled}"/>		
+		<mx:Label text="1" width="40"  paddingTop="5" visible="{_inputsEnabled}"/>
+		
+		
+	</mx:HBox>
+						
+	
+	
+	<mx:HBox>
+		<mx:Label id="lblWest" text="West:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:Label
+		    id="txtWest"
+			styleName="longTermOptionsCurrValue" 
+			text="{_ltSettings.windowRatioWest}" 
+			textAlign="right"
+			width="55"
+			height="20"
+			/>
+		<mx:Spacer width="25"/>
+		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:HSlider 
+			id="sldWest"
+			dataTipOffset="2"
+			labelStyleName="sliderLable"
+			change="sliderChange(event)"
+			snapInterval=".01"
+			width="130"
+			height="25" 
+			minimum="0"
+			value="{_ltSettings.windowRatioWest}"
+			maximum="1"
+			thumbDownSkin="{SliderDragger}" 
+			thumbOverSkin="{SliderDragger}"
+			thumbUpSkin="{SliderDragger}"
+			thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
+			visible="{_inputsEnabled}"/>		
+		<mx:Label text="1" width="40"  paddingTop="5" visible="{_inputsEnabled}"/>
+		
+		
+	</mx:HBox>
+
+	<mx:Label text="Orientation" styleName="longTermOptionsSectionHeader"/>
+						
+	<mx:HBox >
+		<mx:Label id="lblNorthAxis" text="North Axis:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:TextInput id="txtNorthAxis" text="0" width="70" enter="axisChange(event)"  focusOut="axisChange(event)" enabled="{_inputsEnabled}"  />
+	</mx:HBox>
+				
+	<mx:Label text="Windows" styleName="longTermOptionsSectionHeader"/>
+	
+	
+	<mx:HBox> 
+		<mx:Label id="lblWindowType" text="Window Type:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:ComboBox id="cboWindowType" change="onWindowTypeChange()" enabled="{_inputsEnabled}" />
+	</mx:HBox>
+					
+	
+	<mx:Label text="Other properties" styleName="longTermOptionsSectionHeader"/>
+	
+	<mx:HBox>
+		<mx:Label id="lblBuildingAge" text="Building Age" width="100" styleName="longTermOptionsLabel"/>
+		<mx:Label text="New"/>
+		<!--
+		<mx:ComboBox id="cboBuildingAge" change="onBuildingAgeChange()">
+			<mx:ArrayCollection>
+				<mx:Object label="old" data="old"/>
+				<mx:Object label="recent" data="recent"/>
+				<mx:Object label="new" data="new"/>
+			</mx:ArrayCollection>
+		</mx:ComboBox>	
+		-->
+	</mx:HBox>
+	
+	<mx:HBox>
+		<mx:Label id="lblMassLevel" text="Mass level:" width="100" styleName="longTermOptionsLabel"/>
+		<mx:ComboBox id="cboMassLevel" enabled="{_inputsEnabled}" change="onMassLevelChange()"/>
+		
+	</mx:HBox>
+				
+</mx:VBox>

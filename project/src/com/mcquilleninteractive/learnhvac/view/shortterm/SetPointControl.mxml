@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:flash.filters="flash.filters.*"
+   	horizontalScrollPolicy="off" 
+    verticalScrollPolicy="off"
+    creationComplete="onCreationComplete()"
+    hideEffect="{myFade}"
+    showEffect="{myFade}"
+    useHandCursor="true"
+	>
+	
+		
+	<mx:Style>
+		.PIDTitle
+		{
+			font-size:8px;
+		}
+		.tempUnits
+		{
+			font-size:11px;
+			color:#00CCFF;
+		}
+		.tempRealUnits
+		{
+			font-size:10px;
+			color:#33CC00;
+		}
+		.tempInputText
+		{
+			color:#00CCFF;
+			font-size:15px;
+			background-color:none;
+			border-color:none;	
+			border:0px;
+		}
+		.tempRealText
+		{
+			color:#33CC00;
+			font-size:10px;
+			background-color:none;
+			border-color:none;	
+			border:0px;
+		}
+	</mx:Style>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.cairngorm.control.CairngormEvent;
+
+			import flash.filters.DropShadowFilter
+			import flash.utils.Timer
+			import flash.events.TimerEvent
+			import mx.controls.Alert
+			import mx.managers.FocusManager
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.adobe.cairngorm.control.CairngormEventDispatcher     
+		  	import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
+		  	import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+		  	import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
+            import mx.binding.utils.BindingUtils
+			import com.mcquilleninteractive.learnhvac.util.Logger
+		
+			[Bindable]
+			private var currUnits:String = "\u00B0F"
+			private var currValue:Number
+			private var highValue:Number = 100
+			private var lowValue:Number = 0
+			private var timer:Timer
+			private var updateDirection:Number //is user increasing "+1" or decreasing "-1" the SPControl value
+					
+			[Embed(source='/assets/PIDControl.swf', symbol='PIDControl')]
+			[Bindable]
+			private var PIDControlImage:Class	
+   			
+   				
+   			[Embed(source='/assets/PIDControl.swf', symbol='btnIncrease_up')]
+			[Bindable]
+			private var IncreaseUpButton:Class	
+			
+   			[Embed(source='/assets/PIDControl.swf', symbol='btnIncrease_over')]
+			[Bindable]
+			private var IncreaseOverButton:Class
+				
+   			[Embed(source='/assets/PIDControl.swf', symbol='btnIncrease_down')]
+			[Bindable]
+			private var IncreaseDownButton:Class	
+			
+			[Embed(source='/assets/PIDControl.swf', symbol='btnDecrease_up')]
+			[Bindable]
+			private var DecreaseUpButton:Class	
+			
+   			[Embed(source='/assets/PIDControl.swf', symbol='btnDecrease_over')]
+			[Bindable]
+			private var DecreaseOverButton:Class
+				
+   			[Embed(source='/assets/PIDControl.swf', symbol='btnDecrease_down')]
+			[Bindable]
+			private var DecreaseDownButton:Class
+			
+				
+			[Embed(source='/assets/PIDControl.swf', symbol='btnClose_up')]
+			[Bindable]
+			private var CloseUpButton:Class	
+			
+   			[Embed(source='/assets/PIDControl.swf', symbol='btnClose_over')]
+			[Bindable]
+			private var CloseOverButton:Class
+			
+			
+   			[Embed(source='/assets/PIDControl.swf', symbol='grabBar')]
+			[Bindable]
+   			private var GrabBarImage:Class
+   				
+			public function onCreationComplete():void
+			{
+				Logger.debug("#SetPointControl: onCreationComplete()")
+				CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0,true)		
+				CairngormEventDispatcher.getInstance().addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChange, false, 0,true)	
+				
+				timer = new Timer(200)
+				currValue = 80
+				iptTemp.text = String(currValue)
+				timer.addEventListener(TimerEvent.TIMER, timerHandler)
+				
+				//run onScenarioLoaded if scenario has already been loaded
+				//before this component was creationComplete
+				if (LHModelLocator.getInstance().scenarioModel !=null)
+				{
+					onScenarioLoaded(new ScenarioLoadedEvent(ScenarioLoadedEvent.SCENARIO_LOADED))
+				}
+			}
+			
+			public function onScenarioLoaded(event:ScenarioLoadedEvent):void
+			{
+				
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				 
+				Logger.debug("#SetPointControl: onScenarioLoaded()")
+				//setup bindings each time scenario is loaded	
+				
+				var model:LHModelLocator = LHModelLocator.getInstance()
+				
+				//set point
+				BindingUtils.bindSetter(updateSPT, scenModel.getSysVar("TRoomSP"), "currValue")
+				
+				//units	
+				BindingUtils.bindSetter(function(currUnits:String):void{lblTempReal.text=String(currUnits)}, scenModel.getSysVar("TRoom"), "currValue" )
+	
+			}
+			
+			
+			
+			public function onUnitsChange(units:String):void
+			{
+				
+				var tempUnits:String = LHModelLocator.currentTempUnits()
+				lblTempUnits.text = tempUnits
+				lblTempRealUnits.text = tempUnits
+			}
+			
+			public function updateSPT(currValue:Number):void
+			{
+				iptTemp.text = currValue.toString()
+			}
+			
+			private function updateModel():void
+			{
+				
+				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				
+				//update the model with the current value of the SetPointControl
+				Logger.debug("#SetPointContol: updating model with currValue: " + currValue)
+				scenModel.setSysVarValue("TRoomSP", currValue)
+				//and then update SPARK if running
+				if (scenModel.ahuStatus == ScenarioModel.AHU_ON)
+				{
+					var cgEvent : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.EVENT_UPDATE_AHU);
+					CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent);
+				}
+			}
+			
+			
+			public function timerHandler(event:TimerEvent):void
+			{
+				updateValue()	
+			}
+			
+			public function updateValue():void
+			{
+				//update Temp value of input
+				var value:Number = Number(iptTemp.text)
+				value = value + updateDirection 
+				iptTemp.text = String(value)
+			}
+			
+			public function pidStartDrag():void
+			{
+				this.startDrag(false)
+			}
+			
+			public function pidStopDrag():void
+			{
+				this.stopDrag()
+			}
+			
+			public function onPressIncrease():void
+			{
+				updateDirection=1
+				updateValue()
+				timer.start()
+			}
+			
+			public function onReleaseIncrease():void
+			{
+				currValue = Number(iptTemp.text)
+				timer.stop()
+				updateModel()
+			}
+			
+			public function onPressDecrease():void
+			{
+				updateDirection=-1
+				updateValue()
+				timer.start()
+			}
+			
+			public function onReleaseDecrease():void
+			{
+				currValue = Number(iptTemp.text)
+				timer.stop()
+				updateModel()
+			}
+
+			public function onManualEntry():void
+			{
+				var newValue:Number = Number(iptTemp.text)
+				if (newValue < lowValue || newValue > highValue)
+				{
+					mx.controls.Alert.show("Temperature must be between " + lowValue + " and " + highValue)
+					iptTemp.text = String(currValue) //revert to last value
+				}
+				else
+				{
+					currValue = newValue
+				}	
+				this.stage.focus = null;
+				updateModel()
+			}
+		
+			public function onClose():void
+			{
+				this.visible = false
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Fade id="myFade"/>
+	
+	<mx:filters>
+     	<flash.filters:DropShadowFilter 
+     			id="dropShadowFilter"
+     			distance="4" 
+     			angle="45"
+     			blurX="4"
+     			blurY="4"
+     			alpha=".4"
+     			color="#444444"
+     			knockout="false"
+     			quality="1"
+     			strength="1"
+     			inner="false"
+     			hideObject="false"/>
+    </mx:filters>
+    
+	<mx:SWFLoader id="PID_bg" source="{PIDControlImage}" />
+	
+	
+	<mx:Image 	id="grabBar" source="{GrabBarImage}"
+				x="7" y="4"
+   				mouseDown="pidStartDrag()" 
+				mouseUp="pidStopDrag()" 
+			    buttonMode="true"
+				/>   
+	
+	<mx:Label text="SET POINT TEMP" 
+				x="12" y="3"  
+				styleName="PIDTitle" 
+			    buttonMode="true"
+   				mouseDown="pidStartDrag()" 
+				mouseUp="pidStopDrag()" 
+			    />
+			    
+	
+				
+	<mx:Button x="8" y="20"	id="btnIncrease" 
+				upSkin="{IncreaseUpButton}" 
+				overSkin="{IncreaseOverButton}"
+				downSkin="{IncreaseDownButton}"
+			    mouseDown="onPressIncrease()"
+			    mouseUp="onReleaseIncrease()"
+				/>
+	<mx:Button x="8" y="45"	id="btnDecrease" 
+				upSkin="{DecreaseUpButton}" 
+				overSkin="{DecreaseOverButton}"
+				downSkin="{DecreaseDownButton}"
+				mouseDown="onPressDecrease()"
+				mouseUp="onReleaseDecrease()"
+				/>
+			
+	<mx:Button id="btnClose" x="130" y="4"
+				upSkin="{CloseUpButton}" 
+				overSkin="{CloseOverButton}"
+				downSkin="{CloseOverButton}"
+				click="onClose()"
+				/>
+		
+	<mx:TextInput id="iptTemp" 
+			x="40" y="25" 
+			width="75" 
+			textAlign="right" 
+			text="123.4" 
+			styleName="tempInputText"
+			borderStyle="none"
+		    restrict="0-9.\-"
+		    enter="onManualEntry()"
+		    toolTip="Enter set point temperature, or use buttons at left"
+			 />
+	<mx:Label id="lblTempUnits" x="115" y="27" width="20" text="{currUnits}" styleName="tempUnits" />
+	
+	<mx:Label id="lblActual"
+		text="actual:"
+		x="45"
+		y="47"
+		styleName="tempRealText"
+	/>
+		
+	<mx:Label id="lblTempReal" 
+			x="40" y="47" 
+			width="75" 
+			textAlign="right" 
+			text="123.4" 
+			styleName="tempRealText"
+			toolTip="Measured Room Temperature Value"
+			 />
+	
+	<mx:Label id="lblTempRealUnits" x="115" y="47" width="20" text="{currUnits}" styleName="tempRealUnits" />
+	
+	
+	
+	
+	
+	
+</mx:Canvas>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
+	creationComplete="drawChip()"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			private var _itemColor:Number = 0x000000
+			private var _live:Boolean = true
+			public var dataField:String
+			
+			[Bindable]
+			private var _title:String 
+			
+			
+			
+			public function set itemColor(color:Number):void
+			{
+				_itemColor=color
+				drawChip()
+			}
+			
+			public function set live(state:Boolean):void
+			{
+				_live = state
+				drawChip()
+			}
+			
+			public function get live():Boolean
+			{
+				return _live
+			}
+			
+			public function set title(s:String):void
+			{
+				_title = s
+			}
+			
+			private function drawChip():void
+			{
+				var g:Graphics = this.graphics
+				g.clear()
+				
+				g.lineStyle(1,0x000000)
+				
+				if (_live)
+				{
+					g.beginFill(_itemColor)
+				}
+				else
+				{
+					g.beginFill(0x00000,.1)
+				}
+				
+				
+				g.drawRect(5,5,10,15)
+				g.endFill()
+			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	<mx:Label id="txtTitle" x="20" y="5" width="70" text="{_title}"/>
+
+</mx:Canvas>

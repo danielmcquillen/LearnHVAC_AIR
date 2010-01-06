@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:view="com.mcquilleninteractive.learnhvac.view.*"
+	xmlns:viewControllers="com.mcquilleninteractive.learnhvac.view.controllers.*"
+	xmlns:analysis="com.mcquilleninteractive.learnhvac.view.analysis.*"
+	paddingTop="5"
+	height="35" width="100%" 
+	styleName="controlBar"
+    horizontalGap="5"
+	verticalScrollPolicy="off">
+	
+	<mx:Metadata>
+		[Event(name="onStartLTSimulation", type="flash.events.Event")]		
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			public function startSimulation():void
+			{	
+				dispatchEvent(new Event("onStartLTSimulation"))
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Spacer width="10" />
+	
+	<analysis:AnalysisTabs 
+			id="analysisTabs"
+			x="460"
+			paddingTop="3"
+			height="35" width="400" 
+	    	creationPolicy="all" 
+			/>
+				
+	
+</mx:HBox>
+
+					
+					
+	
