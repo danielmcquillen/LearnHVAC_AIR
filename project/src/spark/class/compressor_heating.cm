@@ -1,0 +1,46 @@
+/// \file compressor_heating.cm
+///
+/// T1p = T1 + Wlotot / ( cpvap * mdot )
+/// whereby:
+///  Wlotot = Wlo + alpha*Wis
+///
+
+PORT T1p     [K]        "temperature after heating-up";
+PORT T1      [K]        "fluid temperature at inlet";
+PORT Wlo     [W]        "constant part of the electromechanical losses";
+PORT Wis     [W]        "isentropic compression power";
+PORT Wlotot  [W]        "total electromechanical losses";
+PORT alpha   [-]        "loss factor allowing to define another electromechnical loss which is assumed to be porportional to isentropic power";
+PORT cpvap   [J/(kg.K)] "mean specific heat at constant pressure in superheated vapor state";
+PORT mdot    [kg/s]     "mass flow rate through compressor";
+
+
+DECLARE safcond  cond1;         // c = k * ( p1 - p2 )
+DECLARE prod     prod1, prod2;  // c = a * b
+DECLARE sum      sum1;          // c = a + b
+
+LINK  .T1p,
+      cond1.p1
+                 PRED_FROM_LINK=T1;
+LINK  T1,
+      .T1
+      cond1.p2;
+LINK  cpmdot        //  cpmdot = cpvap * mdot
+      prod1.c
+      cond1.k;
+LINK  .cpvap
+      prod1.a;
+LINK  .mdot
+      prod1.b;
+LINK  alpha_Wis     //  alpha_Wis = alpha * Wis
+      prod2.c
+      sum1.b;
+LINK  .alpha
+      prod2.a;
+LINK  .Wis
+      prod2.b;
+LINK  .Wlo
+      sum1.a;
+LINK  .Wlotot       //  Wlotot = alpha_Wis + Wlo
+      , sum1.c,
+      , cond1.c;

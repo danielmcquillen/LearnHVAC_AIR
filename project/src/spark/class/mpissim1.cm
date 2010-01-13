@@ -1,0 +1,175 @@
+/// \file  mpissim1.cm
+/// \brief Version of pissim1 class with macro ports
+///
+
+
+/////////////////////////////
+// Constants
+PORT CONSTANT
+    , .ZERO          NOERR 
+                     DEFAULT=0
+    , .ONE           NOERR 
+                     DEFAULT=1
+    , .THOUSAND      NOERR 
+                     DEFAULT=1000
+;
+
+
+/////////////////////////////
+// Global chiller data
+PORT  COP            [-]        "coefficient of performance";
+
+
+/////////////////////////////
+// Refrigerant 
+PORT  refrigerant_properties   "Refrigerant fluid properties"
+    , .To          [K]        "reference temperature"                      DEFAULT=233.15
+    , .gamma       [-]        "mean isentropic coefficient" 
+    , .zeta        [-]        "compressibility factor"
+    , .r           [J/(kg.K)] "gas constant"
+    , .cpvap       [J/(kg.K)] "mean specific heat at constant pressure in superheated vapor state"
+    , .cpliq       [J/(kg.K)] "mean specific heat in saturated liquid state"
+    , .hfo         [J/kg]     "specific enthalpy of the saturated liquid at the reference temperatrure"
+    , .hfgb        [J/kg]     "specific vaporization enthalpy at standard boiling point"
+    , .Tb          [K]        "standard boiling temperature"
+    , .Tc          [K]        "critical temperature",
+    , .Acl         [-]        "first coefficient in Clausius-Clapeyron equation"
+    , .Bcl         [K]        "second coefficient in Clausius-Clapeyron equation"
+    , .b_vap       [-]        "constant coefficient used in calculation of vaporization enthalpy"
+;
+
+PORT refrigerant_cycle   "Refrigerant cycle"
+    , .mdot        [kg/s]     "refrigerant mass flow rate"
+    , .h1          [J/kg]     "specific enthalpy at evaporator exhaust"    INIT=200000 ATOL=0.01
+    , .p1          [Pa]       "evaporating pressure"
+    , .T1          [K]        "evaporating temperature"                    INIT=280
+    , .T1p         [K]        "temperature after the heating-up"           INIT=300
+    , .v1p         [m^3/kg]   "specific volume after the heating-up"       INIT=0.05
+    , .p2          [Pa]       "condensing pressure"
+    , .h3          [J/kg]     "specific enthalpy at condenser exhaust"     INIT=100000 ATOL=0.01
+    , .T3          [K]        "condensing temperature"                     INIT=330
+;
+
+
+/////////////////////////////
+// Compressor data
+PORT compressor
+    , .effvol      [-]        "volumetric efficiency of compressor"
+    , .Cf          [-]        "clearance factor of compressor" 
+    , .Wlo         [W]        "constant part of the electromechanical losses in compressor"
+    , .Wlotot      [W]        "total electromechanical losses"
+    , .Wis         [W]        "isentropic compression power"
+    , .W           [W]        "power consumed by compressor"
+    , .alpha       [-]        "loss factor allowing to define another electromechanical loss which is assumed to be porportional to isentropic power"
+    , .Vdots       [m^3/s]    "geometric displacement of compressor"
+;
+
+
+/////////////////////////////
+// Condenser data
+PORT condenser
+    , .Qdot        [W]        "heat flow rejected in condenser"
+    , .eff         [-]        "condenser effectiveness"
+    , .AU          [W/K]      "condenser heat transfer coefficient"
+    , .cp          [J/(kg.K)] "specific heat of liquid water"             INIT=4187.0
+    , .mdot        [kg/s]     "water mass flow in condenser"
+    , .Tsu         [K]        "condenser supply water temperature"
+    , .Tex         [K]        "condenser exhaust water temperature"
+;
+
+
+/////////////////////////////
+// Evaporator data
+PORT  evaporator
+    , .Qdot        [W]        "cooling capacity"
+    , .eff         [-]        "evaporator effectiveness"
+    , .AU          [W/K]      "evaporator heat transfer coefficient"
+    , .cp          [J/(kg.K)] "specific heat of liquid water"             INIT=4187.0
+    , .mdot        [kg/s]     "water mass flow in evaporator"
+    , .Tsu         [K]        "evaporator supply water temperature"
+    , .Tex         [K]        "evaporator exhaust water temperature"
+;
+
+
+
+DECLARE  evaporator  ev;
+DECLARE  condenser   cd;
+DECLARE  compressor  comp;
+DECLARE  balance3    bal_Qdot;
+DECLARE  safcond     cond_Qdot_ev;     // c = k * ( p1 - p2 )
+DECLARE  quot        quot_COP;         // c = a / b
+
+
+LINK .CONSTANT
+, ( .ZERO )        { bal_Qdot.ZERO }
+, ( .ONE  )        { comp.ONE, cd.ONE, ev.ONE }
+, ( .THOUSAND )    { cd.THOUSAND, ev.THOUSAND }
+;
+
+
+LINK .refrigerant_properties
+, ( .gamma )       { comp.gamma }
+, ( .zeta  )       { comp.zeta }
+, ( .r     )       { comp.r }
+, ( .cpvap )       { comp.cpvap }
+, ( .cpliq )       { ev.cpliq,  cd.cpliq }
+, ( .hfo   )       { ev.hfo, cd.hfo }
+, ( .hfgb  )       { ev.hfgb }
+, ( .Tb    )       { ev.Tb }
+, ( .Tc    )       { ev.Tc }
+, ( .Acl   )       { ev.Acl, cd.Acl }
+, ( .Bcl   )       { ev.Bcl, cd.Bcl }
+, ( .b_vap )       { ev.b_vap }
+, ( .To    )       { ev.To, cd.To }
+;
+
+
+LINK .refrigerant_cycle
+, ( .mdot  )       { comp.mdot, cond_Qdot_ev.k }
+, ( .h1    )       { ev.h, cond_Qdot_ev.p1 }
+, ( .p1    )       { comp.p1, ev.p }
+, ( .T1    )       { ev.T, comp.T1 }
+, ( .T1p   )       { comp.T1p }
+, ( .v1p   )       { comp.v1p }
+, ( .p2    )       { comp.p2, cd.p }
+, ( .h3    )       { cd.h, cond_Qdot_ev.p2 }
+, ( .T3    )       { cd.T }
+;
+
+
+LINK .compressor
+, ( .effvol )      { comp.effvol }
+, ( .Cf     )      { comp.Cf }
+, ( .Wlo    )      { comp.Wlo }
+, ( .Wlotot )      { comp.Wlotot }
+, ( .Wis    )      { comp.Wis }
+, ( .W      )      { comp.W, bal_Qdot.c, quot_COP.b }
+, ( .alpha  )      { comp.alpha } 
+, ( .Vdots  )      { comp.Vdots }
+;
+
+
+LINK .condenser
+, ( .cp    )       { cd.cp_water }
+, ( .Qdot  )       { cd.Qdot, bal_Qdot.a }
+, ( .eff   )       { cd.eff }
+, ( .AU    )       { cd.AU }
+, ( .mdot  )       { cd.mdot_water } 
+, ( .Tsu   )       { cd.Tsu_water }
+, ( .Tex   )       { cd.Tex_water }
+;
+
+
+LINK .evaporator
+, ( .cp    )       { ev.cp_water }
+, ( .Qdot  )       { ev.Qdot, cond_Qdot_ev.c, bal_Qdot.b, quot_COP.a }
+, ( .eff   )       { ev.eff }
+, ( .AU    )       { ev.AU }
+, ( .mdot  )       { ev.mdot_water }
+, ( .Tsu   )       { ev.Tsu_water }
+, ( .Tex   )       { ev.Tex_water }
+;
+
+
+LINK .COP
+     quot_COP.c;

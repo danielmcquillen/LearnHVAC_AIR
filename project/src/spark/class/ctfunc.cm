@@ -1,0 +1,58 @@
+/*+++
+  Identification:  Cooling tower model correlation.
+
+  Abstract:        
+       Correlation of cooling tower rating factor, Fr, vs. wet bulb
+           temperature, approach temperature difference, and water
+           temperature drop.
+
+  Notes:           
+       A "soft"  unit conversion has been done to allow SI at the
+         interface.  The interface temperatures are converted from C to
+         F,  and the interface Fr is multiplied by 8.34*60*0.454/3600 =
+         0.06311. The coefficients for the correlations are taken from
+         the DOE-2 User's Manual, Table V.6.
+
+  Interface:       
+      TWb:    Ambiant (outside) air wet bulb temperature (C)
+      Fr:   Rating factor (s/kg)
+      app:  Approach temperature difference of leaving water to wet bulb (C)
+      R:    Range (water temperature drop) (C)
+
+  Acceptable input set:  
+       TWb = 21.11,  app = 6.667, R = 5.555
+
+  Recommended matches:  
+          None
+
+  Suggested breaks:  
+     None
+
+  Local variables:  
+      r1: R-dependent component of log(Fr)
+      r2: Approach-dependent component of log(Fr)
+      logFr: log(Fr)
+
+  Equations:  
+      r1 =  a1 + a2*R + a3*R^2 + a4*TWb +a5*TWb^2 +a6*R*TWb
+      r2 =  b1 + b2*app + b3*app^2 + b4*TWb +b5*TWb^2 +b6*app*TWb
+      logFr = r1 + r2
+---*/
+
+PORT TWb    "Ambiant -outside- air wet bulb temperature"    [deg_C] ;
+PORT Fr        "Rating factor"    [s/kg] ;
+PORT app    "Approach temperature difference of leaving water to wet bulb"    [deg_C] ;
+PORT R        "Range -water temperature drop-"    [deg_C] ;
+
+DECLARE ctr1    ctr1 ;
+DECLARE ctr2    ctr2 ;
+DECLARE log10    log ;
+DECLARE sum    s ;
+
+LINK        .R,    ctr1.R ;
+LINK        .app,    ctr2.app ;
+LINK        .TWb,    ctr1.TWb, ctr2.TWb ;
+LINK r1        ctr1.r1, s.a ;
+LINK r2        ctr2.r2, s.b ;
+LINK logFr    s.c, log.b ;
+LINK        .Fr,    log.a ;

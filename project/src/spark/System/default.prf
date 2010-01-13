@@ -1,0 +1,31 @@
+(
+  GlobalSettings (
+    Tolerance ( 1e-006 ())
+    MaxTolerance ( 0.001 ())
+    ResidualsSafetyFactor ( 0.01 ())
+    IncrementsSafetyFactor ( 0.9 ())
+    BreakUnknownSafetyFactor ( 1 ())
+    NormalUnknownSafetyFactor ( 1 ())
+  ) // End of GlobalSettings section 
+  DefaultComponentSettings (
+    // Settings for component solving method
+    ComponentSolvingMethod ( 0 ())
+    MinIterations ( 1 ())
+    MaxIterations ( 50 ())
+    CheckBadNumericsFlag ( 0 ())
+    EnforceMinMaxFlag ( 0 ())
+    // Settings for Jacobian evaluation
+    JacobianRefreshFrequency ( 0 ())
+    JacobianRefreshRatio ( 0.5 ())
+    FiniteDifferencesPerturbation ( 0 ())
+    // Settings for step control method
+    SteplengthControlMethod ( 1 ())
+    RelaxationCoefficient ( 1 ())
+    MinRelaxationCoefficient ( 1e-006 ())
+    // Settings for matrix solving method
+    MatrixSolvingMethod ( 2 ())
+    ScalingMethod ( 0 ())
+    PivotingMethod ( 0 ())
+    RefinementMethod ( 1 ())
+  ) // End of DefaultComponentSettings section 
+)

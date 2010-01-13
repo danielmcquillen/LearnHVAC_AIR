@@ -1,0 +1,38 @@
+/// \file sensor_staticPressure_generic.cm
+/// generic static pressure sensor
+/// Brian Coffey, May28-08
+/// reads over range 0 Pa to 200 Pa
+/// x = (P+0)/200
+/// time constant should be approx. 5s
+
+port P_real;
+port P_sensor;
+port P_offset;
+port dt;
+port timeConstant;
+
+
+declare sensor_generic_offset_bfdDynamics	sensor;
+declare sum									sum1 sum2 sum3;
+declare safquot								quot1 quot2 quot3;
+
+
+link 					sum1.c						.P_real ;
+link 					sum2.c						.P_sensor ;
+link 					sum3.c						.P_offset ;
+
+link					sum1.b sum2.b 				init=0   parameter ;
+link					sum3.b						init=0   parameter ;
+link					quot1.b quot2.b quot3.b		init=200 parameter ;
+link					sum1.a quot1.a ;
+link					sum2.a quot2.a ;
+link					sum3.a quot3.a ;
+
+
+link timeConstant		sensor.timeConstant .timeConstant ;
+link x_real				sensor.x_real		quot1.c ;
+link offset				sensor.offset		quot3.c ;
+link dt					sensor.dt			.dt ;
+link x_sensor			sensor.x_sensor		quot2.c ;
+
+

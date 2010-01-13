@@ -1,0 +1,1088 @@
+rm -f  System.stp System.tmp sparkparser.log
+C:/vspark210rc7/bin/sparkparser.exe  -e4 -s6 -p ".,./class,../class,C:/vspark210rc7/globalclass,C:/vspark210rc7/hvactk/class"  System.pr 2>&1 | tee sparkparser.log ;\
+if [ -r System.stp ]	; then	 \
+ Stp=System.stp 		;\
+elif [ -r System.tmp ] ; then \
+ Stp=System.tmp		;\
+ echo 1 > gmake.status		;\
+else \
+ echo 1 > gmake.status ; exit 1	;\
+fi;\
+rm -f makefile.inc;\
+C:/vspark210rc7/bin/mkmakinc.exe  $Stp  >  makefile.inc	;\
+echo "SPARK_CLASSPATH=.,./class,../class,C:/vspark210rc7/globalclass,C:/vspark210rc7/hvactk/class" >> makefile.inc
+SPARK: C:/vspark210rc7/bin/sparkparser.exe : Ver 2.10_07 .  search path=(.,./class,../class,C:/vspark210rc7/globalclass,C:/vspark210rc7/hvactk/class).
+"System.pr", line   0:          [0]Reading file : System.pr .
+             line  33:          [1]Reading file : ../class/FileRead.cc .
+"../class/FileRead.cc", line 370:   [2]Reading file DONE : ../class/FileRead.cc .
+"System.pr", line  34:          [1]Reading file : ../class/FileWrite.cc .
+"../class/FileWrite.cc", line 319:   [2]Reading file DONE : ../class/FileWrite.cc .
+"System.pr", line  35:          LINK:(INPDUMMY) used for  INPUT .
+             line  38:          [1]Reading file : ../class/time.cc .
+"../class/time.cc", line  38:    [2]Reading file DONE : ../class/time.cc .
+"System.pr", line  39:          [1]Reading file : ../class/runcontrol.cc .
+"../class/runcontrol.cc", line  40:   [2]Reading file DONE : ../class/runcontrol.cc .
+"System.pr", line  40:          [1]Reading file : ../class/safprod.cc .
+"../class/safprod.cc", line  32:   [2]Reading file DONE : ../class/safprod.cc .
+"System.pr", line  56:          [1]Reading file : ../class/PIplusminus.cc .
+"../class/PIplusminus.cc", line  58:   [2]Reading file DONE : ../class/PIplusminus.cc .
+"System.pr", line  57:          [1]Reading file : ../class/uSplitter.cc .
+"../class/uSplitter.cc", line  56:   [2]Reading file DONE : ../class/uSplitter.cc .
+"System.pr", line  58:          [1]Reading file : ../class/VAVsetpointmanager.cc .
+"../class/VAVsetpointmanager.cc", line  44:   [2]Reading file DONE : ../class/VAVsetpointmanager.cc .
+"System.pr", line  61:          [1]Reading file : ../class/sensor_dryBulb_generic.cm .
+"../class/sensor_dryBulb_generic.cm", line  16:   [2]Reading file : ../class/sensor_generic_offset_bfdDynamics.cm .
+"../class/sensor_generic_offset_bfdDynamics.cm", line  14:    [3]Reading file : ../class/sum.cc .
+"../class/sum.cc", line  28:       [4]Reading file DONE : ../class/sum.cc .
+"../class/sensor_generic_offset_bfdDynamics.cm", line  15:    [3]Using previously read class : sum .
+                                                 line  16:    [3]Reading file : ../class/safquot.cm .
+"../class/safquot.cm", line  21:     [4]Using previously read class : safprod .
+                       line  27:     [4]Reading file DONE : ../class/safquot.cm .
+"../class/sensor_generic_offset_bfdDynamics.cm", line  17:    [3]Reading file : ../class/bfd.cc .
+"../class/bfd.cc", line  39:       [4]Reading file DONE : ../class/bfd.cc .
+"../class/sensor_generic_offset_bfdDynamics.cm", line  28:    [3]Reading file DONE : ../class/sensor_generic_offset_bfdDynamics.cm .
+"../class/sensor_dryBulb_generic.cm", line  17:   [2]Using previously read class : sum .
+                                      line  18:   [2]Using previously read class : safquot .
+                                      line  25:   LINK:(<NONAME>) used for  PARAMETER .
+                                      line  26:   LINK:(<NONAME>) used for  PARAMETER .
+                                      line  27:   LINK:(<NONAME>) used for  PARAMETER .
+                                      line  40:   [2]Reading file DONE : ../class/sensor_dryBulb_generic.cm .
+"System.pr", line  62:          [1]Reading file : ../class/sensor_staticPressure_generic.cm .
+"../class/sensor_staticPressure_generic.cm", line  15:   [2]Using previously read class : sensor_generic_offset_bfdDynamics .
+                                             line  16:   [2]Using previously read class : sum .
+                                             line  17:   [2]Using previously read class : safquot .
+                                             line  24:   LINK:(<NONAME>) used for  PARAMETER .
+                                             line  25:   LINK:(<NONAME>) used for  PARAMETER .
+                                             line  26:   LINK:(<NONAME>) used for  PARAMETER .
+                                             line  39:   [2]Reading file DONE : ../class/sensor_staticPressure_generic.cm .
+"System.pr", line  67:          [1]Reading file : ../class/fan.cc .
+"../class/fan.cc", line 119:     [2]Reading file DONE : ../class/fan.cc .
+"System.pr", line  68:          [1]Reading file : ../class/heatingcoil.cm .
+"../class/heatingcoil.cm", line  91:   [2]Reading file : ../class/coil_mixing.cc .
+"../class/coil_mixing.cc", line  60:    [3]Reading file DONE : ../class/coil_mixing.cc .
+"../class/heatingcoil.cm", line  92:   [2]Reading file : ../class/heatingcoil_fault.cc .
+"../class/heatingcoil_fault.cc", line  68:    [3]Reading file DONE : ../class/heatingcoil_fault.cc .
+"../class/heatingcoil.cm", line  93:   [2]Reading file : ../class/drcc1u.cm .
+"../class/drcc1u.cm", line  63:    [3]Reading file : ../class/cap_rate.cc .
+"../class/cap_rate.cc", line  40:     [4]Reading file DONE : ../class/cap_rate.cc .
+"../class/drcc1u.cm", line  64:    [3]Reading file : ../class/capratel.cc .
+"../class/capratel.cc", line  31:     [4]Reading file DONE : ../class/capratel.cc .
+"../class/drcc1u.cm", line  69:    [3]Reading file : ../class/htxc1u.cm .
+"../class/htxc1u.cm", line  63:     [4]Reading file : ../class/prod.cc .
+"../class/prod.cc", line  32:       [5]Reading file DONE : ../class/prod.cc .
+"../class/htxc1u.cm", line  64:     [4]Reading file : ../class/quot.cc .
+"../class/quot.cc", line  30:       [5]Reading file DONE : ../class/quot.cc .
+"../class/htxc1u.cm", line  65:     [4]Reading file : ../class/cond.cc .
+"../class/cond.cc", line  34:       [5]Reading file DONE : ../class/cond.cc .
+"../class/htxc1u.cm", line  70:     [4]Reading file : ../class/effc1u.cc .
+"../class/effc1u.cc", line 100:      [5]Reading file DONE : ../class/effc1u.cc .
+"../class/htxc1u.cm", line  86:     [4]Reading file DONE : ../class/htxc1u.cm .
+"../class/drcc1u.cm", line  70:    [3]Using previously read class : cond .
+                      line  71:    [3]Reading file : ../class/equal.cc .
+"../class/equal.cc", line  28:     [4]Reading file DONE : ../class/equal.cc .
+"../class/drcc1u.cm", line  76: WARNING:   LINK: units dont match: (.mLiq [kg/s]) vs [mwdt].
+"../class/drcc1u.cm", line  76: WARNING:   LINK: units dont match: (.mLiq [kg/s]) vs (crl.mWater [kg_water/s]).
+"../class/drcc1u.cm", line  69: WARNING:   Port (q) of object (ex) with NOERR is not connected.
+"../class/htxc1u.cm", line  59: WARNING:   ----> Class of previous message's object.
+"../class/drcc1u.cm", line  87:    [3]Reading file DONE : ../class/drcc1u.cm .
+"../class/heatingcoil.cm", line  94:   [2]Reading file : ../class/valve.cc .
+"../class/valve.cc", line  72:    [3]Reading file DONE : ../class/valve.cc .
+"../class/heatingcoil.cm", line  95:   [2]Reading file : ../class/neg.cc .
+"../class/neg.cc", line  29:      [3]Reading file DONE : ../class/neg.cc .
+"../class/heatingcoil.cm", line 101: WARNING:  LINK: units dont match: (f.UAReal [W/k]) vs (HX.UA [W/deg_C]).
+"../class/heatingcoil.cm", line 116: WARNING:  LINK: units dont match: (.mLiqEntCoil [kg_water/s]) vs (HX.mLiq [kg/s]).
+"../class/heatingcoil.cm", line 118: WARNING:  LINK: units dont match: (.mLiqBypass [deg_C]) vs [kg_water/s].
+"../class/heatingcoil.cm", line 118: WARNING:  LINK: units dont match: (.mLiqBypass [deg_C]) vs (ho.mLiqBypass [kg_water/s]).
+                           line 144:   [2]Reading file DONE : ../class/heatingcoil.cm .
+"System.pr", line  69:          [1]Reading file : ../class/coolingcoil.cm .
+"../class/coolingcoil.cm", line  98:   [2]Using previously read class : coil_mixing .
+                           line  99:   [2]Reading file : ../class/coolingcoil_fault.cc .
+"../class/coolingcoil_fault.cc", line  66:    [3]Reading file DONE : ../class/coolingcoil_fault.cc .
+"../class/coolingcoil.cm", line 100:   [2]Reading file : ../class/ccsim.cm .
+"../class/ccsim.cm", line 120:    [3]Reading file : ../class/drcctr.cm .
+"../class/drcctr.cm", line  57:     [4]Using previously read class : cap_rate .
+                      line  58:     [4]Using previously read class : capratel .
+                      line  59:     [4]Reading file : C:/vspark210rc7/hvactk/class/htxctr.cm .
+"C:/vspark210rc7/hvactk/class/htxctr.cm", line  54:      [5]Using previously read class : prod .
+                                          line  55:      [5]Using previously read class : quot .
+                                          line  56:      [5]Using previously read class : cond .
+                                          line  57:      [5]Reading file : ../class/effctr.cc .
+"../class/effctr.cc", line  92:       [6]Reading file DONE : ../class/effctr.cc .
+"C:/vspark210rc7/hvactk/class/htxctr.cm", line  77:      [5]Reading file DONE : C:/vspark210rc7/hvactk/class/htxctr.cm .
+"../class/drcctr.cm", line  64:     [4]Using previously read class : cond .
+                      line  65:     [4]Using previously read class : equal .
+"../class/drcctr.cm", line  59: WARNING:    Port (q) of object (ex) with NOERR is not connected.
+"C:/vspark210rc7/hvactk/class/htxctr.cm", line  50: WARNING:    ----> Class of previous message's object.
+"../class/drcctr.cm", line  81:     [4]Reading file DONE : ../class/drcctr.cm .
+"../class/ccsim.cm", line 121:    [3]Reading file : ../class/wtcctr.cm .
+"../class/wtcctr.cm", line 127:     [4]Reading file : ../class/safrecip.cc .
+"../class/safrecip.cc", line  27:      [5]Reading file DONE : ../class/safrecip.cc .
+"../class/wtcctr.cm", line 128:     [4]Using previously read class : prod .
+                      line 129:     [4]Using previously read class : sum .
+                      line 130:     [4]Reading file : ../class/cpair.cc .
+"../class/cpair.cc", line  29:      [5]Reading file DONE : ../class/cpair.cc .
+"../class/wtcctr.cm", line 131:     [4]Reading file : C:/vspark210rc7/hvactk/class/enthsat.cm .
+"C:/vspark210rc7/hvactk/class/enthsat.cm", line  42:      [5]Reading file : C:/vspark210rc7/hvactk/class/dewpt.cm .
+"C:/vspark210rc7/hvactk/class/dewpt.cm", line  47:       [6]Reading file : ../class/humratio.cc .
+"../class/humratio.cc", line  31:        [7]Reading file DONE : ../class/humratio.cc .
+"C:/vspark210rc7/hvactk/class/dewpt.cm", line  48:       [6]Reading file : ../class/satpress.cc .
+"../class/satpress.cc", line  42:        [7]Reading file DONE : ../class/satpress.cc .
+"C:/vspark210rc7/hvactk/class/dewpt.cm", line  58:       [6]Reading file DONE : C:/vspark210rc7/hvactk/class/dewpt.cm .
+"C:/vspark210rc7/hvactk/class/enthsat.cm", line  43:      [5]Reading file : ../class/enthalpy.cc .
+"../class/enthalpy.cc", line  33:       [6]Reading file DONE : ../class/enthalpy.cc .
+"C:/vspark210rc7/hvactk/class/enthsat.cm", line  51:      [5]Reading file DONE : C:/vspark210rc7/hvactk/class/enthsat.cm .
+"../class/wtcctr.cm", line 133:     [4]Using previously read class : enthalpy .
+                      line 134:     [4]Reading file : C:/vspark210rc7/hvactk/class/enthxctr.cm .
+"C:/vspark210rc7/hvactk/class/enthxctr.cm", line  65:      [5]Using previously read class : prod .
+                                            line  66:      [5]Using previously read class : quot .
+                                            line  67:      [5]Using previously read class : cond .
+                                            line  68:      [5]Using previously read class : effctr .
+"C:/vspark210rc7/hvactk/class/enthxctr.cm", line  82: WARNING:     LINK: units dont match: (.hEnt2 [J/kg]) vs [J/kg_dryAir].
+"C:/vspark210rc7/hvactk/class/enthxctr.cm", line  85: WARNING:     LINK: units dont match: (.hLvg2 [J/kg]) vs [J/kg_dryAir].
+                                            line  87:      [5]Reading file DONE : C:/vspark210rc7/hvactk/class/enthxctr.cm .
+"../class/wtcctr.cm", line 139:     [4]Using previously read class : capratel .
+                      line 140:     [4]Reading file : C:/vspark210rc7/globalclass/propdiff.cm .
+"C:/vspark210rc7/globalclass/propdiff.cm", line  33:      [5]Reading file : ../class/diff.cc .
+"../class/diff.cc", line  61:        [6]Reading file DONE : ../class/diff.cc .
+"C:/vspark210rc7/globalclass/propdiff.cm", line  34:      [5]Using previously read class : quot .
+                                           line  48:      [5]Reading file DONE : C:/vspark210rc7/globalclass/propdiff.cm .
+"../class/wtcctr.cm", line 141:     [4]Reading file : ../class/lintrp.cc .
+"../class/lintrp.cc", line  34:      [5]Reading file DONE : ../class/lintrp.cc .
+"../class/wtcctr.cm", line 142:     [4]Using previously read class : cond .
+                      line 143:     [4]Using previously read class : quot .
+                      line 144:     [4]Reading file : C:/vspark210rc7/hvactk/class/wcoilout.cm .
+"C:/vspark210rc7/hvactk/class/wcoilout.cm", line  80:      [5]Using previously read class : cap_rate .
+                                            line  81:      [5]Using previously read class : quot .
+                                            line  82:      [5]Reading file : ../class/effntu1.cc .
+"../class/effntu1.cc", line  49:       [6]Reading file DONE : ../class/effntu1.cc .
+"C:/vspark210rc7/hvactk/class/wcoilout.cm", line  83:      [5]Using previously read class : lintrp .
+                                            line  84:      [5]Using previously read class : enthsat .
+                                            line  85:      [5]Reading file : ../class/min2.cc .
+"../class/min2.cc", line  28:        [6]Reading file DONE : ../class/min2.cc .
+"C:/vspark210rc7/hvactk/class/wcoilout.cm", line  86:      [5]Using previously read class : cond .
+                                            line  87:      [5]Using previously read class : enthalpy .
+"C:/vspark210rc7/hvactk/class/wcoilout.cm", line  84: WARNING:     Port (TDb) of object (es) with NOERR is not connected.
+"C:/vspark210rc7/hvactk/class/enthsat.cm", line  36: WARNING:     ----> Class of previous message's object.
+"C:/vspark210rc7/hvactk/class/wcoilout.cm", line 112:      [5]Reading file DONE : C:/vspark210rc7/hvactk/class/wcoilout.cm .
+"../class/wtcctr.cm", line 146:     [4]Using previously read class : equal .
+"../class/wtcctr.cm", line 176: WARNING:    LINK: units dont match: (es1.hSat [J/kg_dryAir]) vs (ex.hEnt2 [J/kg]).
+"../class/wtcctr.cm", line 177: WARNING:    LINK: units dont match: (ex.hLvg2 [J/kg]) vs [J/kg_dryAir].
+"../class/wtcctr.cm", line 131: WARNING:    Port (w) of object (es1) with NOERR is not connected.
+"C:/vspark210rc7/hvactk/class/enthsat.cm", line  38: WARNING:    ----> Class of previous message's object.
+"../class/wtcctr.cm", line 134: WARNING:    Port (cRatiop) of object (ex) with NOERR is not connected.
+"C:/vspark210rc7/hvactk/class/enthxctr.cm", line  57: WARNING:    ----> Class of previous message's object.
+"../class/wtcctr.cm", line 134: WARNING:    Port (effp) of object (ex) with NOERR is not connected.
+"C:/vspark210rc7/hvactk/class/enthxctr.cm", line  58: WARNING:    ----> Class of previous message's object.
+"../class/wtcctr.cm", line 134: WARNING:    Port (ntup) of object (ex) with NOERR is not connected.
+"C:/vspark210rc7/hvactk/class/enthxctr.cm", line  60: WARNING:    ----> Class of previous message's object.
+"../class/wtcctr.cm", line 134: WARNING:    Port (qRef) of object (ex) with NOERR is not connected.
+"C:/vspark210rc7/hvactk/class/enthxctr.cm", line  61: WARNING:    ----> Class of previous message's object.
+"../class/wtcctr.cm", line 140: WARNING:    Port (num) of object (pd) with NOERR is not connected.
+"C:/vspark210rc7/globalclass/propdiff.cm", line  29: WARNING:    ----> Class of previous message's object.
+"../class/wtcctr.cm", line 140: WARNING:    Port (denom) of object (pd) with NOERR is not connected.
+"C:/vspark210rc7/globalclass/propdiff.cm", line  30: WARNING:    ----> Class of previous message's object.
+"../class/wtcctr.cm", line 186:     [4]Reading file DONE : ../class/wtcctr.cm .
+"../class/ccsim.cm", line 123:    [3]Reading file : ../class/cclogic.cc .
+"../class/cclogic.cc", line  50:     [4]Reading file DONE : ../class/cclogic.cc .
+"../class/ccsim.cm", line 124:    [3]Reading file : ../class/sercond.cc .
+"../class/sercond.cc", line  40:     [4]Reading file DONE : ../class/sercond.cc .
+"../class/ccsim.cm", line 125:    [3]Reading file : ../class/select.cc .
+"../class/select.cc", line  32:     [4]Reading file DONE : ../class/select.cc .
+"../class/ccsim.cm", line 126:    [3]Using previously read class : prod .
+                     line 127:    [3]Using previously read class : equal .
+"../class/ccsim.cm", line 131: WARNING:   LINK: units dont match: (.UExtW [W/deg_C]) vs [U].
+"../class/ccsim.cm", line 132: WARNING:   LINK: units dont match: (.UIntW [W/deg_C]) vs [U].
+"../class/ccsim.cm", line 120: WARNING:   Port (mAirLvg) of object (dc) with NOERR is not connected.
+"../class/drcctr.cm", line  50: WARNING:   ----> Class of previous message's object.
+"../class/ccsim.cm", line 121: WARNING:   Port (mAirLvg) of object (wc) with NOERR is not connected.
+"../class/wtcctr.cm", line 106: WARNING:   ----> Class of previous message's object.
+"../class/ccsim.cm", line 121: WARNING:   Port (hAirEnt) of object (wc) with NOERR is not connected.
+"../class/wtcctr.cm", line 111: WARNING:   ----> Class of previous message's object.
+"../class/ccsim.cm", line 121: WARNING:   Port (hAirLvg) of object (wc) with NOERR is not connected.
+"../class/wtcctr.cm", line 114: WARNING:   ----> Class of previous message's object.
+"../class/ccsim.cm", line 121: WARNING:   Port (wSurfEntSat) of object (wc) with NOERR is not connected.
+"../class/wtcctr.cm", line 123: WARNING:   ----> Class of previous message's object.
+"../class/ccsim.cm", line 121: WARNING:   Port (qEff) of object (wc) with NOERR is not connected.
+"../class/wtcctr.cm", line 124: WARNING:   ----> Class of previous message's object.
+"../class/ccsim.cm", line 161:    [3]Reading file DONE : ../class/ccsim.cm .
+"../class/coolingcoil.cm", line 101:   [2]Reading file : ../class/UASplit.cc .
+"../class/UASplit.cc", line  41:    [3]Reading file DONE : ../class/UASplit.cc .
+"../class/coolingcoil.cm", line 102:   [2]Using previously read class : sum .
+                           line 103:   [2]Using previously read class : valve .
+                           line 104:   [2]Reading file : ../class/abs1.cc .
+"../class/abs1.cc", line  49:     [3]Reading file DONE : ../class/abs1.cc .
+"../class/coolingcoil.cm", line 100: WARNING:  Port (s) of object (cc) with NOERR is not connected.
+"../class/ccsim.cm", line 110: WARNING:  ----> Class of previous message's object.
+"../class/coolingcoil.cm", line 100: WARNING:  Port (TAirLvgD) of object (cc) with NOERR is not connected.
+"../class/ccsim.cm", line 111: WARNING:  ----> Class of previous message's object.
+"../class/coolingcoil.cm", line 100: WARNING:  Port (TAirLvgW) of object (cc) with NOERR is not connected.
+"../class/ccsim.cm", line 112: WARNING:  ----> Class of previous message's object.
+"../class/coolingcoil.cm", line 100: WARNING:  Port (qSensD) of object (cc) with NOERR is not connected.
+"../class/ccsim.cm", line 113: WARNING:  ----> Class of previous message's object.
+"../class/coolingcoil.cm", line 100: WARNING:  Port (qSensW) of object (cc) with NOERR is not connected.
+"../class/ccsim.cm", line 114: WARNING:  ----> Class of previous message's object.
+"../class/coolingcoil.cm", line 100: WARNING:  Port (qTotW) of object (cc) with NOERR is not connected.
+"../class/ccsim.cm", line 115: WARNING:  ----> Class of previous message's object.
+"../class/coolingcoil.cm", line 100: WARNING:  Port (TLiqLvgD) of object (cc) with NOERR is not connected.
+"../class/ccsim.cm", line 116: WARNING:  ----> Class of previous message's object.
+"../class/coolingcoil.cm", line 100: WARNING:  Port (TLiqLvgW) of object (cc) with NOERR is not connected.
+"../class/ccsim.cm", line 117: WARNING:  ----> Class of previous message's object.
+"../class/coolingcoil.cm", line 161:   [2]Reading file DONE : ../class/coolingcoil.cm .
+"System.pr", line  70:          [1]Reading file : ../class/mix.cc .
+"../class/mix.cc", line  85:     [2]Reading file DONE : ../class/mix.cc .
+"System.pr", line  71:          [1]Reading file : ../class/VAV_damper.cc .
+"../class/VAV_damper.cc", line  67:   [2]Reading file DONE : ../class/VAV_damper.cc .
+"System.pr", line  72:          [1]Reading file : ../class/VAV_damper_position.cc .
+"../class/VAV_damper_position.cc", line  52:   [2]Reading file DONE : ../class/VAV_damper_position.cc .
+"System.pr", line  73:          [1]Reading file : ../class/VAV_control.cc .
+"../class/VAV_control.cc", line  57:   [2]Reading file DONE : ../class/VAV_control.cc .
+"System.pr", line  74:          [1]Reading file : ../class/room.cc .
+"../class/room.cc", line  56:    [2]Reading file DONE : ../class/room.cc .
+"System.pr", line  75:          [1]Reading file : ../class/filter.cc .
+"../class/filter.cc", line  47:   [2]Reading file DONE : ../class/filter.cc .
+"System.pr", line  78:          [1]Reading file : ../class/sboiler.cm .
+"../class/sboiler.cm", line  53:   [2]Reading file : ../class/boiler_logic.cc .
+"../class/boiler_logic.cc", line  71:    [3]Reading file DONE : ../class/boiler_logic.cc .
+"../class/sboiler.cm", line  54:   [2]Reading file : ../class/boiler_fuel.cc .
+"../class/boiler_fuel.cc", line  37:    [3]Reading file DONE : ../class/boiler_fuel.cc .
+"../class/sboiler.cm", line  55:   [2]Reading file : ../class/boiler_parasitic.cc .
+"../class/boiler_parasitic.cc", line  21:    [3]Reading file DONE : ../class/boiler_parasitic.cc .
+"../class/sboiler.cm", line  56:   [2]Using previously read class : quot .
+                       line  57:   [2]Using previously read class : quot .
+                       line  58:   [2]Reading file : ../class/bound.cc .
+"../class/bound.cc", line  53:    [3]Reading file DONE : ../class/bound.cc .
+"../class/sboiler.cm", line  96: WARNING:  LINK: units dont match: (.FlowType [{1=constant,2=variable}]) vs (logic.FlowType [{0=false,1=true}]).
+                       line 138:   [2]Reading file DONE : ../class/sboiler.cm .
+"System.pr", line  79:          [1]Reading file : ../class/chillerDOE2.cc .
+"../class/chillerDOE2.cc", line  49:   [2]Reading file DONE : ../class/chillerDOE2.cc .
+"System.pr", line  80:          [1]Reading file : ../class/coolingTowerNTU.cc .
+"../class/coolingTowerNTU.cc", line  51:   [2]Reading file DONE : ../class/coolingTowerNTU.cc .
+"System.pr", line  83:          [1]Reading file : ../class/wetbulb_accl.cm .
+"../class/wetbulb_accl.cm", line  60:   [2]Reading file : ../class/air_enthsat.cm .
+"../class/air_enthsat.cm", line  63:    [3]Reading file : ../class/air_satpress.cc .
+"../class/air_satpress.cc", line  64:     [4]Reading file DONE : ../class/air_satpress.cc .
+"../class/air_enthsat.cm", line  64:    [3]Reading file : ../class/air_enthalpy.cc .
+"../class/air_enthalpy.cc", line  54:     [4]Reading file DONE : ../class/air_enthalpy.cc .
+"../class/air_enthsat.cm", line  65:    [3]Reading file : ../class/air_humratio.cc .
+"../class/air_humratio.cc", line  51:     [4]Reading file DONE : ../class/air_humratio.cc .
+"../class/air_enthsat.cm", line  81:    [3]Reading file DONE : ../class/air_enthsat.cm .
+"../class/wetbulb_accl.cm", line  61:   [2]Using previously read class : air_enthalpy .
+                            line  62:   [2]Reading file : ../class/air_wetbulb.cm .
+"../class/air_wetbulb.cm", line  68:    [3]Using previously read class : air_enthalpy .
+                           line  69:    [3]Using previously read class : air_humratio .
+                           line  70:    [3]Using previously read class : air_satpress .
+                           line  71:    [3]Reading file : ../class/air_eq31.cc .
+"../class/air_eq31.cc", line  58:     [4]Reading file DONE : ../class/air_eq31.cc .
+"../class/air_wetbulb.cm", line  83:    [3]Reading file DONE : ../class/air_wetbulb.cm .
+"../class/wetbulb_accl.cm", line  63:   [2]Reading file : ../class/noop.cc .
+"../class/noop.cc", line  28:     [3]Reading file DONE : ../class/noop.cc .
+"../class/wetbulb_accl.cm", line  60: WARNING:  Port (wSat) of object (esat) with NOERR is not connected.
+"../class/air_enthsat.cm", line  54: WARNING:  ----> Class of previous message's object.
+"../class/wetbulb_accl.cm", line  60: WARNING:  Port (pVapSat) of object (esat) with NOERR is not connected.
+"../class/air_enthsat.cm", line  56: WARNING:  ----> Class of previous message's object.
+"../class/wetbulb_accl.cm", line  62: WARNING:  Port (wSStar) of object (wb) with NOERR is not connected.
+"../class/air_wetbulb.cm", line  62: WARNING:  ----> Class of previous message's object.
+"../class/wetbulb_accl.cm", line  95:   [2]Reading file DONE : ../class/wetbulb_accl.cm .
+"System.pr", line  84:          [1]Reading file : ../class/equal_link.cm .
+"../class/equal_link.cm", line  21: WARNING:  No objects declared.
+                          line  21:   [2]Reading file DONE : ../class/equal_link.cm .
+"System.pr", line  85:          [1]Using previously read class : safprod .
+             line 101:          LINK:(fanSensor_offset) used for  PARAMETER .
+             line 102:          LINK:(mxSensor_offset) used for  PARAMETER .
+             line 104:          LINK:(supSensor_offset) used for  PARAMETER .
+             line 106:          LINK:(rmSensor_offset) used for  PARAMETER .
+             line 107:          LINK:(VAVoutSensor_offset) used for  PARAMETER .
+             line 110:          LINK:(fanSensor_timeConstant) used for  PARAMETER .
+             line 111:          LINK:(mxSensor_timeConstant) used for  PARAMETER .
+             line 112:          LINK:(supSensor_timeConstant) used for  PARAMETER .
+             line 113:          LINK:(rmSensor_timeConstant) used for  PARAMETER .
+             line 114:          LINK:(VAVoutSensor_timeConstant) used for  PARAMETER .
+             line 135:          LINK:(fanTempRiseEst) used for  PARAMETER .
+"System.pr", line 149: WARNING: LINK: units dont match: (HeatCoolPI.w [-]) vs (uHeatCoolSplit.TsaSet [C]).
+             line 158:          LINK:(RoomAirflowFrac) used for  PARAMETER .
+"System.pr", line 167: WARNING: LINK: units dont match: (OutWB.TDb [deg_C]) vs (Rm.TOut [c]).
+"System.pr", line 167: WARNING: LINK: units dont match: (OutWB.TDb [deg_C]) vs (uHeatCoolSplit.OAT [C]).
+"System.pr", line 168: WARNING: LINK: units dont match: (OutWB.TWb [deg_C]) vs (coolingTower.TWb [C]).
+"System.pr", line 177: WARNING: LINK: units dont match: (MX.TRet [C]) vs (RetWB.TDb [deg_C]).
+"System.pr", line 179: WARNING: LINK: units dont match: (MX.TMix [C]) vs (MixWB.TDb [deg_C]).
+             line 212:          LINK:(MXactuatorSpeed) used for  PARAMETER .
+"System.pr", line 298: WARNING: LINK: units dont match: (CC.mLiqOpen [kg_water/s]) vs (chiller.evapFlowRate [m3/s]).
+"System.pr", line 420: WARNING: LINK: units dont match: (VAVHC.TAirLvg [deg_C]) vs (Rm.TSup [C]).
+             line 482:          LINK:(UARoom) used for  PARAMETER .
+             line 483:          LINK:(cRoomAir) used for  PARAMETER .
+             line 493:          LINK:(Boiler_FlowType) used for  PARAMETER .
+             line 494:          LINK:(Boiler_efficiency) used for  PARAMETER .
+             line 495:          LINK:(Boiler_cp) used for  PARAMETER .
+             line 496:          LINK:(Boiler_T_limit) used for  PARAMETER .
+             line 498:          LINK:(Boiler_ParasiticElecLoad) used for  PARAMETER .
+             line 499:          LINK:(Boiler_C1) used for  PARAMETER .
+             line 500:          LINK:(Boiler_C2) used for  PARAMETER .
+             line 501:          LINK:(Boiler_C3) used for  PARAMETER .
+             line 502:          LINK:(Boiler_PLR_min) used for  PARAMETER .
+             line 503:          LINK:(Boiler_PLR_max) used for  PARAMETER .
+             line 504:          LINK:(Boiler_mdot_tol) used for  PARAMETER .
+             line 505:          LINK:(Boiler_mdot_design) used for  PARAMETER .
+             line 508:          LINK:(Boiler_FlowLockFlag) used for  PARAMETER .
+"System.pr", line 509: WARNING: LINK: units dont match: (HC.TLiqLvgValve [deg_C]) vs (boiler.T_inlet [C]).
+"System.pr", line 512: WARNING: LINK: units dont match: (boiler.mdot_locked [kg/s]) vs (HC.mLiqLvgValve [kg_water/s]).
+"System.pr", line 530: WARNING: LINK: units dont match: (chiller.evapInletTemp [C]) vs (CC.TLiqLvgCoil [deg_C]).
+             line 536:          LINK:(chillRatedEIR) used for  PARAMETER .
+             line 537:          LINK:(chillPumpEff) used for  PARAMETER .
+"System.pr", line 541: WARNING: LINK: units dont match: (chiller.evapOutletTemp [C]) vs (CC.TLiqEntCoil [deg_C]).
+             line 567:          LINK:(CTmAirRated) used for  PARAMETER .
+             line 568:          LINK:(CTmAir) used for  PARAMETER .
+             line 569:          LINK:(CTfanStatic) used for  PARAMETER .
+             line 570:          LINK:(CTfanEff) used for  PARAMETER .
+             line 571:          LINK:(CTpumpHead) used for  PARAMETER .
+             line 572:          LINK:(CTpumpEff) used for  PARAMETER .
+             line 578:          LINK:(CTTwbOutPrev) used for  PARAMETER .
+"System.pr", line  33: WARNING: Port (HCDriftedsensor) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 218: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (HCSensorOffset) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 223: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (FanDeafVFDorIGV) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 255: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (FanFanTooSmall) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 258: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (FanRangeErrorVFD) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 259: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (FanStuckFanSpeed) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 260: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (FanTotFanFailure) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 261: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (FanWrongFanType) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 262: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (MXBadPosOADamper) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 272: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (MXBadSensor) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 273: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (MXDeafActuator) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 274: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (MXMismatchDampAct) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 278: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (MXStuckOADamper) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 281: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (VAVHCTs) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 293: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (VAVBadDmprPosSignal) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 300: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (VAVBadLoopTune) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 303: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (VAVBadReheatCoil) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 305: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (VAVHCDriftedsensor) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 312: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (VAVTooHighInletAirSP) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 321: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (VAVTooLowInletAirSP) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 322: WARNING: ----> Class of previous message's object.
+"System.pr", line  33: WARNING: Port (Pause) of object (R) with NOERR is not connected.
+"../class/FileRead.cc", line 342: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (h) of object (OutWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  57: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (TWb_est) of object (OutWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  58: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (h) of object (RetWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  57: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (TWb_est) of object (RetWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  58: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (h) of object (MixWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  57: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (TWb_est) of object (MixWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  58: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (h) of object (HCentWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  57: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (TWb_est) of object (HCentWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  58: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (h) of object (HClvgWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  57: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (TWb_est) of object (HClvgWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  58: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (h) of object (CClvgWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  57: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (TWb_est) of object (CClvgWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  58: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (h) of object (FanlvgWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  57: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (TWb_est) of object (FanlvgWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  58: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (h) of object (VAVHClvgWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  57: WARNING: ----> Class of previous message's object.
+"System.pr", line  83: WARNING: Port (TWb_est) of object (VAVHClvgWB) with NOERR is not connected.
+"../class/wetbulb_accl.cm", line  58: WARNING: ----> Class of previous message's object.
+"System.pr", line 586:          [1]Reading file DONE : System.pr .
+ ----------------------------------------------
+"../class/sensor_dryBulb_generic.cm", line  25:  LINK:(s_mx~NONAME4) Setting INIT=-20 .
+                                      line  25:  LINK:(s_mx~NONAME4) used for INPUT= PARAMETER: .
+                                      line  26:  LINK:(s_mx~NONAME5) Setting INIT=0 .
+                                      line  26:  LINK:(s_mx~NONAME5) used for INPUT= PARAMETER: .
+                                      line  27:  LINK:(s_mx~NONAME6) Setting INIT=100 .
+                                      line  27:  LINK:(s_mx~NONAME6) used for INPUT= PARAMETER: .
+                                      line  25:  LINK:(s_supply~NONAME4) Setting INIT=-20 .
+                                      line  25:  LINK:(s_supply~NONAME4) used for INPUT= PARAMETER: .
+                                      line  26:  LINK:(s_supply~NONAME5) Setting INIT=0 .
+                                      line  26:  LINK:(s_supply~NONAME5) used for INPUT= PARAMETER: .
+                                      line  27:  LINK:(s_supply~NONAME6) Setting INIT=100 .
+                                      line  27:  LINK:(s_supply~NONAME6) used for INPUT= PARAMETER: .
+                                      line  25:  LINK:(s_rm~NONAME4) Setting INIT=-20 .
+                                      line  25:  LINK:(s_rm~NONAME4) used for INPUT= PARAMETER: .
+                                      line  26:  LINK:(s_rm~NONAME5) Setting INIT=0 .
+                                      line  26:  LINK:(s_rm~NONAME5) used for INPUT= PARAMETER: .
+                                      line  27:  LINK:(s_rm~NONAME6) Setting INIT=100 .
+                                      line  27:  LINK:(s_rm~NONAME6) used for INPUT= PARAMETER: .
+                                      line  25:  LINK:(s_VAVout~NONAME4) Setting INIT=-20 .
+                                      line  25:  LINK:(s_VAVout~NONAME4) used for INPUT= PARAMETER: .
+                                      line  26:  LINK:(s_VAVout~NONAME5) Setting INIT=0 .
+                                      line  26:  LINK:(s_VAVout~NONAME5) used for INPUT= PARAMETER: .
+                                      line  27:  LINK:(s_VAVout~NONAME6) Setting INIT=100 .
+                                      line  27:  LINK:(s_VAVout~NONAME6) used for INPUT= PARAMETER: .
+"../class/sensor_staticPressure_generic.cm", line  24:  LINK:(s_fan~NONAME4) Setting INIT=0 .
+                                             line  24:  LINK:(s_fan~NONAME4) used for INPUT= PARAMETER: .
+                                             line  25:  LINK:(s_fan~NONAME5) Setting INIT=0 .
+                                             line  25:  LINK:(s_fan~NONAME5) used for INPUT= PARAMETER: .
+                                             line  26:  LINK:(s_fan~NONAME6) Setting INIT=200 .
+                                             line  26:  LINK:(s_fan~NONAME6) used for INPUT= PARAMETER: .
+"../class/htxc1u.cm", line  73:  LINK:(HC`HX`ex~NONAME1) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  74:  LINK:(HC`HX`ex~NONAME2) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  75:  LINK:(HC`HX`ex~NONAME3) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  76:  LINK:(HC`HX`ex~NONAME4) Updating UNIT from [deg_C] to [deg_C] .
+                      line  77:  LINK:(HC`HX`ex~NONAME5) Updating UNIT from [deg_C] to [deg_C] .
+                      line  81:  LINK:(HC`HX`ex~effp) Updating UNIT from [-] to [-] .
+                      line  82:  LINK:(HC`HX`ex~qRef) Setting UNIT= [W] .
+                      line  83:  LINK:(HC`HX`ex~NONAME6) Updating UNIT from [deg_C] to [deg_C] .
+                      line  84:  LINK:(HC`HX`ex~NONAME7) Updating UNIT from [deg_C] to [deg_C] .
+                      line  85:  LINK:(HC`HX`ex~NONAME8) Updating UNIT from [W] to [W] .
+"../class/drcc1u.cm", line  73:  LINK:(HC`HX~NONAME1) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  74:  LINK:(HC`HX~NONAME2) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                      line  75:  LINK:(HC`HX~NONAME3) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                      line  76:  LINK:(HC`HX~NONAME4) Updating UNIT from [kg/s] to [mwdt] .
+                      line  77:  LINK:(HC`HX~NONAME5) Updating UNIT from [deg_C] to [deg_C] .
+                      line  78:  LINK:(HC`HX~NONAME6) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                      line  79:  LINK:(HC`HX~NONAME7) Updating UNIT from [deg_C] to [deg_C] .
+                      line  81:  LINK:(HC`HX~capAir) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  82:  LINK:(HC`HX~capLiq) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  83:  LINK:(HC`HX~NONAME8) Updating UNIT from [deg_C] to [deg_C] .
+                      line  84:  LINK:(HC`HX~NONAME9) Updating UNIT from [deg_C] to [deg_C] .
+                      line  85:  LINK:(HC`HX~NONAME10) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                      line  86:  LINK:(HC`HX~NONAME11) Updating UNIT from [W] to [W] .
+"../class/heatingcoil.cm", line  97:  LINK:(HC~Authority) Updating UNIT from [-] to [-] .
+                           line  98:  LINK:(HC~fLeak) Updating UNIT from [-] to [-] .
+                           line 103:  LINK:(HC~NONAME2) Updating UNIT from [deg_C] to [deg_C] .
+                           line 104:  LINK:(HC~NONAME3) Updating UNIT from [deg_C] to [deg_C] .
+                           line 105:  LINK:(HC~NONAME4) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                           line 106:  LINK:(HC~NONAME5) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                           line 107:  LINK:(HC~NONAME6) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                           line 110:  LINK:(HC~NONAME8) Updating UNIT from [deg_C] to [deg_C] .
+                           line 111:  LINK:(HC~NONAME9) Updating UNIT from [deg_C] to [deg_C] .
+                           line 112:  LINK:(HC~NONAME10) Updating UNIT from [deg_C] to [deg_C] .
+                           line 113:  LINK:(HC~NONAME11) Updating UNIT from [deg_C] to [deg_C] .
+                           line 114:  LINK:(HC~NONAME12) Updating UNIT from [deg_C] to [deg_C] .
+                           line 116:  LINK:(HC~NONAME13) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 117:  LINK:(HC~NONAME14) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 118:  LINK:(HC~NONAME15) Updating UNIT from [deg_C] to [kg_water/s] .
+                           line 119:  LINK:(HC~NONAME16) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 120:  LINK:(HC~NONAME17) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 122:  LINK:(HC~NONAME18) Updating UNIT from [W] to [W] .
+                           line 123:  LINK:(HC~qHeating) Updating UNIT from [W] to [W] .
+                           line 125:  LINK:(HC~NONAME19) Updating UNIT from [-] to [-] .
+                           line 126:  LINK:(HC~NONAME20) Updating UNIT from [-] to [-] .
+                           line 127:  LINK:(HC~NONAME21) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 128:  LINK:(HC~mLiqOpenReal) Updating UNIT from [kg_water/s] to [kg_water/s] .
+"../class/htxc1u.cm", line  73:  LINK:(VAVHC`HX`ex~NONAME1) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  74:  LINK:(VAVHC`HX`ex~NONAME2) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  75:  LINK:(VAVHC`HX`ex~NONAME3) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  76:  LINK:(VAVHC`HX`ex~NONAME4) Updating UNIT from [deg_C] to [deg_C] .
+                      line  77:  LINK:(VAVHC`HX`ex~NONAME5) Updating UNIT from [deg_C] to [deg_C] .
+                      line  81:  LINK:(VAVHC`HX`ex~effp) Updating UNIT from [-] to [-] .
+                      line  82:  LINK:(VAVHC`HX`ex~qRef) Setting UNIT= [W] .
+                      line  83:  LINK:(VAVHC`HX`ex~NONAME6) Updating UNIT from [deg_C] to [deg_C] .
+                      line  84:  LINK:(VAVHC`HX`ex~NONAME7) Updating UNIT from [deg_C] to [deg_C] .
+                      line  85:  LINK:(VAVHC`HX`ex~NONAME8) Updating UNIT from [W] to [W] .
+"../class/drcc1u.cm", line  73:  LINK:(VAVHC`HX~NONAME1) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  74:  LINK:(VAVHC`HX~NONAME2) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                      line  75:  LINK:(VAVHC`HX~NONAME3) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                      line  76:  LINK:(VAVHC`HX~NONAME4) Updating UNIT from [kg/s] to [mwdt] .
+                      line  77:  LINK:(VAVHC`HX~NONAME5) Updating UNIT from [deg_C] to [deg_C] .
+                      line  78:  LINK:(VAVHC`HX~NONAME6) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                      line  79:  LINK:(VAVHC`HX~NONAME7) Updating UNIT from [deg_C] to [deg_C] .
+                      line  81:  LINK:(VAVHC`HX~capAir) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  82:  LINK:(VAVHC`HX~capLiq) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  83:  LINK:(VAVHC`HX~NONAME8) Updating UNIT from [deg_C] to [deg_C] .
+                      line  84:  LINK:(VAVHC`HX~NONAME9) Updating UNIT from [deg_C] to [deg_C] .
+                      line  85:  LINK:(VAVHC`HX~NONAME10) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                      line  86:  LINK:(VAVHC`HX~NONAME11) Updating UNIT from [W] to [W] .
+"../class/heatingcoil.cm", line  97:  LINK:(VAVHC~Authority) Updating UNIT from [-] to [-] .
+                           line  98:  LINK:(VAVHC~fLeak) Updating UNIT from [-] to [-] .
+                           line 103:  LINK:(VAVHC~NONAME2) Updating UNIT from [deg_C] to [deg_C] .
+                           line 104:  LINK:(VAVHC~NONAME3) Updating UNIT from [deg_C] to [deg_C] .
+                           line 105:  LINK:(VAVHC~NONAME4) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                           line 106:  LINK:(VAVHC~NONAME5) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                           line 107:  LINK:(VAVHC~NONAME6) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                           line 110:  LINK:(VAVHC~NONAME8) Updating UNIT from [deg_C] to [deg_C] .
+                           line 111:  LINK:(VAVHC~NONAME9) Updating UNIT from [deg_C] to [deg_C] .
+                           line 112:  LINK:(VAVHC~NONAME10) Updating UNIT from [deg_C] to [deg_C] .
+                           line 113:  LINK:(VAVHC~NONAME11) Updating UNIT from [deg_C] to [deg_C] .
+                           line 114:  LINK:(VAVHC~NONAME12) Updating UNIT from [deg_C] to [deg_C] .
+                           line 116:  LINK:(VAVHC~NONAME13) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 117:  LINK:(VAVHC~NONAME14) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 118:  LINK:(VAVHC~NONAME15) Updating UNIT from [deg_C] to [kg_water/s] .
+                           line 119:  LINK:(VAVHC~NONAME16) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 120:  LINK:(VAVHC~NONAME17) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 122:  LINK:(VAVHC~NONAME18) Updating UNIT from [W] to [W] .
+                           line 123:  LINK:(VAVHC~qHeating) Updating UNIT from [W] to [W] .
+                           line 125:  LINK:(VAVHC~NONAME19) Updating UNIT from [-] to [-] .
+                           line 126:  LINK:(VAVHC~NONAME20) Updating UNIT from [-] to [-] .
+                           line 127:  LINK:(VAVHC~NONAME21) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 128:  LINK:(VAVHC~mLiqOpenReal) Updating UNIT from [kg_water/s] to [kg_water/s] .
+"C:/vspark210rc7/hvactk/class/htxctr.cm", line  64:  LINK:(CC`cc`dc`ex~NONAME1) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                                          line  65:  LINK:(CC`cc`dc`ex~NONAME2) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                                          line  66:  LINK:(CC`cc`dc`ex~NONAME3) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                                          line  67:  LINK:(CC`cc`dc`ex~NONAME4) Updating UNIT from [deg_C] to [deg_C] .
+                                          line  68:  LINK:(CC`cc`dc`ex~NONAME5) Updating UNIT from [deg_C] to [deg_C] .
+                                          line  72:  LINK:(CC`cc`dc`ex~effp) Updating UNIT from [-] to [-] .
+                                          line  73:  LINK:(CC`cc`dc`ex~qRef) Setting UNIT= [W] .
+                                          line  74:  LINK:(CC`cc`dc`ex~NONAME6) Updating UNIT from [deg_C] to [deg_C] .
+                                          line  75:  LINK:(CC`cc`dc`ex~NONAME7) Updating UNIT from [deg_C] to [deg_C] .
+                                          line  76:  LINK:(CC`cc`dc`ex~NONAME8) Updating UNIT from [W] to [W] .
+"../class/drcctr.cm", line  67:  LINK:(CC`cc`dc~NONAME1) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  68:  LINK:(CC`cc`dc~NONAME2) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                      line  69:  LINK:(CC`cc`dc~NONAME3) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                      line  70:  LINK:(CC`cc`dc~NONAME4) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                      line  71:  LINK:(CC`cc`dc~NONAME5) Updating UNIT from [deg_C] to [deg_C] .
+                      line  72:  LINK:(CC`cc`dc~NONAME6) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                      line  73:  LINK:(CC`cc`dc~NONAME7) Updating UNIT from [deg_C] to [deg_C] .
+                      line  75:  LINK:(CC`cc`dc~capAir) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  76:  LINK:(CC`cc`dc~capLiq) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line  77:  LINK:(CC`cc`dc~NONAME8) Updating UNIT from [deg_C] to [deg_C] .
+                      line  78:  LINK:(CC`cc`dc~NONAME9) Updating UNIT from [deg_C] to [deg_C] .
+                      line  79:  LINK:(CC`cc`dc~NONAME10) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                      line  80:  LINK:(CC`cc`dc~NONAME11) Updating UNIT from [W] to [W] .
+"C:/vspark210rc7/hvactk/class/dewpt.cm", line  55:  LINK:(CC`cc`wc`es1`dp~PwDP) Updating UNIT from [Pa] to [Pa] .
+"C:/vspark210rc7/hvactk/class/enthsat.cm", line  46:  LINK:(CC`cc`wc`es1~NONAME1) Updating UNIT from [Pa] to [Pa] .
+                                           line  47:  LINK:(CC`cc`wc`es1~NONAME2) Updating UNIT from [deg_C] to [deg_C] .
+                                           line  48:  LINK:(CC`cc`wc`es1~NONAME3) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                                           line  49:  LINK:(CC`cc`wc`es1~NONAME4) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"C:/vspark210rc7/hvactk/class/dewpt.cm", line  55:  LINK:(CC`cc`wc`es2`dp~PwDP) Updating UNIT from [Pa] to [Pa] .
+"C:/vspark210rc7/hvactk/class/enthsat.cm", line  46:  LINK:(CC`cc`wc`es2~NONAME1) Updating UNIT from [Pa] to [Pa] .
+                                           line  47:  LINK:(CC`cc`wc`es2~NONAME2) Updating UNIT from [deg_C] to [deg_C] .
+                                           line  48:  LINK:(CC`cc`wc`es2~NONAME3) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                                           line  49:  LINK:(CC`cc`wc`es2~NONAME4) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"C:/vspark210rc7/hvactk/class/dewpt.cm", line  55:  LINK:(CC`cc`wc`es3`dp~PwDP) Updating UNIT from [Pa] to [Pa] .
+"C:/vspark210rc7/hvactk/class/enthsat.cm", line  46:  LINK:(CC`cc`wc`es3~NONAME1) Updating UNIT from [Pa] to [Pa] .
+                                           line  47:  LINK:(CC`cc`wc`es3~NONAME2) Updating UNIT from [deg_C] to [deg_C] .
+                                           line  48:  LINK:(CC`cc`wc`es3~NONAME3) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                                           line  49:  LINK:(CC`cc`wc`es3~NONAME4) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"C:/vspark210rc7/hvactk/class/enthxctr.cm", line  80:  LINK:(CC`cc`wc`ex~NONAME6) Updating UNIT from [-] to [-] .
+                                            line  81:  LINK:(CC`cc`wc`ex~NONAME7) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                                            line  82:  LINK:(CC`cc`wc`ex~NONAME8) Updating UNIT from [J/kg] to [J/kg_dryAir] .
+                                            line  83:  LINK:(CC`cc`wc`ex~NONAME9) Setting UNIT= [W] .
+                                            line  84:  LINK:(CC`cc`wc`ex~NONAME10) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                                            line  85:  LINK:(CC`cc`wc`ex~NONAME11) Updating UNIT from [J/kg] to [J/kg_dryAir] .
+                                            line  86:  LINK:(CC`cc`wc`ex~NONAME12) Updating UNIT from [W] to [W] .
+"C:/vspark210rc7/hvactk/class/dewpt.cm", line  55:  LINK:(CC`cc`wc`wco`es`dp~PwDP) Updating UNIT from [Pa] to [Pa] .
+"C:/vspark210rc7/hvactk/class/enthsat.cm", line  46:  LINK:(CC`cc`wc`wco`es~NONAME1) Updating UNIT from [Pa] to [Pa] .
+                                           line  47:  LINK:(CC`cc`wc`wco`es~NONAME2) Updating UNIT from [deg_C] to [deg_C] .
+                                           line  48:  LINK:(CC`cc`wc`wco`es~NONAME3) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                                           line  49:  LINK:(CC`cc`wc`wco`es~NONAME4) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"C:/vspark210rc7/hvactk/class/wcoilout.cm", line  90:  LINK:(CC`cc`wc`wco~NONAME1) Updating UNIT from [Pa] to [Pa] .
+                                            line  91:  LINK:(CC`cc`wc`wco~NONAME2) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                                            line  92:  LINK:(CC`cc`wc`wco~NONAME3) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                                            line  93:  LINK:(CC`cc`wc`wco~NONAME4) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                                            line  95:  LINK:(CC`cc`wc`wco~NONAME5) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                                            line  96:  LINK:(CC`cc`wc`wco~NONAME6) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                                            line  97:  LINK:(CC`cc`wc`wco~NONAME7) Updating UNIT from [deg_C] to [deg_C] .
+                                            line  98:  LINK:(CC`cc`wc`wco~NONAME8) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                                            line 100:  LINK:(CC`cc`wc`wco~wAirLvgWet) Setting UNIT= [kg_water/kg_dryAir] .
+                                            line 101:  LINK:(CC`cc`wc`wco~NONAME9) Updating UNIT from [deg_C] to [deg_C] .
+                                            line 102:  LINK:(CC`cc`wc`wco~NONAME10) Updating UNIT from [W] to [W] .
+                                            line 103:  LINK:(CC`cc`wc`wco~ntu) Updating UNIT from [-] to [-] .
+                                            line 105:  LINK:(CC`cc`wc`wco~eff) Updating UNIT from [-] to [-] .
+                                            line 107:  LINK:(CC`cc`wc`wco~hCondSat) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"C:/vspark210rc7/hvactk/class/wcoilout.cm", line 108: WARNING: LINK:(CC`cc`wc`wco~wCond): (CC`cc`wc`wco`es.w) BREAK_LEVEL=8 will propagate to downstream conns.
+                                            line 108:  LINK:(CC`cc`wc`wco~wCond) Setting BREAK_LEVEL=8 for connection (CC`cc`wc`wco`es`e.w).
+                                            line 108:  LINK:(CC`cc`wc`wco~wCond) Setting BREAK_LEVEL=8 for connection (CC`cc`wc`wco`es`dp`hr.w).
+                                            line 108:  LINK:(CC`cc`wc`wco~wCond) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+"../class/wtcctr.cm", line 149:  LINK:(CC`cc`wc~NONAME1) Updating UNIT from [Pa] to [Pa] .
+                      line 150:  LINK:(CC`cc`wc~NONAME2) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                      line 151:  LINK:(CC`cc`wc~NONAME3) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                      line 152:  LINK:(CC`cc`wc~NONAME4) Updating UNIT from [deg_C] to [deg_C] .
+                      line 153:  LINK:(CC`cc`wc~NONAME5) Updating UNIT from [deg_C] to [deg_C] .
+"../class/wtcctr.cm", line 154: WARNING: LINK:(CC`cc`wc~NONAME6): (CC`cc`wc`es2.w) BREAK_LEVEL=8 will propagate to downstream conns.
+                      line 154:  LINK:(CC`cc`wc~NONAME6) Setting BREAK_LEVEL=8 for connection (CC`cc`wc`e.w).
+                      line 154:  LINK:(CC`cc`wc~NONAME6) Setting BREAK_LEVEL=8 for connection (CC`cc`wc`cpair.w).
+                      line 154:  LINK:(CC`cc`wc~NONAME6) Setting BREAK_LEVEL=8 for connection (CC`cc`wc`es2`e.w).
+                      line 154:  LINK:(CC`cc`wc~NONAME6) Setting BREAK_LEVEL=8 for connection (CC`cc`wc`es2`dp`hr.w).
+                      line 154:  LINK:(CC`cc`wc~NONAME6) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                      line 155:  LINK:(CC`cc`wc~NONAME7) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line 156:  LINK:(CC`cc`wc~NONAME8) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                      line 158:  LINK:(CC`cc`wc~L_hAirEnt) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                      line 159:  LINK:(CC`cc`wc~NONAME9) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                      line 160:  LINK:(CC`cc`wc~NONAME10) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                      line 161:  LINK:(CC`cc`wc~NONAME11) Updating UNIT from [W] to [W] .
+                      line 162:  LINK:(CC`cc`wc~NONAME12) Updating UNIT from [W] to [W] .
+                      line 163:  LINK:(CC`cc`wc~NONAME13) Updating UNIT from [deg_C] to [deg_C] .
+                      line 164:  LINK:(CC`cc`wc~NONAME14) Updating UNIT from [deg_C] to [deg_C] .
+                      line 165:  LINK:(CC`cc`wc~NONAME15) Updating UNIT from [deg_C] to [deg_C] .
+                      line 166:  LINK:(CC`cc`wc~intResist) Setting UNIT= [resist] .
+                      line 167:  LINK:(CC`cc`wc~extResist) Setting UNIT= [resist] .
+                      line 168:  LINK:(CC`cc`wc~rInt) Setting UNIT= [resist] .
+                      line 169:  LINK:(CC`cc`wc~rExt) Setting UNIT= [resist] .
+                      line 170:  LINK:(CC`cc`wc~rTot) Setting UNIT= [resist] .
+                      line 176:  LINK:(CC`cc`wc~hLiqEntSat) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                      line 177:  LINK:(CC`cc`wc~hLiqLvgSat) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                      line 178:  LINK:(CC`cc`wc~hSurfEntSat) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"../class/wtcctr.cm", line 179: WARNING: LINK:(CC`cc`wc~NONAME16): (CC`cc`wc`es3.w) BREAK_LEVEL=10 will propagate to downstream conns.
+                      line 179:  LINK:(CC`cc`wc~NONAME16) Setting BREAK_LEVEL=10 for connection (CC`cc`wc`es3`e.w).
+                      line 179:  LINK:(CC`cc`wc~NONAME16) Setting BREAK_LEVEL=10 for connection (CC`cc`wc`es3`dp`hr.w).
+                      line 179:  LINK:(CC`cc`wc~NONAME16) Updating INIT= from 0.002 to 0.005 .
+                      line 179:  LINK:(CC`cc`wc~NONAME16) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                      line 181:  LINK:(CC`cc`wc~hAirEntSat) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                      line 182:  LINK:(CC`cc`wc~cpSat) Setting UNIT= [cp] .
+"../class/wtcctr.cm", line 183: WARNING: LINK:(CC`cc`wc~NONAME17): (CC`cc`wc`wco.wAirLvg) BREAK_LEVEL=7 will propagate to downstream conns.
+                      line 183:  LINK:(CC`cc`wc~NONAME17) Setting BREAK_LEVEL=7 for connection (CC`cc`wc`wco`min1.c).
+                      line 183:  LINK:(CC`cc`wc~NONAME17) Setting BREAK_LEVEL=7 for connection (CC`cc`wc`wco`e.w).
+                      line 183:  LINK:(CC`cc`wc~NONAME17) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                      line 184:  LINK:(CC`cc`wc~NONAME18) Updating UNIT from [deg_C] to [deg_C] .
+                      line 185:  LINK:(CC`cc`wc~NONAME19) Updating UNIT from [W] to [W] .
+                      line 132:  PROBE (es3.w): For connection (CC`cc`wc`es3.w) overriding BREAK_LEVEL= from (8) to (10).
+                      line 132:  PROBE (es3.w): For connection (CC`cc`wc`es3.w) overriding INIT= from (0.005) to (0.005).
+"../class/wtcctr.cm", line 145: WARNING: PROBE (wco~wCond): (CC`cc`wc`wco~wCond) BREAK_LEVEL=10 will propagate to downstream conns.
+                      line 145:  PROBE (wco~wCond): For connection (CC`cc`wc`wco`li2.hibnd) setting BREAK_LEVEL=(10).
+                      line 145:  PROBE (wco~wCond): For connection (CC`cc`wc`wco`es`e.w) overriding BREAK_LEVEL= from (8) to (10).
+                      line 145:  PROBE (wco~wCond): For connection (CC`cc`wc`wco`es`dp`hr.w) overriding BREAK_LEVEL= from (8) to (10).
+                      line 145:  PROBE (wco~wCond): For link (CC`cc`wc`wco~wCond) overriding INIT= from (0.002) to (0.005).
+"../class/ccsim.cm", line 130:  LINK:(CC`cc~NONAME1) Updating UNIT from [m^2] to [m^2] .
+                     line 131:  LINK:(CC`cc~NONAME2) Updating UNIT from [W/deg_C] to [U] .
+                     line 132:  LINK:(CC`cc~NONAME3) Updating UNIT from [W/deg_C] to [U] .
+                     line 133:  LINK:(CC`cc~NONAME4) Updating UNIT from [Pa] to [Pa] .
+                     line 134:  LINK:(CC`cc~NONAME5) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                     line 135:  LINK:(CC`cc~NONAME6) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                     line 136:  LINK:(CC`cc~NONAME7) Updating UNIT from [deg_C] to [deg_C] .
+                     line 137:  LINK:(CC`cc~NONAME8) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                     line 138:  LINK:(CC`cc~NONAME9) Updating UNIT from [deg_C] to [deg_C] .
+                     line 139:  LINK:(CC`cc~UTotD) Setting UNIT= [U] .
+                     line 140:  LINK:(CC`cc~UATotD) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                     line 141:  LINK:(CC`cc~UAExtW) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                     line 142:  LINK:(CC`cc~UAIntW) Updating UNIT from [W/deg_C] to [W/deg_C] .
+                     line 143:  LINK:(CC`cc~NONAME10) Updating UNIT from [deg_C] to [deg_C] .
+                     line 144:  LINK:(CC`cc~NONAME11) Updating UNIT from [deg_C] to [deg_C] .
+                     line 145:  LINK:(CC`cc~wAirLvgD) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                     line 146:  LINK:(CC`cc~wAirLvgW) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                     line 147:  LINK:(CC`cc~NONAME12) Updating UNIT from [deg_C] to [deg_C] .
+                     line 148:  LINK:(CC`cc~NONAME13) Updating UNIT from [deg_C] to [deg_C] .
+                     line 149:  LINK:(CC`cc~TSurfW) Updating UNIT from [deg_C] to [deg_C] .
+                     line 150:  LINK:(CC`cc~TDpW) Updating UNIT from [deg_C] to [deg_C] .
+                     line 151:  LINK:(CC`cc~NONAME14) Updating UNIT from [W] to [W] .
+                     line 152:  LINK:(CC`cc~NONAME15) Updating UNIT from [W] to [W] .
+                     line 153:  LINK:(CC`cc~NONAME16) Updating UNIT from [W] to [W] .
+                     line 155:  LINK:(CC`cc~NONAME18) Updating UNIT from [deg_C] to [deg_C] .
+                     line 156:  LINK:(CC`cc~NONAME19) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                     line 157:  LINK:(CC`cc~NONAME20) Updating UNIT from [deg_C] to [deg_C] .
+                     line 158:  LINK:(CC`cc~NONAME21) Updating UNIT from [W] to [W] .
+                     line 159:  LINK:(CC`cc~NONAME22) Updating UNIT from [W] to [W] .
+                     line 160:  LINK:(CC`cc~NONAME23) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+"../class/coolingcoil.cm", line 106:  LINK:(CC~Authority) Updating UNIT from [-] to [-] .
+                           line 107:  LINK:(CC~mLeak) Updating UNIT from [-] to [-] .
+                           line 110:  LINK:(CC~ATot) Updating UNIT from [m^2] to [m^2] .
+                           line 114:  LINK:(CC~UExtW) Updating UNIT from [U] to [W/deg_C] .
+                           line 115:  LINK:(CC~UIntW) Updating UNIT from [U] to [W/deg_C] .
+                           line 117:  LINK:(CC~NONAME2) Updating UNIT from [Pa] to [Pa] .
+                           line 119:  LINK:(CC~NONAME3) Updating UNIT from [deg_C] to [deg_C] .
+                           line 120:  LINK:(CC~NONAME4) Updating UNIT from [deg_C] to [deg_C] .
+                           line 121:  LINK:(CC~NONAME5) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                           line 122:  LINK:(CC~NONAME6) Updating UNIT from [kg_water/kg_dryAir] to [kg_water/kg_dryAir] .
+                           line 123:  LINK:(CC~NONAME7) Updating UNIT from [kg_dryAir/s] to [kg_dryAir/s] .
+                           line 126:  LINK:(CC~NONAME9) Updating UNIT from [deg_C] to [deg_C] .
+                           line 127:  LINK:(CC~NONAME10) Updating UNIT from [deg_C] to [deg_C] .
+                           line 128:  LINK:(CC~NONAME11) Updating UNIT from [deg_C] to [deg_C] .
+                           line 129:  LINK:(CC~NONAME12) Updating UNIT from [deg_C] to [deg_C] .
+                           line 130:  LINK:(CC~NONAME13) Updating UNIT from [deg_C] to [deg_C] .
+                           line 132:  LINK:(CC~NONAME14) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 133:  LINK:(CC~NONAME15) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 134:  LINK:(CC~NONAME16) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 135:  LINK:(CC~NONAME17) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 136:  LINK:(CC~NONAME18) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 138:  LINK:(CC~NONAME19) Updating UNIT from [W] to [W] .
+                           line 140:  LINK:(CC~qLat1) Setting UNIT= [W] .
+                           line 141:  LINK:(CC~NONAME21) Updating UNIT from [W] to [W] .
+                           line 143:  LINK:(CC~NONAME22) Updating UNIT from [-] to [-] .
+                           line 144:  LINK:(CC~NONAME23) Updating UNIT from [-] to [-] .
+                           line 145:  LINK:(CC~NONAME24) Updating UNIT from [kg_water/s] to [kg_water/s] .
+                           line 146:  LINK:(CC~mLiqOpenReal) Updating UNIT from [kg_water/s] to [kg_water/s] .
+"../class/air_enthsat.cm", line  69:  LINK:(OutWB`esat~pVapSat) Applying MATCH_LEVEL=6 of port to connection (OutWB`esat`sp.p).
+                           line  77:  LINK:(OutWB`esat~NONAME2) Applying MATCH_LEVEL=4 of port to connection (OutWB`esat`sp.T).
+                           line  77:  LINK:(OutWB`esat~NONAME2) Setting BREAK_LEVEL=6 for connection (OutWB`esat`ea.TDb).
+"../class/air_wetbulb.cm", line  78:  LINK:(OutWB`wb~TWb) Applying MATCH_LEVEL=4 of port to connection (OutWB`wb`sp.T).
+                           line  80:  LINK:(OutWB`wb~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  81:  LINK:(OutWB`wb~hSStar) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  82:  LINK:(OutWB`wb~PwSStar) Applying MATCH_LEVEL=6 of port to connection (OutWB`wb`sp.p).
+                           line  82:  LINK:(OutWB`wb~PwSStar) Updating UNIT from [Pa] to [Pa] .
+"../class/wetbulb_accl.cm", line  65:  LINK:(OutWB~TDb) Updating INIT= from 20 to 20.0 .
+                            line  69:  LINK:(OutWB~w) Updating INIT= from 0.002 to 0.002 .
+                            line  74:  LINK:(OutWB~TWb_est) Updating INIT= from 20 to 10 .
+                            line  74:  LINK:(OutWB~TWb_est) Updating UNIT from [deg_C] to [deg_C] .
+                            line  79:  LINK:(OutWB~TDb_2) Updating UNIT from [deg_C] to [deg_C] .
+                            line  82:  LINK:(OutWB~pAtm) Updating INIT= from 101325.0 to 101325.0 .
+                            line  82:  LINK:(OutWB~pAtm) Updating UNIT from [Pa] to [Pa] .
+                            line  87:  LINK:(OutWB~h) Updating INIT= from 25194.2 to 5.742796210351193e+004 .
+                            line  87:  LINK:(OutWB~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"../class/wetbulb_accl.cm", line  91: WARNING: LINK:(OutWB~TWb): (OutWB`wb.TWb) BREAK_LEVEL=7 will propagate to downstream conns.
+                            line  91:  LINK:(OutWB~TWb) Setting BREAK_LEVEL=7 for connection (OutWB`wb`sp.T).
+                            line  91:  LINK:(OutWB~TWb) Setting BREAK_LEVEL=7 for connection (OutWB`wb`e2.TDb).
+                            line  91:  LINK:(OutWB~TWb) Setting BREAK_LEVEL=7 for connection (OutWB`wb`eq31.TWb).
+                            line  91:  LINK:(OutWB~TWb) Setting PREDICT_FROM_LINK=TWb_est .
+                            line  91:  LINK:(OutWB~TWb) Updating UNIT from [deg_C] to [deg_C] .
+"../class/air_enthsat.cm", line  69:  LINK:(RetWB`esat~pVapSat) Applying MATCH_LEVEL=6 of port to connection (RetWB`esat`sp.p).
+                           line  77:  LINK:(RetWB`esat~NONAME2) Applying MATCH_LEVEL=4 of port to connection (RetWB`esat`sp.T).
+                           line  77:  LINK:(RetWB`esat~NONAME2) Setting BREAK_LEVEL=6 for connection (RetWB`esat`ea.TDb).
+"../class/air_wetbulb.cm", line  78:  LINK:(RetWB`wb~TWb) Applying MATCH_LEVEL=4 of port to connection (RetWB`wb`sp.T).
+                           line  80:  LINK:(RetWB`wb~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  81:  LINK:(RetWB`wb~hSStar) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  82:  LINK:(RetWB`wb~PwSStar) Applying MATCH_LEVEL=6 of port to connection (RetWB`wb`sp.p).
+                           line  82:  LINK:(RetWB`wb~PwSStar) Updating UNIT from [Pa] to [Pa] .
+"../class/wetbulb_accl.cm", line  65:  LINK:(RetWB~TDb) Updating INIT= from 20 to 20.0 .
+                            line  69:  LINK:(RetWB~w) Updating INIT= from 0.002 to 0.002 .
+                            line  74:  LINK:(RetWB~TWb_est) Updating INIT= from 20 to 10 .
+                            line  74:  LINK:(RetWB~TWb_est) Updating UNIT from [deg_C] to [deg_C] .
+                            line  79:  LINK:(RetWB~TDb_2) Updating UNIT from [deg_C] to [deg_C] .
+                            line  82:  LINK:(RetWB~pAtm) Updating INIT= from 101325.0 to 101325.0 .
+                            line  82:  LINK:(RetWB~pAtm) Updating UNIT from [Pa] to [Pa] .
+                            line  87:  LINK:(RetWB~h) Updating INIT= from 25194.2 to 5.742796210351193e+004 .
+                            line  87:  LINK:(RetWB~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"../class/wetbulb_accl.cm", line  91: WARNING: LINK:(RetWB~TWb): (RetWB`wb.TWb) BREAK_LEVEL=7 will propagate to downstream conns.
+                            line  91:  LINK:(RetWB~TWb) Setting BREAK_LEVEL=7 for connection (RetWB`wb`sp.T).
+                            line  91:  LINK:(RetWB~TWb) Setting BREAK_LEVEL=7 for connection (RetWB`wb`e2.TDb).
+                            line  91:  LINK:(RetWB~TWb) Setting BREAK_LEVEL=7 for connection (RetWB`wb`eq31.TWb).
+                            line  91:  LINK:(RetWB~TWb) Setting PREDICT_FROM_LINK=TWb_est .
+                            line  91:  LINK:(RetWB~TWb) Updating UNIT from [deg_C] to [deg_C] .
+"../class/air_enthsat.cm", line  69:  LINK:(MixWB`esat~pVapSat) Applying MATCH_LEVEL=6 of port to connection (MixWB`esat`sp.p).
+                           line  77:  LINK:(MixWB`esat~NONAME2) Applying MATCH_LEVEL=4 of port to connection (MixWB`esat`sp.T).
+                           line  77:  LINK:(MixWB`esat~NONAME2) Setting BREAK_LEVEL=6 for connection (MixWB`esat`ea.TDb).
+"../class/air_wetbulb.cm", line  78:  LINK:(MixWB`wb~TWb) Applying MATCH_LEVEL=4 of port to connection (MixWB`wb`sp.T).
+                           line  80:  LINK:(MixWB`wb~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  81:  LINK:(MixWB`wb~hSStar) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  82:  LINK:(MixWB`wb~PwSStar) Applying MATCH_LEVEL=6 of port to connection (MixWB`wb`sp.p).
+                           line  82:  LINK:(MixWB`wb~PwSStar) Updating UNIT from [Pa] to [Pa] .
+"../class/wetbulb_accl.cm", line  65:  LINK:(MixWB~TDb) Updating INIT= from 20 to 20.0 .
+                            line  69:  LINK:(MixWB~w) Updating INIT= from 0.002 to 0.002 .
+                            line  74:  LINK:(MixWB~TWb_est) Updating INIT= from 20 to 10 .
+                            line  74:  LINK:(MixWB~TWb_est) Updating UNIT from [deg_C] to [deg_C] .
+                            line  79:  LINK:(MixWB~TDb_2) Updating UNIT from [deg_C] to [deg_C] .
+                            line  82:  LINK:(MixWB~pAtm) Updating INIT= from 101325.0 to 101325.0 .
+                            line  82:  LINK:(MixWB~pAtm) Updating UNIT from [Pa] to [Pa] .
+                            line  87:  LINK:(MixWB~h) Updating INIT= from 25194.2 to 5.742796210351193e+004 .
+                            line  87:  LINK:(MixWB~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"../class/wetbulb_accl.cm", line  91: WARNING: LINK:(MixWB~TWb): (MixWB`wb.TWb) BREAK_LEVEL=7 will propagate to downstream conns.
+                            line  91:  LINK:(MixWB~TWb) Setting BREAK_LEVEL=7 for connection (MixWB`wb`sp.T).
+                            line  91:  LINK:(MixWB~TWb) Setting BREAK_LEVEL=7 for connection (MixWB`wb`e2.TDb).
+                            line  91:  LINK:(MixWB~TWb) Setting BREAK_LEVEL=7 for connection (MixWB`wb`eq31.TWb).
+                            line  91:  LINK:(MixWB~TWb) Setting PREDICT_FROM_LINK=TWb_est .
+                            line  91:  LINK:(MixWB~TWb) Updating UNIT from [deg_C] to [deg_C] .
+"../class/air_enthsat.cm", line  69:  LINK:(HCentWB`esat~pVapSat) Applying MATCH_LEVEL=6 of port to connection (HCentWB`esat`sp.p).
+                           line  77:  LINK:(HCentWB`esat~NONAME2) Applying MATCH_LEVEL=4 of port to connection (HCentWB`esat`sp.T).
+                           line  77:  LINK:(HCentWB`esat~NONAME2) Setting BREAK_LEVEL=6 for connection (HCentWB`esat`ea.TDb).
+"../class/air_wetbulb.cm", line  78:  LINK:(HCentWB`wb~TWb) Applying MATCH_LEVEL=4 of port to connection (HCentWB`wb`sp.T).
+                           line  80:  LINK:(HCentWB`wb~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  81:  LINK:(HCentWB`wb~hSStar) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  82:  LINK:(HCentWB`wb~PwSStar) Applying MATCH_LEVEL=6 of port to connection (HCentWB`wb`sp.p).
+                           line  82:  LINK:(HCentWB`wb~PwSStar) Updating UNIT from [Pa] to [Pa] .
+"../class/wetbulb_accl.cm", line  65:  LINK:(HCentWB~TDb) Updating INIT= from 20 to 20.0 .
+                            line  69:  LINK:(HCentWB~w) Updating INIT= from 0.002 to 0.002 .
+                            line  74:  LINK:(HCentWB~TWb_est) Updating INIT= from 20 to 10 .
+                            line  74:  LINK:(HCentWB~TWb_est) Updating UNIT from [deg_C] to [deg_C] .
+                            line  79:  LINK:(HCentWB~TDb_2) Updating UNIT from [deg_C] to [deg_C] .
+                            line  82:  LINK:(HCentWB~pAtm) Updating INIT= from 101325.0 to 101325.0 .
+                            line  82:  LINK:(HCentWB~pAtm) Updating UNIT from [Pa] to [Pa] .
+                            line  87:  LINK:(HCentWB~h) Updating INIT= from 25194.2 to 5.742796210351193e+004 .
+                            line  87:  LINK:(HCentWB~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"../class/wetbulb_accl.cm", line  91: WARNING: LINK:(HCentWB~TWb): (HCentWB`wb.TWb) BREAK_LEVEL=7 will propagate to downstream conns.
+                            line  91:  LINK:(HCentWB~TWb) Setting BREAK_LEVEL=7 for connection (HCentWB`wb`sp.T).
+                            line  91:  LINK:(HCentWB~TWb) Setting BREAK_LEVEL=7 for connection (HCentWB`wb`e2.TDb).
+                            line  91:  LINK:(HCentWB~TWb) Setting BREAK_LEVEL=7 for connection (HCentWB`wb`eq31.TWb).
+                            line  91:  LINK:(HCentWB~TWb) Setting PREDICT_FROM_LINK=TWb_est .
+                            line  91:  LINK:(HCentWB~TWb) Updating UNIT from [deg_C] to [deg_C] .
+"../class/air_enthsat.cm", line  69:  LINK:(HClvgWB`esat~pVapSat) Applying MATCH_LEVEL=6 of port to connection (HClvgWB`esat`sp.p).
+                           line  77:  LINK:(HClvgWB`esat~NONAME2) Applying MATCH_LEVEL=4 of port to connection (HClvgWB`esat`sp.T).
+                           line  77:  LINK:(HClvgWB`esat~NONAME2) Setting BREAK_LEVEL=6 for connection (HClvgWB`esat`ea.TDb).
+"../class/air_wetbulb.cm", line  78:  LINK:(HClvgWB`wb~TWb) Applying MATCH_LEVEL=4 of port to connection (HClvgWB`wb`sp.T).
+                           line  80:  LINK:(HClvgWB`wb~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  81:  LINK:(HClvgWB`wb~hSStar) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  82:  LINK:(HClvgWB`wb~PwSStar) Applying MATCH_LEVEL=6 of port to connection (HClvgWB`wb`sp.p).
+                           line  82:  LINK:(HClvgWB`wb~PwSStar) Updating UNIT from [Pa] to [Pa] .
+"../class/wetbulb_accl.cm", line  65:  LINK:(HClvgWB~TDb) Updating INIT= from 20 to 20.0 .
+                            line  69:  LINK:(HClvgWB~w) Updating INIT= from 0.002 to 0.002 .
+                            line  74:  LINK:(HClvgWB~TWb_est) Updating INIT= from 20 to 10 .
+                            line  74:  LINK:(HClvgWB~TWb_est) Updating UNIT from [deg_C] to [deg_C] .
+                            line  79:  LINK:(HClvgWB~TDb_2) Updating UNIT from [deg_C] to [deg_C] .
+                            line  82:  LINK:(HClvgWB~pAtm) Updating INIT= from 101325.0 to 101325.0 .
+                            line  82:  LINK:(HClvgWB~pAtm) Updating UNIT from [Pa] to [Pa] .
+                            line  87:  LINK:(HClvgWB~h) Updating INIT= from 25194.2 to 5.742796210351193e+004 .
+                            line  87:  LINK:(HClvgWB~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"../class/wetbulb_accl.cm", line  91: WARNING: LINK:(HClvgWB~TWb): (HClvgWB`wb.TWb) BREAK_LEVEL=7 will propagate to downstream conns.
+                            line  91:  LINK:(HClvgWB~TWb) Setting BREAK_LEVEL=7 for connection (HClvgWB`wb`sp.T).
+                            line  91:  LINK:(HClvgWB~TWb) Setting BREAK_LEVEL=7 for connection (HClvgWB`wb`e2.TDb).
+                            line  91:  LINK:(HClvgWB~TWb) Setting BREAK_LEVEL=7 for connection (HClvgWB`wb`eq31.TWb).
+                            line  91:  LINK:(HClvgWB~TWb) Setting PREDICT_FROM_LINK=TWb_est .
+                            line  91:  LINK:(HClvgWB~TWb) Updating UNIT from [deg_C] to [deg_C] .
+"../class/air_enthsat.cm", line  69:  LINK:(CClvgWB`esat~pVapSat) Applying MATCH_LEVEL=6 of port to connection (CClvgWB`esat`sp.p).
+                           line  77:  LINK:(CClvgWB`esat~NONAME2) Applying MATCH_LEVEL=4 of port to connection (CClvgWB`esat`sp.T).
+                           line  77:  LINK:(CClvgWB`esat~NONAME2) Setting BREAK_LEVEL=6 for connection (CClvgWB`esat`ea.TDb).
+"../class/air_wetbulb.cm", line  78:  LINK:(CClvgWB`wb~TWb) Applying MATCH_LEVEL=4 of port to connection (CClvgWB`wb`sp.T).
+                           line  80:  LINK:(CClvgWB`wb~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  81:  LINK:(CClvgWB`wb~hSStar) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  82:  LINK:(CClvgWB`wb~PwSStar) Applying MATCH_LEVEL=6 of port to connection (CClvgWB`wb`sp.p).
+                           line  82:  LINK:(CClvgWB`wb~PwSStar) Updating UNIT from [Pa] to [Pa] .
+"../class/wetbulb_accl.cm", line  65:  LINK:(CClvgWB~TDb) Updating INIT= from 20 to 20.0 .
+                            line  69:  LINK:(CClvgWB~w) Updating INIT= from 0.002 to 0.002 .
+                            line  74:  LINK:(CClvgWB~TWb_est) Updating INIT= from 20 to 10 .
+                            line  74:  LINK:(CClvgWB~TWb_est) Updating UNIT from [deg_C] to [deg_C] .
+                            line  79:  LINK:(CClvgWB~TDb_2) Updating UNIT from [deg_C] to [deg_C] .
+                            line  82:  LINK:(CClvgWB~pAtm) Updating INIT= from 101325.0 to 101325.0 .
+                            line  82:  LINK:(CClvgWB~pAtm) Updating UNIT from [Pa] to [Pa] .
+                            line  87:  LINK:(CClvgWB~h) Updating INIT= from 25194.2 to 5.742796210351193e+004 .
+                            line  87:  LINK:(CClvgWB~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"../class/wetbulb_accl.cm", line  91: WARNING: LINK:(CClvgWB~TWb): (CClvgWB`wb.TWb) BREAK_LEVEL=7 will propagate to downstream conns.
+                            line  91:  LINK:(CClvgWB~TWb) Setting BREAK_LEVEL=7 for connection (CClvgWB`wb`sp.T).
+                            line  91:  LINK:(CClvgWB~TWb) Setting BREAK_LEVEL=7 for connection (CClvgWB`wb`e2.TDb).
+                            line  91:  LINK:(CClvgWB~TWb) Setting BREAK_LEVEL=7 for connection (CClvgWB`wb`eq31.TWb).
+                            line  91:  LINK:(CClvgWB~TWb) Setting PREDICT_FROM_LINK=TWb_est .
+                            line  91:  LINK:(CClvgWB~TWb) Updating UNIT from [deg_C] to [deg_C] .
+"../class/air_enthsat.cm", line  69:  LINK:(FanlvgWB`esat~pVapSat) Applying MATCH_LEVEL=6 of port to connection (FanlvgWB`esat`sp.p).
+                           line  77:  LINK:(FanlvgWB`esat~NONAME2) Applying MATCH_LEVEL=4 of port to connection (FanlvgWB`esat`sp.T).
+                           line  77:  LINK:(FanlvgWB`esat~NONAME2) Setting BREAK_LEVEL=6 for connection (FanlvgWB`esat`ea.TDb).
+"../class/air_wetbulb.cm", line  78:  LINK:(FanlvgWB`wb~TWb) Applying MATCH_LEVEL=4 of port to connection (FanlvgWB`wb`sp.T).
+                           line  80:  LINK:(FanlvgWB`wb~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  81:  LINK:(FanlvgWB`wb~hSStar) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  82:  LINK:(FanlvgWB`wb~PwSStar) Applying MATCH_LEVEL=6 of port to connection (FanlvgWB`wb`sp.p).
+                           line  82:  LINK:(FanlvgWB`wb~PwSStar) Updating UNIT from [Pa] to [Pa] .
+"../class/wetbulb_accl.cm", line  65:  LINK:(FanlvgWB~TDb) Updating INIT= from 20 to 20.0 .
+                            line  69:  LINK:(FanlvgWB~w) Updating INIT= from 0.002 to 0.002 .
+                            line  74:  LINK:(FanlvgWB~TWb_est) Updating INIT= from 20 to 10 .
+                            line  74:  LINK:(FanlvgWB~TWb_est) Updating UNIT from [deg_C] to [deg_C] .
+                            line  79:  LINK:(FanlvgWB~TDb_2) Updating UNIT from [deg_C] to [deg_C] .
+                            line  82:  LINK:(FanlvgWB~pAtm) Updating INIT= from 101325.0 to 101325.0 .
+                            line  82:  LINK:(FanlvgWB~pAtm) Updating UNIT from [Pa] to [Pa] .
+                            line  87:  LINK:(FanlvgWB~h) Updating INIT= from 25194.2 to 5.742796210351193e+004 .
+                            line  87:  LINK:(FanlvgWB~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"../class/wetbulb_accl.cm", line  91: WARNING: LINK:(FanlvgWB~TWb): (FanlvgWB`wb.TWb) BREAK_LEVEL=7 will propagate to downstream conns.
+                            line  91:  LINK:(FanlvgWB~TWb) Setting BREAK_LEVEL=7 for connection (FanlvgWB`wb`sp.T).
+                            line  91:  LINK:(FanlvgWB~TWb) Setting BREAK_LEVEL=7 for connection (FanlvgWB`wb`e2.TDb).
+                            line  91:  LINK:(FanlvgWB~TWb) Setting BREAK_LEVEL=7 for connection (FanlvgWB`wb`eq31.TWb).
+                            line  91:  LINK:(FanlvgWB~TWb) Setting PREDICT_FROM_LINK=TWb_est .
+                            line  91:  LINK:(FanlvgWB~TWb) Updating UNIT from [deg_C] to [deg_C] .
+"../class/air_enthsat.cm", line  69:  LINK:(VAVHClvgWB`esat~pVapSat) Applying MATCH_LEVEL=6 of port to connection (VAVHClvgWB`esat`sp.p).
+                           line  77:  LINK:(VAVHClvgWB`esat~NONAME2) Applying MATCH_LEVEL=4 of port to connection (VAVHClvgWB`esat`sp.T).
+                           line  77:  LINK:(VAVHClvgWB`esat~NONAME2) Setting BREAK_LEVEL=6 for connection (VAVHClvgWB`esat`ea.TDb).
+"../class/air_wetbulb.cm", line  78:  LINK:(VAVHClvgWB`wb~TWb) Applying MATCH_LEVEL=4 of port to connection (VAVHClvgWB`wb`sp.T).
+                           line  80:  LINK:(VAVHClvgWB`wb~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  81:  LINK:(VAVHClvgWB`wb~hSStar) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+                           line  82:  LINK:(VAVHClvgWB`wb~PwSStar) Applying MATCH_LEVEL=6 of port to connection (VAVHClvgWB`wb`sp.p).
+                           line  82:  LINK:(VAVHClvgWB`wb~PwSStar) Updating UNIT from [Pa] to [Pa] .
+"../class/wetbulb_accl.cm", line  65:  LINK:(VAVHClvgWB~TDb) Updating INIT= from 20 to 20.0 .
+                            line  69:  LINK:(VAVHClvgWB~w) Updating INIT= from 0.002 to 0.002 .
+                            line  74:  LINK:(VAVHClvgWB~TWb_est) Updating INIT= from 20 to 10 .
+                            line  74:  LINK:(VAVHClvgWB~TWb_est) Updating UNIT from [deg_C] to [deg_C] .
+                            line  79:  LINK:(VAVHClvgWB~TDb_2) Updating UNIT from [deg_C] to [deg_C] .
+                            line  82:  LINK:(VAVHClvgWB~pAtm) Updating INIT= from 101325.0 to 101325.0 .
+                            line  82:  LINK:(VAVHClvgWB~pAtm) Updating UNIT from [Pa] to [Pa] .
+                            line  87:  LINK:(VAVHClvgWB~h) Updating INIT= from 25194.2 to 5.742796210351193e+004 .
+                            line  87:  LINK:(VAVHClvgWB~h) Updating UNIT from [J/kg_dryAir] to [J/kg_dryAir] .
+"../class/wetbulb_accl.cm", line  91: WARNING: LINK:(VAVHClvgWB~TWb): (VAVHClvgWB`wb.TWb) BREAK_LEVEL=7 will propagate to downstream conns.
+                            line  91:  LINK:(VAVHClvgWB~TWb) Setting BREAK_LEVEL=7 for connection (VAVHClvgWB`wb`sp.T).
+                            line  91:  LINK:(VAVHClvgWB~TWb) Setting BREAK_LEVEL=7 for connection (VAVHClvgWB`wb`e2.TDb).
+                            line  91:  LINK:(VAVHClvgWB~TWb) Setting BREAK_LEVEL=7 for connection (VAVHClvgWB`wb`eq31.TWb).
+                            line  91:  LINK:(VAVHClvgWB~TWb) Setting PREDICT_FROM_LINK=TWb_est .
+                            line  91:  LINK:(VAVHClvgWB~TWb) Updating UNIT from [deg_C] to [deg_C] .
+"System.pr", line  35:          LINK:(INPDUMMY) used for INPUT .
+             line  42:          LINK:(last) Setting INPUT_FROM_LINK=current .
+             line  43:          LINK:(current) Setting INIT=1.0 .
+             line  47:          LINK:(SPARKStatus) Setting INIT=1.0 .
+             line 101:          LINK:(fanSensor_offset) Setting INIT=0 .
+             line 101:          LINK:(fanSensor_offset) used for INPUT= PARAMETER: .
+             line 102:          LINK:(mxSensor_offset) Setting INIT=0 .
+             line 102:          LINK:(mxSensor_offset) used for INPUT= PARAMETER: .
+             line 104:          LINK:(supSensor_offset) Setting INIT=0 .
+             line 104:          LINK:(supSensor_offset) used for INPUT= PARAMETER: .
+             line 106:          LINK:(rmSensor_offset) Setting INIT=0 .
+             line 106:          LINK:(rmSensor_offset) used for INPUT= PARAMETER: .
+             line 107:          LINK:(VAVoutSensor_offset) Setting INIT=0 .
+             line 107:          LINK:(VAVoutSensor_offset) used for INPUT= PARAMETER: .
+             line 110:          LINK:(fanSensor_timeConstant) Setting INIT=5 .
+             line 110:          LINK:(fanSensor_timeConstant) used for INPUT= PARAMETER: .
+             line 111:          LINK:(mxSensor_timeConstant) Setting INIT=30 .
+             line 111:          LINK:(mxSensor_timeConstant) used for INPUT= PARAMETER: .
+             line 112:          LINK:(supSensor_timeConstant) Setting INIT=30 .
+             line 112:          LINK:(supSensor_timeConstant) used for INPUT= PARAMETER: .
+             line 113:          LINK:(rmSensor_timeConstant) Setting INIT=30 .
+             line 113:          LINK:(rmSensor_timeConstant) used for INPUT= PARAMETER: .
+             line 114:          LINK:(VAVoutSensor_timeConstant) Setting INIT=30 .
+             line 114:          LINK:(VAVoutSensor_timeConstant) used for INPUT= PARAMETER: .
+             line 132:          LINK:(HeatCoolPIi) Setting INIT=0.0 .
+             line 133:          LINK:(HeatCoolPIiP) Setting INPUT_FROM_LINK=HeatCoolPIi .
+             line 135:          LINK:(fanTempRiseEst) Setting INIT=0.5 .
+             line 135:          LINK:(fanTempRiseEst) used for INPUT= PARAMETER: .
+             line 139:          LINK:(uHeatCoolCurLev) Setting INIT=0.5 .
+             line 140:          LINK:(uHeatCoolPrevLev) Setting INPUT_FROM_LINK=uHeatCoolCurLev .
+             line 150:          LINK:(TSupMea) Setting INIT=15.0 .
+             line 151:          LINK:(TSupMeaP) Setting INPUT_FROM_LINK=TSupMea .
+             line 158:          LINK:(RoomAirflowFrac) Setting INIT=0.15 .
+             line 158:          LINK:(RoomAirflowFrac) used for INPUT= PARAMETER: .
+             line 169:          LINK:(wAirOut) Updating INIT= from 0.002 to 0.05 .
+             line 181:          LINK:(MXwRet) Updating INIT= from 0.002 to 0.05 .
+             line 183:          LINK:(MXTwmix) Updating INIT= from 10 to 10. .
+             line 208:          LINK:(MXTmixSensor) Setting INIT=15 .
+             line 209:          LINK:(MXPos) Setting INIT=0.0 .
+             line 211:          LINK:(MXprevPos) Setting INPUT_FROM_LINK=MXPos .
+             line 212:          LINK:(MXactuatorSpeed) Setting INIT=0.05 .
+             line 212:          LINK:(MXactuatorSpeed) used for INPUT= PARAMETER: .
+             line 238:          LINK:(HCTwAirEnt) Updating INIT= from 10 to 10. .
+             line 241:          LINK:(HCTwAirLvg) Updating INIT= from 10 to 10.0 .
+             line 288:          LINK:(CCTwAirLvg) Updating INIT= from 10 to 10.0 .
+             line 333:          LINK:(fanspeed) Setting INIT=0 .
+             line 335:          LINK:(prevFanspeed) Setting INPUT_FROM_LINK=fanspeed .
+             line 345:          LINK:(FanTwAirLvg) Updating INIT= from 10 to 10. .
+             line 363:          LINK:(FaniP) Setting INPUT_FROM_LINK=Fani .
+             line 396:          LINK:(VAVCFMRealP) Setting INPUT_FROM_LINK=VAVCFMReal .
+             line 398:          LINK:(VAVDAMPiP) Setting INPUT_FROM_LINK=VAVDAMPi .
+             line 406:          LINK:(VAVDAMPosReal) Setting INIT=0 .
+             line 408:          LINK:(VAVDAMPPosPrev) Setting INPUT_FROM_LINK=VAVDAMPosReal .
+             line 415:          LINK:(VAVHCTwAirLvg) Updating INIT= from 10 to 10. .
+             line 452:          LINK:(VAViP) Setting INPUT_FROM_LINK=VAVi .
+             line 461:          LINK:(VAVCLprevLevel) Setting INPUT_FROM_LINK=VAVCLcurLevel .
+             line 462:          LINK:(VAVCLcurLevel) Setting INIT=0.5 .
+             line 472:          LINK:(TRoomSS) Setting INIT=21.0 .
+             line 473:          LINK:(TRoomSSP) Setting INPUT_FROM_LINK=TRoomSS .
+             line 478:          LINK:(TRoomSensor) Setting INIT=21.0 .
+             line 479:          LINK:(TRoomSensorP) Setting INPUT_FROM_LINK=TRoomSensor .
+             line 482:          LINK:(UARoom) Setting INIT=0.0 .
+             line 482:          LINK:(UARoom) used for INPUT= PARAMETER: .
+             line 483:          LINK:(cRoomAir) Setting INIT=50.0 .
+             line 483:          LINK:(cRoomAir) used for INPUT= PARAMETER: .
+             line 493:          LINK:(Boiler_FlowType) Updating INIT= from 1 to 1 .
+             line 493:          LINK:(Boiler_FlowType) used for INPUT= PARAMETER: .
+             line 494:          LINK:(Boiler_efficiency) Setting INIT=0.9 .
+             line 494:          LINK:(Boiler_efficiency) used for INPUT= PARAMETER: .
+             line 495:          LINK:(Boiler_cp) Updating INIT= from 4187.0 to 4186.0 .
+             line 495:          LINK:(Boiler_cp) used for INPUT= PARAMETER: .
+             line 496:          LINK:(Boiler_T_limit) Setting INIT=95.0 .
+             line 496:          LINK:(Boiler_T_limit) used for INPUT= PARAMETER: .
+             line 498:          LINK:(Boiler_ParasiticElecLoad) Setting INIT=15.0 .
+             line 498:          LINK:(Boiler_ParasiticElecLoad) used for INPUT= PARAMETER: .
+             line 499:          LINK:(Boiler_C1) Updating INIT= from 1 to 1.0 .
+             line 499:          LINK:(Boiler_C1) used for INPUT= PARAMETER: .
+             line 500:          LINK:(Boiler_C2) Updating INIT= from 0 to 0.0 .
+             line 500:          LINK:(Boiler_C2) used for INPUT= PARAMETER: .
+             line 501:          LINK:(Boiler_C3) Updating INIT= from 0 to 0.0 .
+             line 501:          LINK:(Boiler_C3) used for INPUT= PARAMETER: .
+             line 502:          LINK:(Boiler_PLR_min) Setting INIT=0.1 .
+             line 502:          LINK:(Boiler_PLR_min) used for INPUT= PARAMETER: .
+             line 503:          LINK:(Boiler_PLR_max) Setting INIT=0.9 .
+             line 503:          LINK:(Boiler_PLR_max) used for INPUT= PARAMETER: .
+             line 504:          LINK:(Boiler_mdot_tol) Updating INIT= from 0.001 to 0.01 .
+             line 504:          LINK:(Boiler_mdot_tol) used for INPUT= PARAMETER: .
+             line 505:          LINK:(Boiler_mdot_design) Setting INIT=10.0 .
+             line 505:          LINK:(Boiler_mdot_design) used for INPUT= PARAMETER: .
+             line 508:          LINK:(Boiler_FlowLockFlag) Updating INIT= from 0 to 1 .
+             line 508:          LINK:(Boiler_FlowLockFlag) used for INPUT= PARAMETER: .
+             line 536:          LINK:(chillRatedEIR) Setting INIT=0.3 .
+             line 536:          LINK:(chillRatedEIR) used for INPUT= PARAMETER: .
+             line 537:          LINK:(chillPumpEff) Setting INIT=3.21 .
+             line 537:          LINK:(chillPumpEff) used for INPUT= PARAMETER: .
+             line 567:          LINK:(CTmAirRated) Setting INIT=1 .
+             line 567:          LINK:(CTmAirRated) used for INPUT= PARAMETER: .
+             line 568:          LINK:(CTmAir) Setting INIT=1 .
+             line 568:          LINK:(CTmAir) used for INPUT= PARAMETER: .
+             line 569:          LINK:(CTfanStatic) Setting INIT=100 .
+             line 569:          LINK:(CTfanStatic) used for INPUT= PARAMETER: .
+             line 570:          LINK:(CTfanEff) Setting INIT=0.3 .
+             line 570:          LINK:(CTfanEff) used for INPUT= PARAMETER: .
+             line 571:          LINK:(CTpumpHead) Setting INIT=3 .
+             line 571:          LINK:(CTpumpHead) used for INPUT= PARAMETER: .
+             line 572:          LINK:(CTpumpEff) Setting INIT=0.6 .
+             line 572:          LINK:(CTpumpEff) used for INPUT= PARAMETER: .
+             line 578:          LINK:(CTTwbOutPrev) Setting INIT=25 .
+             line 578:          LINK:(CTTwbOutPrev) used for INPUT= PARAMETER: .
+ line   0: WARNING: Removing REDUNDANT object (MixWB`e),
+ line   0: WARNING:                and variable (MixWB~h).
+ line   0: WARNING:     redundant with object (HCentWB`e),
+ line   0: WARNING:                and variable (HCentWB~h).
+"../class/air_enthalpy.cc", line   1: WARNING: ----> Class of previous message's object.
+ line   0: WARNING: Removing REDUNDANT object (CC`cc`wc`eq),
+ line   0: WARNING:                and variable (CC`cc`wc~NONAME10).
+ line   0: WARNING:     redundant with object (CC`cc`eq),
+ line   0: WARNING:                and variable (CCmAirLvg).
+"../class/equal.cc", line   1: WARNING: ----> Class of previous message's object.
+ line   0: WARNING: Removing REDUNDANT object (CC`cc`dc`eq1),
+ line   0: WARNING:                and variable (CC`cc`dc~NONAME3).
+ line   0: WARNING:     redundant with object (CC`cc`eq),
+ line   0: WARNING:                and variable (CCmAirLvg).
+"../class/equal.cc", line   1: WARNING: ----> Class of previous message's object.
+ line   0: WARNING: Removing REDUNDANT object (HC`HX`eq1),
+ line   0: WARNING:                and variable (HCmAirLvg).
+ line   0: WARNING:     redundant with object (CC`cc`eq),
+ line   0: WARNING:                and variable (CCmAirLvg).
+"../class/equal.cc", line   1: WARNING: ----> Class of previous message's object.
+ line   0: WARNING: Removing REDUNDANT object (CC`cc`dc`cra),
+ line   0: WARNING:                and variable (CC`cc`wc`wco~capAir).
+ line   0: WARNING:     redundant with object (CC`cc`wc`wco`cr),
+ line   0: WARNING:                and variable (CC`cc`dc~capAir).
+"../class/cap_rate.cc", line   1: WARNING: ----> Class of previous message's object.
+ line   0: WARNING: Removing REDUNDANT object (CC`cc`wc`ex`cd2),
+ line   0: WARNING:                and variable (CC`cc`wc~NONAME19).
+ line   0: WARNING:     redundant with object (CC`cc`wc`cd1),
+ line   0: WARNING:                and variable (CC`cc~NONAME16).
+"../class/cond.cc", line   1: WARNING: ----> Class of previous message's object.
+ line   0: WARNING: Removing REDUNDANT object (CC`cc`dc`crl),
+ line   0: WARNING:                and variable (CC`cc`dc~capLiq).
+ line   0: WARNING:     redundant with object (CC`cc`wc`crl),
+ line   0: WARNING:                and variable (CC`cc`wc~capLiq).
+"../class/capratel.cc", line   1: WARNING: ----> Class of previous message's object.
+#variables=512 ( #objects=443 + #inputs=53 + #defaults=0
+                   + #input_from_links=14  + #globals=2 )
+"System.pr", line   0:          Writing setup file : System.stp.
+0 Errors  110 Warnings.
+----- makefile.inc :  DONE. CURDIR=/home/LearnHVAC/spark/System -----
+gmake System.out
+rm -f	../class/VAVsetpointmanager.obj
+vcpp.sh -c -o ../class/VAVsetpointmanager.obj   -O   -IC:/vspark210rc7/inc  ../class/VAVsetpointmanager.cc ;\
+ if [ $? != 0 ] ; then  echo 3 > gmake.status ; exit 3 ; fi
+==== /vspark210rc7/bin/vcpp.sh  -c -o ../class/VAVsetpointmanager.obj -O -IC:/vspark210rc7/inc ../class/VAVsetpointmanager.cc ====Start====
+VAVsetpointmanager.cc
+==== /vspark210rc7/bin/vcpp.sh   ====End====
+rm -f  ../class/VAVsetpointmanager.dll
+vclink.sh -shared -s -o ../class/VAVsetpointmanager.dll ../class/VAVsetpointmanager.obj C:/vspark210rc7/lib/libsparksolver.lib C:/MCC/CWIN/cbw32.lib ;\
+ if [ $? != 0 ] ; then  echo 3 > gmake.status ; exit 3 ; fi
+==== /vspark210rc7/bin/vclink.sh  -shared -s -o ../class/VAVsetpointmanager.dll ../class/VAVsetpointmanager.obj C:/vspark210rc7/lib/libsparksolver.lib C:/MCC/CWIN/cbw32.lib ====Start====
+==== vclink_sh.bat  @vclink.rsp ====Start====
+
+C:\home\LearnHVAC\spark\System>set _DIRNAME_=C:\vspark210rc7\bin\ 
+
+C:\home\LearnHVAC\spark\System>"C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\Tools\vsvars32.bat"
+Setting environment for using Microsoft Visual Studio .NET 2003 tools.
+(If you have another version of Visual Studio or Visual C++ installed and wish
+to use its tools from the command line, run vcvars32.bat for that version.)
+
+C:\home\LearnHVAC\spark\System>link.exe @vclink.rsp 
+LINK : warning LNK4044: unrecognized option '/warn:3'; ignored
+   Creating library ../class/VAVsetpointmanager.lib and object ../class/VAVsetpointmanager.exp
+==== vclink_sh.bat  @vclink.rsp ====End====
+==== /vspark210rc7/bin/vclink.sh   ====End====
+rm -f ../class/VAVsetpointmanager.lib ../class/VAVsetpointmanager.exp
+rm -f	System.xml  sparksetup.log
+if [ -r System.eqs ] ; then \
+ rm -f System.eqs.tmp ; tail +6 System.eqs > System.eqs.tmp ;\
+ rm -f System.prf.tmp ; cp -p System.prf System.prf.tmp ; fi
+C:/vspark210rc7/bin/sparksetup.exe    System   > sparksetup.log  2>&1 ;\
+ if [ $? != 0 ] ; then  echo 2 > gmake.status ; exit 2 ; fi
+if [ -r System.eqs.tmp -a -r System.eqs ] ; then \
+ tail +6 System.eqs > System.eqsNew.tmp ; \
+ if cmp -s  System.eqs.tmp System.eqsNew.tmp ; then \
+  cp -p System.prf.tmp System.prf ;\
+ fi ; rm -f System.eqsNew.tmp ; fi
+rm -f  System.eqs.tmp  System.prf.tmp
+----- System.xml :  DONE. CURDIR=/home/LearnHVAC/spark/System -----
+rm -f System.out run.log
+C:/vspark210rc7/bin/sparksolver System.prf System.run System.xml > run.log ;\
+  X=$? ; if [ $X != 0 ]; then  echo $X > gmake.status; exit $X ; fi
+gmake[1]: *** [System.out] Error 160
+gmake: *** [run] Error 2

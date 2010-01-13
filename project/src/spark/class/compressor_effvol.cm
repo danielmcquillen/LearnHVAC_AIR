@@ -1,0 +1,43 @@
+/// \file compressor_effvol.cm
+///
+/// effvol = 1 + Cf - Cf * ( pratio )^(1/gamma)
+/// where pratio = p2/p1
+///
+
+PORT effvol  [-]  "volumetric effectiveness of compressor" ;
+PORT Cf      [-]  "clearance factor of compressor" ;
+PORT gamma   [-]  "mean isentropic coefficient" ;
+PORT pratio  [-]  "pressure ratio";
+PORT ONE          DEFAULT=1;
+
+DECLARE quot     quot1;
+DECLARE pow      pow1;
+DECLARE prod     prod1;
+DECLARE sum      sum1;
+DECLARE diff     diff1;
+
+
+LINK .effvol,
+     sum1.c;
+LINK .ONE,
+     sum1.a,
+     quot1.a;
+LINK .Cf,
+     diff1.a,
+     prod1.a;
+LINK .gamma,
+     quot1.b;
+LINK exponent,
+     quot1.c,
+     pow1.b;
+LINK .pratio,
+     pow1.a;
+LINK pow1.c,
+     prod1.b;
+LINK prod1.c,
+     diff1.b;
+LINK diff1.c,
+     sum1.b;
+
+     
+

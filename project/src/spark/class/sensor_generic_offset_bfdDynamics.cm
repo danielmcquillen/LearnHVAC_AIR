@@ -1,0 +1,27 @@
+/// \file sensor_generic_offset_bfdDynamics.cm
+/// generic sensor (with offset and dynamics, x values between 0 and 1)
+/// Brian Coffey, May28-08
+/// dynamics based on formulation: x = x0 + integral( ((x_steadyState - x)/timeConstant) dt )
+/// note that xdot is a bit of a misnomer - to use the standard integrators for this case, xdot = (x_steadyState - x)/timeConstant
+
+port x_real; 
+port offset;
+port timeConstant;
+port dt;
+port x_sensor; 
+
+
+declare sum				offsetSum;
+declare sum 			xDotSum;
+declare safquot 		xDotQuot;
+declare bfd			 	integrator; // note: can switch this out to use any integrator - euler, implicit_euler, bfd (backward-forward difference), bd4 (4th-order bfd), abm4 (Adams-Bashforth-Moulton), integrator_euler (PC Euler), integrator_trapezoidal (PC Trapezoidal)
+
+link x_real				.x_real 		offsetSum.a	;
+link x_offset			.offset			offsetSum.b ;
+link x_steadyState						offsetSum.c 	xDotSum.c 					integrator.x_init;
+link x_delta											xDotSum.a 	xDotQuot.a ;
+link timeConstant		.timeConstant 								xDotQuot.b ;
+link x		 			.x_sensor 						xDotSum.b 					integrator.x;
+link xdot															xDotQuot.c 		integrator.xdot;
+link dt					.dt 														integrator.dt ;
+

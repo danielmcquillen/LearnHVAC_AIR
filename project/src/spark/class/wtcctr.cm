@@ -1,0 +1,185 @@
+/// \file wtcctr.cm
+///
+///  Identification:  Wet Cooling/dehumidification Coil, counter flow
+///
+///  Abstract:        
+///       Cooling and dehumidification when the entire metal surface
+///              is wetted by condensate. Based on the ASHRAE Toolkit
+///              WETCOIL model,   modified slightly.  In the Toolkit, the
+///              Cp of dry air is used.  We use Cp of moist air. Elmahdy's
+///              paper,  upon which the Toolkit model is based,  says "heat
+///              capacity of air," which should probably be moist air in
+///              view of the physics.  The liquid is assumed to be water.
+///
+///  Notes:           
+///       This model uses a specific flow arrangement,  normally
+///              counter flow in order to allow more efficient solution
+///              relative to the general flow arrangement model,
+///              wetc_gen.cm.  If a different flow arrangement is wanted,
+///              this object can be edited by changing the comment
+///              delimiters where the heat exchanger object is declared
+///              below.
+///
+///  Interface:       
+/// -          PAtm:     Atmospheric pressure (Pascals)
+/// -          mAirEnt:  Entering air flow (kg dry air/s)
+/// -          mAirLvg:  Leaving air flow (kg dry air/s)
+/// -          mLiq:     Liquid flow (kg/s)
+/// -          TAirEnt:  Entering air dry bulb temperature (C)
+/// -          TLiqEnt:  Entering water temperature (deg C)
+/// -          wAirEnt:  Entering air humidity  ratio (kg-water/kg dry air)
+/// -          UAIntTot: Overall heat transfer coefficient, coil inside (kg/s)
+/// -          UAExtTot: Overall heat transfer coefficient, coil outside (kg/s)
+/// -          hAirEnt:  Entering air enthalpy (J/kg dry air)
+/// -          hAirLvg:  Leaving air enthalpy (J/kg dry air)
+/// -          wAirLvg:  Leaving air humidity  ratio (kg-water/kg dry air)
+/// -          TAirLvg:  Leaving air Temperature (deg C)
+/// -          qSens:    Sensible cooling provided. Positive for cooling. (W)
+/// -          qTot:     Total cooling provided. Positive for cooling. (W)
+/// -          TSurfEnt: Metal surface temperature at entrance (deg C)
+/// -          TDpEnt:   Entering air dewpoint temperature (deg C)
+///
+///  Acceptable input set:  
+/// -       PAtm = 101325,
+/// -          mAirEnt = 1.0,  TAirEnt = 21.0,  wAirEnt = 0.01,
+/// -          mLiq = 0.5,    TLiqEnt = 8,
+/// -          UAIntTot = 4000, UAExtTot = 2000
+///
+///  Suggested breaks:  
+/// -       wSurfEntSat = 0.005, BREAK_LEVEL = 10
+/// -            ( = es3.w ) *EE*
+/// -       wco.wCond = 0.005,   BREAK_LEVEL = 10
+/// -            ( = es.w, li2.hibnd ) *EE*
+///
+///  Local variables:  
+/// -       extResist: Air-side resistance (deg C/W)
+/// -          intResist: Water-side resistance (deg C/W)
+/// -          UAh:      Overall enthalpy heat transfer coefficient (kg/s)
+/// -          rInt:     extResist*CpAir
+/// -          rExt:     intResist*cpSat
+/// -          rTot:     extResist*CpAir + intResist*cpSat
+/// -          resistRatio: Ratio of internal to external enthalpy resistances
+/// -          capAir:   Air capacity rate (kg/s)
+/// -          capLiq:   Water capacity rate (kg/s)
+/// -          hLiqEntSat: Enthlpy of saturated  air at entering water
+/// -                      temperature (J/kg)
+/// -          hLiqLvgSat: Enthlpy of saturated air at leaving water
+/// -                      temperature (J/kg)
+/// -          hSurfEntSat: Enthlpy of saturated air at entering metal surface
+/// -                      temperature (J/kg)
+/// -          wSurfEntSat: Humidity ratio of saturated air at entering metal
+/// -                       surface temperature (kg/kg dry air)
+/// -          hAirEntSat: Enthlpy of saturated air at entering air humidity
+/// -                      ratio (J/kg)
+/// -          cpSat:     Fictitious specific heat to allow heat exchanger
+/// -                     model to be used with enthalpy driving potential
+/// -                     (J/kg C-deg)
+///
+///  Equations:  
+/// -       CpAir = CP_AIR + wAirEnt * CP_VAP
+/// -                extResist = 1./UAExtTot
+/// -                rExt = CpAir * extResist
+/// -                intResist = 1./UAIntTot
+/// -                rInt = cpsat * intResist
+/// -                rTot = rExt + rInt
+/// -                enthsat(PAtm,hAirEnt,TAirEnt,WAirEnt)
+/// -                enthsat(PAtm,hLiqEntSat,TLiqEnt)
+/// -                enthsat(PAtm,hAirEntSat,TDpEnt)
+/// -                cpSat = (hAirEntSat-hLiqEntSat)/(TDpEnt-TLiqEnt)
+/// -                UAH = 1./rTot
+/// -                capLiq = mLiq * CP_WATER
+/// -                capLiqWet = MLiq *  (CpLiq/cpSat)
+/// -                heatex(mAirEnt,hAirEnt,capLiqWet,hLiqEntSat,UAH,
+/// -                       hAirLvg,hLiqLvgSat)
+/// -                resistRatio = rInt * UAH
+/// -                hSurfEntSat = hLiqLvgSat + resistRatio*(hAirEnt-hLiqLvgSat)
+/// -                enthsat(PAtm, TSurfEnt, hSurfEntSat)
+/// -                QTot = mAirEnt*(hAirEnt-hAirLvg)
+/// -                TLiqLvg = TLiqEnt+QTot/(MLiq*CpLiq)
+/// -                wcoilout (mAirEnt,TAirEnt,WAirEnt,hAirEnt,hAirLvg,
+/// -                          UAExtTot,TAirLvg,WAirLvg,QSen)
+/// -                mAirLvg = mAirEnt
+///
+
+PORT PAtm    "Atmospheric pressure"            [Pa] ;
+PORT mAirEnt    "Entering air flow"            [kg_dryAir/s] ;
+PORT mAirLvg NOERR  "Leaving air flow"            [kg_dryAir/s] ;
+PORT mLiq    "Liquid flow"                [kg_water/s] ;
+PORT TAirEnt    "Entering air dry bulb temperature"    [deg_C] ;
+PORT TLiqEnt    "Entering water temperature"        [deg_C] ;
+PORT wAirEnt    "Entering air humidity  ratio"        [kg_water/kg_dryAir] ;
+PORT hAirEnt NOERR  "Entering air enthalpy"        [J/kg_dryAir] ;
+PORT UAIntTot    "Overall heat transfer coefficient, coil inside"    [W/deg_C] ;
+PORT UAExtTot    "Overall heat transfer coefficient, coil outside"   [W/deg_C] ;
+PORT hAirLvg NOERR  "Leaving air enthalpy"        [J/kg_dryAir] ;
+PORT wAirLvg    "Leaving air humidity  ratio"        [kg_water/kg_dryAir] ;
+PORT TAirLvg    "Leaving air Temperature"        [deg_C] ;
+PORT TLiqLvg    "???EE??? Leaving water temperature"    [deg_C] ;
+PORT qSens    "Sensible cooling provided. Positive for cooling."  [W] ;
+PORT qTot    "Total cooling provided. Positive for cooling."        [W] ;
+PORT TSurfEnt    "Metal surface temperature at entrance"    [deg_C] ;
+PORT TDpEnt    "Entering air dewpoint temperature"    [deg_C] ;
+
+PORT wSurfEntSat  NOERR  /*EE*/ ;
+PORT qEff      NOERR  /*EE*/ ;
+
+
+DECLARE safrecip        sr1, sr2, sr3 ;  // changed Sept 22, 2008, BCoffey, from recip (was causing bad numerics)
+DECLARE prod        p1, p2, p3 ;
+DECLARE sum            s ;
+DECLARE cpair        cpair ;
+DECLARE enthsat        es1, es2, es3 ;
+  PROBE  Pr_es3        es3.w    BREAK_LEVEL = 10  INIT = 0.005 ;
+DECLARE enthalpy    e ;
+DECLARE enthxctr    ex ;    /* COUNTER FLOW */
+/* DECLARE enthxprl    ex ;    /* PARALLEL FLOW */
+/* DECLARE enthxcbu    ex ;    /* CROSS FLOW BOTH UNMIXED */
+/* DECLARE enthxcbm    ex ;    /* CROSS FLOW BOTH MIXED */
+/* DECLARE enthxc1u    ex ;    /* CROSS FLOW FIRST UNMIXED */
+DECLARE capratel    crl ;
+DECLARE propdiff    pd ;
+DECLARE lintrp        li ;
+DECLARE cond        cd1, cd2 ;
+DECLARE quot        sq ;
+DECLARE wcoilout    wco ;
+  PROBE wco_Pr1        wco~wCond    BREAK_LEVEL = 10  INIT = 0.005 ;
+DECLARE equal        eq ;
+
+
+LINK    .PAtm,        wco.PAtm, es1.PAtm, es2.PAtm, es3.PAtm    [Pa] ;
+LINK    .mAirEnt,    ex.cap1, cd1.U12, wco.mAirEnt, eq.a    [kg_dryAir/s] ;
+LINK    .mLiq,        crl.mWater                [kg_water/s] ;
+LINK    .TAirEnt,    wco.TAirEnt, e.TDb            [deg_C] ;
+LINK    .TLiqEnt,    es1.TDb, pd.y0, cd2.T2            [deg_C] ;
+LINK    .wAirEnt,    cpair.w, e.w, es2.w, wco.wAirEnt    [kg_water/kg_dryAir] ;
+LINK    .UAIntTot,    sr2.a                    [W/deg_C] ;
+LINK    .UAExtTot,    sr1.a, wco.UAExt            [W/deg_C] ;
+
+LINK L_hAirEnt    .hAirEnt, e.h, li.hibnd, cd1.T1, wco.hAirEnt, ex.hEnt1  [J/kg_dryAir] ;
+LINK    .hAirLvg,    ex.hLvg1, cd1.T2, wco.hAirLvg        [J/kg_dryAir] ;
+LINK    .mAirLvg,    eq.b                    [kg_dryAir/s] ;
+LINK    .qSens,        wco.qSens                [W] ;
+LINK    .qTot,        cd1.q, cd2.q                [W] ;
+LINK    .TSurfEnt,    es3.TDb                    [deg_C] ;
+LINK    .TLiqLvg,    cd2.T1                    [deg_C] ;
+LINK    .TDpEnt,    es2.TDb, pd.y                [deg_C] ;
+LINK intResist        sr2.c, p2.a                [resist] ;
+LINK extResist        sr1.c, p1.a                [resist] ;
+LINK rInt        s.b, p2.c, p3.b                [resist] ;
+LINK rExt        s.a, p1.c                [resist] ;
+LINK rTot        s.c, sr3.a                [resist] ;
+LINK UAh        sr3.c, p3.a, ex.UA     ;
+LINK resistRatio    p3.c, li.x     ;
+LINK CpAir        cpair.CpAir, p1.b     ;
+LINK capLiq        crl.cap, sq.a, cd2.U12     ;
+LINK capLiqWet        sq.c, ex.cap2     ;
+LINK hLiqEntSat        es1.hSat, pd.x0, ex.hEnt2        [J/kg_dryAir] ;
+LINK hLiqLvgSat        ex.hLvg2, li.lobnd            [J/kg_dryAir] ;
+LINK hSurfEntSat    li.y, es3.hSat            [J/kg_dryAir] ;
+LINK    .wSurfEntSat,    es3.w                [kg_water/kg_dryAir]
+        INIT = 0.005    BREAK_LEVEL = 10 ;
+LINK hAirEntSat        es2.hSat, pd.x                [J/kg_dryAir] ;
+LINK cpSat        pd.m, p2.b, sq.b            [cp] ;
+LINK    .wAirLvg,    wco.wAirLvg                [kg_water/kg_dryAir] ;
+LINK    .TAirLvg,    wco.TAirLvg                [deg_C] ;
+LINK    .qEff,        ex.q                    [W] ;

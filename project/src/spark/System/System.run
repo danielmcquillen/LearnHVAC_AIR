@@ -1,0 +1,60 @@
+(
+  InitialTime 
+  (
+    0.0 () 
+  )
+  FinalTime 
+  (
+    20000.0 () 
+  )
+  InitialTimeStep 
+  (
+    1.0 () 
+  )
+  VariableTimeStep 
+  (
+    0 () 
+  )
+  MinTimeStep 
+  (
+    1.0e-6 () 
+  )
+  MaxTimeStep 
+  (
+    1.0e+6 () 
+  )
+  FirstReport 
+  (
+    0.0 () 
+  )
+  ReportCycle 
+  (
+    1.0 () 
+  )
+  DiagnosticLevel 
+  (
+    7 () 
+  )
+  ConsistentInitialCalculation 
+  (
+    1 () 
+  )
+  UrlTimeUnit 
+  (
+    second () 
+  )
+  UrlInitialWallClock 
+  (
+    1/1/* 12:00:00 () 
+  )
+  InputFiles 
+  (
+    System.inp () 
+  )
+  OutputFile 
+  (
+    System.out () 
+  )
+  InitialSnapshotFile () 
+  FinalSnapshotFile () 
+)

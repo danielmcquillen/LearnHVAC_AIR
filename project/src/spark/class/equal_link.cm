@@ -1,0 +1,20 @@
+/// \file equal_link.cm
+///
+
+/* CLASSMACRO  equal_link "link two varaible"
+
+ABSTRACT
+	...
+	...
+ABSTRACT_END
+TEST_INPUT
+
+*/
+// ==== PORTS ====
+
+PORT a;
+PORT b;
+
+LINK .a .b;
+
+

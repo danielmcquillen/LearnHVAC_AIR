@@ -1,0 +1,12 @@
+// SPARK Solver 2.1.0 rc7 [release build 060208]
+// Problem name = System
+// Time         = 20090812.132044 Wed
+// File name    = System.factory.log
+//////////////////////////////////////////////////////////////////////
+
+Starting SPARK XML loader : 
+  Buffer size = 512 bytes
+  File name   = "System.xml"
+Successfully loaded the XML file in 0.062 s
+
+Constructed problem in 0.125 s.

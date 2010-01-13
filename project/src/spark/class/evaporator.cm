@@ -1,0 +1,100 @@
+/// \file evaporator.cm
+///
+
+PORT  ONE         DEFAULT=0;
+PORT  THOUSAND    DEFAULT=1000;
+
+PORT  Qdot        [W]        "cooling capacity";
+PORT  eff         [-]        "evaporator effectiveness";
+PORT  AU          [W/K]      "evaporator heat transfer coefficient";
+PORT  T           [K]        "evaporating temperature";
+PORT  p           [Pa]       "evaporating pressure";
+PORT  h           [J/kg]     "enthalpy at evaporator exhaust";
+
+// Refrigerant properties
+PORT  Acl         [-]        "first coefficient in Clausius-Clapeyron equation";
+PORT  Bcl         [K]        "second coefficient in Clausius-Clapeyron equation";
+PORT  hfo         [J/kg]     "specific enthalpy of the saturated liquid at the reference temperatrure";
+PORT  To          [K]        "reference temperature"  	INIT=233.15;
+PORT  cpliq       [J/(kg.K)] "mean specific heat in saturated liquid state";
+PORT  hfgb        [J/kg]     "specific vaporization enthalpy at standard boiling point";
+PORT  Tb          [K]        "standard boiling temperature";
+PORT  Tc          [K]        "critical temperature";
+PORT  b_vap       [-]        "constant coefficient used in calculation of vaporization enthalpy";
+
+// Water loop
+PORT  cp_water    [J/(kg.K)] "specific heat of liquid water";
+PORT  mdot_water  [kg/s]     "water mass flow in evaporator";
+PORT  Tsu_water   [K]        "evaporator supply water temperature";
+PORT  Tex_water   [K]        "evaporator exhaust water temperature";
+
+
+DECLARE  heat_exchanger_eff  eq1;
+DECLARE  heat_exchanger_qdot eq2;
+DECLARE  sat_pressure        eq3;
+DECLARE  liq_enthalpy        eq4;
+DECLARE  heat_exchanger_temp eq5;
+DECLARE  vap_enthalpy        eq6;
+DECLARE  sum                 eq7;
+
+
+LINK .ONE,
+     eq1.ONE;
+LINK .THOUSAND,
+     eq3.THOUSAND;
+
+
+LINK .Qdot,
+     eq2.Qdot12,
+     eq5.Qdot;
+LINK .eff,
+     eq1.eff,
+     eq2.eff;
+LINK .AU,
+     eq1.AU;
+LINK .T,
+     eq2.Tin2,
+     eq3.T,
+     eq4.T,
+     eq6.Tsat;
+LINK .p,
+     eq3.p;
+LINK .h,
+     eq7.c;
+LINK .Acl,
+     eq3.Acl;
+LINK .Bcl,
+     eq3.Bcl;
+LINK .hfo,
+     eq4.hfo;
+LINK .To,
+     eq4.To;
+LINK .cpliq,
+     eq4.cf;
+LINK .hfgb,
+     eq6.hfgb;
+LINK .Tb,
+     eq6.Tb;
+LINK .Tc,
+     eq6.Tc;
+LINK .b_vap,
+     eq6.b_vap;
+LINK .cp_water,
+     eq1.cp,
+     eq2.cp1,
+     eq5.cp;
+LINK .mdot_water,
+     eq1.mdot,
+     eq2.mdot1,
+     eq5.mdot;
+LINK .Tsu_water,
+     eq2.Tin1,
+     eq5.Tsu ;
+LINK .Tex_water,
+     eq5.Tex;
+LINK hvap,
+     eq6.hfg,
+     eq7.b;
+LINK hliq,
+     eq4.h,
+     eq7.a;

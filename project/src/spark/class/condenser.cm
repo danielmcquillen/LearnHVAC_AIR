@@ -1,0 +1,79 @@
+/// \file condenser.cm
+///
+
+PORT  ONE         DEFAULT=0;
+PORT  THOUSAND    DEFAULT=1000;
+
+PORT  Qdot        [W]        "heat flow rejected in condenser";
+PORT  eff         [-]        "condenser effectiveness";
+PORT  AU          [W/K]      "condenser heat transfer coefficient";
+PORT  T           [K]        "condensing temperature";
+PORT  p           [Pa]       "condensing pressure";
+PORT  h           [J/kg]     "enthalpy at condenser exhaust";
+
+// Refrigerant properties
+PORT  To          [K]        "reference temperature"  INIT=233.15;
+PORT  Acl         [-]        "first coefficient in Clausius-Clapeyron equation";
+PORT  Bcl         [K]        "second coefficient in Clausius-Clapeyron equation";
+PORT  hfo         [J/kg]     "enthalpy of the saturated liquid at the reference temperatrure";
+PORT  cpliq       [J/(kg.K)] "mean specific heat in saturated liquid state";
+
+// Water loop
+PORT  cp_water    [J/(kg.K)] "specific heat of liquid water";
+PORT  mdot_water  [kg/s]     "water mass flow in condenser";
+PORT  Tsu_water   [K]        "condenser supply water temperature";
+PORT  Tex_water   [K]        "condenser exhaust water temperature";
+
+
+DECLARE  heat_exchanger_eff  eq1;
+DECLARE  heat_exchanger_qdot eq2;
+DECLARE  sat_pressure        eq3;
+DECLARE  liq_enthalpy        eq4;
+DECLARE  heat_exchanger_temp eq5;
+
+
+LINK .ONE,
+     eq1.ONE;
+LINK .THOUSAND,
+     eq3.THOUSAND;
+
+
+LINK .Qdot,
+     eq2.Qdot12,
+     eq5.Qdot;
+LINK .eff,
+     eq1.eff,
+     eq2.eff;
+LINK .AU,
+     eq1.AU;
+LINK .T,
+     eq2.Tin2,
+     eq3.T,
+     eq4.T;
+LINK .p,
+     eq3.p;
+LINK .h,
+     eq4.h;
+LINK .Acl,
+     eq3.Acl;
+LINK .Bcl,
+     eq3.Bcl;
+LINK .hfo,
+     eq4.hfo;
+LINK .To,
+     eq4.To;
+LINK .cpliq,
+     eq4.cf;
+LINK .cp_water,
+     eq1.cp,
+     eq2.cp1,
+     eq5.cp;
+LINK .mdot_water,
+     eq1.mdot,
+     eq2.mdot1,
+     eq5.mdot;
+LINK .Tsu_water,
+     eq2.Tin1,
+     eq5.Tsu ;
+LINK .Tex_water,
+     eq5.Tex;

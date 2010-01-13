@@ -1,0 +1,202 @@
+/// \file  mechiller.cm
+/// \brief PISSIM1 model from ASHRAE toolkit for electric chiller
+///        combined with a controller to calculate Vdots_comp to 
+///        satisfy the desired Load.
+///
+/// M-port interface
+///
+
+
+PORT CONSTANT,
+    , .ZERO           NOERR DEFAULT=0
+    , .ONE            NOERR DEFAULT=1
+    , .THOUSAND       NOERR DEFAULT=1000
+;
+
+
+/////////////////////////////
+// Global chiller data
+PORT data
+    , .COP         [-]        "coefficient of performance"
+    , .MinCap      [W]        "minimum capacity"
+    , .MaxCap      [W]        "maximum capacity"
+;
+
+PORT Load          [W]        "requested load";
+
+
+
+/////////////////////////////
+// Refrigerant 
+PORT  refrigerant_properties   "Refrigerant fluid properties"
+    , .To          [K]        "reference temperature"                      DEFAULT=233.15
+    , .gamma       [-]        "mean isentropic coefficient" 
+    , .zeta        [-]        "compressibility factor"
+    , .r           [J/(kg.K)] "gas constant"
+    , .cpvap       [J/(kg.K)] "mean specific heat at constant pressure in superheated vapor state"
+    , .cpliq       [J/(kg.K)] "mean specific heat in saturated liquid state"
+    , .hfo         [J/kg]     "specific enthalpy of the saturated liquid at the reference temperatrure"
+    , .hfgb        [J/kg]     "specific vaporization enthalpy at standard boiling point"
+    , .Tb          [K]        "standard boiling temperature"
+    , .Tc          [K]        "critical temperature",
+    , .Acl         [-]        "first coefficient in Clausius-Clapeyron equation"
+    , .Bcl         [K]        "second coefficient in Clausius-Clapeyron equation"
+    , .b_vap       [-]        "constant coefficient used in calculation of vaporization enthalpy"
+;
+
+PORT refrigerant_cycle   "Refrigerant cycle"
+    , .mdot        [kg/s]     "refrigerant mass flow rate"
+    , .h1          [J/kg]     "specific enthalpy at evaporator exhaust"    INIT=200000  ATOL=0.01
+    , .p1          [Pa]       "evaporating pressure"
+    , .T1          [K]        "evaporating temperature"                    INIT=280
+    , .T1p         [K]        "temperature after the heating-up"           INIT=300
+    , .v1p         [m^3/kg]   "specific volume after the heating-up"       INIT=0.05
+    , .p2          [Pa]       "condensing pressure"
+    , .h3          [J/kg]     "specific enthalpy at condenser exhaust"     INIT=100000  ATOL=0.01
+    , .T3          [K]        "condensing temperature"                     INIT=330
+;
+
+PORT v1p_pred      [m^3/kg]   "initial guess for refrigerant_cycle.v1p"    INIT=0.05    NOERR;
+
+
+/////////////////////////////
+// Compressor data
+PORT compressor
+    , .effvol      [-]        "volumetric efficiency of compressor"
+    , .Cf          [-]        "clearance factor of compressor" 
+    , .Wlo         [W]        "constant part of the electromechanical losses in compressor"
+    , .Wlotot      [W]        "total electromechanical losses"            INIT=1000   ATOL=0.1   NOERR  
+    , .Wis         [W]        "isentropic compression power"              INIT=10000  ATOL=0.1
+    , .W           [W]        "power consumed by compressor"
+    , .alpha       [-]        "loss factor allowing to define another electromechanical loss which is assumed to be porportional to isentropic power"
+    , .Vdots       [m^3/s]    "geometric displacement of compressor"      INIT=0.1    MIN=0.0
+;
+
+
+/////////////////////////////
+// Condenser data
+PORT condenser
+    , .Qdot        [W]        "heat flow rejected in condenser"
+    , .eff         [-]        "condenser effectiveness"
+    , .AU          [W/K]      "condenser heat transfer coefficient"
+    , .cp          [J/(kg.K)] "specific heat of liquid water"             INIT=4187.0
+    , .mdot        [kg/s]     "water mass flow in condenser"
+    , .Tsu         [K]        "condenser supply water temperature"
+    , .Tex         [K]        "condenser exhaust water temperature"
+;
+
+
+/////////////////////////////
+// Evaporator data
+PORT  evaporator
+    , .Qdot        [W]        "cooling capacity"
+    , .eff         [-]        "evaporator effectiveness"
+    , .AU          [W/K]      "evaporator heat transfer coefficient"
+    , .cp          [J/(kg.K)] "specific heat of liquid water"             INIT=4187.0
+    , .mdot        [kg/s]     "water mass flow in evaporator"
+    , .Tsu         [K]        "evaporator supply water temperature"
+    , .Tex         [K]        "evaporator exhaust water temperature"
+;
+
+
+
+/////////////////////////////
+// Class declaration
+/////////////////////////////
+
+DECLARE mpissim1            model;
+DECLARE controller          cont;
+
+
+
+/////////////////////////////
+// Constant parameters
+/////////////////////////////
+
+LINK .CONSTANT
+     model.CONSTANT
+;
+
+
+/////////////////////////////
+// General properties
+/////////////////////////////
+
+LINK Load
+     .Load
+     cont.y_req 
+                   INPUT
+;
+
+LINK  .data
+, ( .COP    )      { model.COP  }
+, ( .MinCap )      { cont.y_min  INPUT }
+, ( .MaxCap )      { cont.y_max  INPUT }
+;
+
+
+/////////////////////////////
+// Refrigerant properties
+/////////////////////////////
+
+LINK .refrigerant_properties
+     model.refrigerant_properties
+     INPUT
+;
+
+
+// It is critical to initialize the specific volume to a decent value
+LINK v1p_pred
+     .v1p_pred
+                     INPUT;
+
+LINK .refrigerant_cycle
+     model.refrigerant_cycle
+, ( .v1p )          { PREDICT_FROM_LINK=v1p_pred }
+;
+
+
+
+/////////////////////////////
+// Compressor data
+/////////////////////////////
+
+
+LINK .compressor
+     model.compressor
+, ( .Cf    )       { INPUT }
+, ( .Wlo   )       { INPUT }
+, ( .alpha )       { INPUT }
+, ( .Wis   )       {  } 
+, ( .Vdots )       { cont.x  }  // If Vdots < Vdots:MIN, this will generate an error message to the run log file.
+;
+
+
+
+/////////////////////////////
+// Condenser data
+/////////////////////////////
+
+LINK .condenser
+     model.condenser
+, ( .mdot )        { INPUT }
+, ( .AU )          { INPUT }
+, ( .cp )          { INPUT }
+, ( .Tsu  )        { }
+;
+
+
+
+/////////////////////////////
+// Evaporator data
+/////////////////////////////
+
+LINK .evaporator
+     model.evaporator
+, ( .Qdot )        { BREAK_LEVEL=10 PREDICT_FROM_LINK=Load, cont.y  }
+, ( .mdot )        { INPUT }
+, ( .AU   )        { INPUT }
+, ( .cp   )        { INPUT }
+, ( .Tsu  )        { }
+;
+

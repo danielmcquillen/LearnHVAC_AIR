@@ -1,0 +1,26 @@
+/// \file  safquot.cm
+/// \brief Numerically robust quotient operator c = a / b based on the safprod.cc atomic class.
+///
+/// Note that safprod.cc implements the inverse relation in a residual form
+/// to avoid divsion by zero.
+///
+/// \par Equations:
+/// \code
+/// 0 = a - c * b
+/// \endcode
+///
+/////////////////////////////////////////////////////////////////////////////////////////
+/// \attention COPYRIGHT (C) 2005 THE REGENTS OF THE UNIVERSITY OF CALIFORNIA .
+/////////////////////////////////////////////////////////////////////////////////////////
+
+
+PORT a    "Numerator";
+PORT b    "Denominator";
+PORT c    "Quotient";
+
+DECLARE safprod  op;   // 0 = c - a * b
+
+LINK  .a   op.c;
+LINK  .b   op.b;
+LINK  .c   op.a;
+

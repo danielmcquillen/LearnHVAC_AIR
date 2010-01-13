@@ -1,0 +1,33 @@
+/// \file heat_exchanger_Qdot.cm
+/// 
+/// Qdot12 = eff * cp1 * mdot1 * ( Tin1 - Tin2 )
+///
+
+PORT Qdot12  [W]         "heat transfer" ;
+PORT eff      [-]        "heat exchanger effectiveness" ;
+PORT cp1      [J/(kg.K)] "specific heat" ;
+PORT mdot1    [kg/s]     "mass flow rate" ;
+PORT Tin1     [K]        "temperature of incoming fluid 1" ;
+PORT Tin2     [K]        "temperature of incoming fluid 2" ;
+
+DECLARE cond    cond1;         // c = k * ( p1 - p2 )
+DECLARE prod    prod1, prod2;  // c = a * b
+
+LINK  .Qdot12
+      cond1.q;
+LINK  temp_effcpmdot,   // eff * cp1 * mdot1
+      prod1.c
+      cond1.U12 ;
+LINK  .eff 
+      prod1.a ;
+LINK  temp_cpmdot,      // cp1 * mdot1
+      prod1.b     
+      prod2.c ;
+LINK  .cp1
+      prod2.a ;
+LINK  .mdot1
+      prod2.b ;
+LINK  .Tin1
+      cond1.T1 ;
+LINK  .Tin2
+      cond1.T2 ;

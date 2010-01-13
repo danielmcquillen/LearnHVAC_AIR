@@ -1,0 +1,160 @@
+/// \file ccsim.cm
+///
+///  Identification:  Simple Cooling Coil Model
+///
+///  Abstract:        
+///       An air-liquid heat exchanger for cooling and dehumidification
+///       of moist air.  Follows the ASHRAE Toolkit CCSIM model,  although
+///       not precisely.  A dry coil is run in parallel with a wet coil
+///       model for the same air stream.  A switch selects between the two
+///       sets of outputs depending on entering dew point, surface, and
+///       liquid temperatures,  and the load calculated by the two models.
+///
+///  Notes:           
+///       This model uses a specific flow arrangement,  normally counter
+///       flow, in order to allow more efficient solution relative to
+///       the general flow arrangement model.
+///
+///  Interface:       
+///       Input set for typical usage:
+///       ATot:    Total coil area (wet & dry) (m^2)
+///       UExtW:   Wet coil air side (external) heat transfer coefficient (W/deg C)
+///       UIntW:   Wet coil liquid side (internal) heat transfer coefficient (W/deg C)
+///       PAtm:    Atmospheric pressure (Pa)
+///       mAirEnt: Entering air flow (kg dry air/s)
+///       mLiq:    Liquid flow (kg/s)
+///       TAirEnt: Coil entering air dry bulb temperature (C)
+///       wAirEnt: Coil entering air humidity  ratio (kg-water/kg dry air)
+///       TLiqEnt: Coil entering water temperature (deg C)
+///
+///       Output set for typical usage:
+///       mAirLvg: Leaving air flow (kg dry air/s)
+///       TLiqLvg:  Leaving water temperature (deg C)
+///       qTot:     Total heat transfer rate.  Positive for air cooling. (W)
+///       qSens:    Sensible heat transfer rate.  Positive for air cooling. (W)
+///       TAirLvg: Leaving air temperature. (C)
+///       wAirLvg: Leaving air humidity ratio (kg-water/kg dry air)
+///
+///  Acceptable input set:  
+///       ATot = 1.0, UExtW = 8600, UIntW = 17200,
+///       PAtm = 101325,
+///       mAirEnt = 3.2, mLiq = 4.2, TAirEnt = 25.0,  wAirEnt = 0.01,
+///       TLiqEnt = 5.5556
+///
+///  Local variables:  
+///      UTotD:   Dry coil overall heat transfer coefficient (W/deg C)
+///      UATotD:  Dry coil overall UA W/deg C)
+///      UAExtW:  Wet coil air side (external) UA (W/deg C)
+///      UAIntW:  Wet coil liquid side (internal) UA (W/deg C)
+///      qSensW:  Wet coil sensible heat transfer (positive air->liquid)(W)
+///      qTotW:   Wet coil total heat transfer (positive air->liquid)(W)
+///      qSensD:  Dry coil total (all sensible) heat transfer (positive air->liquid)(W)
+///      TSurfW:   Wet coil entering surface temperature (C)
+///      TDpW:     Air dew point temperature between wet and dry coils (C)
+///      TAirLvgW: Wet coil leaving air temperature. (C)
+///      wAirLvgW: Wet leaving air humidity ratio (kg-water/kg dry air)
+///      TAirLvgD: Dry coil leaving air temperature. (C)
+///      wAirLvgD: Dry leaving air humidity ratio (kg-water/kg dry air)
+///      TLiqLvgW: Leaving water temperature (deg C)
+///      TLiqLvgD: Leaving water temperature (deg C)
+///      s:        Switch signal.  1 for wet coil,  0 dry coil (-)
+///
+///  Equations:  
+///      dry coil equations
+///      wet coil equations
+///      1/UTotD = 1/UExtW + 1/UIntW
+///      UATotD = UTotD * ATot
+///      UAExtW = UExtW * ATot
+///      UAIntW = UIntW * ATot
+///      s = if(qDry < qWet)
+///         if(TDp < TLiq)
+///            0;
+///         else
+///            1;
+///      else
+///         if(TDp < TSurf)
+///            0;
+///         else
+///            1;
+///      TAirLvg = s ? TAirLvgW : TAirLvgD
+///      wAirLvg = s ? wAirLvgW : wAirLvgD
+///      TLiqLvg = s ? TLiqLvgW : TLiqLvgD
+///      qTot    = s ? qTotW    : qTotD
+///      qSens   = s ? qSensW   : qSensD
+///      mAirLvg = mAirEnt
+///
+
+       /* Input set for typical usage: */
+
+PORT ATot        "Total coil area -wet & dry-"        [m^2] ;
+PORT UExtW        "Wet coil air side -external- heat transfer coefficient" [W/deg_C] ;
+PORT UIntW        "Wet coil liquid side -internal- heat transfer coefficient" [W/deg_C] ;
+PORT PAtm        "Atmospheric pressure"            [Pa] ;
+PORT mAirEnt    "Entering air flow"            [kg_dryAir/s] ;
+PORT mLiq        "Liquid flow"                [kg_water/s] ;
+PORT TAirEnt    "Coil entering air dry bulb temperature"    [deg_C] ;
+PORT wAirEnt    "Coil entering air humidity  ratio"    [kg_water/kg_dryAir] ;
+PORT TLiqEnt    "Coil entering water temperature"    [deg_C] ;
+
+       /* Output set for typical usage: */
+
+PORT mAirLvg      "Leaving air flow"            [kg_dryAir/s] NOERR;
+PORT TLiqLvg     "Leaving water temperature"        [deg_C] NOERR;
+PORT qTot        "Total heat transfer rate. Positive for air cooling."     [W] ;
+PORT qSens        "Sensible heat transfer rate. Positive for air cooling." [W] ;
+PORT TAirLvg    "Leaving air temperature."        [deg_C] ;
+PORT wAirLvg    "Leaving air humidity ratio"        [kg_water/kg_dryAir] ;
+
+       /* Local variables: */
+
+PORT s            NOERR /*EE*/ ;
+PORT TAirLvgD    NOERR /*EE*/ ;
+PORT TAirLvgW    NOERR /*EE*/ ;
+PORT qSensD        NOERR /*EE*/ ;
+PORT qSensW        NOERR /*EE*/ ;
+PORT qTotW        NOERR /*EE*/ ;
+PORT TLiqLvgD    NOERR /*EE*/ ;
+PORT TLiqLvgW    NOERR /*EE*/ ;
+
+
+DECLARE drcctr    	dc;
+DECLARE wtcctr    	wc;   
+
+DECLARE cclogic    	sw;
+DECLARE sercond    	ser;
+DECLARE select    	sel1, sel2, sel3, sel4, sel5;
+DECLARE prod    	p1, p2, p3;
+DECLARE equal    	eq;
+
+
+LINK        	.ATot,    	p1.a, p2.a, p3.a        			[m^2] ;
+LINK        	.UExtW,    	p2.b, ser.U1            			[U] ;
+LINK        	.UIntW,    	p3.b, ser.U2            			[U] ;
+LINK        	.PAtm,    	wc.PAtm                				[Pa] ;
+LINK        	.mAirEnt, 	dc.mAirEnt, wc.mAirEnt, eq.a    	[kg_dryAir/s] ;
+LINK        	.mLiq,    	dc.mLiq, wc.mLiq        			[kg_water/s] ;
+LINK        	.TAirEnt,   dc.TAirEnt, wc.TAirEnt    			[deg_C] ;
+LINK        	.wAirEnt,   dc.wAirEnt, wc.wAirEnt    			[kg_water/kg_dryAir] ;
+LINK        	.TLiqEnt,   dc.TLiqEnt, wc.TLiqEnt, sw.TLiq    	[deg_C] ;
+LINK UTotD    	ser.UTot, 	p1.b                				[U] ;
+LINK UATotD    	p1.c, 		dc.UA                				[W/deg_C] ;
+LINK UAExtW    	p2.c, 		wc.UAExtTot            				[W/deg_C] ;
+LINK UAIntW    	p3.c, 		wc.UAIntTot            				[W/deg_C] ;
+LINK        	.TAirLvgD,  dc.TAirLvg, sel1.b    				[deg_C] ;
+LINK        	.TAirLvgW,  wc.TAirLvg, sel1.a    				[deg_C] ;
+LINK wAirLvgD 	dc.wAirLvg, sel2.b            					[kg_water/kg_dryAir] ;
+LINK wAirLvgW 	wc.wAirLvg, sel2.a            					[kg_water/kg_dryAir] ;
+LINK        	.TLiqLvgD,  dc.TLiqLvg, sel3.b    				[deg_C] ;
+LINK        	.TLiqLvgW,  wc.TLiqLvg, sel3.a    				[deg_C] ;
+LINK TSurfW    	wc.TSurfEnt, sw.TSurf            				[deg_C] ;
+LINK TDpW    	wc.TDpEnt, 	sw.TDp            					[deg_C] ;
+LINK        	.qSensW,    wc.qSens, sel5.a    				[W] ;
+LINK        	.qSensD,    dc.q, sw.qDry, sel4.b, sel5.b    	[W] ;
+LINK        	.qTotW,    	wc.qTot, sw.qWet, sel4.a    		[W] ;
+LINK        	.s,    		sw.s, sel1.s, sel2.s, sel3.s,  sel4.s, sel5.s     ;
+LINK        	.TAirLvg,   sel1.c            					[deg_C] ;
+LINK        	.wAirLvg,   sel2.c            					[kg_water/kg_dryAir] ;
+LINK        	.TLiqLvg,   sel3.c            					[deg_C] ;
+LINK        	.qTot,    	sel4.c                				[W] ;
+LINK        	.qSens,    	sel5.c                				[W] ;
+LINK        	.mAirLvg,   eq.b            					[kg_dryAir/s] ;

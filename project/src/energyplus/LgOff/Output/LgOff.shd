@@ -1,0 +1,935 @@
+ Shadowing Combinations
+..Solar Distribution=FullInteriorAndExterior
+ ==================================
+ Surface=EXT-PER1N-NOR is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER1N-SW
+ ...Surface=INT-PER1N-SOU
+ ...Surface=INT-PER1N-SE
+ ...Surface=iz-INT-PER1E-NW
+ ...Surface=iz-INT-PER1W-NE
+ ...Surface=iz-INT-CORE1-NOR
+ ...Surface=FLOOR-PER1N
+ ...Surface=CEILING-PER1N
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-1-NOR
+ ==================================
+ Surface=WIN-1-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1N-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1N-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1N-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1E-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1W-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE1-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER1N is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=CEILING-PER1N is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER1N is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=EXT-PER1E-EAS is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER1E-NW
+ ...Surface=INT-PER1E-WES
+ ...Surface=INT-PER1E-SW
+ ...Surface=iz-INT-PER1N-SE
+ ...Surface=iz-INT-PER1S-NE
+ ...Surface=iz-INT-CORE1-EAS
+ ...Surface=FLOOR-PER1E
+ ...Surface=CEILING-PER1E
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-1-EAS
+ ==================================
+ Surface=WIN-1-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1E-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1E-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1E-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1N-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1S-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE1-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER1E is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=CEILING-PER1E is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER1E is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=EXT-PER1S-SOU is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER1S-NE
+ ...Surface=INT-PER1S-NOR
+ ...Surface=INT-PER1S-NW
+ ...Surface=iz-INT-PER1E-SW
+ ...Surface=iz-INT-PER1W-SE
+ ...Surface=iz-INT-CORE1-SOU
+ ...Surface=FLOOR-PER1S
+ ...Surface=CEILING-PER1S
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-1-SOU
+ ==================================
+ Surface=WIN-1-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1S-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1S-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1S-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1E-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1W-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE1-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER1S is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=CEILING-PER1S is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER1S is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=EXT-PER1W-WES is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER1W-SE
+ ...Surface=INT-PER1W-EAS
+ ...Surface=INT-PER1W-NE
+ ...Surface=iz-INT-PER1N-SW
+ ...Surface=iz-INT-PER1S-NW
+ ...Surface=iz-INT-CORE1-WES
+ ...Surface=FLOOR-PER1W
+ ...Surface=CEILING-PER1W
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-1-WES
+ ==================================
+ Surface=WIN-1-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1W-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1W-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER1W-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1N-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1S-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE1-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER1W is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=CEILING-PER1W is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER1W is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE1-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE1-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE1-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE1-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1N-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1E-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1S-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER1W-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-CORE1 is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=CEILING-CORE1 is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-CORE1 is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=EXT-PER2N-NOR is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER2N-SW
+ ...Surface=INT-PER2N-SOU
+ ...Surface=INT-PER2N-SE
+ ...Surface=iz-INT-PER2E-NW
+ ...Surface=iz-INT-PER2W-NE
+ ...Surface=iz-INT-CORE2-NOR
+ ...Surface=FLOOR-PER2N
+ ...Surface=CEILING-PER2N
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-2-NOR
+ ==================================
+ Surface=WIN-2-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2N-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2N-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2N-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2E-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2W-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE2-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER2N is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=CEILING-PER2N is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER2N is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=EXT-PER2E-EAS is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER2E-NW
+ ...Surface=INT-PER2E-WES
+ ...Surface=INT-PER2E-SW
+ ...Surface=iz-INT-PER2N-SE
+ ...Surface=iz-INT-PER2S-NE
+ ...Surface=iz-INT-CORE2-EAS
+ ...Surface=FLOOR-PER2E
+ ...Surface=CEILING-PER2E
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-2-EAS
+ ==================================
+ Surface=WIN-2-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2E-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2E-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2E-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2N-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2S-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE2-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER2E is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=CEILING-PER2E is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER2E is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2S-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=EXT-PER2S-SOU is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER2S-NE
+ ...Surface=INT-PER2S-NW
+ ...Surface=INT-PER2S-NOR
+ ...Surface=iz-INT-PER2E-SW
+ ...Surface=iz-INT-PER2W-SE
+ ...Surface=iz-INT-CORE2-SOU
+ ...Surface=FLOOR-PER2S
+ ...Surface=CEILING-PER2S
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-2-SOU
+ ==================================
+ Surface=WIN-2-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2S-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2S-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2E-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2W-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE2-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER2S is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=CEILING-PER2S is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER2S is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=EXT-PER2W-WES is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER2W-SE
+ ...Surface=INT-PER2W-EAS
+ ...Surface=INT-PER2W-NE
+ ...Surface=iz-INT-PER2N-SW
+ ...Surface=iz-INT-PER2S-NW
+ ...Surface=iz-INT-CORE2-WES
+ ...Surface=FLOOR-PER2W
+ ...Surface=CEILING-PER2W
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-2-WES
+ ==================================
+ Surface=WIN-2-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2W-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2W-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER2W-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2N-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2S-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE2-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER2W is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=CEILING-PER2W is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER2W is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE2-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE2-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE2-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE2-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2N-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2E-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2W-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER2S-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-CORE2 is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=CEILING-CORE2 is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-CORE2 is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=EXT-PER3N-NOR is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER3N-SW
+ ...Surface=INT-PER3N-SOU
+ ...Surface=INT-PER3N-SE
+ ...Surface=iz-INT-PER3E-NW
+ ...Surface=iz-INT-PER3W-NE
+ ...Surface=iz-INT-CORE3-NOR
+ ...Surface=FLOOR-PER3N
+ ...Surface=ROOF-PER3N
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-3-NOR
+ ==================================
+ Surface=WIN-3-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3N-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3N-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3N-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3E-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3W-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE3-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER3N is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=ROOF-PER3N is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER3N is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=EXT-PER3E-EAS is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER3E-NW
+ ...Surface=INT-PER3E-WES
+ ...Surface=INT-PER3E-SW
+ ...Surface=iz-INT-PER3N-SE
+ ...Surface=iz-INT-PER3S-NE
+ ...Surface=iz-INT-CORE3-EAS
+ ...Surface=FLOOR-PER3E
+ ...Surface=ROOF-PER3E
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-3-EAS
+ ==================================
+ Surface=WIN-3-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3E-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3E-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3E-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3N-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3S-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE3-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER3E is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=ROOF-PER3E is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER3E is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=EXT-PER3S-SOU is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER3S-NE
+ ...Surface=INT-PER3S-NOR
+ ...Surface=INT-PER3S-NW
+ ...Surface=iz-INT-PER3E-SW
+ ...Surface=iz-INT-PER3W-SE
+ ...Surface=iz-INT-CORE3-SOU
+ ...Surface=FLOOR-PER3S
+ ...Surface=ROOF-PER3S
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-3-SOU
+ ==================================
+ Surface=WIN-3-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3S-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3S-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3S-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3E-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3W-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE3-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER3S is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=ROOF-PER3S is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER3S is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=EXT-PER3W-WES is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           8
+ ...Surface=INT-PER3W-SE
+ ...Surface=INT-PER3W-EAS
+ ...Surface=INT-PER3W-NE
+ ...Surface=iz-INT-PER3N-SW
+ ...Surface=iz-INT-PER3S-NW
+ ...Surface=iz-INT-CORE3-WES
+ ...Surface=FLOOR-PER3W
+ ...Surface=ROOF-PER3W
+ Number of receiving sub surfaces=           1
+ ....Surface=WIN-3-WES
+ ==================================
+ Surface=WIN-3-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3W-SE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3W-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-PER3W-NE is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3N-SW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3S-NW is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-CORE3-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-PER3W is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=ROOF-PER3W is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-PER3W is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE3-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE3-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE3-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INT-CORE3-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3N-SOU is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3E-WES is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3S-NOR is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=iz-INT-PER3W-EAS is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=FLOOR-CORE3 is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=ROOF-CORE3 is used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0
+ ==================================
+ Surface=INTERNAL-CORE3 is not used as Shadow Casting Surface in calculations.
+ Number of general receiving surfaces=           0
+ Number of back surfaces=           0
+ Number of receiving sub surfaces=           0

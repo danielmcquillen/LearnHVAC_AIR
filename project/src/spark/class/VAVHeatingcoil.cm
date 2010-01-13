@@ -1,0 +1,95 @@
+/// \file VAVHeatingcoil.com
+///
+
+#ifdef SPARK_PARSER
+
+/* CLASSMACRO  coil_valve	
+
+*/
+PORT	TAirEnt		"Coil entering air dry bulb temperature"[deg_C] ;
+PORT	TAirLvg		"Coil leaving air dry bulb temperature"	[deg_C] ;
+PORT	wAirEnt		"Coil entering air humidity  ratio"	[kg_water/kg_dryAir] ;
+PORT	wAirLvg		"Coil leaving air humidity  ratio"	[kg_water/kg_dryAir];
+PORT 	mAirEnt		"Air flow entering"				[kg_dryAir/s] ;
+PORT    mAirLvg         "Air flow leaving"; 
+
+PORT	TLiqEnt		"Coil entering water temperature"	[deg_C] ;
+PORT	TLiqLvg		"Coil leaving water temperature"	[deg_C] ;
+PORT	TLiqbypass	"By pass water temperature"	[deg_C] ;
+PORT	TLiqLvgValve	"Valve leaving water temperature"	[deg_C] ;
+PORT	TLiqEntValve	"Valve entering water temperature"	[deg_C] ;
+
+PORT	mLiqEnt		"Coil entering water temperature"	[deg_C] ;
+PORT	mLiqLvg		"Coil leaving water temperature"	[deg_C] ;
+PORT	mLiqbypass	"By pass water temperature"	[deg_C] ;
+PORT	mLiqLvgValve	"Valve leaving water temperature"	[deg_C] ;
+PORT	mLiqEntValve	"Valve entering water temperature"	[deg_C] ;
+
+PORT	qTot		"Heat transfer rate.  Positive for air cooling." [W];
+
+port	pos	"valve control signal, between 0-1"		[] ;
+port    posReal "real valve position, between 0-1"		[] ; 
+port	mLiqOpen	"Mass flow rate for open valve"		[Kg/s] ;
+
+
+port	StuckValve;
+port	BootLeakage;
+port	OversizedValve;
+port	LeakyValve;
+port	ObstructedPipe;
+port	UndersizedCoil;
+PORT	FouledCoil;
+
+PORT	UA;
+
+declare coil_mixing ho;
+declare VAVheatingcoil_fault f;
+declare drcc1u HX;
+declare valve v;
+
+link Authority f.A v.A		"Valve authority, between 0-1"		[] ;
+link mLeak f.mLeak v.mLeak	"Fraction of m_open for closed valve"	[Kg/s] ;
+
+
+link .UA HX.UA;
+
+
+link	.TAirEnt HX.TAirEnt		"Coil entering air dry bulb temperature"[deg_C] ;
+link	.TAirLvg HX.TAirLvg		"Coil leaving air dry bulb temperature"	[deg_C] ;
+link	.wAirEnt HX.wAirEnt		"Coil entering air humidity  ratio"	[kg_water/kg_dryAir] ;
+link	.wAirLvg HX.wAirLvg		"Coil leaving air humidity  ratio"	[kg_water/kg_dryAir];
+link 	.mAirEnt HX.mAirEnt		"Air flow entering"				[kg_dryAir/s] ;
+link    .mAirLvg  HX.mAirLvg       "Air flow leaving"; 
+
+link	.TLiqEnt HX.TLiqEnt ho.TLiqEnt		"Coil entering water temperature"	[deg_C] ;
+link	.TLiqLvg HX.TLiqLvg ho.TLiqLvg		"Coil leaving water temperature"	[deg_C] ;
+link	.TLiqbypass ho.TLiqbypass	"By pass water temperature"	[deg_C] ;
+link	.TLiqLvgValve ho.TLiqLvgValve	"Valve leaving water temperature"	[deg_C] ;
+link	.TLiqEntValve ho.TLiqEntValve	"Valve entering water temperature"	[deg_C] ;
+
+link	.mLiqEnt HX.mLiq v.mLiq ho.mLiqEnt	"Coil entering water temperature"	[deg_C] ;
+link	.mLiqLvg	ho.mLiqLvg	"Coil leaving water temperature"	[deg_C] ;
+link	.mLiqbypass	ho.mLiqbypass "By pass water temperature"	[deg_C] ;
+link	.mLiqLvgValve	ho.mLiqLvgValve "Valve leaving water temperature"	[deg_C] ;
+link	.mLiqEntValve	ho.mLiqEntValve "Valve entering water temperature"	[deg_C] ;
+
+link	.qTot	HX.q	 "Heat transfer rate.  Positive for air cooling." [W];
+
+link	.pos f.pos	"valve control signal, between 0-1"		[] ;
+link    .posReal f.posReal v.pos "real valve position, between 0-1"		[] ; 
+link	.mLiqOpen v.mLiqOpen ho.mLiqOpen	"Mass flow rate for open valve"		[Kg/s] ;
+
+
+link	.StuckValve f.StuckValve;;
+link	.BootLeakage f.BootLeakage;
+link	.OversizedValve f.OversizedValve;
+link	.LeakyValve f.LeakyValve;
+link	.ObstructedPipe f.ObstructedPipe;
+link	.UndersizedCoil f.UndersizedCoil;
+link	.FouledCoil f.FouledCoil;
+
+
+
+
+
+

@@ -16,6 +16,8 @@ package com.mcquilleninteractive.learnhvac.model
 		// - skips login
 		
 		public var buildVersion:String = "1.0.1"
+		public var isFirstStartup:Boolean = false
+		
 		public static var testMode:Boolean = false	
 
 		public static function getInstance():LHModelLocator

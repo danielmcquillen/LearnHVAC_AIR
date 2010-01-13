@@ -1,0 +1,54 @@
+Program Version,EnergyPlus 3.1.0.027, 8/13/2009 10:06 AM,IDD_Version 3.1.0.027
+   ** Warning ** Output:PreprocessorMessage="EPMacro" has the following Warning conditions:
+   **   ~~~   ** at approximately input line number=30: column=8
+   **   ~~~   ** macro redefined
+   **   ~~~   ** symbol=LH_Orientation
+   **   ~~~   ** refer to <file>.epmdet for details.
+   ************* Beginning Zone Sizing Calculations
+   ** Warning ** Site:GroundTemperature:BuildingSurface: Some values fall outside the range of 15-25C.
+   **   ~~~   ** These values may be inappropriate.  Please consult the Input Output Reference for more details.
+   ************* Note that the following warning(s) may/will occur if you have not enclosed your zone completely.
+   ** Warning ** Entered Zone Volumes differ from calculated zone volume(s).
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Calculated design cooling load for zone=PERIM-1-WEST is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ** Warning ** Calculated design cooling load for zone=CORE-1 is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ************* Beginning System Sizing Calculations
+   ************* Beginning Plant Sizing Calculations
+   ************* Testing Individual Branch Integrity
+   ************* All Branches passed integrity testing
+   ************* Testing Individual Supply Air Path Integrity
+   ************* All Supply Air Paths passed integrity testing
+   ************* Testing Individual Return Air Path Integrity
+   ************* All Return Air Paths passed integrity testing
+   ** Severe  ** Node Connection Error, Node="VAV_5 SUPPLY EQUIPMENT INLET NODE", The same node appears as a non-parent Inlet node more than once.
+   **   ~~~   ** Reference Object=OUTDOORAIR:MIXER, Name=VAV_5_OAMIXING BOX
+   **   ~~~   ** Reference Object=FAN:VARIABLEVOLUME, Name=VAV_RETURN_FAN
+   ************* There was 1 node connection error noted.
+   ** Warning ** Processing Monthly Tabular Reports: OCCUPANT COMFORT DATA SUMMARY
+   **   ~~~   ** ..Variable name=THERMALCOMFORTMRT not valid for this simulation.
+   **   ~~~   ** ..i.e., Variable name=PERIM-1-NORTH:THERMALCOMFORTMRT not valid for this simulation.
+   **   ~~~   ** ..Variables not valid for this simulation will have "[Invalid/Undefined]" in the Units Column of the Table Report.
+   ** Warning ** Processing Monthly Tabular Reports: Variable names not valid for this simulation
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual variables.
+   ** Warning ** CoolingTower:SingleSpeed "TOWERWATERSYS COOLTOWER"
+   **   ~~~   ** Cooling tower water outlet temperature (4.76 C) is below the specified minimum condenser loop temp of 5.00 C
+   **   ~~~   **  Occurrence info=DULUTH MN USA TMY2-14913 WMO#=727450, 03/13 07:10 - 07:15
+   *************
+   ************* ===== Recurring Error Summary =====
+   ************* The following recurring error messages occurred.
+   *************
+   *************  ** Warning ** CoolingTower:SingleSpeed "TOWERWATERSYS COOLTOWER" Cooling tower water outlet temperature is below the specified minimum condenser loop temp error continues...
+   *************  **   ~~~   **   This error occurred 218 times.
+   *************  **   ~~~   **   Max=4.99999  Min=4.659693
+   *************
+   *************
+   ************* ===== Final Error Summary =====
+   ************* The following error categories occurred.  Consider correcting or noting.
+   ************* Node Connection Errors
+   ************* ..Node connection errors are often caused by spelling mistakes in a node name field.
+   ************* ..To track down the problem, search the idf file for each node name listed to see if it
+   ************* ..occurs in the expected input fields.
+   *************
+   ************* EnergyPlus Completed Successfully-- 226 Warning; 1 Severe Errors; Elapsed Time=00hr 02min 23.50sec

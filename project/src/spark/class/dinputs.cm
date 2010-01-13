@@ -1,0 +1,26 @@
+/// \file dinputs.cm
+/// Dynamic Inputs for Room Simulation
+
+PORT	FileReadEn;
+PORT    fr;
+PORT    Ts;
+PORT    Kp;
+PORT    Ki;
+PORT    Kd;
+PORT    bias;
+
+DECLARE	dTs	dTs;
+DECLARE dKp	dKp;
+DECLARE dKi	dKi;
+DECLARE dKd	dKd;
+DECLARE dbias   dbias;
+DECLARE dPIDfr  dPIDfr;
+
+LINK	.FileReadEn, dKp.in, dKi.in, dKd.in, dTs.in, dbias.in, dPIDfr.in;
+
+LINK	.Ts, dTs.out;
+LINK	.Kp, dKp.out;
+LINK	.Ki, dKi.out;
+LINK	.Kd, dKd.out;
+LINK	.bias, dbias.out;
+LINK    .fr, dPIDfr.out;

@@ -1,0 +1,43 @@
+/// \file vap_enthalpy.cm
+///
+/// hfg = hfgb * ( (Tc - Tsat)/(Tc - Tb) )^b_vap
+///
+
+PORT hfg   [J/kg]  "specific vaporization enthalpy";
+PORT hfgb  [J/kg]  "specific vaporization enthalpy at standard boiling point";
+PORT Tsat  [K]     "temperature of liquid";
+PORT Tb    [K]     "standard boiling temperature";
+PORT Tc    [K]     "critical temperature";
+PORT b_vap [-]     "constant coefficient";
+
+DECLARE diff    diff1, diff2;   // c = a - b
+DECLARE quot    quot1;          // c = a / b
+DECLARE pow     pow1; 
+DECLARE prod    prod1;          // c = a * b
+
+LINK .hfg
+     prod1.c;
+LINK .hfgb
+     prod1.a;
+LINK temp_B,     // ( (Tc - Tsat)/(Tc - Tb) )^b_vap
+     prod1.b,
+     pow1.c;
+LINK .b_vap
+     pow1.b;
+LINK temp_quot,  // (Tc - Tsat)/(Tc - Tb)
+     pow1.a
+     quot1.c;
+LINK temp_dTnum, // (Tc - Tsat)
+     quot1.a
+     diff1.c;
+LINK temp_dTden, // (Tc - Tb)
+     quot1.b
+     diff2.c;
+LINK .Tc 
+     diff1.a
+     diff2.a;
+LINK .Tsat
+     diff1.b;
+LINK .Tb
+     diff2.b;
+
