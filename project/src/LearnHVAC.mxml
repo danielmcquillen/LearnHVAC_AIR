@@ -2,7 +2,7 @@
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:control="com.mcquilleninteractive.learnhvac.control.*" 
 	xmlns:business="com.mcquilleninteractive.learnhvac.business.*" 
-	xmlns:analysis="com.mcquilleninteractive.learnhvac.view.analysis.*" 
+	xmlns:an="com.mcquilleninteractive.learnhvac.view.analysis.*" 
 	xmlns:scenario="com.mcquilleninteractive.learnhvac.view.scenario.*"
 	xmlns:view="com.mcquilleninteractive.learnhvac.view.*"
 	xmlns:util="com.mcquilleninteractive.learnhvac.util.*"    

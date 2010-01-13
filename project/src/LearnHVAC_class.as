@@ -20,6 +20,7 @@ import mx.logging.LogEventLevel;
 import mx.logging.targets.TraceTarget;
 import mx.managers.PopUpManager;
 import mx.managers.ToolTipManager;
+import flash.events.Event;
 
 
 //for logging...
@@ -85,12 +86,12 @@ public function onInit():void
 
 	//if this is first run, copy installed files to working directories
 	//check if this is first install
-	var firstInstallDataBA:ByteArray = EncryptedLocalStore.getItem("comfenFirstInstallDate")
-	if (firstInstallDataBA==null)
-	{
-		ml.isFirstStartup = true
+	//var firstInstallDataBA:ByteArray = EncryptedLocalStore.getItem("comfenFirstInstallDate")
+	//if (firstInstallDataBA==null)
+	//{
+	//	ml.isFirstStartup = true
 		doFirstStartup()
-	}
+	//}
 
 	//set proxy port from settings
 	ml.proxyPort = settings.proxyPort
@@ -115,7 +116,8 @@ public function onInit():void
 
 public function onCC():void
 {
-							
+	//intercept close function
+	this.addEventListener(Event.CLOSING, onAppClose, false, 0, true)			
 }	
 
 public function onLoggedIn(event:CairngormEvent):void
@@ -217,8 +219,8 @@ private function createFileTarget():FileTarget
 
 
 protected function doFirstStartup():void
-{
-					
+{ 
+		Logger.debug("Doing first startup tasks",this)		
 		//record the date first installed
 		var d:Date = new Date()
 		var dateBA:ByteArray = new ByteArray()
@@ -226,20 +228,26 @@ protected function doFirstStartup():void
 		EncryptedLocalStore.setItem("comfenFirstInstallDate", dateBA)
 		
 		//copy the spark and energyplus file to the storage directory		
-		Logger.debug("Moving spark to applicationStorageDirectory.", this) 
 		var sparkFile:File = File.applicationDirectory.resolvePath("spark")
 		var copySparkFile:File = File.applicationStorageDirectory.resolvePath("spark")
+		Logger.debug("Moving spark to : " +  copySparkFile.nativePath, this) 
+		if (copySparkFile.exists) copySparkFile.deleteDirectory(true)
 		sparkFile.copyTo(copySparkFile)
 				
-		Logger.debug("Moving EnergyPlus to applicationStorageDirectory.", this) 
 		var eplusFile:File = File.applicationDirectory.resolvePath("energyplus")
 		var copyEplusFile:File = File.applicationStorageDirectory.resolvePath("energyplus")
+		Logger.debug("Moving EnergyPlus to: " + copyEplusFile.nativePath, this) 
+		if (copyEplusFile.exists) copyEplusFile.deleteDirectory(true)
 		eplusFile.copyTo(copyEplusFile)		
 		
 		
 }
 
-
+protected function onAppClose(event:Event):void
+{
+	Logger.debug("intercepting close ",this)
+	//TODO: kill running spark or E+ processes
+}
 
 
 

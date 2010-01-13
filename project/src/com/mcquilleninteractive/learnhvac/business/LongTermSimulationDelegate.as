@@ -42,12 +42,12 @@ package com.mcquilleninteractive.learnhvac.business
 		{
 			this.command = command
 			
-			_ePlusExe = File.applicationDirectory.resolvePath("energyplus/Run-Prototype-LgOffice.bat")
-			_includeFilesDir =  File.applicationDirectory.resolvePath("energyplus/LgOff/IncFiles")
-			_paramBaseFile = File.applicationDirectory.resolvePath("energyplus/LgOff/IncFiles/Param_LgOff_base.inc")
-			_paramFile = File.applicationDirectory.resolvePath("energyplus/LgOff/IncFiles/Param_LgOff.inc")
-			_eplusOutVarsFile = File.applicationDirectory.resolvePath('LgOff/Output/LgOff.csv')
-			_eplusOutputMeterFile = File.applicationDirectory.resolvePath('LgOff/Output/LgOffMeter.csv')
+			_ePlusExe = File.applicationStorageDirectory.resolvePath("energyplus/Run-Prototype-LgOffice.bat")
+			_includeFilesDir =  File.applicationStorageDirectory.resolvePath("energyplus/LgOff/IncFiles")
+			_paramBaseFile = File.applicationStorageDirectory.resolvePath("energyplus/LgOff/IncFiles/Param_LgOff_base.inc")
+			_paramFile = File.applicationStorageDirectory.resolvePath("energyplus/LgOff/IncFiles/Param_LgOff.inc")
+			_eplusOutVarsFile = File.applicationStorageDirectory.resolvePath('LgOff/Output/LgOff.csv')
+			_eplusOutputMeterFile = File.applicationStorageDirectory.resolvePath('LgOff/Output/LgOffMeter.csv')
 			
 			_stream = new FileStream()
 			

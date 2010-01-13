@@ -10,6 +10,8 @@ package com.mcquilleninteractive.learnhvac.business
 	
 	import flash.desktop.NativeProcess;
 	import flash.desktop.NativeProcessStartupInfo;
+	import flash.events.NativeProcessExitEvent;
+	import flash.events.ProgressEvent
 	import flash.events.TimerEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
@@ -49,6 +51,7 @@ package com.mcquilleninteractive.learnhvac.business
 	
 		//spark communicates through input.txt and output.txt text files...
 		
+		protected var _runInDir:File
 		protected var _sparkExe:File
 		protected var _inputFile:File
 		protected var _testFile:File
@@ -92,11 +95,12 @@ package com.mcquilleninteractive.learnhvac.business
 			//set up paths
 		
 			//CURR_DIRECTORY = "C:\\_Daniel_McQuillen\\McQuillen_Interactive\\clients\\Deringer\\LearnHVAC\\Zinc_project\\src\\"
-			_sparkExe = File.applicationDirectory.resolvePath("spark/System")			
-			_inputFile = File.applicationDirectory.resolvePath("spark/System/input.txt")
-			_outputFile = File.applicationDirectory.resolvePath("spark/System/output.txt")
-			_statusFile = File.applicationDirectory.resolvePath("spark/System/solver.status")
-			_errorFile = File.applicationDirectory.resolvePath("spark/System/error.log")
+			_runInDir = File.applicationStorageDirectory.resolvePath("spark/System")
+			_sparkExe = File.applicationStorageDirectory.resolvePath("spark/System/sparksolver.exe")			
+			_inputFile = File.applicationStorageDirectory.resolvePath("spark/System/input.txt")
+			_outputFile = File.applicationStorageDirectory.resolvePath("spark/System/output.txt")
+			_statusFile = File.applicationStorageDirectory.resolvePath("spark/System/solver.status")
+			_errorFile = File.applicationStorageDirectory.resolvePath("spark/System/error.log")
 			
 			//setup error codes that are output from SPARK within solver.status
 			_codesArr = new Array()
@@ -250,16 +254,20 @@ package com.mcquilleninteractive.learnhvac.business
 						
 			_process = new NativeProcess()
 			var startupInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo()
-			startupInfo.executable = _sparkExe
-			startupInfo.workingDirectory = File.applicationDirectory.resolvePath("spark/System")
-			
+					
 			var processArgs:Vector.<String> = new Vector.<String>();
 			processArgs.push("System.xml")
 			processArgs.push("System.prf")
 			processArgs.push("System.run")
-			 
-			startupInfo.arguments = processArgs
 			
+			startupInfo.arguments = processArgs
+			startupInfo.executable = _sparkExe
+			startupInfo.workingDirectory = _runInDir
+			startupInfo
+			
+			_process.addEventListener(NativeProcessExitEvent.EXIT, onProcessFinished)
+			_process.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onProcessError)
+			_process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onOutputData)
 			_process.start(startupInfo)
 			
 			//set timers for startup procedure
@@ -279,6 +287,31 @@ package com.mcquilleninteractive.learnhvac.business
 			_waitForSparkStartupTimer.start()
 		}
 
+		protected function onProcessError(event:ProgressEvent):void
+		{
+			Logger.error("Spark process quit with an error",this)
+			removeProcessListeners()	
+		}
+		
+		protected function onOutputData(event:ProgressEvent):void
+		{
+			var outputText:String = _process.standardOutput.readUTFBytes(_process.standardOutput.bytesAvailable)
+			Logger.error("Spark process output:" + outputText, this)
+		}
+		
+		protected function onProcessFinished(event:ProgressEvent):void
+		{
+			Logger.debug("SPARK process finished",this)
+			removeProcessListeners()	
+		}
+		
+		protected function removeProcessListeners():void
+		{
+			_process.removeEventListener(NativeProcessExitEvent.EXIT, onProcessFinished)
+			_process.removeEventListener(ProgressEvent.STANDARD_ERROR_DATA, onProcessError)
+			_process.removeEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onOutputData)
+			
+		}
 		
 		public function isOutputFileReady(event:TimerEvent):void
 		{
