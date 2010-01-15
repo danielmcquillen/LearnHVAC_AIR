@@ -327,6 +327,7 @@
 			height="28"
 		    itemClick="onTabClick(event)"
 		    selectedIndex="0"
+		    focusEnabled="false"
 			>
 			<mx:dataProvider>       
 				<mx:Object label="Real-time Sim."  

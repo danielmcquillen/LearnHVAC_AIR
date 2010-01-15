@@ -327,12 +327,7 @@ package com.mcquilleninteractive.learnhvac.model
 						
 						if (col==1) tAirOut = val
 						if (col==2) twAirOut = val						
-						
-						if (rowIndex<20)
-						{								
-							Logger.debug("on row " + rowIndex + " col: " + col + " tAirOut: " + tAirOut)
-						}
-													
+										
 						if (dataArr[columnName]!=undefined) 
 						{
 							dataArr[columnName].push(val)

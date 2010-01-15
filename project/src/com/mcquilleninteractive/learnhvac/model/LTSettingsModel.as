@@ -23,7 +23,7 @@ package com.mcquilleninteractive.learnhvac.model
 
 		public var buildingPropertiesEnabled:Boolean = false
 		
-		public var runID:String
+		public var runID:String = EPlusRunsModel.RUN_1 //default to run 1
 
 		public function LTSettingsModel()
 		{

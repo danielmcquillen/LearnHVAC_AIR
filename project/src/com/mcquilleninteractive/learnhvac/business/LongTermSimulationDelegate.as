@@ -25,6 +25,8 @@ package com.mcquilleninteractive.learnhvac.business
 	{
 		protected var command:LongTermSimulationCommand
 		
+		protected var _energyPlusPath:String = "Local Settings/Application Data/LearnHVAC/energyplus/"
+		
 		protected var _ePlusExe:File
 		protected var _includeFilesDir:File
 		protected var _paramBaseFile:File		
@@ -42,12 +44,14 @@ package com.mcquilleninteractive.learnhvac.business
 		{
 			this.command = command
 			
-			_ePlusExe = File.applicationStorageDirectory.resolvePath("energyplus/Run-Prototype-LgOffice.bat")
-			_includeFilesDir =  File.applicationStorageDirectory.resolvePath("energyplus/LgOff/IncFiles")
-			_paramBaseFile = File.applicationStorageDirectory.resolvePath("energyplus/LgOff/IncFiles/Param_LgOff_base.inc")
-			_paramFile = File.applicationStorageDirectory.resolvePath("energyplus/LgOff/IncFiles/Param_LgOff.inc")
-			_eplusOutVarsFile = File.applicationStorageDirectory.resolvePath('LgOff/Output/LgOff.csv')
-			_eplusOutputMeterFile = File.applicationStorageDirectory.resolvePath('LgOff/Output/LgOffMeter.csv')
+			var baseDir:File = File.userDirectory.resolvePath(_energyPlusPath)
+			
+			_ePlusExe = baseDir.resolvePath("LearnHVACEPlusLauncher.exe")
+			_includeFilesDir =  baseDir.resolvePath("LgOff/IncFiles")
+			_paramBaseFile = baseDir.resolvePath("LgOff/IncFiles/Param_LgOff_base.inc")
+			_paramFile = baseDir.resolvePath("LgOff/IncFiles/Param_LgOff.inc")
+			_eplusOutVarsFile = baseDir.resolvePath('LgOff/Output/LgOff.csv')
+			_eplusOutputMeterFile = baseDir.resolvePath('LgOff/Output/LgOffMeter.csv')
 			
 			_stream = new FileStream()
 			
@@ -80,8 +84,8 @@ package com.mcquilleninteractive.learnhvac.business
 			}
 	
 			//Check weather file exists...and if so copy to In.epw
-			var weatherFile:File = File.applicationDirectory.resolvePath("energyplus/Weather/" + ltSettings.weatherFile)
-			var inEPWFile:File = File.applicationDirectory.resolvePath("energyplus/In.epw")
+			var weatherFile:File = File.userDirectory.resolvePath(_energyPlusPath+ "Weather/" + ltSettings.weatherFile)
+			var inEPWFile:File = File.userDirectory.resolvePath(_energyPlusPath + "In.epw")
 			
 			if (weatherFile.exists==false)
 			{
@@ -292,7 +296,6 @@ package com.mcquilleninteractive.learnhvac.business
 			
 			var outputParamLgOff:String = lhInc + "\n\n" + paramLgOff
 			
-			Logger.debug(" writing output to ParamLgOff: " + outputParamLgOff, this)
 			
 			// save new version
 			try
@@ -319,36 +322,26 @@ package com.mcquilleninteractive.learnhvac.business
 			try
 			{
 				//run energyPlus via proxy
-				var launchEPlusHelper:File = File.applicationDirectory.resolvePath("energyplus/launchEPlusHelper.exe")
+				var launchEPlusHelper:File = File.userDirectory.resolvePath(_energyPlusPath + "LearnHVACEPlusLauncher.exe")
 				
 				if (Capabilities.os.toLowerCase().indexOf("mac") > -1)
 				{
 					Alert.show("can't run EPlus on mac just yet.")
 					return false
 				}
-												
+				_process = new NativeProcess()								
 				var startupInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo()
 				startupInfo.executable = launchEPlusHelper
-				startupInfo.workingDirectory = File.applicationDirectory.resolvePath("energyplus")
+				startupInfo.workingDirectory = File.userDirectory.resolvePath(_energyPlusPath)
 				_process.addEventListener(NativeProcessExitEvent.EXIT, onProcessFinished)
 				_process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onStandardOutput)
 				_process.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onStandardError)
-				try
-				{
-					_process.start(startupInfo)
-				}
-				catch (err:Error)
-				{				
-					Logger.error("runEnergyPlus() Error starting process: "+ err, this)
-					Alert.show("Cannot start EnergyPlus. Please try again or contact support for help.")
-				}
-								
-				
+				_process.start(startupInfo)								
 			} 
 			catch(error:Error)
 			{
 				var msg:String =  "Couldn't launch runEPlusHelper.exe"
-				Logger.error(" " + msg)
+				Logger.error(msg + " error: " + error, this)
 				mx.controls.Alert.show(msg)
 				return false	
 			}
@@ -361,9 +354,7 @@ package com.mcquilleninteractive.learnhvac.business
 		/* *************************** */
 		/*  Process Command Listeners  */
 		/* *************************** */
-		
-		
-		
+			
 		public function onStandardOutput(event:ProgressEvent):void
 		{
 			var text:String = _process.standardOutput.readUTFBytes(_process.standardOutput.bytesAvailable)
@@ -381,7 +372,7 @@ package com.mcquilleninteractive.learnhvac.business
 			Logger.debug("onProcessFinished event: " + event, this)
 			if (_eplusOutVarsFile.exists && _eplusOutputMeterFile.exists)
 			{
-				loadOutputFiles()
+				loadOutputFiles()				
 			}
 			else
 			{
@@ -403,16 +394,7 @@ package com.mcquilleninteractive.learnhvac.business
 		public function loadOutputFiles():void
 		{
 			Logger.debug(" Output file finished. Loading ...", this)
-						
-			//DISCUSSION:
-			//Zinc is causing lots of problems here when trying to loadFile.
-			//We discovered that the file exists and are therefore in this function
-			//However, if the file is still being written, Zinc throws an error
-			//but Zinc does not trap errors well with Flex. So for now
-			//just using a try block and then letting the error die silently while
-			//keeping the timer going. If the read goes through, THEN we turn the timer off. 
-			//We try five times, if still no success, then we fail
-						
+															
 			try
 			{
 				Logger.debug(" Trying to read... (try #"+ _readTries+")", this)
@@ -422,13 +404,9 @@ package com.mcquilleninteractive.learnhvac.business
 			}
 			catch(error:Error)
 			{
-				_readTries++
-				if (_readTries>10)
-				{
-        			Logger.error("couldn't read the LgOff.csv output file. Error: " + error), this
-					mx.controls.Alert.show("Error while trying to read the EnergyPlus LgOff.csv file.  \n\nError msg: " + error)
-					command.setupFailed()
-				}
+				Logger.error("couldn't read the LgOff.csv output file. Error: " + error), this
+				Alert.show("Error while trying to read the EnergyPlus LgOff.csv file.  \n\nError msg: " + error)
+				command.setupFailed()
 				return
 			}
 		

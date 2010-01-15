@@ -286,6 +286,7 @@ package com.mcquilleninteractive.learnhvac.business
 			_waitForSparkStartupTimer.reset()
 			_waitForSparkStartupTimer.start()
 		}
+		
 
 		protected function onProcessError(event:ProgressEvent):void
 		{

@@ -86,12 +86,15 @@ public function onInit():void
 
 	//if this is first run, copy installed files to working directories
 	//check if this is first install
-	//var firstInstallDataBA:ByteArray = EncryptedLocalStore.getItem("comfenFirstInstallDate")
-	//if (firstInstallDataBA==null)
-	//{
-	//	ml.isFirstStartup = true
+	var firstInstallDataBA:ByteArray = EncryptedLocalStore.getItem("firstInstallDate")
+	if (firstInstallDataBA==null)
+	{
+		ml.isFirstStartup = true
 		doFirstStartup()
-	//}
+	}
+
+	//TEMP 
+	doFirstStartup()
 
 	//set proxy port from settings
 	ml.proxyPort = settings.proxyPort
@@ -225,20 +228,22 @@ protected function doFirstStartup():void
 		var d:Date = new Date()
 		var dateBA:ByteArray = new ByteArray()
 		dateBA.writeUTFBytes(d.toString())
-		EncryptedLocalStore.setItem("comfenFirstInstallDate", dateBA)
+		EncryptedLocalStore.setItem("firstInstallDate", dateBA)
 		
-		//copy the spark and energyplus file to the storage directory		
+		
+		//copy the spark to the storage directory		
 		var sparkFile:File = File.applicationDirectory.resolvePath("spark")
-		var copySparkFile:File = File.applicationStorageDirectory.resolvePath("spark")
+		var copySparkFile:File = File.userDirectory.resolvePath("Local Settings/Application Data/LearnHVAC/spark")
 		Logger.debug("Moving spark to : " +  copySparkFile.nativePath, this) 
-		if (copySparkFile.exists) copySparkFile.deleteDirectory(true)
-		sparkFile.copyTo(copySparkFile)
+		copySparkFile.createDirectory()
+		sparkFile.copyTo(copySparkFile, true)
 				
+		//copy the energyplus to the storage directory	
 		var eplusFile:File = File.applicationDirectory.resolvePath("energyplus")
-		var copyEplusFile:File = File.applicationStorageDirectory.resolvePath("energyplus")
+		var copyEplusFile:File = File.userDirectory.resolvePath("Local Settings/Application Data/LearnHVAC/energyplus")
 		Logger.debug("Moving EnergyPlus to: " + copyEplusFile.nativePath, this) 
-		if (copyEplusFile.exists) copyEplusFile.deleteDirectory(true)
-		eplusFile.copyTo(copyEplusFile)		
+		copyEplusFile.createDirectory()
+		eplusFile.copyTo(copyEplusFile, true)		
 		
 		
 }
@@ -246,7 +251,13 @@ protected function doFirstStartup():void
 protected function onAppClose(event:Event):void
 {
 	Logger.debug("intercepting close ",this)
+	
 	//TODO: kill running spark or E+ processes
+	Logger.debug("forcing spark to stop ",this)
+	var ml:LHModelLocator = LHModelLocator.getInstance()
+	ml.scenarioModel.sparkService.stopSpark()
+	
+	
 }
 
 
