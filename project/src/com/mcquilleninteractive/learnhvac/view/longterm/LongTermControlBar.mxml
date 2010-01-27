@@ -17,17 +17,22 @@
 	<mx:Script>
 		<![CDATA[
 		
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
+		            
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel	
+						
 		
 			public function onCC():void
 			{			
-			 	CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded)					
 			}
+			
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function onScenarioLoaded(cgEvent:Event):void
 			{
-				lblScenarioName.text = LHModelLocator.getInstance().scenarioModel.name
+				lblScenarioName.text = scenarioModel.name
 			}
 			
 			public function startSimulation():void

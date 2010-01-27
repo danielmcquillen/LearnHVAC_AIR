@@ -7,23 +7,20 @@
 	<mx:Script>
 		<![CDATA[
 			
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
             import com.mcquilleninteractive.learnhvac.util.Logger
             import mx.controls.Label 
             import com.mcquilleninteractive.learnhvac.model.SystemVariable
             import com.mcquilleninteractive.learnhvac.event.ShowSchematicEvent
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
    			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
-   			import com.adobe.cairngorm.control.CairngormEvent
-		    
-		    
+   			
 			[Embed(source='assets/DawaAssets.swf', symbol='CCValveOff')]
 			[Bindable]
-			private var CCValveOff:Class
-			
+			private var CCValveOff:Class			
 			
 			[Embed(source='assets/DawaAssets.swf', symbol='CCValveOn')]
 			[Bindable]
@@ -33,38 +30,29 @@
 		    		    
 			public function onCC():void
 			{
-				//add listener for scenarioLoaded event --> this will be used to update labels
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
-	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);	
-	   			
-	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
-   				if (LHModelLocator.getInstance().scenarioLoaded == true)
-   				{
-   					scenarioLoaded(null)
-   				}
+				
 			}
 			
 									
 			
-			public function scenarioLoaded(event:CairngormEvent):void
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
+			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{						
 				Logger.debug("scenarioLoaded()", this)	
-						
-				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-											
+																	
 				//set visibility of labels				
-				lblCCTAirEnt.visible=lblCCTAirEnt_Title.visible=scenModel.getSysVar("CCTAirEnt").visible
-				lblCCTAirLvg.visible=lblCCTAirLvg_Title.visible=scenModel.getSysVar("CCTAirLvg").visible
-				lblCHLevapout.visible=lblCHLevapout_Title.visible=scenModel.getSysVar("CHLevapout").visible
-				lblCCTLiqLvg.visible=lblCCTLiqLvg_Title.visible=scenModel.getSysVar("CCTLiqLvg").visible
-				lblCCpos.visible=lblCCpos_Title.visible=scenModel.getSysVar("CCpos").visible
+				lblCCTAirEnt.visible=lblCCTAirEnt_Title.visible=scenarioModel.getSysVar("CCTAirEnt").visible
+				lblCCTAirLvg.visible=lblCCTAirLvg_Title.visible=scenarioModel.getSysVar("CCTAirLvg").visible
+				lblCHLevapout.visible=lblCHLevapout_Title.visible=scenarioModel.getSysVar("CHLevapout").visible
+				lblCCTLiqLvg.visible=lblCCTLiqLvg_Title.visible=scenarioModel.getSysVar("CCTLiqLvg").visible
+				lblCCpos.visible=lblCCpos_Title.visible=scenarioModel.getSysVar("CCpos").visible
 			
 			}
 			
 			public function onCCValveClick(event:Event):void
 			{
-				var cgEvent:ShowSchematicEvent = new ShowSchematicEvent(ShowSchematicEvent.EVENT_SHOW_CC_LIQUIDS_POPUP)
-				CairngormEventDispatcher.getInstance().dispatchEvent( cgEvent )
+				var evt:ShowSchematicEvent = new ShowSchematicEvent(ShowSchematicEvent.SHOW_CC_LIQUIDS_POPUP, true)
+				dispatchEvent( evt )
 			}
 		]]>
 	</mx:Script>

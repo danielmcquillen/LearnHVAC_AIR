@@ -2,7 +2,7 @@
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:myComps="*"
 	width="380"
-	height="200"
+	height="220"
 	horizontalScrollPolicy="off"
 	verticalScrollPolicy="off"
     paddingLeft="20"
@@ -16,6 +16,8 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.event.EnergyPlusEvent;
+			import org.swizframework.Swiz;
 		
 		import com.mcquilleninteractive.learnhvac.util.Logger
 		import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent
@@ -23,12 +25,22 @@
 		import com.adobe.cairngorm.control.CairngormEventDispatcher
 		import mx.managers.PopUpManager
 		
+		[Bindable]
+		protected var _output:String 
+		
 		public function onCreationComplete():void
 		{
 			Logger.debug("#RunningEPlusModal: setting up listeners...")
-			CairngormEventDispatcher.getInstance().addEventListener(LongTermSimulationEvent.EVENT_FAILED, onSetupFailed, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.EVENT_EPLUS_FILE_LOADED, onEPlusFileLoaded, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.EVENT_EPLUS_DATA_PARSED, onEPlusDataParsed, false, 0,true)
+			CairngormEventDispatcher.getInstance().addEventListener(LongTermSimulationEvent.SIM_FAILED, onSetupFailed, false, 0,true)
+			CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.EPLUS_FILE_LOADED, onEPlusFileLoaded, false, 0,true)
+			CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.EPLUS_DATA_PARSED, onEPlusDataParsed, false, 0,true)
+					
+		}
+		
+		[Mediate(event="EnergyPlusEvent.ENERGY_PLUS_OUTPUT")]
+		public function onEnergyPlusOutput(event:EnergyPlusEvent):void
+		{
+			_output = event.output
 		}
 		
 		public function onEPlusFileLoaded(event:ScenarioDataLoadedEvent):void
@@ -56,17 +68,17 @@
 		private function onCancel():void
 		{
 			Logger.debug("#RunningEPlusModal: onCancel() called")
-			var cgEvent:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.EVENT_CANCEL)
-			CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+			var event:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_CANCEL, true)
+			dispatchEvent(event)
 			removeListeners()
 			PopUpManager.removePopUp(this)
 		}
 		
 		private function removeListeners():void
 		{
-			CairngormEventDispatcher.getInstance().removeEventListener(ScenarioDataLoadedEvent.EVENT_EPLUS_FILE_LOADED, onEPlusFileLoaded)
-			CairngormEventDispatcher.getInstance().removeEventListener(ScenarioDataLoadedEvent.EVENT_EPLUS_DATA_PARSED, onEPlusDataParsed)
-			CairngormEventDispatcher.getInstance().removeEventListener(LongTermSimulationEvent.EVENT_FAILED, onSetupFailed)
+			CairngormEventDispatcher.getInstance().removeEventListener(ScenarioDataLoadedEvent.EPLUS_FILE_LOADED, onEPlusFileLoaded)
+			CairngormEventDispatcher.getInstance().removeEventListener(ScenarioDataLoadedEvent.EPLUS_DATA_PARSED, onEPlusDataParsed)
+			CairngormEventDispatcher.getInstance().removeEventListener(LongTermSimulationEvent.SIM_FAILED, onSetupFailed)
 		}
 		
 		]]>
@@ -76,11 +88,13 @@
 		
 		<mx:Label id="lblStatus" x="0" y="5" text="Running EnergyPlus Simulation..." textAlign="center" width="100%" height="100%"/>
 		
-		<myComps:LoadingBarSmall x="220" y="30" />
+		<mx:Label id="lblOutput" x="0" y="25" text="{_output}" textAlign="center" width="100%" height="100%"/>
+		
+		<myComps:LoadingBarSmall x="220" y="50" />
 			
 		<mx:Button id="btnCancelLoadServers" 
 	 		label="Cancel" 
-	 		x="240" y="80"
+	 		x="240" y="100"
 	 		width="120" height="30"
 	 		click="onCancel()"
 		 />

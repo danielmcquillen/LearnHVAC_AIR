@@ -2,20 +2,22 @@
 package com.mcquilleninteractive.learnhvac.event{
 	
 	import flash.events.Event;
-	import com.adobe.cairngorm.control.CairngormEvent;
 
-	public class LoggedInEvent extends CairngormEvent{
+	public class LoggedInEvent extends Event
+	{
 		
-		public static var EVENT_LOGGED_IN: String = "loggedIn"
+		public static const LOGGED_IN: String = "loggedIn"
 		
-		public function LoggedInEvent(type:String){
-	      	super( type )
-     	}
-     	
-     	override public function clone() : Event{
-			return new LoggedInEvent(type)
-		}		
+		public function LoggedInEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
+		{			
+			super(type, bubbles, cancelable);
+		}	
 		
+		
+		override public function clone():Event
+        {
+            return new LoggedInEvent(this.type, this.bubbles, this.cancelable );
+        }
 	}
 	
 }

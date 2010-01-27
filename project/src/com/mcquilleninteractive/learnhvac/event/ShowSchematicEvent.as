@@ -2,25 +2,23 @@
 package com.mcquilleninteractive.learnhvac.event{
 	
 	import flash.events.Event;
-	import com.adobe.cairngorm.control.CairngormEvent;
 
-	public class ShowSchematicEvent extends CairngormEvent{
+	public class ShowSchematicEvent extends Event
+	{
 		
-		public static var EVENT_SHOW_HC_LIQUIDS_POPUP: String = "showHCLiquidsPopup";
-		public static var EVENT_SHOW_CC_LIQUIDS_POPUP: String = "showCCLiquidsPopup";
-		
-		public function ShowSchematicEvent(type:String)
-		{
-	      	super( type );
-     	}
-     	
-     	override public function clone() : Event
-		{
-			return new ShowSchematicEvent(type);
+		public static const SHOW_HC_LIQUIDS_POPUP: String = "showHCLiquidsPopup";
+		public static const SHOW_CC_LIQUIDS_POPUP: String = "showCCLiquidsPopup";
+		     			
+		public function ShowSchematicEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
+		{			
+			super(type, bubbles, cancelable);
 		}	
-     	
     	
 		
+		override public function clone():Event
+        {
+            return new ShowSchematicEvent(this.type, this.bubbles, this.cancelable );
+        }
 	}
 	
 }

@@ -10,19 +10,27 @@
 	<mx:Script>
 		<![CDATA[
 		
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 			import mx.charts.series.LineSeries;
 			import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent
- 			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+ 			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
  			import com.mcquilleninteractive.learnhvac.model.EPlusData
- 			import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel
+ 			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
  			import com.mcquilleninteractive.learnhvac.util.Logger
  			import com.mcquilleninteractive.learnhvac.util.ColorSetting
  			
  			import mx.collections.ArrayCollection;
-	    	import com.adobe.cairngorm.control.CairngormEventDispatcher 
 	    	import mx.styles.StyleManager;
 			import mx.graphics.Stroke
 	    	
+            
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel	
+            
+			[Bindable]
+			[Autowire]
+			public var longTermSimulationDataModel:LongTermSimulationDataModel	
 			
 			private var _runID:String
 		
@@ -35,7 +43,6 @@
 	    	private function onCC():void
 	    	{
 	    		Logger.debug("#EnergyOverview: onCC() runID : " + _runID)
-	    		CairngormEventDispatcher.getInstance().addEventListener(LongTermSimulationEvent.EVENT_DONE, onLongTermSimDone)
 	    		
 	    		//hash manages which lines are drawn on chart
 		    	_visibleFieldsArr = [ 	{fieldName:"lighting", enabled:true, color:ColorSetting.lightingColor},
@@ -80,18 +87,17 @@
 	    		}
 	    	}
 	    	
-	    	
-	    	public function onLongTermSimDone(event:LongTermSimulationEvent):void
+	    	[Mediate(event="LongTermSimulationEvent.SIM_COMPLETE")]
+	    	public function onLongTermSimComplete(event:LongTermSimulationEvent):void
 	    	{
-	    		Logger.debug("#EOChart: onLongTermSimDone() ")
 	    		setChartData()
 	    	}
 	    	
 	    	public function setChartData():void
 	    	{
-	    		if (LHModelLocator.getInstance().scenarioModel!=null)
+	    		if (scenarioModel!=null)
 	    		{
-	    			dataAC = LHModelLocator.getInstance().scenarioModel.ePlusRunsModel.getEPlusData(_runID).hourlyMeterDataAC
+	    			dataAC = longTermSimulationDataModel.getEPlusData(_runID).hourlyMeterDataAC
 	    	   		dataAC.refresh()
 	    		}
 	    		else

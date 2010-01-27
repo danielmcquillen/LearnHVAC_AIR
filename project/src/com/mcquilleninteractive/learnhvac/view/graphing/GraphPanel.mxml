@@ -15,21 +15,20 @@
 				import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 				import com.mcquilleninteractive.learnhvac.model.IGraphDataModel;
 				import com.mcquilleninteractive.learnhvac.model.EPlusData;
-				import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel
-				import com.mcquilleninteractive.learnhvac.model.SparkRunsModel
+				import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
+				import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel
 				import mx.charts.ChartItem;
-				import com.adobe.cairngorm.control.CairngormEvent
 				import mx.managers.DragManager
 				import mx.events.DragEvent
 				import mx.core.DragSource
 				import mx.core.UIComponent
 				import com.mcquilleninteractive.learnhvac.util.Logger
-				import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+				import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 				import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 				import mx.charts.chartClasses.ChartBase
 				import mx.collections.ArrayCollection
 				import mx.controls.Tree	
-				import com.adobe.cairngorm.control.CairngormEventDispatcher
+				
 				import com.mcquilleninteractive.learnhvac.event.AddVarToGraphEvent
 				import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
 				import com.mcquilleninteractive.learnhvac.event.GraphEvent
@@ -51,6 +50,12 @@
 				private var titlePrefix:String //prepends the title of the chart with "RT Run1: ", "LT Run1: " , etc.
 				public var position:Number //1 for upper chart, 2 for lower chart
 				
+				
+				
+				[Bindable]
+				[Autowire]
+				public var scenarioModel:ScenarioModel
+						
 				/* DATA MODEL */
 				public var graphDataModel:IGraphDataModel
 				
@@ -75,10 +80,9 @@
 				public function onCreationComplete():void
 				{
 					graphVars= new Array()
-					CairngormEventDispatcher.getInstance().addEventListener(GraphEvent.EVENT_REFRESH_GRAPH, refreshData, false, 0,true)
-					CairngormEventDispatcher.getInstance().addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged, false, 0,true)
 				}
 
+				[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
 				public function onUnitsChanged(event:SetUnitsCompleteEvent):void
 				{
 					refreshData(null)
@@ -209,16 +213,16 @@
 					
 					switch (dataTree.type)
 					{
-						case EPlusRunsModel.RUN_1:
+						case LongTermSimulationDataModel.RUN_1:
 							titlePrefix = "LT Run1: "
 							break
-						case EPlusRunsModel.RUN_2:
+						case LongTermSimulationDataModel.RUN_2:
 							titlePrefix = "LT Run2: "
 							break
-						case SparkRunsModel.RUN_1:
+						case ShortTermSimulationDataModel.RUN_1:
 							titlePrefix = "RT Run1: "
 							break
-						case SparkRunsModel.RUN_2:
+						case ShortTermSimulationDataModel.RUN_2:
 							titlePrefix = "RT Run2: "
 							break
 						default:
@@ -318,13 +322,13 @@
     				var var1Name:String = ""
     				var var2Name:String = ""
     				
-    				if (dataType==EPlusRunsModel.RUN_1 || dataType==EPlusRunsModel.RUN_2)
+    				if (dataType==LongTermSimulationDataModel.RUN_1 || dataType==LongTermSimulationDataModel.RUN_2)
     				{
-    					var sysVar1:SystemVariable = LHModelLocator.getInstance().scenarioModel.getSysVar(graphVars[0])
+    					var sysVar1:SystemVariable = scenarioModel.getSysVar(graphVars[0])
     					if (sysVar1!=null)
 	    					var1Name = sysVar1.display_name
 	   					if (graphVars[1]!=null)
-	   						var sysVar2:SystemVariable = LHModelLocator.getInstance().scenarioModel.getSysVar(graphVars[1])	
+	   						var sysVar2:SystemVariable = scenarioModel.getSysVar(graphVars[1])	
     					if (sysVar2!=null)
     						var2Name = sysVar2.display_name
     				}
@@ -407,7 +411,8 @@
 					return name + " " + units
 				}            	
 
-				public function refreshData(event:CairngormEvent):void
+				[Mediate(event="GraphEvent.REFRESH_GRAPH")]
+				public function refreshData(event:GraphEvent):void
 				{
 					if (graphVars.length>0)
 					{

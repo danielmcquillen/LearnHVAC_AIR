@@ -20,17 +20,22 @@
 			import com.mcquilleninteractive.learnhvac.event.VisualizationEvent
 			import mx.collections.ListCollectionView
 			import mx.events.ItemClickEvent
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			import com.mcquilleninteractive.learnhvac.model.SystemNodeModel
 			import com.mcquilleninteractive.learnhvac.model.SystemVariable
 			import com.mcquilleninteractive.learnhvac.util.Logger
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
-			import com.adobe.cairngorm.control.CairngormEvent
+			
 			import mx.binding.utils.BindingUtils
 			import mx.managers.DragManager;
             import mx.core.DragSource;
             import mx.controls.Image
+            
+            
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel
+
             
 			public var outputVarsView:ListCollectionView //view of data in a system node ... filters for OUTPUT variables
 			
@@ -41,15 +46,9 @@
 			
 			
 			public function onCreationComplete():void
-			{
-				
-   				CairngormEventDispatcher.getInstance().addEventListener(VisualizationEvent.EVENT_NAVIGATION_CHANGE_NODE, onCurrNodeIndexChange)
-   				
-				//build comboBox
-		    	var model : LHModelLocator = LHModelLocator.getInstance()
-		    	
+			{  						    	
 		    	//setup dataproviders
-				cboSysNode.dataProvider = model.scenarioModel.sysNodesArr
+				cboSysNode.dataProvider = scenarioModel.sysNodesAC
 				
 				buildOutputGrid()
 			}
@@ -67,7 +66,7 @@
 			public function updateOutputValueView(newIndex:Number):void
 			{
 				//update dg to selectedIndex
-				var sysVarsArr:ArrayCollection = LHModelLocator.getInstance().scenarioModel.sysNodesArr.getItemAt(newIndex).sysVarsArr
+				var sysVarsArr:ArrayCollection = scenarioModel.sysNodesAC.getItemAt(newIndex).sysVarsArr
 				Logger.debug("#OP: updateOutputValueView() sysVarsArr.length: " + sysVarsArr.length)
 				outputVarsView = new ListCollectionView(sysVarsArr)
 				outputVarsView.filterFunction = filterOutputGrid
@@ -75,18 +74,18 @@
 				outputVarsView.refresh()
 				
 			}
-								
-			public function onCurrNodeIndexChange(event:CairngormEvent):void
+		
+			[Mediate(event="VisualizationEvent.NAVIGATION_CHANGE_NODE")]
+			public function onCurrNodeIndexChange(event:VisualizationEvent):void
 			{ 
 				//update the combo box
-				var newIndex:Number = LHModelLocator.getInstance().scenarioModel.currNodeIndex
+				var newIndex:Number = scenarioModel.currNodeIndex
 				cboSysNode.selectedIndex = newIndex
 				updateOutputValueView(newIndex)
 			}
 			
 			public function comboNodeSelect(event:Event):void
 			{
-				var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
 				var selectedIndex:Number = event.target.selectedIndex;
 				updateOutputValueView(selectedIndex)		
 			}

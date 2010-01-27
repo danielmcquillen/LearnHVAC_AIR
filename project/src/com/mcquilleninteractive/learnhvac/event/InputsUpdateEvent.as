@@ -2,20 +2,22 @@
 package com.mcquilleninteractive.learnhvac.event{
 	
 	import flash.events.Event;
-	import com.adobe.cairngorm.control.CairngormEvent;
 
-	public class InputsUpdateEvent extends CairngormEvent{
+	public class InputsUpdateEvent extends Event
+	{
 		
-		public static var EVENT_INPUTS_UPDATE : String = "inputsUpdate";
-
-		public function InputsUpdateEvent():void{
-	      	super( EVENT_INPUTS_UPDATE );
-     	}
+		public static const INPUTS_UPDATE : String = "inputsUpdate";
      	
-     	override public function clone() : Event{
-			return new InputsUpdateEvent();
-		}		
+     	public function InputsUpdateEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
+		{			
+			super(type, bubbles, cancelable);
+		}	
+			
 		
+		override public function clone():Event
+        {
+            return new InputsUpdateEvent(this.type, this.bubbles, this.cancelable );
+        }
 	}
 	
 }

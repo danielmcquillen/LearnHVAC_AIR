@@ -3,7 +3,7 @@ package com.mcquilleninteractive.learnhvac.util
 
 	import flash.events.IOErrorEvent;
 	import flash.net.XMLSocket;
-	import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	import mx.logging.LogEventLevel;

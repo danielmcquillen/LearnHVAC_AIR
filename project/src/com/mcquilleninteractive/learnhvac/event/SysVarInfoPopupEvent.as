@@ -2,12 +2,12 @@
 package com.mcquilleninteractive.learnhvac.event{
 	
 	import flash.events.Event;
-	import com.adobe.cairngorm.control.CairngormEvent;
 
-	public class SysVarInfoPopupEvent extends CairngormEvent{
+	public class SysVarInfoPopupEvent extends Event
+	{
 		
-		public static var EVENT_SHOW_INFO: String = "showSysVarInfoPopup";
-		public static var EVENT_HIDE_INFO: String = "hideSysVarInfoPopup";
+		public static const SHOW_INFO: String = "showSysVarInfoPopup";
+		public static const HIDE_INFO: String = "hideSysVarInfoPopup";
 		
 		public var sysVarName:String
 		public var sysVarDisplayName:String
@@ -15,17 +15,15 @@ package com.mcquilleninteractive.learnhvac.event{
 		public var lowValue:String
 		public var highValue:String
 		
-		public function SysVarInfoPopupEvent(type:String)
+		public function SysVarInfoPopupEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
-	      	super( type );
-     	}
-     	
-     	override public function clone() : Event
-		{
-			return new SysVarInfoPopupEvent(type);
-		}	
-     	
-    	
+			super(type, bubbles, cancelable);
+		}
+		  	
+		override public function clone():Event
+        {
+            return new SysVarInfoPopupEvent(this.type, this.bubbles, this.cancelable );
+        }
 		
 	}
 	

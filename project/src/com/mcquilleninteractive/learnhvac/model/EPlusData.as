@@ -6,11 +6,15 @@ package com.mcquilleninteractive.learnhvac.model
 	import com.mcquilleninteractive.learnhvac.vo.SparkInputVarsVO;
 	
 	import mx.collections.ArrayCollection;
+	import org.swizframework.Swiz;
 	
 	[Bindable]
 	public class EPlusData implements IGraphDataModel
 	{
-		public var eplusRunsModel		:EPlusRunsModel
+		
+		protected var _scenarioModel:ScenarioModel
+		
+		public var longTermSimulationDataModel		:LongTermSimulationDataModel
 		public var dataArr				:Array					//holds arrays that hold values for each variable
 		public var dataXML				:XML 
 		public var dataLoaded			:Boolean = true
@@ -36,12 +40,12 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public var zoneDataArr:Array
 		
-		public function EPlusData(eplusRunsModel:EPlusRunsModel) 
+		public function EPlusData(longTermSimulationDataModel:LongTermSimulationDataModel) 
 		{
 			dataArr = []
 			rmQSENSArr = []
 			dataXML = createBaseXML()
-			this.eplusRunsModel = eplusRunsModel
+			this.longTermSimulationDataModel = longTermSimulationDataModel
 			
 			// use the current year for timecode of output
 			currYear = String(new Date().fullYear)	
@@ -85,6 +89,8 @@ package com.mcquilleninteractive.learnhvac.model
 		/* Finds the spark inputs for a given dateTime (will only match by the hour) */
 		public function getSparkInputs(dateTime:Date, floorOfInterest:uint, zoneOfInterest:uint):SparkInputVarsVO
 		{
+			
+			
 			Logger.debug("getSparkInputs() dateTime: " + dateTime, this)
 			
 			var dataArrLength:int = dataArr[dateTimeID].length
@@ -552,8 +558,9 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function getVarName(varID:String):String
 		{
+			if (_scenarioModel==null) _scenarioModel = Swiz.getBean("scenarioModel") as ScenarioModel
 			//If this is a SystemVariable, show display name, otherwise it's probably a E+ variable so cjust return id
-			var sysVar:SystemVariable = LHModelLocator.getInstance().scenarioModel.getSysVar(varID)
+			var sysVar:SystemVariable = _scenarioModel.getSysVar(varID)
 			if (sysVar!=null)
 			{				
 				return sysVar.display_name	

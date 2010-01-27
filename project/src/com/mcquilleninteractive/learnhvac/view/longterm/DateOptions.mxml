@@ -12,13 +12,14 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
 		
 		
-			/**** TODO : REFACTOR THIS CLASS WHEN WE CHANGE UP THE SCENARIO.XML SO THAT DATES ARE READ INTO AND UPDATED IN LTSETTINGSMODEL */
+			/**** TODO : REFACTOR THIS CLASS WHEN WE CHANGE UP THE SCENARIO.XML SO THAT DATES ARE READ INTO AND UPDATED IN LongTermSimulationModel */
 		
-			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel;
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
 			
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
 			import com.mcquilleninteractive.learnhvac.util.Logger
@@ -31,7 +32,8 @@
 			public var _errorMsgArr:Array = [];
 			
 			[Bindable]
-			private var _ltSettings:LTSettingsModel
+			[Autowire]
+			public var longTermSimulationModel:LongTermSimulationModel
 			
 			protected function onCC():void
 			{
@@ -56,7 +58,6 @@
 			
 			public function onScenarioLoaded():void
 			{				
-				_ltSettings = LHModelLocator.getInstance().scenarioModel.ltSettingsModel
 				resetValues()
 			}
 			
@@ -90,18 +91,7 @@
 			
 			public function resetValues():void
 			{
-				/*
-				try
-				{
-					var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-					//update date entry based on scenario info
-					
-				}
-				catch(err:Error)
-				{
-					Logger.error("#LongTermSimulation: onScenarioLoaded() couldn't set start and stop date. Err: " + err.message)
-				}	
-				*/
+			
 			}
 			
 			
@@ -123,23 +113,23 @@
    	   	   	
 	<mx:HBox>
    		<mx:Label text="WDD Start Date:"  width="150" styleName="longTermOptionsLabel"/>
-	    <mx:Label id="txtWDDStartDate"  text="{monthDayFormatter.format(_ltSettings.wddStartDate)}" width="60"/>				
+	    <mx:Label id="txtWDDStartDate"  text="{monthDayFormatter.format(longTermSimulationModel.wddStartDate)}" width="60"/>				
 	</mx:HBox>
 	
 	<mx:HBox>
    		<mx:Label text="WDD Stop Date:"  width="150" styleName="longTermOptionsLabel"/>
-	    <mx:Label id="txtWDDStopDate"  text="{monthDayFormatter.format(_ltSettings.wddStopDate)}" width="60"/>				
+	    <mx:Label id="txtWDDStopDate"  text="{monthDayFormatter.format(longTermSimulationModel.wddStopDate)}" width="60"/>				
 	</mx:HBox>
    		
    	<mx:Label text="Summer Design Day Dates" paddingTop="5" styleName="longTermOptionsSectionHeader"/>
    	
 	<mx:HBox >
    		<mx:Label text="SDD Start Date:"  width="150" styleName="longTermOptionsLabel"/>
-		<mx:Label id="txtSDDStartDate"  text="{monthDayFormatter.format(_ltSettings.sddStartDate)}" width="60"/>		
+		<mx:Label id="txtSDDStartDate"  text="{monthDayFormatter.format(longTermSimulationModel.sddStartDate)}" width="60"/>		
 	</mx:HBox>
 	<mx:HBox  >
    		<mx:Label text="SDD Stop Date:"  width="150" styleName="longTermOptionsLabel"/>
-		<mx:Label id="txtSDDStopDate"  text="{monthDayFormatter.format(_ltSettings.sddStopDate)}" width="60"/>			
+		<mx:Label id="txtSDDStopDate"  text="{monthDayFormatter.format(longTermSimulationModel.sddStopDate)}" width="60"/>			
 	</mx:HBox>
 	
 	

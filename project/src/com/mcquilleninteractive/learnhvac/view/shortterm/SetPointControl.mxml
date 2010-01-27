@@ -45,21 +45,22 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.adobe.cairngorm.control.CairngormEvent;
-
-			import flash.filters.DropShadowFilter
-			import flash.utils.Timer
-			import flash.events.TimerEvent
-			import mx.controls.Alert
-			import mx.managers.FocusManager
+			import com.mcquilleninteractive.learnhvac.event.SetPointEvent;
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
-			import com.adobe.cairngorm.control.CairngormEventDispatcher     
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
+			     
 		  	import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
 		  	import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
 		  	import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
-            import mx.binding.utils.BindingUtils
 			import com.mcquilleninteractive.learnhvac.util.Logger
+			
+            import mx.binding.utils.BindingUtils
+			import mx.controls.Alert
+			import mx.managers.FocusManager
+			import flash.filters.DropShadowFilter
+			import flash.utils.Timer
+			import flash.events.TimerEvent
+			
 		
 			[Bindable]
 			private var currUnits:String = "\u00B0F"
@@ -115,69 +116,32 @@
 			public function onCreationComplete():void
 			{
 				Logger.debug("#SetPointControl: onCreationComplete()")
-				CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0,true)		
-				CairngormEventDispatcher.getInstance().addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChange, false, 0,true)	
-				
-				timer = new Timer(200)
-				currValue = 80
-				iptTemp.text = String(currValue)
-				timer.addEventListener(TimerEvent.TIMER, timerHandler)
-				
-				//run onScenarioLoaded if scenario has already been loaded
-				//before this component was creationComplete
-				if (LHModelLocator.getInstance().scenarioModel !=null)
-				{
-					onScenarioLoaded(new ScenarioLoadedEvent(ScenarioLoadedEvent.SCENARIO_LOADED))
-				}
+				iptTemp.text = "80"				
 			}
-			
-			public function onScenarioLoaded(event:ScenarioLoadedEvent):void
+								
+			[Mediate(event="ShortTermSimulationEvent.OUTPUT_UPDATED")]
+			public function onShortTermOutputUpdated(event:ShortTermSimulationEvent):void
 			{
-				
-				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-				 
-				Logger.debug("#SetPointControl: onScenarioLoaded()")
-				//setup bindings each time scenario is loaded	
-				
-				var model:LHModelLocator = LHModelLocator.getInstance()
-				
-				//set point
-				BindingUtils.bindSetter(updateSPT, scenModel.getSysVar("TRoomSP"), "currValue")
-				
-				//units	
-				BindingUtils.bindSetter(function(currUnits:String):void{lblTempReal.text=String(currUnits)}, scenModel.getSysVar("TRoom"), "currValue" )
-	
+				var currTemp:String = scenarioModel.getSysVar("TRoomSP").currValue.toString()
+				lblTempReal.text=currTemp
+				iptTemp.text = currTemp
+			}
+								
+			[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
+			public function onUnitsChange(event:SetUnitsCompleteEvent):void
+			{				
+				lblTempUnits.text = event.units
+				lblTempRealUnits.text = event.units
 			}
 			
-			
-			
-			public function onUnitsChange(units:String):void
-			{
-				
-				var tempUnits:String = LHModelLocator.currentTempUnits()
-				lblTempUnits.text = tempUnits
-				lblTempRealUnits.text = tempUnits
-			}
-			
-			public function updateSPT(currValue:Number):void
-			{
-				iptTemp.text = currValue.toString()
-			}
 			
 			private function updateModel():void
-			{
-				
-				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-				
+			{								
 				//update the model with the current value of the SetPointControl
-				Logger.debug("#SetPointContol: updating model with currValue: " + currValue)
-				scenModel.setSysVarValue("TRoomSP", currValue)
-				//and then update SPARK if running
-				if (scenModel.ahuStatus == ScenarioModel.AHU_ON)
-				{
-					var cgEvent : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.EVENT_UPDATE_AHU);
-					CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent);
-				}
+				
+				var evt:SetPointEvent = new SetPointEvent(SetPointEvent.CHANGE_SET_POINT, true)
+				evt.temp = currValue
+				dispatchEvent(evt)
 			}
 			
 			

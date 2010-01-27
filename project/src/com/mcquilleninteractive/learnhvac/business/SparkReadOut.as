@@ -1,13 +1,15 @@
 package com.mcquilleninteractive.learnhvac.business
 {
 	
-	import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
+	import org.swizframework.Swiz;
 	
 	
 	public class SparkReadOut
 	{
+		private var _scenarioModel:ScenarioModel
 				
 		public function SparkReadOut()
 		{
@@ -33,7 +35,7 @@ package com.mcquilleninteractive.learnhvac.business
 		{
 			
 			var t:Date = new Date()			
-			var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+			_scenarioModel = Swiz.getBean("ScenarioModel") as ScenarioModel
 			
 			var sysVars:Array = []
 			var outLines:Array = outString.split("\n")
@@ -48,7 +50,7 @@ package com.mcquilleninteractive.learnhvac.business
 			//This value maps to the Tstep sysVar, so write it explicitly
 			var line:String = outLines[0]
 			var parts:Array = line.split(":")
-			scenModel.setSysVarValue("Tstep", Number(parts[1]), true)
+			_scenarioModel.setSysVarValue("Tstep", Number(parts[1]), true)
 			
 			//Now, step through all remaining lines and update respective sysVar
 			var value:Number
@@ -71,7 +73,7 @@ package com.mcquilleninteractive.learnhvac.business
 						{
 							Logger.error("#SparkReadOut: couldn't convert sysVar: " + parts[0] + " value: " + parts[1].slice(0,-1))
 						}
-						scenModel.setSysVarValue(parts[0].toString(), value, true)
+						_scenarioModel.setSysVarValue(parts[0].toString(), value, true)
 					}					
 				}					
 			}

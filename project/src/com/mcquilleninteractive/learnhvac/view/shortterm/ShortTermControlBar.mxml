@@ -22,26 +22,25 @@
           	import mx.managers.PopUpManager;
 			import com.mcquilleninteractive.learnhvac.view.popups.ZoneEnergyGraph;
 			import com.mcquilleninteractive.learnhvac.view.popups.SystemEnergyGraph;
-			import com.mcquilleninteractive.learnhvac.model.SparkRunsModel
-			import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			import com.mcquilleninteractive.learnhvac.model.EPlusData
 			import com.mcquilleninteractive.learnhvac.util.Logger
-			import com.adobe.cairngorm.control.CairngormEventDispatcher						
-			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent		
+									
 			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
 			import com.mcquilleninteractive.learnhvac.event.LongTermImportEvent;
-			import com.adobe.cairngorm.control.CairngormEventDispatcher;	
+			;	
 			import mx.controls.Alert
 			import mx.collections.ArrayCollection
 			
 			public static var START_SIM:String = "startSim"
 			public static var STOP_SIM:String = "stopSim";
 			
-			          	          	
 			[Bindable]
-			public var model : LHModelLocator = LHModelLocator.getInstance();
+			[Autowire]
+			public var scenarioModel:ScenarioModel
 			
 			[Embed('assets/img/lightning_icon.png')]
 			[Bindable]
@@ -98,13 +97,9 @@
 		
 			protected function onCC():void
 			{
-			 	CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded)					
 			}
-			public function onScenarioLoaded(cgEvent:Event):void
-			{
-				lblScenarioName.text = LHModelLocator.getInstance().scenarioModel.name
-			}
-		
+				
+				
 			protected function startStopSimulation():void
 			{
 				if (startStopButtonState=="start")
@@ -266,8 +261,8 @@
    			height="30"
    			icon="{MovieIcon}"
 			click="onViewMovie()" 
-			enabled="{model.scenarioModel.movieAvailable}"
-			toolTip="{model.scenarioModel.movieToolTip}"
+			enabled="{scenarioModel.movieAvailable}"
+			toolTip="{scenarioModel.movieToolTip}"
    			styleName="sectionToolBarButton"
 			 />
 	
@@ -283,7 +278,9 @@
 		verticalScrollPolicy="off" >
 		
 			<mx:Label text="Current scenario:" width="110" color="#FFFFFF"/>
-			<mx:Label id="lblScenarioName" width="220" color="#FFFFFF" />
+			<mx:Label id="lblScenarioName" 
+				text="{scenarioModel.name}"
+				width="220" color="#FFFFFF" />
 			
 	</mx:HBox>
 		

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:myComps="*"
+	width="380"
+	height="170"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+    paddingLeft="20"
+    paddingTop="20"
+    paddingRight="20"
+    paddingBottom="10"
+    horizontalAlign="center"
+    addedToStage="onATS()"
+	>
+	
+	
+	<mx:Script>
+		<![CDATA[
+		
+		import com.mcquilleninteractive.learnhvac.util.Logger
+		import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel
+		import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent
+		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
+		import mx.managers.PopUpManager
+		import org.swizframework.Swiz
+				
+		protected function onCancel():void
+		{
+			var event : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_STOP, true);
+			dispatchEvent(event)
+			PopUpManager.removePopUp(this)
+		}
+		
+		protected function onATS():void
+		{
+			//if the sim is already running we can close this window
+			var model:ShortTermSimulationModel = Swiz.getBean("shortTermSimulationModel") as ShortTermSimulationModel
+			if (model.currentState == ShortTermSimulationModel.STATE_RUNNING)
+			{				
+				PopUpManager.removePopUp(this)	
+			}
+		}
+		
+		[Mediate(event="ShortTermSimulationEvent.SIM_CRASHED")]
+		public function onShortTermSimCrashed(event:ShortTermSimulationEvent):void
+		{
+			Logger.debug("onShortTermSimCrashed()", this)
+			PopUpManager.removePopUp(this)	
+		}
+		
+		
+		[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
+		public function onShortTermSimStarted(event:ShortTermSimulationEvent):void
+		{
+			Logger.debug("onShortTermSimStarted()", this)
+			PopUpManager.removePopUp(this)	
+		}
+	
+		
+		]]>
+	</mx:Script>
+	
+	<mx:Canvas>
+		
+		<mx:Label id="lblStatus" x="0" y="5" text="Starting SPARK Simulation..." textAlign="center" width="100%" height="100%"/>
+		
+		<myComps:LoadingBarSmall x="220" y="30" />
+		
+		<mx:Button label="Cancel" click="onCancel()" width="90" x="265" y="75"/>	
+		<!--
+		<mx:Button id="btnCancelSpark" 
+	 		label="Cancel" 
+	 		x="240" y="80"
+	 		width="120" height="30"
+	 		click="onCancel()"
+		 />-->
+	
+	</mx:Canvas>	
+
+		
+</mx:Panel>

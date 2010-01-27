@@ -9,12 +9,16 @@ package com.mcquilleninteractive.learnhvac.business
 	public class SparkWriteIn{
 
 		import com.mcquilleninteractive.learnhvac.util.Logger
-		import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+		import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 		import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel
 		import com.mcquilleninteractive.learnhvac.model.SystemVariable
 	
 		private var sysVars:Array  //holds variables to be included in input.txt
+	        
+		[Bindable]
+		[Autowire]
+		public var scenarioModel:ScenarioModel
 	
 		public function SparkWriteIn()
 		{
@@ -46,7 +50,6 @@ package com.mcquilleninteractive.learnhvac.business
 		*/
 		private function makeText(sparkStatus:String):String
 		{	
-			var scenarioModel:ScenarioModel= LHModelLocator.getInstance().scenarioModel
 			var outTextStr:String = ""
 						
 			// WRITE SPARKRUN line first, as there is a strange bug in spark which causes it to 
@@ -73,7 +76,7 @@ package com.mcquilleninteractive.learnhvac.business
 			}
 					
 			// Write all system variables destined for input.txt (i.e. only INPUT variables)
-			for each (var sysNode:SystemNodeModel in scenarioModel.sysNodesArr)
+			for each (var sysNode:SystemNodeModel in scenarioModel.sysNodesAC)
 			{
 				for each (var sysVar:SystemVariable in sysNode.sysVarsArr)
 				{

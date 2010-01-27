@@ -11,12 +11,17 @@
 		<![CDATA[
 		
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent;
-			import com.adobe.cairngorm.control.CairngormEventDispatcher;
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			import com.mcquilleninteractive.learnhvac.util.Logger            
 			import mx.events.ValidationResultEvent;
           	import mx.managers.PopUpManager;
+			
+			
+			[Bindable]
+			[Autowire(bean="applicationModel")]
+			protected var applicationModel:ApplicationModel
+			
 			
 			public function onInitialize():void
 			{
@@ -30,12 +35,11 @@
 			
 			private function init():void
 			{
-				var model:LHModelLocator  = LHModelLocator.getInstance()
-				sparkStartupDelay.text = model.sparkStartupDelay.toString()
-				sparkIntervalDelay.text = model.sparkIntervalDelay.toString()
-				rdoAnimation.selectedValue = model.animationSpeed
-				rdoUnits.selectedValue = LHModelLocator.currUnits
-				sparkMaxReadsPerStep.text = model.sparkMaxReadsPerStep.toString()	
+				sparkStartupDelay.text = applicationModel.sparkStartupDelay.toString()
+				sparkIntervalDelay.text = applicationModel.sparkIntervalDelay.toString()
+				rdoAnimation.selectedValue = applicationModel.animationSpeed
+				rdoUnits.selectedValue = ApplicationModel.currUnits
+				sparkMaxReadsPerStep.text = applicationModel.sparkMaxReadsPerStep.toString()	
 			}
 			
 			private function onCancel():void
@@ -46,22 +50,21 @@
 			private function onOK():void
 			{
 				//update settings to user choices
-				if (performValidation())
+				if (performValidation() && applicationModel)
 				{	
-					var model:LHModelLocator  = LHModelLocator.getInstance()
-					var scenModel:ScenarioModel  = LHModelLocator.getInstance().scenarioModel
-					model.animationSpeed = rdoAnimation.selectedValue.toString()
-					model.sparkIntervalDelay = Number(sparkIntervalDelay.text)
-					model.sparkStartupDelay = Number(sparkStartupDelay.text)
-					model.sparkMaxReadsPerStep = Number( sparkMaxReadsPerStep.text )											
+					applicationModel.animationSpeed = rdoAnimation.selectedValue.toString()
+					applicationModel.sparkIntervalDelay = Number(sparkIntervalDelay.text)
+					applicationModel.sparkStartupDelay = Number(sparkStartupDelay.text)
+					applicationModel.sparkMaxReadsPerStep = Number( sparkMaxReadsPerStep.text )											
 					//LHModelLocator.getInstance().showFramesPerSecondBar = cboFPS.selected									
-					LHModelLocator.getInstance().logToFile = cboLogToFile.selected												
+					applicationModel.logToFile = cboLogToFile.selected												
 																	
 					//only launch setUnitsEvent if different from current value
-					if (LHModelLocator.currUnits != rdoUnits.selectedValue)
+					if (ApplicationModel.currUnits != rdoUnits.selectedValue)
 					{
-						var cgEvent:SetUnitsEvent = new SetUnitsEvent(rdoUnits.selectedValue.toString())
-						CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+						var evt:SetUnitsEvent = new SetUnitsEvent(SetUnitsEvent.SET_UNITS)
+						evt.units = rdoUnits.selectedValue.toString()
+						dispatchEvent(evt)
 					}
 					
 				}
@@ -104,17 +107,17 @@
 	
 	    	<mx:FormItem label="Units:">
 	    		<mx:RadioButtonGroup id="rdoUnits"/>
-        		<mx:RadioButton groupName="rdoUnits" id="unitsSI" value="{LHModelLocator.UNITS_SI}" 
+        		<mx:RadioButton groupName="rdoUnits" id="unitsSI" value="{ApplicationModel.UNITS_SI}" 
            			 label="SI units" width="150" />
-        		<mx:RadioButton groupName="rdoUnits" id="unitsIP" value="{LHModelLocator.UNITS_IP}" 
+        		<mx:RadioButton groupName="rdoUnits" id="unitsIP" value="{ApplicationModel.UNITS_IP}" 
           			 label="IP units" width="150" />
 	    	</mx:FormItem>
 	
 	    	<mx:FormItem label="Air Particle Animation:" >
 	    		<mx:RadioButtonGroup id="rdoAnimation"/>
-        		<mx:RadioButton groupName="rdoAnimation" id="animFull" value="{LHModelLocator.ANIMATION_SPEED_FULL}" 
+        		<mx:RadioButton groupName="rdoAnimation" id="animFull" value="{ApplicationModel.ANIMATION_SPEED_FULL}" 
            			 label="Full" width="150" />
-        		<mx:RadioButton groupName="rdoAnimation" id="animNone" value="{LHModelLocator.ANIMATION_SPEED_NONE}" 
+        		<mx:RadioButton groupName="rdoAnimation" id="animNone" value="{ApplicationModel.ANIMATION_SPEED_NONE}" 
           			  label="None" width="150" />
 	    	</mx:FormItem>
 	    	
@@ -149,7 +152,7 @@
 			-->
 			
 			<mx:FormItem label="Write log messages to log.txt:" >
-				<mx:CheckBox id="cboLogToFile" label="Log to file" selected="{LHModelLocator.getInstance().logToFile}"/>
+				<mx:CheckBox id="cboLogToFile" label="Log to file" selected="{applicationModel.logToFile}"/>
 	    	</mx:FormItem>
 	
 			<mx:Spacer height="10"/>

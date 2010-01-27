@@ -11,19 +11,27 @@
 				import com.mcquilleninteractive.learnhvac.model.EPlusData;
 				import com.mcquilleninteractive.learnhvac.vo.SparkInputVarsVO;
 				import com.mcquilleninteractive.learnhvac.event.DebugEvent;
-				import com.mcquilleninteractive.learnhvac.command.LongTermSimulationCommand;
 				import com.mcquilleninteractive.learnhvac.business.LongTermSimulationDelegate;
 				import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
-				import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+				import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 				import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
-				import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel;
+				import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
+				import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
 				import com.mcquilleninteractive.learnhvac.model.SystemVariable;
-				import com.mcquilleninteractive.learnhvac.event.AutoEvent
-				import com.adobe.cairngorm.control.CairngormEventDispatcher;
+				
 			
 				import mx.logging.Log
 				import mx.logging.LogEventLevel
 				import com.adobe.onair.logging.TextAreaTarget
+				import org.swizframework.Swiz
+			
+				[Bindable]
+				[Autowire]
+				public var scenarioModel:ScenarioModel
+								
+				[Bindable]
+				[Autowire]
+				public var longTermSimulationDataModel:LongTermSimulationDataModel
 			
 				public var textAreaTarget:TextAreaTarget
 				
@@ -35,7 +43,7 @@
 					textAreaTarget.includeLevel = true
 					textAreaTarget.level = LogEventLevel.DEBUG
 					Log.addTarget(textAreaTarget)
-					txtDebug.text += LHModelLocator.getInstance().buildVersion
+					txtDebug.text += ApplicationModel.buildVersion
 				}
 			
 				public function onPanelClose(evt:Event):void
@@ -55,7 +63,6 @@
 					
 					txtCmd.text = ""
 					
-					var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
 					var msg:String = "\n"
 					var sysNode:SystemNodeModel
 					var sysVar:SystemVariable
@@ -77,11 +84,11 @@
 						
 							if (args[1]=="true")
 							{							
-								LHModelLocator.testMode = true	
+								ApplicationModel.testMode = true	
 							}
 							else
 							{
-								LHModelLocator.testMode = false
+								ApplicationModel.testMode = false
 							}
 						
 							break
@@ -92,13 +99,13 @@
 								var evt:DebugEvent = new DebugEvent(DebugEvent.LOAD_TEST_EPLUS_DATA_EVENT)
 								if (args[2]=="run1")
 								{
-									evt.runID = EPlusRunsModel.RUN_1
-									CairngormEventDispatcher.getInstance().dispatchEvent(evt)
+									evt.runID = LongTermSimulationDataModel.RUN_1
+									Swiz.dispatchEvent(evt)
 								}
 								else if (args[2] == "run2")
 								{
-									evt.runID = EPlusRunsModel.RUN_2
-									CairngormEventDispatcher.getInstance().dispatchEvent(evt)
+									evt.runID = LongTermSimulationDataModel.RUN_2
+									Swiz.dispatchEvent(evt)
 								}
 								else
 								{
@@ -115,7 +122,7 @@
 							switch(args[1])
 							{
 								case "all" :
-									for each (sysNode in scenModel.sysNodesArr)
+									for each (sysNode in scenarioModel.sysNodesAC)
 									{
 										for each (sysVar in sysNode.sysVarsArr)
 										{
@@ -126,7 +133,7 @@
 							
 								case "input":
 							
-									for each (sysNode in scenModel.sysNodesArr)
+									for each (sysNode in scenarioModel.sysNodesAC)
 									{
 										for each (sysVar in sysNode.sysVarsArr)
 										{
@@ -137,7 +144,7 @@
 								
 								case "output":
 								
-									for each (sysNode in scenModel.sysNodesArr)
+									for each (sysNode in scenarioModel.sysNodesAC)
 									{
 										for each (sysVar in sysNode.sysVarsArr)
 										{
@@ -153,11 +160,11 @@
 									msg = "\n\nLT -> ST /n ------------ /n Long-term simulation variables imported into short-term sim:\n\n" 
 									if (args[2]=="run2")
 									{
-										var runID:String = EPlusRunsModel.RUN_2
+										var runID:String = LongTermSimulationDataModel.RUN_2
 									}
 									else if (args[2]=="run1")
 									{
-										runID = EPlusRunsModel.RUN_1
+										runID = LongTermSimulationDataModel.RUN_1
 									}
 									
 									if (args[3]!=null)
@@ -166,7 +173,7 @@
 									}				
 									
 									//get SparkInputVarsVOs and show values of each for each date
-									var ePlusData:EPlusData = LHModelLocator.getInstance().scenarioModel.ePlusRunsModel.getEPlusData(runID)
+									var ePlusData:EPlusData = longTermSimulationDataModel.getEPlusData(runID)
 									var zoneDataArr:Array = ePlusData.zoneDataArr
 									var dateArr:Array = ePlusData.dataArr[ePlusData.dateTimeID]
 									var len:uint = zoneDataArr.length
@@ -221,7 +228,7 @@
 																		
 								default:
 								
-									sysVar = scenModel.getSysVar(args[1])
+									sysVar = scenarioModel.getSysVar(args[1])
 									var s:String = sysVar.name + " (" + sysVar.typeID + ")  "
 									if (sysVar!=null)
 									{
@@ -232,14 +239,6 @@
 										msg = msg + "can't find variable named " + args[1]
 									}
 							}
-							
-													
-						case "inputPanel":
-							var autoEvent:AutoEvent = new AutoEvent(AutoEvent.EVENT_INPUT_PANEL, args[1], null)
-							CairngormEventDispatcher.getInstance().dispatchEvent(autoEvent)
-							break
-						
-					
 							
 							
 							break

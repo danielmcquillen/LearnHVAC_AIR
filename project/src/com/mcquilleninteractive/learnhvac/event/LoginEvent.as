@@ -1,30 +1,27 @@
 // ActionScript file
-package com.mcquilleninteractive.learnhvac.event{
-	
-	import com.adobe.cairngorm.control.CairngormEvent;
-	
+package com.mcquilleninteractive.learnhvac.event
+{
+		
 	import flash.events.Event;
 
-	public class LoginEvent extends CairngormEvent{
+	public class LoginEvent extends Event
+	{
 		
-		public static var EVENT_LOGIN : String = "login"
+		public static const LOGIN : String = "login"
+		
 		public var username : String
 		public var password : String
 		public var loggingInAsGuest : Boolean
 		
-		public function LoginEvent(username : String, 
-									password : String, 
-									loggingInAsGuest:Boolean = false){
-	      	super( EVENT_LOGIN )
-	      	this.username = username
-			this.password = password
-	      	this.loggingInAsGuest = loggingInAsGuest
-     	}
-     	
-     	override public function clone() : Event{
-			return new LoginEvent(username, password,  loggingInAsGuest)
-		}		
-		
+		public function LoginEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
+		{			
+			super(type, bubbles, cancelable);
+		}	
+				
+		override public function clone():Event
+        {
+            return new LoginEvent(this.type, this.bubbles, this.cancelable );
+        }	
 	}
 	
 }

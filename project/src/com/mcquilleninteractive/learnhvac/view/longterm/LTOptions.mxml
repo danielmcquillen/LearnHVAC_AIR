@@ -16,14 +16,23 @@
 			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
 			import com.mcquilleninteractive.learnhvac.util.Logger
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.SystemVariable
-			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel
-			import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel
-			
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
 			
 			import mx.collections.ArrayCollection
 			import mx.validators.Validator
+			
+			
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel	
+						
+			[Bindable]	
+			[Autowire]		
+			public var longTermSimulationModel:LongTermSimulationModel	
+			
 				
 			private var _elevationView:ElevationView
 			private var _zoneSelector:ZoneSelector
@@ -34,10 +43,6 @@
 			
 			public var _validatorsArr:Array = [];
 			
-			
-			
-			[Bindable]
-			private var _ltSettings:LTSettingsModel;
 			
 			[Bindable]
 			private var _sysVarsAC:ArrayCollection = new ArrayCollection()
@@ -54,27 +59,22 @@
 			{	
 			}
 			
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function onScenarioLoaded():void
 			{	
-				_ltSettings = LHModelLocator.getInstance().scenarioModel.ltSettingsModel
-				
-				resetValues()			
-				
-				
+				resetValues()					
 			}
 			
 			public function resetValues():void
 			{
-				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-				
 				//set start and stop dates
-				dfStartDate.enabled = scenModel.allow_longterm_date_change
-				dfStopDate.enabled = scenModel.allow_longterm_date_change
-				dfStartDate.selectedDate = scenModel.ltSettingsModel.startDate
-				dfStopDate.selectedDate = scenModel.ltSettingsModel.stopDate
+				dfStartDate.enabled = scenarioModel.allow_longterm_date_change
+				dfStopDate.enabled = scenarioModel.allow_longterm_date_change
+				dfStartDate.selectedDate = longTermSimulationModel.startDate
+				dfStopDate.selectedDate = longTermSimulationModel.stopDate
 				
 				//get import vars
-				_sysVarsAC = scenModel.getLongTermExportSysVars()
+				_sysVarsAC = scenarioModel.getLongTermExportSysVars()
 			}
 			
 			
@@ -117,17 +117,17 @@
 			
 			protected function onRunChange():void
 			{
-				_ltSettings.runID = cboRun.selectedItem.data
+				longTermSimulationModel.runID = cboRun.selectedItem.data
 			}
 			
 			protected function dfStartDayChange():void
 			{
-				LHModelLocator.getInstance().scenarioModel.ltSettingsModel.startDate = dfStartDate.selectedDate
+				longTermSimulationModel.startDate = dfStartDate.selectedDate
 			}
 			
 			protected function dfStopDayChange():void
 			{
-				LHModelLocator.getInstance().scenarioModel.ltSettingsModel.stopDate = dfStopDate.selectedDate 
+				longTermSimulationModel.stopDate = dfStopDate.selectedDate 
 			}
 			
 				
@@ -166,8 +166,8 @@
 			toolTip="Store your simulation results as 'Run1' or 'Run2'">
 			<mx:dataProvider>
 				<mx:ArrayCollection>
-					<mx:Object label="Run 1" data="{EPlusRunsModel.RUN_1}"/>
-					<mx:Object label="Run 2" data="{EPlusRunsModel.RUN_2}"/>
+					<mx:Object label="Run 1" data="{LongTermSimulationDataModel.RUN_1}"/>
+					<mx:Object label="Run 2" data="{LongTermSimulationDataModel.RUN_2}"/>
 				</mx:ArrayCollection>
 			</mx:dataProvider>
 		</mx:ComboBox>

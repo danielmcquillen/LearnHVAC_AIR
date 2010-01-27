@@ -8,18 +8,16 @@
 	<mx:Script>
 		<![CDATA[
 			
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
             import com.mcquilleninteractive.learnhvac.util.Logger
             import mx.controls.Label 
             import com.mcquilleninteractive.learnhvac.model.SystemVariable
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
    			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
-   			import com.adobe.cairngorm.control.CairngormEvent
-   			
-		 
+   					 
 		    private var unitsFanpStatReal:String = ""
 			private var unitsFanmAirLvg:String = ""
 			private var unitsFannReal:String = ""
@@ -27,17 +25,7 @@
 				
 			public function onCC():void
 			{
-				
-				//add listener for scenarioLoaded event --> this will be used to update labels
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
-	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);
-	   			
-	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
-   				if (LHModelLocator.getInstance().scenarioLoaded == true)
-   				{
-   					scenarioLoaded(null)
-   				}
-				
+								
 				//draw line to duct work from last label
 				this.graphics.lineStyle(1,0xFFFFFF,1)
 				this.graphics.moveTo(580,290)
@@ -45,19 +33,18 @@
 				this.graphics.drawCircle(580,220,5)
 			}
 			
-			public function scenarioLoaded(event:CairngormEvent):void
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
+			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{						
-					
-				scenModel = LHModelLocator.getInstance().scenarioModel
-															
+																				
 				//set visibility of labels	
-				lblFanpowerTot.visible=lblFanpowerTot_Title.visible=scenModel.getSysVar("FanpowerTot").visible
-				//lblFannReal.visible=lblFannReal_Title.visible=scenModel.getSysVar("FannReal").visible
-				lblFanTAirEnt.visible=lblFanTAirEnt_Title.visible=scenModel.getSysVar("FanTAirEnt").visible
-				lblFanmAirEnt.visible=lblFanmAirEnt_Title.visible=scenModel.getSysVar("FanmAirEnt").visible
-				lblFanTAirLvg.visible=lblFanTAirLvg_Title.visible=scenModel.getSysVar("FanTAirLvg").visible
-				//lblFanmAirLvg.visible=lblFanmAirLvg_Title.visible=scenModel.getSysVar("FanmAirLvg").visible
-				lblFanpStatReal.visible=lblFanpStatReal_Title.visible=scenModel.getSysVar("FanpStatReal").visible	
+				lblFanpowerTot.visible=lblFanpowerTot_Title.visible=scenarioModel.getSysVar("FanpowerTot").visible
+				//lblFannReal.visible=lblFannReal_Title.visible=scenarioModel.getSysVar("FannReal").visible
+				lblFanTAirEnt.visible=lblFanTAirEnt_Title.visible=scenarioModel.getSysVar("FanTAirEnt").visible
+				lblFanmAirEnt.visible=lblFanmAirEnt_Title.visible=scenarioModel.getSysVar("FanmAirEnt").visible
+				lblFanTAirLvg.visible=lblFanTAirLvg_Title.visible=scenarioModel.getSysVar("FanTAirLvg").visible
+				//lblFanmAirLvg.visible=lblFanmAirLvg_Title.visible=scenarioModel.getSysVar("FanmAirLvg").visible
+				lblFanpStatReal.visible=lblFanpStatReal_Title.visible=scenarioModel.getSysVar("FanpStatReal").visible	
 			
    				
 			}

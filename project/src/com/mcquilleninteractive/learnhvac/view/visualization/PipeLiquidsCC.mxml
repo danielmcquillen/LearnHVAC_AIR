@@ -19,64 +19,56 @@
 			import flash.geom.ColorTransform
 			import com.mcquilleninteractive.learnhvac.util.Logger
 			import mx.binding.utils.BindingUtils
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
+			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
-			import com.mcquilleninteractive.learnhvac.event.AHUEvent
 									
-			public var scenModel:ScenarioModel
+			
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel											
+									
 			public var _active:Boolean = false
 			
 			public function onCreationComplete():void
-			{
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
-   				dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded)
-   				dispatcher.addEventListener(AHUEvent.EVENT_AHU_STARTED, onAHUOn)
-				dispatcher.addEventListener(AHUEvent.EVENT_AHU_STOPPED, onAHUOff)
-			
-				/*
-   				if (LHModelLocator.getInstance().scenarioModel.scenID!=null)
-   				{
-   					initBindings()
-   				}
-   				*/
+			{		
 			}
 			
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function scenarioLoaded(e:Event):void
 			{	
 				initBindings()
 			}
 			
-			public function initBindings():void
+			[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
+			public function onShortTermSimStarted(event:ShortTermSimulationEvent):void
 			{
-				scenModel = LHModelLocator.getInstance().scenarioModel
-				
-				BindingUtils.bindSetter(setTLiqEntValve, scenModel.getSysVar("CCTLiqEntValve"), "currValue" )
-				BindingUtils.bindSetter(setTLiqLvg, scenModel.getSysVar("CCTLiqLvg"), "currValue" )
-				BindingUtils.bindSetter(setmLiqEnt, scenModel.getSysVar("CCmLiqEnt"), "currValue" )
-			}	
-				
-			public function onAHUOn(event:AHUEvent):void
-			{
-				if (_active)
-				{
-					updatePipes()
-				}
+				updatePipes()
 			}
 			
-			public function onAHUOff(event:AHUEvent):void
+			[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
+			public function onShortTermSimStopped(event:ShortTermSimulationEvent):void
 			{
 				liquidsCC.turnAllPipesOff()
 			}
+			
+			
+			public function initBindings():void
+			{				
+				BindingUtils.bindSetter(setTLiqEntValve, scenarioModel.getSysVar("CCTLiqEntValve"), "currValue" )
+				BindingUtils.bindSetter(setTLiqLvg, scenarioModel.getSysVar("CCTLiqLvg"), "currValue" )
+				BindingUtils.bindSetter(setmLiqEnt, scenarioModel.getSysVar("CCmLiqEnt"), "currValue" )
+			}	
+				
 			
 			public function updatePipes():void
 			{
 				try
 				{
-					setTLiqEntValve(scenModel.getSysVar("CCTLiqEntValve").baseSIValue)
-					setTLiqLvg(scenModel.getSysVar("CCTLiqLvg").baseSIValue)
-					setmLiqEnt(scenModel.getSysVar("CCmLiqEnt").baseSIValue)
+					setTLiqEntValve(scenarioModel.getSysVar("CCTLiqEntValve").baseSIValue)
+					setTLiqLvg(scenarioModel.getSysVar("CCTLiqLvg").baseSIValue)
+					setmLiqEnt(scenarioModel.getSysVar("CCmLiqEnt").baseSIValue)
 				}					
 				catch(e:Error)
 				{
@@ -93,7 +85,7 @@
 					//user has entered system node where this component should be visible
 					//get latest current values if AHU is on
 					
-					if (LHModelLocator.getInstance().scenarioModel.ahuStatus == ScenarioModel.AHU_ON)
+					if (scenarioModel.ahuStatus == ScenarioModel.AHU_ON)
 					{
 						updatePipes()				
 					}
@@ -111,7 +103,7 @@
 				if (!_active) return
 				
 				//get SI value manually -- see note above
-				value = scenModel.getSysVar("CCTLiqEntValve").baseSIValue
+				value = scenarioModel.getSysVar("CCTLiqEntValve").baseSIValue
 				liquidsCC.setTemp(value, 0)
 				liquidsCC.setTemp(value, 1)
 			}			
@@ -121,7 +113,7 @@
 				if (!_active) return
 				
 				//get SI value manually -- see note above
-				value = scenModel.getSysVar("CCTLiqLvg").baseSIValue
+				value = scenarioModel.getSysVar("CCTLiqLvg").baseSIValue
 				
 				liquidsCC.setTemp(value, 2)
 				liquidsCC.setTemp(value, 3)
@@ -132,7 +124,7 @@
 				if (!_active) return
 				
 				//get SI value manually -- see note above
-				value = scenModel.getSysVar("CCmLiqEnt").baseSIValue
+				value = scenarioModel.getSysVar("CCmLiqEnt").baseSIValue
 				
 				liquidsCC.setFlow(value, 0)
 				liquidsCC.setFlow(value, 1)

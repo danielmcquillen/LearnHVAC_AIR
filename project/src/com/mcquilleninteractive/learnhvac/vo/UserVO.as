@@ -1,11 +1,9 @@
 // ActionScript file
 package  com.mcquilleninteractive.learnhvac.vo 
 {
-	import com.adobe.cairngorm.vo.IValueObject;
-
 	[Bindable]
 	[RemoteClass(alias="com.mcquilleninteractive.learnhvac.vo.User")]
-	public class UserVO implements IValueObject
+	public class UserVO 
 	{
 		
 		public var id : Number;

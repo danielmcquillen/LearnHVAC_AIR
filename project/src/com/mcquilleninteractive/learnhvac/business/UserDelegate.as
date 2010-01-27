@@ -2,30 +2,23 @@
 package com.mcquilleninteractive.learnhvac.business {
 	
 	import mx.rpc.IResponder
-	import com.adobe.cairngorm.business.ServiceLocator
-	import mx.rpc.remoting.mxml.RemoteObject
-	import com.mcquilleninteractive.learnhvac.model.LHModelLocator
-	import com.mcquilleninteractive.learnhvac.util.Logger
 	
-	public class UserDelegate	{
+	import mx.rpc.remoting.mxml.RemoteObject
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel
+	import com.mcquilleninteractive.learnhvac.util.Logger
+	import mx.rpc.AsyncToken;
+	
+	public class UserDelegate	
+	{		
+		[Autowire(bean="userService")]
+		public var userService:RemoteObject		
 		
-		private var responder : IResponder
-		private var service : RemoteObject
+		public function UserDelegate(){}
 		
-		public function UserDelegate(responder : IResponder){
-			
-			this.service = mx.rpc.remoting.mxml.RemoteObject(ServiceLocator.getInstance().getRemoteObject( "UserService" ))
-			this.responder = responder;
-		
-		}
-		
-		public function loginUser(username : String, password : String) : void {	
-								
+		public function loginUser(login:String, password:String):AsyncToken 
+		{	
 			//call service 
-			var call : Object = service.doLogin(username, password);
-			call.resultHandler = responder.result;
-			call.faultHandler = responder.fault;	
-		
+			return userService.doLogin(login, password);
 		}
 		
 	

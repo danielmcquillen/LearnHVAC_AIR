@@ -3,7 +3,6 @@
 	width="100%"
 	horizontalScrollPolicy="off"
 	verticalScrollPolicy="off"
-	creationComplete="onCC()"
 	paddingBottom="0"
 	paddingLeft="0"
 	paddingTop="0"
@@ -15,35 +14,30 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.mcquilleninteractive.learnhvac.command.LoadScenarioDataCommand;
+			import org.swizframework.Swiz;
 			import flash.net.navigateToURL; 	//use these two if I'm using Flex way of opening browser
     		import flash.net.URLRequest;
-			import com.mcquilleninteractive.learnhvac.event.AHUEvent;
 			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 			import mx.charts.chartClasses.ChartElement;
 			import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.view.popups.SettingsPanel
 			import com.mcquilleninteractive.learnhvac.event.GraphEvent
 			import com.mcquilleninteractive.learnhvac.event.ScenarioDataEvent
 			import com.mcquilleninteractive.learnhvac.event.ApplicationEvent
 			import com.mcquilleninteractive.learnhvac.util.Logger;            
-			import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel    
-			import com.mcquilleninteractive.learnhvac.model.SparkRunsModel
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel    
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel
 			import com.mcquilleninteractive.learnhvac.util.DebugPanel;
 			import mx.managers.PopUpManager
 			import mx.binding.utils.BindingUtils;
-			import com.adobe.cairngorm.control.CairngormEventDispatcher;
           	import mx.managers.PopUpManager;
           	import mx.events.CloseEvent;
           	import mx.events.MenuEvent;
           	import mx.events.ItemClickEvent
           	import mx.controls.Alert;
           	
-          	          	
-			[Bindable]
-			public var model : LHModelLocator = LHModelLocator.getInstance();
-			
+          	          				
 			[Bindable]
             [Embed(source="assets/img/weather_sun.png")]
             private var SunIcon:Class;
@@ -78,29 +72,28 @@
 			[Bindable]
 			private var SPCIcon:Class	
 			
+			[Bindable]
+			[Autowire]
+			public var applicationModel:ApplicationModel 
 			
 			
 			private var settingsPopup:SettingsPanel
-			
-			public function onCC():void
-			{
-				 BindingUtils.bindSetter(screenChange, model, "viewing");
-			}
-	
-			
+									
 			public function screenChange(index:Number):void
 			{
+				if (appMenuBar==null) return
+				
 				Logger.debug("#AppControlBar: screenChange called. index: " + index)
 				switch (index)
 				{
-					case LHModelLocator.PANEL_LONG_TERM_SIMULATION:
-					case LHModelLocator.PANEL_SHORT_TERM_SIMULATION:
-					case LHModelLocator.PANEL_ANALYSIS:
+					case ApplicationModel.PANEL_LONG_TERM_SIMULATION:
+					case ApplicationModel.PANEL_SHORT_TERM_SIMULATION:
+					case ApplicationModel.PANEL_ANALYSIS:
 						appTabBar.visible = true
 						appMenuBar.visible = true
 						break
-					case LHModelLocator.PANEL_SELECT_SCENARIO:
-						this.appTabBar.visible = false		
+					case ApplicationModel.PANEL_SELECT_SCENARIO:
+						appTabBar.visible = false		
 						appMenuBar.visible = false			
 						break
 				}				
@@ -115,8 +108,8 @@
 			{
 				if (evt.detail == Alert.OK)
 				{
-					var cgEvent:ApplicationEvent = new ApplicationEvent(ApplicationEvent.EVENT_SELECT_NEW_SCENARIO)
-					CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)				
+					var event:ApplicationEvent = new ApplicationEvent(ApplicationEvent.SELECT_NEW_SCENARIO, true)
+					dispatchEvent(event)				
 				}
 			}
 			
@@ -132,8 +125,8 @@
 				if (evt.detail == Alert.OK)
 				{
 					Logger.debug("#LogoutCommand: user confirmed intention to log out. Launching app event...")
-					var cgEvent:LogoutEvent = new LogoutEvent()
-					CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+					var event:LogoutEvent = new LogoutEvent(LogoutEvent.LOGOUT, true)
+					dispatchEvent(event)
 				}
 				else
 				{
@@ -150,28 +143,28 @@
 						onNewScenario()
 						break
 					case "loadEPlusInitial":
-						onLoadEPlus(EPlusRunsModel.RUN_1)
+						onLoadEPlus(LongTermSimulationDataModel.RUN_1)
 						break
 					case "loadEPlusComparison":
-						onLoadEPlus(EPlusRunsModel.RUN_2)
+						onLoadEPlus(LongTermSimulationDataModel.RUN_2)
 						break
 					case "loadSparkInitial":
-						onLoadSpark(SparkRunsModel.RUN_1)
+						onLoadSpark(ShortTermSimulationDataModel.RUN_1)
 						break
 					case "loadSparkComparison":
-						onLoadSpark(SparkRunsModel.RUN_2)
+						onLoadSpark(ShortTermSimulationDataModel.RUN_2)
 						break
 					case "saveEPlusInitial":
-						onSaveEPlus(EPlusRunsModel.RUN_1)
+						onSaveEPlus(LongTermSimulationDataModel.RUN_1)
 						break
 					case "saveEPlusComparison":
-						onSaveEPlus(SparkRunsModel.RUN_2)
+						onSaveEPlus(ShortTermSimulationDataModel.RUN_2)
 						break
 					case "saveSparkInitial":
-						onSaveSpark(SparkRunsModel.RUN_1)
+						onSaveSpark(ShortTermSimulationDataModel.RUN_1)
 						break
 					case "saveSparkComparison":
-						onSaveSpark(SparkRunsModel.RUN_2)
+						onSaveSpark(ShortTermSimulationDataModel.RUN_2)
 						break
 					
 				}
@@ -185,13 +178,13 @@
                 switch(cmd)
                 {
                 	case "eplus":
-                		model.viewing = LHModelLocator.PANEL_LONG_TERM_SIMULATION
+                		applicationModel.viewing = ApplicationModel.PANEL_LONG_TERM_SIMULATION
                 		break
                 	case "spark": 	             		
-						model.viewing = LHModelLocator.PANEL_SHORT_TERM_SIMULATION
+						applicationModel.viewing = ApplicationModel.PANEL_SHORT_TERM_SIMULATION
                 		break
                 	case "analysis":
-						model.viewing = LHModelLocator.PANEL_ANALYSIS
+						applicationModel.viewing = ApplicationModel.PANEL_ANALYSIS
 						
                 		break
                 		
@@ -229,26 +222,30 @@
           	
            	public function onLoadEPlus(runID:String):void
           	{
-          		var cgEvent:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.LOAD_EPLUS_DATA_EVENT, runID)
-          		CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+          		var event:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.LOAD_EPLUS_DATA_EVENT, true)
+          		event.runID = runID
+          		dispatchEvent(event)
           	}
           	
           	public function onLoadSpark(runID:String):void
           	{
-          		var cgEvent:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.LOAD_SPARK_DATA_EVENT, runID)
-          		CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+          		var event:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.LOAD_SPARK_DATA_EVENT, true)
+          		event.runID = runID
+          		dispatchEvent(event)
           	}
 		
           	public function onSaveEPlus(runID:String):void
           	{
-          		var cgEvent:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.SAVE_EPLUS_DATA_EVENT, runID)
-				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+          		var event:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.SAVE_EPLUS_DATA_EVENT, true)
+				event.runID = runID
+          		dispatchEvent(event)
           	}
           	
           	public function onSaveSpark(runID:String):void
           	{
-          		var cgEvent:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.SAVE_SPARK_DATA_EVENT, runID)
-				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+          		var event:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.SAVE_SPARK_DATA_EVENT, true)
+				event.runID = runID
+          		dispatchEvent(event)
           	}
           
          	public function onDebug():void
@@ -319,6 +316,7 @@
     		  	verticalAlign="bottom"
        		 	horizontalGap="0" 
     		 	horizontalAlign="left"
+		    	visible="{applicationModel.viewing != ApplicationModel.PANEL_SELECT_SCENARIO}"
     		  	>
     		  	
 		<mx:TabBar 
@@ -328,6 +326,7 @@
 		    itemClick="onTabClick(event)"
 		    selectedIndex="0"
 		    focusEnabled="false"
+		   
 			>
 			<mx:dataProvider>       
 				<mx:Object label="Real-time Sim."  

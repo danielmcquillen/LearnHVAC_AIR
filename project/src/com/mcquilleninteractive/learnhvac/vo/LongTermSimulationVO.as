@@ -1,11 +1,10 @@
 // ActionScript file
 package  com.mcquilleninteractive.learnhvac.vo 
 {
-	import com.adobe.cairngorm.vo.IValueObject;
 	import com.mcquilleninteractive.learnhvac.util.Conversions;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 
-	public class LongTermSimulationVO implements IValueObject
+	public class LongTermSimulationVO 
 	{
 		
 		public var runID:String  //corresponds to dataModel ID (for graphing SPARK or EPlus)		

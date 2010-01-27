@@ -10,20 +10,28 @@
 	
 	<mx:Script>
 			<![CDATA[
-				import com.mcquilleninteractive.learnhvac.model.LTSettingsModel;
-				
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;			
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;				
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO	
 			import com.mcquilleninteractive.learnhvac.util.Logger
 			import com.mcquilleninteractive.learnhvac.util.Conversions
 				
 			import mx.validators.Validator
 			
+			
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel	
+				
+			[Bindable]	
+			[Autowire]		
+			public var longTermSimulationModel:LongTermSimulationModel	
+			
 			private var _elevationView:ElevationView
 			private var _zoneSelector:ZoneSelector;
 			
-			[Bindable]
-			private var _ltSettings:LTSettingsModel;
 						
 			[Bindable]
 			private var _loadUnits:String;
@@ -50,6 +58,16 @@
 				_errorMsgArr["txtLightingPeakLoad"] = "Lighting Peak Load"
 				_errorMsgArr["txtAreaPerPeson"] = "Area per Person"
 			}	
+			
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]			
+			public function onScenarioLoaded():void
+			{				
+				_equipPeakLoad = Conversions.roundToDecimals(longTermSimulationModel.equipPeakLoad, 2)
+				_lightingPeakLoad =  Conversions.roundToDecimals(longTermSimulationModel.lightingPeakLoad, 2)
+				resetValues()
+			}
+			
+			
 			
 			public function setViewRefs(elevationView:ElevationView, zoneSelector:ZoneSelector):void
 			{				
@@ -79,16 +97,6 @@
 			}
 			
 			
-			public function onScenarioLoaded():void
-			{				
-				_ltSettings = LHModelLocator.getInstance().scenarioModel.ltSettingsModel
-				
-				_equipPeakLoad = Conversions.roundToDecimals(_ltSettings.equipPeakLoad, 2)
-				_lightingPeakLoad =  Conversions.roundToDecimals(_ltSettings.lightingPeakLoad, 2)
-				
-				resetValues()
-			}
-			
 			
 			public function get errorMsg():String
 			{
@@ -103,11 +111,11 @@
 			public function resetValues():void
 			{
 	
-				txtEquipPeakLoad.text = _ltSettings.equipPeakLoad.toString()
-				txtLightingPeakLoad.text = _ltSettings.lightingPeakLoad.toString()
-				txtAreaPerPerson.text = Conversions.roundToDecimals(_ltSettings.areaPerPerson, 2).toString()
+				txtEquipPeakLoad.text = longTermSimulationModel.equipPeakLoad.toString()
+				txtLightingPeakLoad.text = longTermSimulationModel.lightingPeakLoad.toString()
+				txtAreaPerPerson.text = Conversions.roundToDecimals(longTermSimulationModel.areaPerPerson, 2).toString()
 					
-				if (LHModelLocator.currUnits == "SI")
+				if (ApplicationModel.currUnits == "SI")
 				{
 					_loadUnits = "W / sq.m."
 					_peopleUnits = "sq.m / person"
@@ -138,13 +146,13 @@
 			protected function onEquipPeakLoadChange():void
 			{
 				if (vldEquipPeakLoad.validate())
-					_ltSettings.equipPeakLoad = Number(txtEquipPeakLoad.text)		
+					longTermSimulationModel.equipPeakLoad = Number(txtEquipPeakLoad.text)		
 			}
 			
 			protected function 	onLightingPeakLoadChange():void
 			{
 				if (vldLightingPeakLoad.validate())
-					_ltSettings.lightingPeakLoad = Number(txtLightingPeakLoad.text)		
+					longTermSimulationModel.lightingPeakLoad = Number(txtLightingPeakLoad.text)		
 			}
 				
 			]]>
@@ -199,7 +207,7 @@
 		<mx:TextInput 
 			id="txtAreaPerPerson"
 			width="70" 
-			text="{_ltSettings.areaPerPerson}"  
+			text="{longTermSimulationModel.areaPerPerson}"  
 			restrict="0-9"/>
 		<mx:Label text="{_peopleUnits}"/>
 	</mx:HBox>

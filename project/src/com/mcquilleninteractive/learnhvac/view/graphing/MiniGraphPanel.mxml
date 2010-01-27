@@ -18,26 +18,29 @@
 			<![CDATA[
 			
 				import mx.charts.ChartItem;
-				import com.adobe.cairngorm.control.CairngormEvent
 				import mx.managers.DragManager
 				import mx.events.DragEvent
 				import mx.core.DragSource
 				import mx.core.UIComponent
 				import com.mcquilleninteractive.learnhvac.util.Logger
-				import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+				import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 				import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 				import com.mcquilleninteractive.learnhvac.model.SystemVariable
-				import com.mcquilleninteractive.learnhvac.event.SparkEvent
+				import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
 				import mx.charts.chartClasses.ChartBase;
 				import mx.collections.ArrayCollection
 				import mx.controls.Tree	
 				import mx.controls.Alert
-				import com.adobe.cairngorm.control.CairngormEventDispatcher
+				
 				import com.mcquilleninteractive.learnhvac.event.AddVarToGraphEvent
 				import mx.containers.Panel
 				
 				[Event(name="panelClosed",type="flash.events.Event")]
 				
+				
+				[Bindable]
+				[Autowire]
+				public var scenarioModel:ScenarioModel
 				
  				[Embed (source = 'assets/img/clear_graph.png')]
  				[Bindable]
@@ -56,10 +59,10 @@
 				public var graphID:Number
 				
 				[Bindable]
-			    public var var1Color:Number = LHModelLocator.chart1Var1Color;
+			    public var var1Color:Number = ApplicationModel.chart1Var1Color;
 
 			    [Bindable]
-    			public var var2Color:Number = LHModelLocator.chart1Var2Color;
+    			public var var2Color:Number = ApplicationModel.chart1Var2Color;
 				
 
 				public function onCreationComplete():void
@@ -72,47 +75,31 @@
 					updateTimer = new Timer(5000)
 					updateTimer.addEventListener(TimerEvent.TIMER, onUpdateTimer)
 					
-					var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
-					
-					dispatcher.addEventListener(SparkEvent.SPARK_ON, startTimer)
-					dispatcher.addEventListener(SparkEvent.SPARK_OFF, stopTimer)
-					dispatcher.addEventListener(SparkEvent.SPARK_CRASHED, stopTimer)
-					dispatcher.addEventListener(SparkEvent.SPARK_INTERVAL_TIMEOUT, stopTimer)
-					dispatcher.addEventListener(SparkEvent.SPARK_STARTUP_TIMEOUT, stopTimer)
 					
 				}
 				
-				public function startTimer(event:CairngormEvent):void
+				[Mediate("ShortTermSimulationEvent.SIM_STARTED")]
+				public function startTimer(event:ShortTermSimulationEvent):void
 				{
 					updateTimer.start()
 				}
 				
-				public function stopTimer(event:CairngormEvent):void
+				[Mediate("ShortTermSimulationEvent.SIM_STOPPED")]
+				[Mediate("ShortTermSimulationEvent.SIM_CRASHED")]
+				public function stopTimer(event:ShortTermSimulationEvent):void
 				{
 					updateTimer.stop()
 				}
 				
 				protected function onClose():void
 				{
-					Logger.debug("#MiniGraphPanel: closing...")
-					
 					updateTimer.stop()
-					
-					var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
-					
-					dispatcher.removeEventListener(SparkEvent.SPARK_ON, startTimer)
-					dispatcher.removeEventListener(SparkEvent.SPARK_OFF, stopTimer)
-					dispatcher.removeEventListener(SparkEvent.SPARK_CRASHED, stopTimer)
-					dispatcher.removeEventListener(SparkEvent.SPARK_INTERVAL_TIMEOUT, stopTimer)
-					dispatcher.removeEventListener(SparkEvent.SPARK_STARTUP_TIMEOUT, stopTimer)
 				}
 				
 				protected function onUpdateTimer(event:TimerEvent):void
 				{
 					this.onRefreshData(null)
 				}
-
-
 								
 				public function clear():void
 				{
@@ -130,10 +117,8 @@
 				public function onDragEnter(event:DragEvent):void
 				{
 					
-					lineChart.setStyle("borderThickness", 4);   
-					
-					mx.managers.DragManager.showFeedback(mx.managers.DragManager.COPY)
-					
+					lineChart.setStyle("borderThickness", 4);   					
+					mx.managers.DragManager.showFeedback(mx.managers.DragManager.COPY)					
 					var dropTarget:LineChart = event.currentTarget as LineChart;
 					
 					//TODO: Filter for only drags from OutputPanel or InputPanel
@@ -207,8 +192,11 @@
     					graphVars.push(sysVarName)
     				}
     				
-					var cgEvent:CairngormEvent = new AddVarToGraphEvent(AddVarToGraphEvent.EVENT_ADD_SPARK_VAR, graphVars, lineChart, AddVarToGraphEvent.GRAPH_TYPE_TIME_SERIES)
-    				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+    				var evt:AddVarToGraphEvent = new AddVarToGraphEvent(AddVarToGraphEvent.ADD_SHORT_TERM_VAR)
+					evt.varIDs = graphVars
+					evt.chart = lineChart
+					evt.graphType = AddVarToGraphEvent.GRAPH_TYPE_TIME_SERIES
+    				dispatchEvent(evt)
 				}
 				
 				// Called if the user drags the drag proxy away from the drop target
@@ -250,8 +238,7 @@
     			
 				public function getVarTitle(varID:String):String
 				{
-    				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-					return varID + " " + scenModel.getSysVar(varID).units
+					return varID + " " + scenarioModel.getSysVar(varID).units
 				}
             
             	public function chartParseFunction(s:String):Date
@@ -265,8 +252,12 @@
 					if (graphVars.length>0)
 					{
 						Logger.debug("#VizPanel: refreshing data. graphVars: " + graphVars)	
-						var cgEvent:AddVarToGraphEvent = new AddVarToGraphEvent(AddVarToGraphEvent.EVENT_ADD_SPARK_VAR, graphVars, lineChart, AddVarToGraphEvent.GRAPH_TYPE_TIME_SERIES)
-    					CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+						var evt:AddVarToGraphEvent = new AddVarToGraphEvent(AddVarToGraphEvent.ADD_SHORT_TERM_VAR)
+						evt.varIDs = graphVars
+						evt.chart = lineChart
+						evt.graphType = AddVarToGraphEvent.GRAPH_TYPE_TIME_SERIES
+    					dispatchEvent(evt)
+						
 					}
 					
 				} 

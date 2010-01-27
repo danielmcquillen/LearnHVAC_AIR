@@ -8,7 +8,6 @@
 	    paddingTop="10"
 	    backgroundAlpha="1"
 	    backgroundColor="#FFFFFF"
-	    creationComplete="onCC()"
 	    
 		>
 		
@@ -17,44 +16,42 @@
 				
 			import com.mcquilleninteractive.learnhvac.event.LongTermImportEvent;	
 			import com.mcquilleninteractive.learnhvac.util.Logger			
-			import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.EPlusData
-			import com.mcquilleninteractive.learnhvac.model.SparkRunsModel		
-			import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel					
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel		
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel					
 			import com.mcquilleninteractive.learnhvac.event.*
 			
 			import com.adobe.cairngorm.control.CairngormEventDispatcher
 			import com.adobe.cairngorm.control.CairngormEvent
 			import mx.collections.ArrayCollection
-			import mx.controls.dataGridClasses.DataGridColumn
-			
+			import mx.controls.dataGridClasses.DataGridColumn			
 			import mx.controls.Alert
-				
-			private var currentYear:Number = new Date().fullYear;
-			private var _currSelectedIndex:Number  //used to roll back selection if run doesn't exist
-			private var _selectedRun:String
-			
-			
+							
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel
+						
 			[Bindable]
 			[Embed(source='assets/img/long_term_import_icon.png')]
 			public var LongTermImportIcon:Class
-			
-			protected function onCC():void
-			{
-				CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0,true)		
-				CairngormEventDispatcher.getInstance().addEventListener(AHUEvent.EVENT_AHU_STARTED, onAHUStarted, false, 0,true)				
-				CairngormEventDispatcher.getInstance().addEventListener(AHUEvent.EVENT_AHU_STOPPED, onAHUStopped, false, 0,true)				
-			}
-			
+					
+			private var currentYear:Number = new Date().fullYear;
+			private var _currSelectedIndex:Number  //used to roll back selection if run doesn't exist
+			private var _selectedRun:String
+						
+						
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function onScenarioLoaded(event:ScenarioLoadedEvent):void
 			{
 				setDateTime()
 				reset()
 			}
 			
-			public function onAHUStarted(event:CairngormEvent):void
+			[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
+			public function onShortTermSimulationStarted(event:ShortTermSimulationEvent):void
 			{
 				cboRun.enabled = false
 				timeStepper.enabled = false
@@ -64,7 +61,8 @@
 				this.cboZone.enabled = false
 			}
 			
-			public function onAHUStopped(event:CairngormEvent):void
+			[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
+			public function onShortTermSimulationStopped(event:ShortTermSimulationEvent):void
 			{
 				cboRun.enabled = true
 				timeStepper.enabled = true
@@ -84,7 +82,7 @@
 			{				
 				dgLongTermSimImportVars.dataProvider = new ArrayCollection()
 				
-				LHModelLocator.getInstance().scenarioModel.sparkRunsModel.currRunID = SparkRunsModel.RUN_1
+				scenarioModel.shortTermSimulationDataModel.currRunID = ShortTermSimulationDataModel.RUN_1
 				cboRun.selectedIndex = 0
 				
 			}
@@ -96,7 +94,7 @@
 					
 			public function addTempMarkerToLabel(item:Object, column:DataGridColumn):String
 			{
-				return String(item[column.dataField]) + LHModelLocator.currentTempUnits()
+				return String(item[column.dataField]) + ApplicationModel.currentTempUnits()
 			}
 
 			public function formatValue(item:Object, column:DataGridColumn):String 
@@ -107,13 +105,13 @@
 			//make sure correct run is set
 			protected function onRunChange():void
 			{
-				LHModelLocator.getInstance().scenarioModel.sparkRunsModel.currRunID = cboRun.selectedItem.data
+				scenarioModel.shortTermSimulationDataModel.currRunID = cboRun.selectedItem.data
 			}
 						
 			
 			public function setDateTime():void
 			{
-				var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				var scenarioModel:ScenarioModel = scenarioModel
 				
 				if (scenarioModel==null) return				
 				Logger.debug("#VizPanelInfo: setting date time from model: " + scenarioModel.realtime_start_datetime)
@@ -141,7 +139,7 @@
 			{
 				Logger.debug("updateSimulationStartDateAndTime()",this)
 								
-				var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel					
+				var scenarioModel:ScenarioModel = scenarioModel					
 				var selectedDate:Date = this.dateField.selectedDate
 				
 				
@@ -165,13 +163,12 @@
 			
 			protected function onZoneChange():void
 			{
-				var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				var scenarioModel:ScenarioModel = scenarioModel
 				scenarioModel.zoneOfInterest = cboZone.selectedItem.data
 			}
 	
 			protected function onFloorChange():void
 			{
-				var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
 				scenarioModel.floorOfInterest = cboFloor.selectedItem.data			
 			}
 			
@@ -179,8 +176,7 @@
 			
 			public function changeLongTermRunImport():void
 			{
-				var epRunsModel:EPlusRunsModel = LHModelLocator.getInstance().scenarioModel.ePlusRunsModel
-				var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+				var epRunsModel:LongTermSimulationDataModel = scenarioModel.longTermSimulationDataModel
 				var selectedRun:String = cboLongTermRun.selectedItem.data
 				
 				switch (selectedRun)
@@ -190,12 +186,12 @@
 						reset()
 						break
 						
-					case EPlusRunsModel.RUN_1:
+					case LongTermSimulationDataModel.RUN_1:
 						
 						if (epRunsModel.run1Loaded)
 						{
-							scenarioModel.importLongTermVarsFromRun = EPlusRunsModel.RUN_1	
-							var epData:EPlusData = scenarioModel.ePlusRunsModel.getEPlusData(EPlusRunsModel.RUN_1)
+							scenarioModel.importLongTermVarsFromRun = LongTermSimulationDataModel.RUN_1	
+							var epData:EPlusData = scenarioModel.longTermSimulationDataModel.getEPlusData(LongTermSimulationDataModel.RUN_1)
 							scenarioModel.getLongTermExportSysVars()
 							dgLongTermSimImportVars.dataProvider = scenarioModel.sysVarsImportedFromLongTermAC
 							
@@ -209,12 +205,12 @@
 						}
 						break
 						
-					case EPlusRunsModel.RUN_2:
+					case LongTermSimulationDataModel.RUN_2:
 											
 						if (epRunsModel.run2Loaded)
 						{
-							scenarioModel.importLongTermVarsFromRun = EPlusRunsModel.RUN_1	
-							epData = scenarioModel.ePlusRunsModel.getEPlusData(EPlusRunsModel.RUN_2)		
+							scenarioModel.importLongTermVarsFromRun = LongTermSimulationDataModel.RUN_1	
+							epData = scenarioModel.longTermSimulationDataModel.getEPlusData(LongTermSimulationDataModel.RUN_2)		
 							scenarioModel.getLongTermExportSysVars()
 							dgLongTermSimImportVars.dataProvider = scenarioModel.sysVarsImportedFromLongTermAC
 						}
@@ -257,8 +253,8 @@
 				change="onRunChange()">
 				<mx:dataProvider>
 					<mx:ArrayCollection>
-						<mx:Object label="Run 1" data="{SparkRunsModel.RUN_1}"/>
-						<mx:Object label="Run 2" data="{SparkRunsModel.RUN_2}"/>
+						<mx:Object label="Run 1" data="{ShortTermSimulationDataModel.RUN_1}"/>
+						<mx:Object label="Run 2" data="{ShortTermSimulationDataModel.RUN_2}"/>
 					</mx:ArrayCollection>
 				</mx:dataProvider>
 			</mx:ComboBox>			
@@ -280,8 +276,8 @@
 				<mx:dataProvider>
 					<mx:ArrayCollection>
 						<mx:Object label="None" data="none"/>
-						<mx:Object label="Run 1" data="{EPlusRunsModel.RUN_1}"/>
-						<mx:Object label="Run 2" data="{EPlusRunsModel.RUN_2}"/>
+						<mx:Object label="Run 1" data="{LongTermSimulationDataModel.RUN_1}"/>
+						<mx:Object label="Run 2" data="{LongTermSimulationDataModel.RUN_2}"/>
 					</mx:ArrayCollection>
 				</mx:dataProvider>
 			</mx:ComboBox>

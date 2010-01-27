@@ -1,29 +1,26 @@
 // ActionScript file
 package com.mcquilleninteractive.learnhvac.event{
 	
-	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
 	import flash.events.Event;
 
-	public class SetUnitsCompleteEvent extends CairngormEvent{
+	public class SetUnitsCompleteEvent extends Event
+	{
 		
-		public static var UNITS_CHANGED : String = "unitsChanged";
+		public static const UNITS_CHANGED : String = "unitsChanged";
 		public var units:String 
 				
-		public function SetUnitsCompleteEvent(type:String, units:String){
-			Logger.debug("#SetUnitsCompleteEvent: created type: " + type)
-			this.units = units
-	      	super( type );
-     	}
-     	
-     	override public function clone() : Event
-		{
-			return new SetUnitsCompleteEvent(type, units);
-		}	
-     	
-    	
+		public function SetUnitsCompleteEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
+		{			
+			super(type, bubbles, cancelable);
+		}			
 		
+		
+		override public function clone():Event
+        {
+            return new SetUnitsCompleteEvent(this.type, this.bubbles, this.cancelable );
+        }
 	}
 	
 }

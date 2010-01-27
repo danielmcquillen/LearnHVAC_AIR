@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:myComps="*"
+	width="380"
+	height="190"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+    paddingLeft="20"
+    paddingTop="20"
+    paddingRight="20"
+    paddingBottom="10"
+    horizontalAlign="center"
+    creationComplete="onCreationComplete()"
+	>
+	
+	
+	<mx:Script>
+		<![CDATA[
+		import com.mcquilleninteractive.learnhvac.event.EnergyPlusEvent;
+		import org.swizframework.Swiz;		
+		import com.mcquilleninteractive.learnhvac.util.Logger
+		import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent
+		import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent
+		import mx.managers.PopUpManager
+		
+		
+		[Bindable]
+		protected var _msg:String = "Running EnergyPlus...";
+		
+		[Bindable]
+		protected var _output:String 
+		
+		public function onCreationComplete():void
+		{
+			Logger.debug("#RunningEPlusModal: setting up listeners...")				
+		}
+		
+		[Mediate(event="EnergyPlusEvent.ENERGY_PLUS_OUTPUT")]
+		public function onEnergyPlusOutput(event:EnergyPlusEvent):void
+		{
+			_output = event.output
+		}
+		
+		[Mediate(event="LongTermSimulationEvent.FILE_LOADED")]		
+		public function onEPlusFileLoaded(event:LongTermSimulationEvent):void
+		{
+			Logger.debug("#RunningEPlusModal: onEPlusFileLoaded() called")
+			//change popup status
+			lblStatus.text = "Parsing output data..."
+			
+		}
+		
+		[Mediate(event="ScenarioDataLoadedEvent.EPLUS_DATA_PARSED")]	
+		public function onEPlusDataParsed(event:ScenarioDataLoadedEvent):void
+		{
+			Logger.debug("#RunningEPlusModal: onEPlusDataParsed() called. Removing modal popup.")
+			//clean up refs before destroying this popup
+			PopUpManager.removePopUp(this)	
+		}
+		
+		public function onSetupFailed(event:LongTermSimulationEvent):void
+		{
+			PopUpManager.removePopUp(this)				
+		}
+		
+		private function onCancel():void
+		{
+			Logger.debug("#RunningEPlusModal: onCancel() called")
+			var event:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_CANCEL, true)
+			dispatchEvent(event)
+			PopUpManager.removePopUp(this)
+		}
+		
+		
+		]]>
+	</mx:Script>
+	
+	
+	
+	<mx:Canvas>
+		
+		<mx:Text id="lblStatus" 
+			x="130" y="0" 
+			text="{_msg}" 
+			textAlign="center" 
+			width="340" 
+		    fontWeight="bold"
+			height="50"/>
+				
+		<mx:Label id="lblOutput" 
+			x="130" y="25" 
+			text="{_output}" 
+			textAlign="center" 
+			width="330"/>
+				
+		<myComps:LoadingBarSmall x="220" y="60" />
+		
+		<mx:Button id="btnCancel" label="Cancel" click="onCancel()" width="80" x="260" y="100" />
+			
+	</mx:Canvas>	
+	
+	
+</mx:Panel>

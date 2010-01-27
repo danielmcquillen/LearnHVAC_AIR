@@ -9,15 +9,9 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel;
-			import mx.collections.ArrayCollection;
-			import com.mcquilleninteractive.learnhvac.util.ColorSetting
-			
-			import com.adobe.cairngorm.control.CairngormEvent;
-			import com.adobe.cairngorm.control.CairngormEventDispatcher;
-			import mx.collections.ArrayCollection;
-			
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			import com.mcquilleninteractive.learnhvac.model.SystemVariable
 			import com.mcquilleninteractive.learnhvac.util.ColorSetting
@@ -26,12 +20,25 @@
    			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
 			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.util.ColorSetting
+
+			import mx.collections.ArrayCollection;
+			
+			
+
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel
+			
+			
+			[Bindable]
+			[Autowire]
+			public var longTermSimulationModel:LongTermSimulationModel
 
 			[Bindable]
 			private var zoneTotalsAC:ArrayCollection 
 			
 			private var _sysVarVAVHCq:SystemVariable 
-			private var _ltSettings:LTSettingsModel 
 			private var _valuesArr:Array 
 			
 			/* Specs from Brian
@@ -50,69 +57,48 @@
 									
 				zoneTotalsAC = new ArrayCollection(_valuesArr)
 			
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
-	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0, true)
-	   			dispatcher.addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged, false, 0, true)	
-				dispatcher.addEventListener(ScenarioModel.SHORT_TERM_OUTPUT_LOADED, onShortTermOutputLoaded, false, 0, true)
-				
 				//when this graph is first shown, a scenario will already have been loaded, so call onScenarioLoaded once to get it set up correctly
 				onScenarioLoaded(null)
 				
 			}
 			
-			public function onScenarioLoaded(event:CairngormEvent):void
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
+			public function onScenarioLoaded(event:ScenarioLoadedEvent):void
 			{
-				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-				_ltSettings = scenModel.ltSettingsModel
 				//the number and type of sysVar isn't going to change much, so I'm not going to use 
 				//binding, I'm just going to keep a ref and then update when the outputs are loaded
-				_sysVarVAVHCq = scenModel.getSysVar("VAVHCq")
-				
+				_sysVarVAVHCq = scenarioModel.getSysVar("VAVHCq")				
 				getRelevantValues()
 				
 			}
 			
-			public function onUnitsChanged(event:CairngormEvent):void
+			[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
+			public function onUnitsChanged(event:SetUnitsCompleteEvent):void
 			{
 				getRelevantValues()				
 			}
 			
-			public function onShortTermOutputLoaded(event:CairngormEvent):void
+			[Mediate(event="ShortTermSimulationEvent.OUTPUT_UPDATED")]			
+			public function onShortTermOutputUpdated(event:ShortTermSimulationEvent):void
 			{
 				getRelevantValues()
 			}
 			
 			private function getRelevantValues():void
 			{
-				Logger.debug("Getting relevant values", this)
-				Logger.debug("_ltSettings:" + _ltSettings, this)
-				Logger.debug("zoneTotalsAC.getItemAt(0):" + zoneTotalsAC.getItemAt(0), this)
-				Logger.debug("zoneTotalsAC.getItemAt(0).VAVHCq:" + zoneTotalsAC.getItemAt(0).VAVHCq, this)
-				Logger.debug("_sysVarVAVHCq:" + _sysVarVAVHCq, this)
 				var obj:Object = zoneTotalsAC.getItemAt(0)
-				var zoneSize:Number = _ltSettings.getCurrentZoneSize()
-				
-				Logger.debug("setting VAVHCq = " + _sysVarVAVHCq.currValue, this)
+				var zoneSize:Number = longTermSimulationModel.getCurrentZoneSize()				
 				obj.VAVHCq = _sysVarVAVHCq.currValue
-				obj.lightingPower = _ltSettings.lightingPeakLoad * zoneSize
-				obj.equipPower = _ltSettings.equipPeakLoad * zoneSize
+				obj.lightingPower = longTermSimulationModel.lightingPeakLoad * zoneSize
+				obj.equipPower = longTermSimulationModel.equipPeakLoad * zoneSize
 				zoneTotalsAC.refresh()
 			}
 			
 			private function onClose():void
 			{
 				Logger.debug("closing window.", this)
-				removeListeners()
 			}
 			
-			private function removeListeners():void
-			{
-				Logger.debug("removing listeners.", this)
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
-				dispatcher.removeEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded)
-	   			dispatcher.removeEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged)	
-				dispatcher.removeEventListener(ScenarioModel.SHORT_TERM_OUTPUT_LOADED, onShortTermOutputLoaded)
-			}
 			
 			
 			

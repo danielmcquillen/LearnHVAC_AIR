@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:util="com.mcquilleninteractive.learnhvac.util.*"
+    width="100%"
+    initialize="onInit()"
+    creationComplete="onCC()"
+ 	>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			import air.net.URLMonitor;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.containers.Panel;
+			import mx.events.MenuEvent
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import mx.binding.utils.BindingUtils						
+			
+			import mx.core.Application;
+			private var cwViewing:ChangeWatcher
+			
+			[Bindable]
+			[Autowire]
+			public var applicationModel:ApplicationModel
+						
+			private function onInit():void
+			{
+            } 			
+			private function onCC():void
+			{
+			}		
+				
+				
+			private function menuHandler(event:MenuEvent):void
+			{
+								
+				var cmd:String = event.item.data
+				
+				switch(cmd)
+				{
+					
+						
+					
+					/* COMFEN */ 	
+						
+					case "about":
+						break
+						
+					case "quit":
+						break
+						
+					case "hide":
+						Application.application.minimize()
+						break
+						
+					case "preferences":
+						break
+						
+					/* File */ 
+					
+					case "new_scenario":	
+						break
+						
+					case "close_scenario":
+						break
+					
+									
+					/* HELP MENU */
+					
+					case "view_help_files":
+						break								
+
+					case "learn_hvac_website":
+						var url:String = "http://learnhvac.org/"
+						openHelpPage(url)
+						break
+
+					case "help_glossary":					
+						break
+					
+					
+						
+					
+					/* Analysis */
+					
+					
+					
+					default:
+						Logger.error("#AppMenu: menuHandler() unrecognized command: " + cmd)
+				
+				}
+				
+				
+			}
+			
+			
+			private function openHelpPage(url:String):void
+			{
+				var request:URLRequest = new URLRequest(url)
+				navigateToURL(request, "_blank")			
+			}
+					
+			
+		]]>
+	</mx:Script>
+	
+	
+	<mx:MenuBar id="appMenu"
+			    showRoot="false"
+			    itemClick="menuHandler(event)"
+			    width="100%" 
+			    styleName="appMenu"
+			    height="25">
+		<util:MenuItem id="rootMenu">
+		
+		
+			<util:MenuItem label="Learn HVAC" id="learnhvac">
+				<util:MenuItem label="About Learn HVAC" id="about" data="about"/>
+				<util:MenuItem type="separator"/>
+				<util:MenuItem label="Preferences" id="preferences" data="preferences"/>
+				<util:MenuItem type="separator"/>
+				<util:MenuItem label="Hide Learn HVAC" id="hide" data="hide"/>
+				<util:MenuItem type="separator"/>
+				<util:MenuItem label="Quit" id="quit" data="quit"/>
+			</util:MenuItem>
+		
+			<util:MenuItem label="File" id="file">
+				<util:MenuItem label="New scenario..." id="new_project" data="new_scenario"/>
+ 				<util:MenuItem label="Close scenario" id="close_project" data="close_scenario" enabled="{applicationModel.scenarioLoaded}"/>
+						
+			</util:MenuItem>
+		
+			
+			
+			<util:MenuItem label="Help" id="help">
+				<util:MenuItem label="Help contents" id="view_help_files" data="view_help_files"/>
+				<util:MenuItem label="LearnVHAC website" id="learn_hvac_website" data="learn_hvac_website"/>
+				<util:MenuItem label="Glossary" id="help_glossary" data="help_glossary"/>
+				
+			</util:MenuItem>   
+		</util:MenuItem>
+	</mx:MenuBar>
+	
+</mx:Canvas>

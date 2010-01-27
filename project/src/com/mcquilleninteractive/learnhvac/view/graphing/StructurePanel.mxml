@@ -9,17 +9,14 @@
 	 	<mx:Script>
 	 		<![CDATA[
 	 		import com.mcquilleninteractive.learnhvac.model.SparkData;
-	 		import com.mcquilleninteractive.learnhvac.model.LHModelLocator	
-	 		import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel	
-	 		import com.mcquilleninteractive.learnhvac.model.SparkRunsModel	
+	 		import com.mcquilleninteractive.learnhvac.model.ApplicationModel	
+	 		import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel	
+	 		import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel	
 	 		import com.mcquilleninteractive.learnhvac.model.EPlusData	
 	 		import com.mcquilleninteractive.learnhvac.model.IGraphDataModel	
 	 		import com.mcquilleninteractive.learnhvac.util.Logger
 			import mx.collections.XMLListCollection
-			import com.adobe.cairngorm.control.CairngormEvent
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
-			import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent		
-	 		import com.mcquilleninteractive.learnhvac.event.SparkEvent	
+			import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent	
 			import mx.managers.DragManager
 			import mx.events.DragEvent
 			
@@ -27,13 +24,13 @@
 			public function onCC():void
 			{
 				Logger.debug("StructurePanel created", this)
-				CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.SPARK_DATA_PARSED, onSparkDataParsed)
-				CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.EVENT_EPLUS_DATA_PARSED, onEPlusDataParsed)	
 				
-				sparkRun1.setType(SparkRunsModel.RUN_1)
-				sparkRun2.setType(SparkRunsModel.RUN_2)
+				sparkRun1.setType(ShortTermSimulationDataModel.RUN_1)
+				sparkRun2.setType(ShortTermSimulationDataModel.RUN_2)
 			}
 			
+			
+			[Mediate(event="ScenarioDataLoadedEvent.SPARK_DATA_PARSED")]
 			public function onSparkDataParsed(event:ScenarioDataLoadedEvent):void
 			{
 				
@@ -44,10 +41,10 @@
 				
 				switch(event.graphDataModelID)
 				{
-					case SparkRunsModel.RUN_1:
+					case ShortTermSimulationDataModel.RUN_1:
 						sparkRun1.loadData(graphDataModel)
 						break
-					case SparkRunsModel.RUN_2:
+					case ShortTermSimulationDataModel.RUN_2:
 						sparkRun2.loadData(graphDataModel)
 						break
 				}	
@@ -55,7 +52,8 @@
 			}
 			
 			
-			public function onEPlusDataParsed(evt:CairngormEvent):void
+			[Mediate(event="ScenarioDataLoadedEvent.EPLUS_DATA_PARSED")]
+			public function onEPlusDataParsed(evt:Event):void
 			{
 				var event:ScenarioDataLoadedEvent = ScenarioDataLoadedEvent(evt)
 				var graphDataModel:IGraphDataModel = event.graphDataModel
@@ -65,13 +63,13 @@
 				
 				switch(event.graphDataModelID)
 				{
-					case EPlusRunsModel.RUN_1:
+					case LongTermSimulationDataModel.RUN_1:
 						eplusRun1.loadData(graphDataModel)
-						eplusRun1.setType(EPlusRunsModel.RUN_1)
+						eplusRun1.setType(LongTermSimulationDataModel.RUN_1)
 						break
-					case EPlusRunsModel.RUN_2:
+					case LongTermSimulationDataModel.RUN_2:
 						eplusRun2.loadData(graphDataModel)
-						eplusRun2.setType(EPlusRunsModel.RUN_2)
+						eplusRun2.setType(LongTermSimulationDataModel.RUN_2)
 						break
 				}	
 				

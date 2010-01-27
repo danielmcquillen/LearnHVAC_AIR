@@ -8,16 +8,15 @@
 	<mx:Script>
 		<![CDATA[
 			
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
             import com.mcquilleninteractive.learnhvac.util.Logger
             import mx.controls.Label 
             import com.mcquilleninteractive.learnhvac.model.SystemVariable
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
    			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
-   			import com.adobe.cairngorm.control.CairngormEvent
    			import mx.core.UIComponent
 		            			
 		    
@@ -28,17 +27,6 @@
 		            			
 			public function onCC():void
 			{
-				
-				//add listener for scenarioLoaded event --> this will be used to update labels
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
-	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);	
-	   			
-	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
-   				if (LHModelLocator.getInstance().scenarioLoaded == true)
-   				{
-   					scenarioLoaded(null)
-   				}
-	   			
 				//lines that show relation of labels to motion on screen 
 				VAVHCmAirLvg_line = new UIComponent()
 				var line1:Shape = new Shape()
@@ -63,15 +51,13 @@
    					
 			}
 			
-			public function scenarioLoaded(event:CairngormEvent):void
-			{						
-				
-				scenModel = LHModelLocator.getInstance().scenarioModel
-																										
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
+			public function scenarioLoaded(event:ScenarioLoadedEvent):void
+			{																																
 				//set visibility of labels	
-				lblVAVHCmAirLvg.visible=lblVAVHCmAirLvg_Title.visible=VAVHCmAirLvg_line.visible=scenModel.getSysVar("VAVHCmAirLvg").visible 
-				lblVAVHCTAirLvg.visible=lblVAVHCTAirLvg_Title.visible=VAVHCTAirLvg_line.visible=scenModel.getSysVar("VAVHCTAirLvg").visible 
-				lblTRoom.visible=lblTRoom_Title.visible=scenModel.getSysVar("TRoom").visible   	
+				lblVAVHCmAirLvg.visible=lblVAVHCmAirLvg_Title.visible=VAVHCmAirLvg_line.visible=scenarioModel.getSysVar("VAVHCmAirLvg").visible 
+				lblVAVHCTAirLvg.visible=lblVAVHCTAirLvg_Title.visible=VAVHCTAirLvg_line.visible=scenarioModel.getSysVar("VAVHCTAirLvg").visible 
+				lblTRoom.visible=lblTRoom_Title.visible=scenarioModel.getSysVar("TRoom").visible   	
 			   				
 			}
 

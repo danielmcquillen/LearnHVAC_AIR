@@ -1,12 +1,6 @@
 package com.mcquilleninteractive.learnhvac.model
 {
-	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
-	import com.mcquilleninteractive.learnhvac.business.SparkService;
 	import com.mcquilleninteractive.learnhvac.business.TestModeSparkService
-	import com.mcquilleninteractive.learnhvac.business.ISparkService
-	import com.mcquilleninteractive.learnhvac.event.AHUEvent;
-	import com.mcquilleninteractive.learnhvac.event.SparkEvent;
 	import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 	import com.mcquilleninteractive.learnhvac.util.DateUtil;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
@@ -22,13 +16,16 @@ package com.mcquilleninteractive.learnhvac.model
 	public class ScenarioModel extends EventDispatcher
 	{
 		
-		/////////////////////////////////////
-		// STATIC VARIABLES
-		/////////////////////////////////////
 		
 		// type of data for analysis section
-		public static var SPARK_DATA_TYPE:String = "sparkDataType" // for graphing
-		public static var EPLUS_DATA_TYPE:String = "eplusDataType" // for graphing
+		public static var SPARK_DATA_TYPE:String = "sparkDataType"; // for graphing
+		public static var EPLUS_DATA_TYPE:String = "eplusDataType"; // for graphing
+		
+		[Autowire]
+		public var shortTermSimulationDataModel:ShortTermSimulationDataModel
+				
+		[Autowire]
+		public var longTermSimulationDataModel:LongTermSimulationDataModel
 		
 		//state of AHU 
 		public static var AHU_ON:String = "AHUon"
@@ -61,19 +58,10 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public static var LT_IMPORT_NONE:String = "none"
 		
-		/////////////////////////////////////
-		// INSTANCE VARIABLES
-		/////////////////////////////////////
-				
-		// CHILDREN MODELS
-		// for holding EPlus and Spark data for graphing
-		public var ePlusRunsModel:EPlusRunsModel
-		public var sparkRunsModel:SparkRunsModel	
 		
-		// MAIN ARRAYS 
 		// for holding scenario data
-		public var sysNodesArr:ArrayCollection 			= new ArrayCollection()			// array to hold sysNodes (which hold system variables)
-		public var sysNodesForNavArr:ArrayCollection 	= new ArrayCollection()			// another array to hold sysNodes used for user navigation (e.g. SPARK not included)
+		public var sysNodesAC:ArrayCollection 			= new ArrayCollection()			// array to hold sysNodes (which hold system variables)
+		public var sysNodesForNavAC:ArrayCollection 	= new ArrayCollection()			// another array to hold sysNodes used for user navigation (e.g. SPARK not included)
 		public var sysVarsImportedFromLongTermAC:ArrayCollection = new ArrayCollection()// holds group of SysVars that are imported from LongTerm into ShortTerm sim
 		public var varsToImportArr:Array = ["TAirOut","TwAirOut", "RmQSENS"]			//CONFIGURE THIS TO CHANGE WHICH VARS ARE TO BE IMPORTED FROM E+
 					
@@ -81,9 +69,9 @@ package com.mcquilleninteractive.learnhvac.model
 			
 		// values for short-term simulation
 		public var currNode:String  					//node user is viewing
-		public var currNodeIndex:Number = 0				//index of node user is viewing (index within sysNodesArr) 
-		public var sparkService:ISparkService
+		public var currNodeIndex:Number = 0				//index of node user is viewing (index within sysNodesAC) 
 		public var ahuStatus:String 
+		
 		
 		// meta-information for scenario externally loaded
 		public var id:String 
@@ -133,47 +121,21 @@ package com.mcquilleninteractive.learnhvac.model
 		public var timeScale:Number = 1					//timescale is changed by user...multiplies 1 second increment
 		public var currTime:String = "00:00:00"			//string representation of time (visual components bind to this)
 		public var epochTimeArr:Array					//array of epoch seconds representating DATE and time of each step for graphing 
-		
-			
-		//Long-term variables
-		public var ltSettingsModel:LTSettingsModel = new LTSettingsModel()
-		
 		public var lookupArr:Array						//This makes finding system variables quicker after the first search through the nodes
 		
 		//Tells scenario model which long term simulation to import variables from into short-term sim (selected by user)
-		//Values are LT_IMPORT_NONE, EPlusRunsModel.RUN_1, or EPlusRunsModel.RUN_2
+		//Values are LT_IMPORT_NONE, LongTermSimulationDataModel.RUN_1, or LongTermSimulationDataModel.RUN_2
 		public var importLongTermVarsFromRun:String = LT_IMPORT_NONE
+		
+		private var _floorOfInterest:uint = 1
+		private var _zoneOfInterest:uint = 1
 		
 		/////////////////////////////////////
 		// CONSTRUCTOR FUNCTIONS
 		/////////////////////////////////////
 		
 		public function ScenarioModel():void
-		{
-			
-			Logger.debug(": created")
-			//not sure why these variables aren't init'ing properly when set as part of the class member declaration
-			
-			
-			//TESTMODE
-			if (LHModelLocator.testMode)
-			{
-				sparkService = new TestModeSparkService(this)
-			}
-			else
-			{				
-				sparkService = new SparkService(this)
-			}
-					
-			ePlusRunsModel = new EPlusRunsModel()
-			sparkRunsModel = new SparkRunsModel()
-						
-			CairngormEventDispatcher.getInstance().addEventListener(SparkEvent.SPARK_INTERVAL_TIMEOUT, onSparkEvent, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(SparkEvent.SPARK_STARTUP_TIMEOUT, onSparkEvent, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(SparkEvent.SPARK_CRASHED, onSparkEvent, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(SparkEvent.SPARK_OFF, onSparkEvent, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(SparkEvent.SPARK_ON, onSparkEvent, false, 0,true)
-			
+		{															
 			initialize()
 		}
 				
@@ -220,10 +182,10 @@ package com.mcquilleninteractive.learnhvac.model
             numericDataSort.fields = [dataSortField];
 
             /* Set the ArrayCollection object's sort property to our custom sort, and refresh the ArrayCollection. */
-            this.sysNodesArr.sort = numericDataSort;
-            this.sysNodesForNavArr.sort = numericDataSort
-            this.sysNodesArr.refresh();
-            this.sysNodesForNavArr.refresh();
+            sysNodesAC.sort = numericDataSort;
+            sysNodesForNavAC.sort = numericDataSort
+            sysNodesAC.refresh();
+            sysNodesForNavAC.refresh();
 
 		}
 		
@@ -240,7 +202,7 @@ package com.mcquilleninteractive.learnhvac.model
 			}
 			else //try to find variable by looping through model
 			{
-				for each (var sysNode:SystemNodeModel in sysNodesArr)
+				for each (var sysNode:SystemNodeModel in sysNodesAC)
 				{
 					for each (var sysVar:SystemVariable in sysNode.sysVarsArr)
 					{
@@ -271,8 +233,8 @@ package com.mcquilleninteractive.learnhvac.model
 		{
 			//wipe out all info from ScenarioModel
 			//TODO: need to call destroy() functions on node and sysvar objects
-			sysNodesArr = new ArrayCollection()
-			sysNodesForNavArr = new ArrayCollection()
+			sysNodesAC = new ArrayCollection()
+			sysNodesForNavAC = new ArrayCollection()
 			resetTimer()
 		}
 		
@@ -356,9 +318,9 @@ package com.mcquilleninteractive.learnhvac.model
 			}
 			
 			var nodeFound:Boolean = false
-			for (var i:Number=0;i<sysNodesArr.length;i++)
+			for (var i:Number=0;i<sysNodesAC.length;i++)
 			{
-				if (sysNodesArr[i].id == nodeID)
+				if (sysNodesAC[i].id == nodeID)
 				{
 					Logger.debug("setCurrNode() currNodeIndex was set to : " + i, this) 
 					currNodeIndex = i
@@ -371,120 +333,18 @@ package com.mcquilleninteractive.learnhvac.model
 			}
 		}
 		
-		
-		//////////////////////////////////////
-		// AHU AND SPARK FUNCTIONS 
-		//////////////////////////////////////
 			
-		public function startAHU():void
+		
+		
+		
+				
+		public function resetAllSysVarValueHistories():void
 		{
-			//Start the AHU system, which essentially means start SPARK
-			//But don't broadcast that the AHU is started until we hear back
-			//from the SparkService that SPARK started OK.
-			Logger.debug("starting AHU", this)
-			resetAllSysVarValueHistories()
-			resetTimer()
-			if (importLongTermVarsFromRun!=ScenarioModel.LT_IMPORT_NONE) importLongTermVars()
-			sparkService.startSpark()
-		}
-		
-		
-		public function stopAHU():void
-		{
-			//Stop the AHU system, which essentially means stop SPARK
-			//But don't broadcast that the AHU is stopped until we hear back
-			//from the SparkService that SPARK stopped OK.
-			Logger.debug("stopping AHU", this)
-			sparkService.stopSpark()
-		}
-		
-		public function updateAHU():void
-		{
-			sparkService.updateSpark()
-		}
-		
-		public function cancelStartAHU():void
-		{
-			sparkService.stopSpark() //currently this is same as stop but may need to become a different function
-		}
-		
-		
-		// Listen for events from SPARK and respond and also issue events for entire AHU.
-		// Most components should be shielded from SPARK events and really only listen here
-		// for AHU events (only a few components listen directly to SparkService's SparkEvents, such as the SPARK icon in the corner of the viz window).			
-		public function onSparkEvent(evt:SparkEvent):void
-		{
-			
-			Logger.debug("sparkStatus called. type: " + evt.type + " code: " + evt.code + " msg: " + evt.msg, this)
-			
-			switch(evt.type)
-			{
-				case SparkService.SPARK_ON:
-					ahuStatus = ScenarioModel.AHU_ON
-					CairngormEventDispatcher.getInstance().dispatchEvent(new AHUEvent(AHUEvent.EVENT_AHU_STARTED))
-					break
-				case SparkService.SPARK_STARTUP_TIMEOUT:
-				case SparkService.SPARK_INTERVAL_TIMEOUT:
-				case SparkService.SPARK_CRASHED:
-				case SparkService.SPARK_OFF:
-					ahuStatus = ScenarioModel.AHU_OFF
-					CairngormEventDispatcher.getInstance().dispatchEvent(new AHUEvent(AHUEvent.EVENT_AHU_STOPPED))
-					break
-				default:
-					Logger.warn("onSparkEvent() unrecognized evt type: " + evt.type, this)
-			}
-			
-			
-		}
-		
-		/** Updates scenario properties each time a short-term (SPARK) output is read in */
-		public function loadShortTermOutputComplete(step:Number):void
-		{
-			updateTimer(step);
-			
-			//only import long-term variables on the hour 						
-			if (currDateTime.minutes==0 && currDateTime.seconds== 0)
-			{
-				importLongTermVars()
-				//automatically update spark variables to get imported variables into simulator
-				var updateEvent : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.EVENT_UPDATE_AHU);
-				CairngormEventDispatcher.getInstance().dispatchEvent(updateEvent);
-			}			
-			
-			//tell anybody who cares that the short term simulation output is complete
-			var cgEvent:CairngormEvent = new CairngormEvent(ScenarioModel.SHORT_TERM_OUTPUT_LOADED)
-			CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
-		}
-		
-		
-		 
-		//update every spark variable so that it records value
-		//(don't want to do this with binding because then I have to manage event listeners)
-		/*
-		private function recordAllSysVarValues():void
-		{
-			Logger.debug("ScenarioModel: recordAllSysVarValues() ~~~~~~~~~~~~~~~~~~~ ")
-			var len:Number = sysNodesArr.length
+			var len:Number = sysNodesAC.length
 			for (var i:Number=0; i<len;i++)
 			{
-				var len2:Number = sysNodesArr[i].sysVarsArr.length
-				for (var j:Number=0; j<len2; j++)
-				{
-					Logger.debug("recording value for sysVar: " +sysNodesArr[i].sysVarsArr[j].name )
-					sysNodesArr[i].sysVarsArr[j].recordValue()
-				}
-			}
-		} 
-		*/
-		
-		
-		private function resetAllSysVarValueHistories():void
-		{
-			var len:Number = sysNodesArr.length
-			for (var i:Number=0; i<len;i++)
-			{
-				var s:SystemNodeModel = sysNodesArr[i] as SystemNodeModel
-				var len2:Number = sysNodesArr[i].sysVarsArr.length
+				var s:SystemNodeModel = sysNodesAC[i] as SystemNodeModel
+				var len2:Number = sysNodesAC[i].sysVarsArr.length
 				for (var j:Number=0; j<len2; j++)
 				{
 					s.sysVarsArr[j].clearHistory()
@@ -553,7 +413,7 @@ package com.mcquilleninteractive.learnhvac.model
 			if (importLongTermVarsFromRun==ScenarioModel.LT_IMPORT_NONE) return 
 															
 			var sparkInputsVO:SparkInputVarsVO 
-			var ePlusData:EPlusData = ePlusRunsModel.getEPlusData(importLongTermVarsFromRun)	
+			var ePlusData:EPlusData = longTermSimulationDataModel.getEPlusData(importLongTermVarsFromRun)	
 						
 			if (ePlusData==null)
 			{
@@ -563,7 +423,7 @@ package com.mcquilleninteractive.learnhvac.model
 			
 			//try
 			//{		
-				sparkInputsVO = ePlusData.getSparkInputs(currDateTime, this.ltSettingsModel.floorOfInterest, this.ltSettingsModel.zoneOfInterest)
+				sparkInputsVO = ePlusData.getSparkInputs(currDateTime, _floorOfInterest, _zoneOfInterest)
 			//}
 			//catch(err:Error)
 			//{
@@ -609,11 +469,11 @@ package com.mcquilleninteractive.learnhvac.model
 		public function getLongTermExportSysVars():ArrayCollection
 		{
 			var resultAC:ArrayCollection = new ArrayCollection()
-			var len:Number = sysNodesArr.length
+			var len:Number = sysNodesAC.length
 			for (var i:Number=0; i<len;i++)
 			{
-				var s:SystemNodeModel = sysNodesArr[i] as SystemNodeModel
-				var len2:Number = sysNodesArr[i].sysVarsArr.length
+				var s:SystemNodeModel = sysNodesAC[i] as SystemNodeModel
+				var len2:Number = sysNodesAC[i].sysVarsArr.length
 				for (var j:Number=0; j<len2; j++)
 				{
 					var sysVar:SystemVariable = s.sysVarsArr[j]
@@ -625,6 +485,7 @@ package com.mcquilleninteractive.learnhvac.model
 				
 		public function setRealTimeStartDate(d:Date):void
 		{
+			Logger.debug("setRealTimeStartDate()",this)
 			_realtime_start_datetime = d
 			this.currDateTime = d
 			currTime = DateUtil.formatTime(currDateTime)
@@ -639,23 +500,25 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function set zoneOfInterest(val:uint):void
 		{
-			this.ltSettingsModel.zoneOfInterest = val
+			Logger.debug("zoneOfInterest()",this)
+			_zoneOfInterest = val
+			//longTermSimulationModel.zoneOfInterest = val
 			importLongTermVars()				
 		}
 		
 		
 		public function set floorOfInterest(val:uint):void
 		{
-			this.ltSettingsModel.floorOfInterest = val
-			importLongTermVars()				
+			_floorOfInterest = val				
 		}
 		
 		//////////////////////////////////////
 		// TIMER FUNCTIONS 
 		//////////////////////////////////////
 		
-		public function updateTimer(step:Number):void{
-			
+		public function updateTimer(step:Number):void
+		{
+			Logger.debug("updateTimer()",this)
 			//record each step for graphing purposes, but increment time according
 			//to the timeScale property (e.g. if timeScale is 5, add 5 seconds on each update, not one)
 			
@@ -669,6 +532,15 @@ package com.mcquilleninteractive.learnhvac.model
 			epochTimeArr.push(Date.parse(currDateTime.toString()))
 			currTime = DateUtil.formatTime(currDateTime)
 						
+			// import long-term variables on the hour 						
+			if (currDateTime.minutes==0 && currDateTime.seconds== 0)
+			{
+				importLongTermVars()
+				//automatically update spark variables to get imported variables into simulator
+				var event : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_UPDATE);
+				dispatchEvent(event);
+			}		
+								
 			Logger.debug("currTime:" + currTime)
 		}
 

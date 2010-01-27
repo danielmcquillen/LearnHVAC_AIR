@@ -2,24 +2,34 @@
 package com.mcquilleninteractive.learnhvac.event{
 	
 	import flash.events.Event;
-	import com.adobe.cairngorm.control.CairngormEvent;
 
-	public class ShortTermSimulationEvent extends CairngormEvent{
+	public class ShortTermSimulationEvent extends Event
+	{
 		
-		public static var EVENT_START_AHU : String = "startAHU";
-		public static var EVENT_UPDATE_AHU : String = "updateAHU";
-		public static var EVENT_STOP_AHU : String = "stopAHU";
-		public static var EVENT_CANCEL_START_AHU : String = "cancelStartAHU";
+		public static const SIM_START : String = "startShortTermSimulation";
+		public static const SIM_UPDATE : String = "updateShortTermSimulation";
+		public static const SIM_STOP : String = "stopShortTermSimulation";
 		
+		//these are the responses from the simulation
+		public static const SIM_STARTED:String = "shortTermSimulationStarted"
+		public static const SIM_UPDATED:String = "shortTermSimulationUpdated"
+		public static const SIM_STOPPED:String = "shortTermSimulationStopped"
+		public static const SIM_ERROR:String = "shortTermSimulationError"
+		public static const SIM_CRASHED:String = "shortTermSimulationCrashed"
+		public static const OUTPUT_UPDATED:String ="shortTermSimulationOutputUpdated"
 		
-		public function ShortTermSimulationEvent(type:String)
+		public var code:int
+		public var errorMessage:String
+		
+		public function ShortTermSimulationEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
-		  	super( type )
-     	}
-     	
-     	override public function clone() : Event
-		{
-			return new ShortTermSimulationEvent( type )
-		}		
+			super(type, bubbles, cancelable);
+		}
+		
+		override public function clone():Event
+        {
+            return new ShortTermSimulationEvent(this.type, this.bubbles, this.cancelable );
+        }
+		
 	}
 }

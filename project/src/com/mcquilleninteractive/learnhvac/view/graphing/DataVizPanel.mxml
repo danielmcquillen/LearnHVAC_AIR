@@ -10,10 +10,9 @@
 	<mx:Script>
 		<![CDATA[
 		
-			import com.adobe.cairngorm.control.CairngormEvent;
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			
 			
 			public var position:Number 
 			
@@ -22,16 +21,15 @@
 			
 				if (position==1)
 				{
-					graphPanel.var1Color = LHModelLocator.chart1Var1Color
-					graphPanel.var2Color = LHModelLocator.chart1Var2Color
+					graphPanel.var1Color = ApplicationModel.chart1Var1Color
+					graphPanel.var2Color = ApplicationModel.chart1Var2Color
 				}
 				else
 				{	
-					graphPanel.var1Color = LHModelLocator.chart2Var1Color
-					graphPanel.var2Color = LHModelLocator.chart2Var2Color	
+					graphPanel.var1Color = ApplicationModel.chart2Var1Color
+					graphPanel.var2Color = ApplicationModel.chart2Var2Color	
 				}
 				
-				CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.EVENT_EPLUS_DATA_PARSED, onEPlusDataParsed, false, 0,true)
 			}
 			
 			public function setGraphType (graphType:String) :void
@@ -53,12 +51,7 @@
 				graphPanel.setGraphType(graphType)
 			
 			}
-			
-			public function onEPlusDataParsed(e:ScenarioDataLoadedEvent):void
-			{
-				
-			}
-			
+	
 			public function clearGraph():void
 			{
 				graphPanel.clear()

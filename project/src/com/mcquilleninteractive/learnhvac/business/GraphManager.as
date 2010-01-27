@@ -10,7 +10,6 @@ package com.mcquilleninteractive.learnhvac.business
 	
 	*/
 	
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.mcquilleninteractive.learnhvac.event.ApplicationEvent;
 	import com.mcquilleninteractive.learnhvac.event.GraphEvent;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
@@ -28,11 +27,16 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		public function GraphManager()
 		{
-			CairngormEventDispatcher.getInstance().addEventListener(GraphEvent.EVENT_ADD_MINI_GRAPH, onAddMiniGraph, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(ApplicationEvent.EVENT_SELECT_NEW_SCENARIO, onSelectNewScenario, false, 0,true)
 			graphs = new Array()
 		}
 
+		Mediate(event="ApplicationEvent.SELECT_NEW_SCENARIO")]
+		public function onSelectNewScenario(event:ApplicationEvent):void
+		{
+			clearAllGraphs()
+		}
+		
+		[Mediate(event="GraphEvent.ADD_MINI_GRAPH")]
 		public function onAddMiniGraph(event:GraphEvent):void
 		{
 			Logger.debug("#Adding Graph with id:  " + graphID)
@@ -73,11 +77,6 @@ package com.mcquilleninteractive.learnhvac.business
 			delete graphs[event.target.graphID]
 		}
 
-	
-		public function onSelectNewScenario(event:ApplicationEvent):void
-		{
-			clearAllGraphs()
-		}
 
 	}
 }

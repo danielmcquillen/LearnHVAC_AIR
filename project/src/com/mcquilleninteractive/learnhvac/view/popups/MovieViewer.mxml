@@ -13,8 +13,7 @@
   			<![CDATA[
   			import com.mcquilleninteractive.learnhvac.util.Logger;
   			import com.mcquilleninteractive.learnhvac.event.ViewMovieEvent
-  			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
-  			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+  			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
     		import mx.managers.PopUpManager
   				
 			

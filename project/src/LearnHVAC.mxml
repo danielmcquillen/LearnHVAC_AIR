@@ -4,9 +4,11 @@
 	xmlns:business="com.mcquilleninteractive.learnhvac.business.*" 
 	xmlns:analysis="com.mcquilleninteractive.learnhvac.view.analysis.*" 
 	xmlns:scenario="com.mcquilleninteractive.learnhvac.view.scenario.*"
+	xmlns:event="com.mcquilleninteractive.learnhvac.event.*"
 	xmlns:view="com.mcquilleninteractive.learnhvac.view.*"
 	xmlns:util="com.mcquilleninteractive.learnhvac.util.*"    
 	xmlns:ext="nl.wv.extenders.panel.*"
+	xmlns:swizframework="org.swizframework.*"
 	xmlns:myComps="*"
     preinitialize="onPreInit()"
 	initialize="onInit()"
@@ -73,8 +75,7 @@ is excluded from license. The prototype model input file to EnergyPlus for a lar
 building has been developed by two national laboratories and is excluded from this license.
 
 */
-			
-			
+			import com.mcquilleninteractive.learnhvac.config.Beans
 			
 			[Bindable]
 			[Embed(source='assets/img/bug.png')]
@@ -82,18 +83,24 @@ building has been developed by two national laboratories and is excluded from th
 			
 		]]>
 	</mx:Script>
+	
+	<swizframework:SwizConfig 
+		strict="true"
+		eventPackages="com.mcquilleninteractive.learnhvac.event"
+		mediateBubbledEvents="true"
+		viewPackages="com.mcquilleninteractive.learnhvac.view"
+        injectionEvent="preinitialize"
+		beanLoaders="{[Beans]}"
+		logEventLevel="{LogEventLevel.WARN}"
+		/>
+
 
 	<mx:Style source="/assets/css/styles.css"/>
 	<mx:Script source="LearnHVAC_class.as" />
-
-	<!-- Service Locator definition -->
-	<business:Services id="services"/>
 	
-	<!-- the FrontController, containing Commands specific to this appliation -->
-	<control:LHController id="controller"/>
-
-	<!-- layout -->
 	
+	
+	<!-- layout -->	
 	<mx:Canvas id="appCanvas" 
 		height="100%" 
 		width="100%" 
@@ -102,17 +109,23 @@ building has been developed by two national laboratories and is excluded from th
 	
 		<view:Login 
 			id="loginPanel"
-			height="100%" width="100%"/>
+			height="100%" width="100%"
+			visible="{!_applicationModel.loggedIn}"
+			/>
 			
 		<mx:Canvas id="mainCanvas" 
-			visible="false" 
 			height="100%" width="100%"
 			horizontalScrollPolicy="off"
 		 	verticalScrollPolicy="off"
+		 	visible="{_applicationModel.loggedIn}"
 		    
 			>
+			
+			
 			<mx:VBox width="100%" height="100%" verticalGap="0">
 				
+			<view:AppMenu id="appMenu" width="100%"/>
+			
 			<view:AppControlBar id="appBarCanvas" width="100%" />	
 			
 			<mx:ViewStack width="100%" height="100%"
@@ -121,7 +134,7 @@ building has been developed by two national laboratories and is excluded from th
 					paddingBottom="0" 
 					paddingTop="0" 
 					resizeToContent="true" 
-					selectedIndex="{model.viewing}"
+					selectedIndex="{_applicationModel.viewing}"
 				    historyManagementEnabled="false"
 				    creationPolicy="all"
 					>

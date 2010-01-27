@@ -6,50 +6,28 @@
 	<mx:Script>
 		<![CDATA[
 			
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
             import com.mcquilleninteractive.learnhvac.util.Logger
             import mx.controls.Label 
             import com.mcquilleninteractive.learnhvac.model.SystemVariable
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
    			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
-   			import com.adobe.cairngorm.control.CairngormEvent
-		            				 
+   		
+		              				 
 		    
 			public function onCC():void
 			{		
-				//add listener for scenarioLoaded event --> this will be used to update labels
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
-	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);	
-	   			
-	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
-   				if (LHModelLocator.getInstance().scenarioLoaded == true)
-   				{
-   					scenarioLoaded(null)
-   				}
-   				
 			}
-			
-			
-			
-			public function scenarioLoaded(event:CairngormEvent):void
-			{						
-								
-				scenModel = LHModelLocator.getInstance().scenarioModel
 				
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]					
+			public function scenarioLoaded(event:ScenarioLoadedEvent):void
+			{																
 				//set visibility of labels			
-				lblTAirOut.visible=lblTAirOut_Title.visible=scenModel.getSysVar("TAirOut").visible		
-			
-   				
+				lblTAirOut.visible=lblTAirOut_Title.visible=scenarioModel.getSysVar("TAirOut").visible		   				
 			}
-			
-			
-			
 						
-					
-			
 		]]>
 	</mx:Script>
 	<mx:Label id="lblTAirOut_Title" text="Outside Air Dry Bulb Temp: " 

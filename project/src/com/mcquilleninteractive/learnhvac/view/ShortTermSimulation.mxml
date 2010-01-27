@@ -8,7 +8,6 @@
 			xmlns:shortterm="com.mcquilleninteractive.learnhvac.view.shortterm.*"
 			width="100%" 
 			height="100%"
-			preinitialize="onPreInit()"
 			creationComplete="onCC()" 
 			horizontalScrollPolicy="off"
 			verticalScrollPolicy="off"
@@ -19,34 +18,30 @@
 	
 	<mx:Script>
 		<![CDATA[
-		import com.mcquilleninteractive.learnhvac.view.popups.SparkModal
+		import com.mcquilleninteractive.learnhvac.view.popups.ShortTermSimulationPopup
 		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
-		import com.mcquilleninteractive.learnhvac.event.AHUEvent;
 		import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
 		import mx.core.IFlexDisplayObject;
 		import mx.containers.Panel;
 		import com.mcquilleninteractive.learnhvac.model.DialogManager
 		import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-		import com.mcquilleninteractive.learnhvac.model.SparkRunsModel
+		import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel
 		import com.mcquilleninteractive.learnhvac.event.ViewMovieEvent;
 		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
-		import com.mcquilleninteractive.learnhvac.event.ResetInputsToInitialValuesEvent
+		import com.mcquilleninteractive.learnhvac.event.ResetInputsEvent
 		import com.mcquilleninteractive.learnhvac.event.GraphEvent
-		import com.mcquilleninteractive.learnhvac.view.controllers.SimulationViewController
 		import com.mcquilleninteractive.learnhvac.view.popups.SimulationModal
 		import com.mcquilleninteractive.learnhvac.view.LongTermSimulation
-		import com.mcquilleninteractive.learnhvac.model.LHModelLocator	
+		import com.mcquilleninteractive.learnhvac.model.ApplicationModel	
 		import com.mcquilleninteractive.learnhvac.event.VisualizationEvent	
-		import com.mcquilleninteractive.learnhvac.event.AHUEvent	
 		import com.mcquilleninteractive.learnhvac.event.ShowSchematicEvent	
 		import com.mcquilleninteractive.learnhvac.event.ApplicationEvent	
 		import com.mcquilleninteractive.learnhvac.event.SysVarInfoPopupEvent	
 		import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent	
 		import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent
 		import com.mcquilleninteractive.learnhvac.util.Logger
-		import com.adobe.cairngorm.control.CairngormEventDispatcher
-		import com.mcquilleninteractive.learnhvac.event.SparkEvent            
-		import com.mcquilleninteractive.learnhvac.view.event.SimNavEvent   
+		
+		import com.mcquilleninteractive.learnhvac.event	.SimNavEvent   
 		import com.mcquilleninteractive.learnhvac.view.popups.HCLiquidsSchematicPanel
 		import com.mcquilleninteractive.learnhvac.view.popups.CCLiquidsSchematicPanel
 		import mx.managers.PopUpManager
@@ -56,56 +51,25 @@
 		import mx.core.UIComponent
 		import com.mcquilleninteractive.learnhvac.util.DebugPanel;
 
-		private var simViewController:SimulationViewController
 		private var dest:String 
-		
-		
-		private var scenarioModel:ScenarioModel
-							
+									
 		private var hcLiquidsSchematic:HCLiquidsSchematicPanel = null
 		private var ccLiquidsSchematic:CCLiquidsSchematicPanel = null
 		
 		private var simModal:IFlexDisplayObject
 		
-		protected var _sparkModal:SparkModal
+		protected var _shortTermSimPopup:ShortTermSimulationPopup
 		
 		//public var topNavFunctionList:Array
 		
 		[Bindable]
-		public var model : LHModelLocator = LHModelLocator.getInstance();
+		[Autowire]
+		public var scenarioModel:ScenarioModel
 		
 		[Bindable]
 		[Embed(source='assets/img/long_term_import_icon.png')]
 		public var RealTimeImportIcon:Class
-			
-			
-        public function onPreInit():void
-		{
-						
-			//topNavFunctionList = new Array()
-			
-			//hook up listeners			
-			var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
-   			dispatcher.addEventListener(VisualizationEvent.EVENT_NAVIGATION_CHANGE_NODE, navChange)
-   			dispatcher.addEventListener(ShowSchematicEvent.EVENT_SHOW_HC_LIQUIDS_POPUP, onShowSchematicPopup)
-   			dispatcher.addEventListener(ShowSchematicEvent.EVENT_SHOW_CC_LIQUIDS_POPUP, onShowSchematicPopup)
-   			dispatcher.addEventListener(SysVarInfoPopupEvent.EVENT_SHOW_INFO, sysVarInfoPopup)
-   			dispatcher.addEventListener(SysVarInfoPopupEvent.EVENT_HIDE_INFO, sysVarInfoPopup)
-   			dispatcher.addEventListener(SparkEvent.SPARK_CRASHED, onSparkCrash)
-   			dispatcher.addEventListener(SparkEvent.SPARK_STARTUP_TIMEOUT, onSparkTimeout)
-   			dispatcher.addEventListener(SparkEvent.SPARK_INTERVAL_TIMEOUT, onSparkTimeout)
-			dispatcher.addEventListener(AHUEvent.EVENT_AHU_STOPPED, onAHUEvent)
-			dispatcher.addEventListener(AHUEvent.EVENT_AHU_STARTED, onAHUEvent)
-				
-			//simViewController = new SimulationViewController();
-			//simViewController.addEventListener("scenarioLoaded",onScenarioLoaded);
-			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded)
-			dispatcher.addEventListener(ApplicationEvent.EVENT_SELECT_NEW_SCENARIO, onSelectNewScenario)
-			dispatcher.addEventListener(LogoutEvent.EVENT_LOGOUT, onLogout)
-			
-					
-		}
-				
+							
 		private function onHide():void
 		{
 			DialogManager.getInstance().hideAll()
@@ -115,35 +79,50 @@
 		{			
 			DialogManager.getInstance().showAll()
 		}
-
 		
 		public function onCC():void
 		{
-			Logger.debug("#ShortTermSimulation: onCreationComplete ")
-			//pnlViz.addEventListener("showSetPointControl", onShowSetPointControl)
-			pnlViz.addEventListener("introAnimFinished", onIntroAnimFinished)	
-			
-			
+			pnlViz.addEventListener("introAnimFinished", onIntroAnimFinished)		
 		}
 		
+		   
+		[Mediate(event="ShortTermSimulationEvent.SIM_CRASHED")]
+        public function onShortTermSimulationCrash(event:ShortTermSimulationEvent):void
+        {
+        	Logger.debug("onShortTermSimulationCrash()", this)
+        	// Tell user about SPARK crash in modal dialog IF THE CRASH WASN'T DUE TO TIMEOUT
+        	var alertMsg:String = "Simulation crashed. Error " + event.code + " : " + event.errorMessage
+        	mx.controls.Alert.show(alertMsg,"Simulation Crash")
+        	if (_shortTermSimPopup!=null)
+        	{
+        		PopUpManager.removePopUp(_shortTermSimPopup)
+        		_shortTermSimPopup = null
+        	}
+        	controlBar.simError()        	      	        	        
+        }
+                
+		[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
+        public function onAHUEvent(event:ShortTermSimulationEvent):void
+        {
+        	controlBar.simStopped() //reset buttons      	
+        }
+		
+		[Mediate(event="ApplicationEvent.SELECT_NEW_SCENARIO")]			
 		public function onSelectNewScenario(event:ApplicationEvent):void
 		{
-			Logger.debug("#Simulation: onSelectNewScenario event received")
-			clearSimPanel()
-					
+			clearSimPanel()					
 		}
 		
+		[Mediate(event="LogoutEvent.LOGOUT")]
 		public function onLogout(event:LogoutEvent):void
 		{
-			Logger.debug("#Simulation: onLogout event received")
 			clearSimPanel()
 		}
 		
 		public function clearSimPanel():void
 		{
-			Logger.debug("#Simulation: clearVizPanel() called...cleaning up screen")
 			//clean up everything on screen to get ready for new scenario
-			
+						
 			//Clean up input panel
 			if (pnlInput!=null) pnlInput.clearInputPanel() //if user logs out before loading a scenario, this will be null
 
@@ -153,37 +132,35 @@
 			DialogManager.getInstance().removeAllPopUps()
 									
 			//turn off AHU and Spark
-			if (LHModelLocator.getInstance().scenarioModel != null)
+			if (scenarioModel != null)
 			{
-				if (LHModelLocator.getInstance().scenarioModel.ahuStatus==ScenarioModel.AHU_ON)
+				if (scenarioModel.ahuStatus==ScenarioModel.AHU_ON)
 				{
 					stopSimulation()
 				}	
 			} 
 		}
 	
-		
-		public function navChange(navEvent:VisualizationEvent):void
+		[Mediate(event="VisualizationEvent.NAVIGATION_CHANGE_NODE")]
+   		public function navChange(navEvent:VisualizationEvent):void
 		{
-			//This function catches the navEvent launched by the miniNav from within the Visualization window
+			// This function catches the navEvent launched by the miniNav
+			// from within the Visualization window
 			
-			//update the model 
-			var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
 			scenarioModel.setCurrNode(navEvent.toNode)
 						
 			// update the combobox to the new node
 			// this is a little tricky because the combobox uses a 
 			// different index than scenarioModel.currNodeIndex  (b/c it doesn't show SPARK) 
-			var len:Number = scenarioModel.sysNodesForNavArr.length
+			var len:Number = scenarioModel.sysNodesForNavAC.length
 			for (var i:Number=0;i<len; i++)
 			{
-				var sysNode:SystemNodeModel = SystemNodeModel(scenarioModel.sysNodesForNavArr[i])
+				var sysNode:SystemNodeModel = SystemNodeModel(scenarioModel.sysNodesForNavAC[i])
 				if (sysNode.id == scenarioModel.currNode)
 				{
 					vizInfo.cboAhuNav.selectedIndex = i
 				}
-			}
-			
+			}			
 			
 			// we can use events for this later but right now it's easiest to just 
 			// hit the input and output panel directly
@@ -199,47 +176,40 @@
 		}
 		 
 				
-		public function sysVarInfoPopup(event:SysVarInfoPopupEvent):void
+   		[Mediate(event="SysVarInfoPopupEvent.SHOW_INFO")]
+		public function onShowSysVarInfoPopup(event:SysVarInfoPopupEvent):void
 		{
-			
-			if (event.type == SysVarInfoPopupEvent.EVENT_HIDE_INFO)
-			{
-				pnlSysVarInfo.visible = false
-				pnlSysVarInfo.stopDrag()
-				pnlSysVarInfo.x = 0
-				pnlSysVarInfo.y = 0
-			}
-			else if (event.type == SysVarInfoPopupEvent.EVENT_SHOW_INFO)
-			{
-				pnlSysVarInfo.x = mouseX + 10
-				pnlSysVarInfo.y = mouseY - 140
-				pnlSysVarInfo.sysVarDisplayName.text = event.sysVarDisplayName 
-				pnlSysVarInfo.sysVarName.text = event.sysVarName
-				pnlSysVarInfo.description.text = event.sysVarDescription
-				pnlSysVarInfo.lowValue.text  = event.lowValue
-				pnlSysVarInfo.highValue.text = event.highValue
-				pnlSysVarInfo.visible = true
-				pnlSysVarInfo.startDrag()
-			}
+			pnlSysVarInfo.x = mouseX + 10
+			pnlSysVarInfo.y = mouseY - 140
+			pnlSysVarInfo.sysVarDisplayName.text = event.sysVarDisplayName 
+			pnlSysVarInfo.sysVarName.text = event.sysVarName
+			pnlSysVarInfo.description.text = event.sysVarDescription
+			pnlSysVarInfo.lowValue.text  = event.lowValue
+			pnlSysVarInfo.highValue.text = event.highValue
+			pnlSysVarInfo.visible = true
+			pnlSysVarInfo.startDrag()
 		}
 		
-		/*********  Event Handlers   *********/
-		
-			
+   		[Mediate(event="SysVarInfoPopupEvent.HIDE_INFO")]
+		public function onHideSysVarInfoPopup(event:SysVarInfoPopupEvent):void
+		{			
+			pnlSysVarInfo.visible = false
+			pnlSysVarInfo.stopDrag()
+			pnlSysVarInfo.x = 0
+			pnlSysVarInfo.y = 0			
+		}
+					
+   		[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 		public function onScenarioLoaded(event:Event):void
 		{
 			Logger.debug("#Simulation: onScenarioLoaded()...now trying to hook up combo.")
-			
-			scenarioModel = LHModelLocator.getInstance().scenarioModel
 			
 			//show modal
 			simModal = PopUpManager.createPopUp(this.parent, SimulationModal, true)
 			PopUpManager.centerPopUp(simModal)
 			
 			//set combobox dataProvider
-			vizInfo.cboAhuNav.dataProvider = model.scenarioModel.sysNodesForNavArr
-			
-			
+			vizInfo.cboAhuNav.dataProvider = scenarioModel.sysNodesForNavAC			
 		}
 		
 		public function onIntroAnimFinished(e:Event):void
@@ -256,72 +226,25 @@
 			}
 		}
 		
-		public function onShowSchematicPopup(event:ShowSchematicEvent):void
+		[Mediate(event="ShowSchematicEvent.SHOW_HC_LIQUIDS_POPUP")]
+		public function onShowHCSchematicPopup(event:ShowSchematicEvent):void
 		{
-			switch(event.type)
-			{
-				case ShowSchematicEvent.EVENT_SHOW_HC_LIQUIDS_POPUP:
-					DialogManager.getInstance().showHCLiquidsSchematic()					
-					break;
-					
-				case ShowSchematicEvent.EVENT_SHOW_CC_LIQUIDS_POPUP:					
-					DialogManager.getInstance().showCCLiquidsSchematic()
-					break;
-					
-				default:
-					Logger.error("#Simulation: onShowSchematicPopup() unrecognized event: "+ event.type)	
-			}
-				
+			DialogManager.getInstance().showHCLiquidsSchematic()	
+		}
+		[Mediate(event="ShowSchematicEvent.SHOW_CC_LIQUIDS_POPUP")]
+   		public function onShowCCSchematicPopup(event:ShowSchematicEvent):void
+		{
+			DialogManager.getInstance().showCCLiquidsSchematic()
 		}
 			
 		
 		public function onAddMiniGraph():void
         {
-        	var cgEvent:GraphEvent = new GraphEvent(GraphEvent.EVENT_ADD_MINI_GRAPH)
-        	cgEvent.host = this
-        	CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+        	var evt:GraphEvent = new GraphEvent(GraphEvent.ADD_MINI_GRAPH, true)
+        	evt.host = this
+        	dispatchEvent(evt)
         }
-          
-        public function onSparkCrash(event:SparkEvent):void
-        {
-        	Logger.debug("#Simulation: onSparkCrash event received.")
-        	// Tell user about SPARK crash in modal dialog IF THE CRASH WASN'T DUE TO TIMEOUT
-        	var alertMsg:String = "Spark crashed. Error " + event.code + " : " + event.msg
-        	mx.controls.Alert.show(alertMsg,"SPARK Crash")
-        	if (_sparkModal!=null)
-        	{
-        		PopUpManager.removePopUp(_sparkModal)
-        		_sparkModal = null
-        	}
-        	controlBar.simError()
-        	      	        	        
-        }
-        
-        public function onSparkTimeout(event:SparkEvent):void
-        {
-        	if (_sparkModal!=null)
-        	{
-        		PopUpManager.removePopUp(_sparkModal)
-        		_sparkModal = null
-        	}
-        }
-        
-        public function onAHUEvent(event:AHUEvent):void
-        {
-        	switch (event.type)
-        	{
-        		case AHUEvent.EVENT_AHU_STOPPED:        			
-					controlBar.simStopped() //reset buttons
-        			break
-        			
-        		case AHUEvent.EVENT_AHU_STARTED:
-        			break
-        			
-        		default:
-        			
-        	}
-        	
-        }
+       
         
         
       	public function startSimulation():void
@@ -329,13 +252,13 @@
 			if (pnlInput.areInputsValid("forStartup"))
 			{							
 				//show modal
-				_sparkModal = new SparkModal()
-				PopUpManager.addPopUp(_sparkModal,this,true)
-				PopUpManager.centerPopUp(_sparkModal)				
+				_shortTermSimPopup = new ShortTermSimulationPopup()
+				PopUpManager.addPopUp(_shortTermSimPopup,this,true)
+				PopUpManager.centerPopUp(_shortTermSimPopup)				
 				controlBar.simStarted()
 				
-				var cgEvent : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.EVENT_START_AHU);
-				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent);
+				var event : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_START, true);
+				dispatchEvent(event);
 			}
 			else
 			{
@@ -345,17 +268,11 @@
 		
 					
 		public function stopSimulation():void
-		{
-			var cgEvent : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.EVENT_STOP_AHU);
-			CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent);
+		{			
+			var event : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_STOP, true);
+			dispatchEvent(event);			
 		}
 				
-		public function onSimNavEvent(event:SimNavEvent):void
-		{
-			Logger.debug("onSimNavEvent() event: " + event, this)
-			pnlViz.simNavEvent(event);
-		}
-			
 		
 			
 		]]>
@@ -382,7 +299,7 @@
 	
 			<shortterm:VisualizationPanel id="pnlViz" x="385" y="0"  />
 			
-			<shortterm:VizPanelInfo id="vizInfo" x="383" y="500" simNav="onSimNavEvent(event)" />					
+			<shortterm:VizPanelInfo id="vizInfo" x="383" y="500"/>					
 						
 			<!-- popup info and panels -->    
 			<shortterm:SysVarInfoPanel 

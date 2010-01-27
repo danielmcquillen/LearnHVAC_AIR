@@ -1,9 +1,7 @@
 // ActionScript file
 package  com.mcquilleninteractive.learnhvac.vo 
 {
-	import com.adobe.cairngorm.vo.IValueObject;
-
-	public class WeatherFilesVO implements IValueObject
+	public class WeatherFilesVO
 	{
 		
 		public var weatherFiles:XML

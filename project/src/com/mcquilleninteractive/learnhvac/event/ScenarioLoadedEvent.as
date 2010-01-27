@@ -2,19 +2,23 @@
 package com.mcquilleninteractive.learnhvac.event{
 	
 	import flash.events.Event;
-	import com.adobe.cairngorm.control.CairngormEvent;
 
-	public class ScenarioLoadedEvent extends CairngormEvent{
+	public class ScenarioLoadedEvent extends Event
+	{		
+		public static const SCENARIO_LOAD_FAILED : String = "scenarioLoadFailed";
+		public static const SCENARIO_LOADED : String = "scenarioLoaded";
 		
-		public static var SCENARIO_LOADED : String = "scenarioLoaded";
-		
-		public function ScenarioLoadedEvent(type:String):void{
-	      	super( type);
-     	}	
-     	
-     	override public function clone() : Event
+		public function ScenarioLoadedEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
-			return new ScenarioLoadedEvent( type );
-		}	
+			super(type, bubbles, cancelable);
+		}
+		  	
+		
+		
+		override public function clone():Event
+        {
+            return new ScenarioLoadedEvent(this.type, this.bubbles, this.cancelable );
+        }
+		    
 	}
 }

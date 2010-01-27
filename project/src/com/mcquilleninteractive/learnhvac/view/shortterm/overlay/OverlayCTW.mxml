@@ -7,30 +7,19 @@
 	<mx:Script>
 		<![CDATA[
 						
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
             import com.mcquilleninteractive.learnhvac.util.Logger
-            import mx.controls.Label 
             import com.mcquilleninteractive.learnhvac.model.SystemVariable
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
+            import com.mcquilleninteractive.learnhvac.model.ScenarioModel
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
    			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
-   			import com.adobe.cairngorm.control.CairngormEvent
-		            			
+            import mx.controls.Label 
+		        			
 		    
 			public function onCC():void
-			{
-				//add listener for scenarioLoaded event --> this will be used to update labels
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
-	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);		
-	   			
-	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
-   				if (LHModelLocator.getInstance().scenarioLoaded == true)
-   				{
-   					scenarioLoaded(null)
-   				}
-					
+			{	   								
 				//graphics to help indicate where values refer
 				this.graphics.lineStyle(1,0xCCCCCC,1)
 				
@@ -45,15 +34,13 @@
 				
 			}
 
-			public function scenarioLoaded(event:CairngormEvent):void
-			{					
-				
-				scenModel = LHModelLocator.getInstance().scenarioModel
-																							
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
+			public function scenarioLoaded(event:ScenarioLoadedEvent):void
+			{																												
 				//set visibility of labels		
-				lblCHLcondout.visible=lblCHLcondout_Title.visible=scenModel.getSysVar("CHLcondout").visible
-				lblCTWtout.visible=lblCTWtout_Title.visible=scenModel.getSysVar("CTWtout").visible
-				lblCHLcondflow.visible=lblCHLcondflow_Title.visible=scenModel.getSysVar("CHLcondflow").visible		
+				lblCHLcondout.visible=lblCHLcondout_Title.visible=scenarioModel.getSysVar("CHLcondout").visible
+				lblCTWtout.visible=lblCTWtout_Title.visible=scenarioModel.getSysVar("CTWtout").visible
+				lblCHLcondflow.visible=lblCHLcondflow_Title.visible=scenarioModel.getSysVar("CHLcondflow").visible		
 								
 			}
 

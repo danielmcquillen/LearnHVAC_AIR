@@ -10,32 +10,21 @@
 	<mx:Script>
 		<![CDATA[
 			
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
             import com.mcquilleninteractive.learnhvac.util.Logger
             import mx.controls.Label 
             import com.mcquilleninteractive.learnhvac.model.SystemVariable
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
    			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
-   			import com.adobe.cairngorm.control.CairngormEvent
-		            			        			
+   		           			        			
 		            			
 			public function onCC():void
 			{
 				
-				//add listener for scenarioLoaded event --> this will be used to update labels
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
-	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);
-	   					
-	   			//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
-   				if (LHModelLocator.getInstance().scenarioLoaded == true)
-   				{
-   					scenarioLoaded(null)
-   				}
-				
-   								
+				   								
 				//draw little helpful lines on overlay
 				var g:Graphics = this.graphics
 				g.lineStyle(1,0xFFFFFF,1)
@@ -105,25 +94,23 @@
 				
 			}
 			
-			public function scenarioLoaded(event:CairngormEvent):void
-			{						
-						
-				scenModel = LHModelLocator.getInstance().scenarioModel
-																						
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
+			public function scenarioLoaded(event:ScenarioLoadedEvent):void
+			{																												
 				//set visibility of labels			
-				lblMXTRet.visible=lblMXTRet_Title.visible=scenModel.getSysVar("MXTRet").visible
-				lblBOIfuel.visible=lblBOIfuel_Title.visible=scenModel.getSysVar("BOIfuel").visible
-				lblCHLcomppow.visible=lblCHLcomppow_Title.visible=scenModel.getSysVar("CHLcomppow").visible
-				lblCHLcondout.visible=lblCHLcondout_Title.visible=scenModel.getSysVar("CHLcondout").visible
-				lblCTWtout.visible=lblCTWtout_Title.visible=scenModel.getSysVar("CTWtout").visible
-				lblCHLevapin.visible=lblCHLevapin_Title.visible=scenModel.getSysVar("CHLevapin").visible
-				lblCHLevapout.visible=lblCHLevapout_Title.visible=scenModel.getSysVar("CHLevapout").visible
-				lblTAirSup.visible=lblTAirSup_Title.visible=scenModel.getSysVar("TAirSup").visible
-				lblCCposReal.visible=lblCCposReal_Title.visible=scenModel.getSysVar("CCposReal").visible
-				lblHCposReal.visible=lblHCposReal_Title.visible=scenModel.getSysVar("HCposReal").visible
-				lblMXOAPosDamperReal.visible=lblMXOAPosDamperReal_Title.visible=scenModel.getSysVar("MXOAPosDamperReal").visible
-				lblBOItout.visible=lblBOItout_Title.visible=scenModel.getSysVar("BOItout").visible
-				lblBOItin.visible=lblBOItin_Title.visible=scenModel.getSysVar("BOItin").visible
+				lblMXTRet.visible=lblMXTRet_Title.visible=scenarioModel.getSysVar("MXTRet").visible
+				lblBOIfuel.visible=lblBOIfuel_Title.visible=scenarioModel.getSysVar("BOIfuel").visible
+				lblCHLcomppow.visible=lblCHLcomppow_Title.visible=scenarioModel.getSysVar("CHLcomppow").visible
+				lblCHLcondout.visible=lblCHLcondout_Title.visible=scenarioModel.getSysVar("CHLcondout").visible
+				lblCTWtout.visible=lblCTWtout_Title.visible=scenarioModel.getSysVar("CTWtout").visible
+				lblCHLevapin.visible=lblCHLevapin_Title.visible=scenarioModel.getSysVar("CHLevapin").visible
+				lblCHLevapout.visible=lblCHLevapout_Title.visible=scenarioModel.getSysVar("CHLevapout").visible
+				lblTAirSup.visible=lblTAirSup_Title.visible=scenarioModel.getSysVar("TAirSup").visible
+				lblCCposReal.visible=lblCCposReal_Title.visible=scenarioModel.getSysVar("CCposReal").visible
+				lblHCposReal.visible=lblHCposReal_Title.visible=scenarioModel.getSysVar("HCposReal").visible
+				lblMXOAPosDamperReal.visible=lblMXOAPosDamperReal_Title.visible=scenarioModel.getSysVar("MXOAPosDamperReal").visible
+				lblBOItout.visible=lblBOItout_Title.visible=scenarioModel.getSysVar("BOItout").visible
+				lblBOItin.visible=lblBOItin_Title.visible=scenarioModel.getSysVar("BOItin").visible
 			
 			}
 		]]>

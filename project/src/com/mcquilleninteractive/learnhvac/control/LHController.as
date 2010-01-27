@@ -17,6 +17,7 @@ package com.mcquilleninteractive.learnhvac.control{
 		
 		public function initializeCommands():void{
 			
+			/*
 			Logger.debug("#LHController: init'ing commands...")
 			
 			addCommand( LoginEvent.EVENT_LOGIN, LoginCommand )
@@ -38,17 +39,11 @@ package com.mcquilleninteractive.learnhvac.control{
 			addCommand( InputsUpdateEvent.EVENT_INPUTS_UPDATE, InputsUpdateCommand)
 			
 			addCommand( SetUnitsEvent.EVENT_SET_UNITS_TO_SI, SetUnitsCommand)
-			addCommand( SetUnitsEvent.EVENT_SET_UNITS_TO_IP, SetUnitsCommand)
+			addCommand( SetUnitsEvent.S, SetUnitsCommand)
 			
 			addCommand( ResetInputsToInitialValuesEvent.EVENT_RESET_INPUTS_TO_INITIAL_VALUES, ResetInputsToInitialValuesCommand)
 			
-			addCommand( ShortTermSimulationEvent.EVENT_START_AHU, ShortTermSimulationCommand)
-			// ShortTermSimulationCommand listens directly for an EVENT_CANCEL_START_AHU 
-			addCommand( ShortTermSimulationEvent.EVENT_UPDATE_AHU, ShortTermSimulationCommand)
-			addCommand( ShortTermSimulationEvent.EVENT_STOP_AHU, ShortTermSimulationCommand)
-			
-			addCommand( LongTermSimulationEvent.EVENT_RUN, LongTermSimulationCommand)
-			
+						
 			addCommand( AddVarToGraphEvent.EVENT_ADD_EPLUS_VAR, AddVarToGraphCommand)
 			addCommand( AddVarToGraphEvent.EVENT_ADD_SPARK_VAR, AddVarToGraphCommand)
 			
@@ -60,7 +55,7 @@ package com.mcquilleninteractive.learnhvac.control{
 			
 			//code for test/debugging/admin			
 			addCommand( DebugEvent.LOAD_TEST_EPLUS_DATA_EVENT, LoadTestEplusDataCommand)
-			
+			*/
 		}
 		
 	}

@@ -8,16 +8,16 @@
 	<mx:Script>
 		<![CDATA[
 			
-			import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			
 						
 		]]>
 	</mx:Script>
 	
-	<graphing:EnergyOverviewChart height="50%" width="100%" title="EnergyPlus Run 1" layout="horizontal" runID="{EPlusRunsModel.RUN_1}" />
+	<graphing:EnergyOverviewChart height="50%" width="100%" title="EnergyPlus Run 1" layout="horizontal" runID="{LongTermSimulationDataModel.RUN_1}" />
 	
-	<graphing:EnergyOverviewChart height="50%" width="100%" title="EnergyPlus Run 2" layout="horizontal" runID="{EPlusRunsModel.RUN_2}"/>
+	<graphing:EnergyOverviewChart height="50%" width="100%" title="EnergyPlus Run 2" layout="horizontal" runID="{LongTermSimulationDataModel.RUN_2}"/>
 		
 	
 		

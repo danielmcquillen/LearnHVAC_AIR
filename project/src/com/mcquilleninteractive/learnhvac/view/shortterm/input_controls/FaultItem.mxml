@@ -32,7 +32,6 @@
 			import mx.validators.NumberValidator
 			import com.mcquilleninteractive.learnhvac.util.Logger
 			import com.mcquilleninteractive.learnhvac.model.SystemVariable
-   			import com.adobe.cairngorm.control.CairngormEventDispatcher
    			import com.mcquilleninteractive.learnhvac.event.SysVarInfoPopupEvent  
    			import mx.core.UIComponent
 			import com.mcquilleninteractive.learnhvac.util.Logger
@@ -166,19 +165,19 @@
 			
 			public function showInfoPanel():void
 			{
-				var cgEvent:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.EVENT_SHOW_INFO)
-				cgEvent.sysVarDescription = data.description
-				cgEvent.lowValue = data.low_value
-				cgEvent.highValue = data.high_value
-				cgEvent.sysVarDisplayName = data.display_name
-				cgEvent.sysVarName = data.name
-				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+				var event:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.SHOW_INFO, true)
+				event.sysVarDescription = data.description
+				event.lowValue = data.low_value
+				event.highValue = data.high_value
+				event.sysVarDisplayName = data.display_name
+				event.sysVarName = data.name
+				dispatchEvent(event)
 			}
 			
 			public function hideInfoPanel():void
 			{
-				var cgEvent:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.EVENT_HIDE_INFO)
-				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+				var event:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.HIDE_INFO, true)
+				dispatchEvent(event)
 			}
 			
 			public function onDrag(event:MouseEvent):void

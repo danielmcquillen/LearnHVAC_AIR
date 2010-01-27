@@ -7,32 +7,21 @@
 		<![CDATA[
 			
 				
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
             import com.mcquilleninteractive.learnhvac.util.Logger
             import mx.controls.Label 
             import com.mcquilleninteractive.learnhvac.model.SystemVariable
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
    			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
-   			import com.adobe.cairngorm.control.CairngormEvent
-		            					   
+   		
 		    private var unitsFannReal:String 	 
 		    private var unitsPAtm:String 	 
 		             					            			
 			public function onCC():void
-			{
-				//add listener for scenarioLoaded event --> this will be used to update labels
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
-	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded);			
-   				
-   				//check to see if a scenario has already been loaded, if so, call scenarioLoaded to make sure fields are configured
-   				if (LHModelLocator.getInstance().scenarioLoaded == true)
-   				{
-   					scenarioLoaded(null)
-   				}
-   				
+			{   				
    				//draw lines for UI niceness
    				
    				//VAV valve pos
@@ -61,26 +50,25 @@
    				
 			}
 
-			public function scenarioLoaded(event:CairngormEvent):void
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
+			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{		
 				
-				Logger.debug("scenarioLoaded()", this)	
-				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-			
+				Logger.debug("scenarioLoaded()", this)				
 								
 				//set visibility of labels				
-				lblTAirOut.visible = lblTAirOut_Title.visible = scenModel.getSysVar("TAirOut").visible
-				lblTwAirOut.visible = lblTwAirOut_Title.visible = scenModel.getSysVar("TwAirOut").visible
-				lblHCposReal.visible = lblHCposReal_Title.visible= scenModel.getSysVar("HCposReal").visible
-				lblCCposReal.visible = lblCCposReal_Title.visible =  scenModel.getSysVar("CCposReal").visible
-				lblTRoom.visible = lblTRoom_Title.visible =  scenModel.getSysVar("TRoom").visible
-				lblMXEAPosDamperReal.visible = scenModel.getSysVar("MXEAPosDamperReal").visible
-				lblMXOAPosDamperReal.visible = scenModel.getSysVar("MXOAPosDamperReal").visible
-				lblMXRAPosDamperReal.visible = scenModel.getSysVar("MXRAPosDamperReal").visible			
-				lblTSupMea.visible= lblTSupMea_Title.visible =  scenModel.getSysVar("TsupMea").visible
-				lblVAVHCTAirLvg.visible = lblVAVHCTAirLvg_Title.visible = scenModel.getSysVar("VAVHCTAirLvg").visible
-				lblVAVDAMPos.visible = lblVAVDAMPos_Title.visible = scenModel.getSysVar("VAVDAMPos").visible
-				lblVAVHCpos.visible = lblVAVHCpos_Title.visible = scenModel.getSysVar("VAVHCpos").visible
+				lblTAirOut.visible = lblTAirOut_Title.visible = scenarioModel.getSysVar("TAirOut").visible
+				lblTwAirOut.visible = lblTwAirOut_Title.visible = scenarioModel.getSysVar("TwAirOut").visible
+				lblHCposReal.visible = lblHCposReal_Title.visible= scenarioModel.getSysVar("HCposReal").visible
+				lblCCposReal.visible = lblCCposReal_Title.visible =  scenarioModel.getSysVar("CCposReal").visible
+				lblTRoom.visible = lblTRoom_Title.visible =  scenarioModel.getSysVar("TRoom").visible
+				lblMXEAPosDamperReal.visible = scenarioModel.getSysVar("MXEAPosDamperReal").visible
+				lblMXOAPosDamperReal.visible = scenarioModel.getSysVar("MXOAPosDamperReal").visible
+				lblMXRAPosDamperReal.visible = scenarioModel.getSysVar("MXRAPosDamperReal").visible			
+				lblTSupMea.visible= lblTSupMea_Title.visible =  scenarioModel.getSysVar("TsupMea").visible
+				lblVAVHCTAirLvg.visible = lblVAVHCTAirLvg_Title.visible = scenarioModel.getSysVar("VAVHCTAirLvg").visible
+				lblVAVDAMPos.visible = lblVAVDAMPos_Title.visible = scenarioModel.getSysVar("VAVDAMPos").visible
+				lblVAVHCpos.visible = lblVAVHCpos_Title.visible = scenarioModel.getSysVar("VAVHCpos").visible
 				
 			}
 			

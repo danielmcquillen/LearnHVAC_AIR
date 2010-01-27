@@ -1,6 +1,6 @@
 package com.mcquilleninteractive.learnhvac.vo
 {
-	import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.util.Conversions;
 	
 	public class SparkInputVarsVO
@@ -32,7 +32,7 @@ package com.mcquilleninteractive.learnhvac.vo
 		{
 			var rmQ:Number = (_lightingHeatGain + _electricEquipmentHeatGain + _peopleHeatGain) / 3600
 			
-			if (units== LHModelLocator.UNITS_SI)
+			if (units== ApplicationModel.UNITS_SI)
 			{
 				return rmQ	
 			}
@@ -46,7 +46,7 @@ package com.mcquilleninteractive.learnhvac.vo
 
 		public function get tAirOut():Number
 		{
-			if (LHModelLocator.currUnits == LHModelLocator.UNITS_SI)
+			if (ApplicationModel.currUnits == ApplicationModel.UNITS_SI)
 			{
 				return _tAirOut	
 			}
@@ -58,7 +58,7 @@ package com.mcquilleninteractive.learnhvac.vo
 		
 		public function set tAirOut(v:Number):void
 		{
-			if (LHModelLocator.currUnits == LHModelLocator.UNITS_SI)
+			if (ApplicationModel.currUnits == ApplicationModel.UNITS_SI)
 			{
 				_tAirOut = v
 			}
@@ -70,7 +70,7 @@ package com.mcquilleninteractive.learnhvac.vo
 
 		public function get twAirOut():Number
 		{
-			if (LHModelLocator.currUnits == LHModelLocator.UNITS_SI)
+			if (ApplicationModel.currUnits == ApplicationModel.UNITS_SI)
 			{
 				return _twAirOut	
 			}
@@ -82,7 +82,7 @@ package com.mcquilleninteractive.learnhvac.vo
 		
 		public function set twAirOut(v:Number):void
 		{
-			if (LHModelLocator.currUnits == LHModelLocator.UNITS_SI)
+			if (ApplicationModel.currUnits == ApplicationModel.UNITS_SI)
 			{
 				_twAirOut = v
 			}

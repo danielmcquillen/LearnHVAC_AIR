@@ -3,9 +3,9 @@
 
 package com.mcquilleninteractive.particleengine
 {
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
+	;
 	import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
-	import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.util.ColorSetting;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
@@ -17,6 +17,7 @@ package com.mcquilleninteractive.particleengine
 	import mx.binding.utils.BindingUtils;
 	import mx.binding.utils.ChangeWatcher;
 	import mx.core.UIComponent;
+	import org.swizframework.Swiz;
 	
 	
 	public class ParticleEngine extends UIComponent
@@ -133,7 +134,7 @@ package com.mcquilleninteractive.particleengine
 		private var particleManager:ParticleManager
 		
 		[Bindable]
-		private var scenModel:ScenarioModel
+		private var scenarioModel:ScenarioModel
 		
 		public function ParticleEngine():void
 		{
@@ -171,7 +172,7 @@ package com.mcquilleninteractive.particleengine
 			//       going to MX node, so update manually here
 			if (systemNode==ScenarioModel.SN_MIXINGBOX)
 			{
-				setMXTRet(scenModel.getSysVar("MXTRet").currValue)
+				setMXTRet(scenarioModel.getSysVar("MXTRet").currValue)
 			}
 			
 		}
@@ -182,7 +183,8 @@ package com.mcquilleninteractive.particleengine
 			
 			//TODO: implement different air animations speeds...until then, just turn on or off 
 			// depending on user settings
-			if (DISABLED_PE || LHModelLocator.getInstance().animationSpeed==LHModelLocator.ANIMATION_SPEED_NONE)
+			var applicationModel:ApplicationModel = Swiz.getBean("applicationModel") as ApplicationModel
+			if (DISABLED_PE || applicationModel.animationSpeed==ApplicationModel.ANIMATION_SPEED_NONE)
 			{
 				return
 			} 
@@ -203,25 +205,25 @@ package com.mcquilleninteractive.particleengine
 			//manually call set functions to make sure initial colors are correct
 			try
 			{
-				setHCTAirEnt(scenModel.getSysVar("HCTAirEnt").currValue)
-				setHCTAirLvg(scenModel.getSysVar("HCTAirEnt").currValue)
-				setCCTAirEnt(scenModel.getSysVar("CCTAirEnt").currValue)
-				setCCTAirLvg(scenModel.getSysVar("CCTAirLvg").currValue)
-				setFanTAirEnt(scenModel.getSysVar("FanTAirEnt").currValue)
-				setFanTAirLvg(scenModel.getSysVar("FanTAirLvg").currValue)
-				setMXRAPosDamperReal(scenModel.getSysVar("MXRAPosDamperReal").currValue)
-				setMXTRet(scenModel.getSysVar("MXTRet").currValue)
-				setMXTOut(scenModel.getSysVar("MXTOut").currValue)
-				setMXTmix(scenModel.getSysVar("MXTmix").currValue)
-				setVAVHCTAirEnt(scenModel.getSysVar("VAVHCTAirEnt").currValue)
-				setVAVHCTAirLvg(scenModel.getSysVar("VAVHCTAirLvg").currValue)
-				setVAVHCTAirLvg(scenModel.getSysVar("VAVHCTAirLvg").currValue)
-				setTRoom(scenModel.getSysVar("TRoom").currValue)
-				setTAirOut(scenModel.getSysVar("TAirOut").currValue)
+				setHCTAirEnt(scenarioModel.getSysVar("HCTAirEnt").currValue)
+				setHCTAirLvg(scenarioModel.getSysVar("HCTAirEnt").currValue)
+				setCCTAirEnt(scenarioModel.getSysVar("CCTAirEnt").currValue)
+				setCCTAirLvg(scenarioModel.getSysVar("CCTAirLvg").currValue)
+				setFanTAirEnt(scenarioModel.getSysVar("FanTAirEnt").currValue)
+				setFanTAirLvg(scenarioModel.getSysVar("FanTAirLvg").currValue)
+				setMXRAPosDamperReal(scenarioModel.getSysVar("MXRAPosDamperReal").currValue)
+				setMXTRet(scenarioModel.getSysVar("MXTRet").currValue)
+				setMXTOut(scenarioModel.getSysVar("MXTOut").currValue)
+				setMXTmix(scenarioModel.getSysVar("MXTmix").currValue)
+				setVAVHCTAirEnt(scenarioModel.getSysVar("VAVHCTAirEnt").currValue)
+				setVAVHCTAirLvg(scenarioModel.getSysVar("VAVHCTAirLvg").currValue)
+				setVAVHCTAirLvg(scenarioModel.getSysVar("VAVHCTAirLvg").currValue)
+				setTRoom(scenarioModel.getSysVar("TRoom").currValue)
+				setTAirOut(scenarioModel.getSysVar("TAirOut").currValue)
 			}
 			catch(e:Error)
 			{
-				Logger.debug("#PE: error trying to get initial currValues from scenModel: "  + e.message)
+				Logger.debug("#PE: error trying to get initial currValues from scenarioModel: "  + e.message)
 			}
 		}
 		
@@ -321,25 +323,25 @@ package com.mcquilleninteractive.particleengine
 		
 			//setup binding
 			
-			scenModel = LHModelLocator.getInstance().scenarioModel
-			cwArr.push(BindingUtils.bindSetter(setHCTAirEnt, scenModel.getSysVar("HCTAirEnt"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setHCTAirLvg, scenModel.getSysVar("HCTAirLvg"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setCCTAirEnt, scenModel.getSysVar("CCTAirEnt"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setCCTAirLvg, scenModel.getSysVar("CCTAirLvg"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setFanTAirEnt, scenModel.getSysVar("FanTAirEnt"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setFanTAirLvg, scenModel.getSysVar("FanTAirLvg"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setMXRAPosDamperReal, scenModel.getSysVar("MXRAPosDamperReal"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setMXTRet, scenModel.getSysVar("MXTRet"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setMXTOut, scenModel.getSysVar("MXTOut"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setMXTmix, scenModel.getSysVar("MXTmix"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setVAVHCTAirEnt, scenModel.getSysVar("VAVHCTAirEnt"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setVAVHCTAirLvg, scenModel.getSysVar("VAVHCTAirLvg"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setVAVHCTAirLvg, scenModel.getSysVar("VAVHCTAirLvg"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setTRoom, scenModel.getSysVar("TRoom"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setTAirOut, scenModel.getSysVar("TAirOut"), "currValue" ))
+			scenarioModel = Swiz.getBean("scenarioModel") as ScenarioModel
+			cwArr.push(BindingUtils.bindSetter(setHCTAirEnt, scenarioModel.getSysVar("HCTAirEnt"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setHCTAirLvg, scenarioModel.getSysVar("HCTAirLvg"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setCCTAirEnt, scenarioModel.getSysVar("CCTAirEnt"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setCCTAirLvg, scenarioModel.getSysVar("CCTAirLvg"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setFanTAirEnt, scenarioModel.getSysVar("FanTAirEnt"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setFanTAirLvg, scenarioModel.getSysVar("FanTAirLvg"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setMXRAPosDamperReal, scenarioModel.getSysVar("MXRAPosDamperReal"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setMXTRet, scenarioModel.getSysVar("MXTRet"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setMXTOut, scenarioModel.getSysVar("MXTOut"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setMXTmix, scenarioModel.getSysVar("MXTmix"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setVAVHCTAirEnt, scenarioModel.getSysVar("VAVHCTAirEnt"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setVAVHCTAirLvg, scenarioModel.getSysVar("VAVHCTAirLvg"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setVAVHCTAirLvg, scenarioModel.getSysVar("VAVHCTAirLvg"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setTRoom, scenarioModel.getSysVar("TRoom"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setTAirOut, scenarioModel.getSysVar("TAirOut"), "currValue" ))
 			
 			
-			Logger.debug("#PE: initPE() scenModel: " + scenModel)
+			Logger.debug("#PE: initPE() scenarioModel: " + scenarioModel)
 	
 			running = false
 			sysVarsArr = []
@@ -826,7 +828,7 @@ package com.mcquilleninteractive.particleengine
 			// passing in sysVarName but not using it yet. May use if we need
 			// to create different color schemes for air and water.
 			
-			var cf:ColorTransform =  ColorSetting.getTemperatureColor(p_temp, LHModelLocator.currUnits)
+			var cf:ColorTransform =  ColorSetting.getTemperatureColor(p_temp, ApplicationModel.currUnits)
 			return cf
 		
 		}

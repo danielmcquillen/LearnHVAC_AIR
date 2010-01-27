@@ -15,26 +15,27 @@
 	<mx:Script>
 	    <![CDATA[
 	    	import mx.events.ValidationResultEvent
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			
 			import com.mcquilleninteractive.learnhvac.event.LoginEvent
 			import com.mcquilleninteractive.learnhvac.event.LogoutEvent
 			import com.mcquilleninteractive.learnhvac.event.ApplicationEvent
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import mx.controls.Alert
 			import com.mcquilleninteractive.learnhvac.util.Logger;
 	
 			[Bindable]
-			private var model : LHModelLocator = LHModelLocator.getInstance();
-			
+			[Autowire(bean="applicationModel")]
+			public var applicationModel:ApplicationModel
+				
 			
 			private var loggingInAsGuest:Boolean = false
 			
 			private function onCC() : void
 			{
-				CairngormEventDispatcher.getInstance().addEventListener(LogoutEvent.EVENT_LOGOUT, onLogout, false, 0,true)			
-			
+					
 			}
 			
+			[Mediate(event="LogoutEvent.LOGOUT")]
 			public function onLogout(cgEvent:LogoutEvent):void
 			{
 				username.text = ""
@@ -42,20 +43,24 @@
 			}		
 	
 			// mutate the loginBtn's click event into a cairngorm event			
-			private function doLogin() : void {
+			private function doLogin() : void 
+			{
 				// validate the fields
 				var noUsername : Boolean = vUsername.validate().type == ValidationResultEvent.INVALID;
 				var noPassword : Boolean = vPassword.validate().type == ValidationResultEvent.INVALID;
-				if (noUsername || noPassword) {
+				if (noUsername || noPassword) 
+				{
 					return;
 				}
 				else
 				{
 					// if everything validates, broadcast an event containing the username & password
-					var cgEvent : LoginEvent = new LoginEvent( username.text, 
-																password.text, 
-																loggingInAsGuest );
-					CairngormEventDispatcher.getInstance().dispatchEvent( cgEvent );
+					var event : LoginEvent = new LoginEvent( LoginEvent.LOGIN, true );
+					event.username = username.text
+					event.password = password.text, 
+					event.loggingInAsGuest = loggingInAsGuest
+					Logger.debug("dispatching login event...",this)
+					dispatchEvent( event );
 
 					// now that the fields are sent in the event, blank out the login form fields
 					// otherwise they'll still be populated whenever the user returns here

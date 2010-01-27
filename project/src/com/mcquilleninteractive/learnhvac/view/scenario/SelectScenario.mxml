@@ -3,7 +3,6 @@
 			xmlns:view="com.mcquilleninteractive.learnhvac.view.*" 
 			width="100%" 
 			height="100%"
-			preinitialize="onPreInitialize()"
 			horizontalScrollPolicy="off"
 			verticalScrollPolicy="off"
 			>
@@ -17,13 +16,15 @@
 	<mx:Script>
 	
 		<![CDATA[
+		import com.mcquilleninteractive.learnhvac.model.UserModel;
+		import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
+		import mx.collections.ArrayCollection;
+		
 		import mx.events.ListEvent;
 		import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent;
-		import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+		import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 		import com.mcquilleninteractive.learnhvac.event.GetScenarioListEvent;
 		import com.mcquilleninteractive.learnhvac.view.scenario.SelectScenarioItemRenderer;
-		import com.adobe.cairngorm.control.CairngormEventDispatcher;
-		import com.adobe.cairngorm.control.CairngormEvent;	
 		import com.mcquilleninteractive.learnhvac.util.Logger;
 	
 	
@@ -34,35 +35,32 @@
 		[Bindable]
 		[Embed(source='assets/img/database_refresh.png')]
 		public var DiskIcon:Class
-		
-		
-	
+				
 		[Bindable]
-		private var model : LHModelLocator = LHModelLocator.getInstance();
-		//public var topNavFunctionList:Array 
+		[Autowire]
+		public var scenarioLibraryModel:ScenarioLibraryModel
 		
-		public function onPreInitialize():void
-		{
-			//topNavFunctionList = new Array()
-		}
+		[Bindable]
+		[Autowire]
+		public var userModel:UserModel
 		
-	
+			
 		private function getLocalScenarioList():void
 		{
-			var event : GetScenarioListEvent = new GetScenarioListEvent(GetScenarioListEvent.EVENT_GET_LOCAL_SCENARIO_LIST);
-			CairngormEventDispatcher.getInstance().dispatchEvent( event );
+			var event : GetScenarioListEvent = new GetScenarioListEvent(GetScenarioListEvent.GET_LOCAL_SCENARIO_LIST, true);
+			dispatchEvent( event );
 		}
 		
 		private function getRemoteScenarioList():void
 		{
-			var event : GetScenarioListEvent = new GetScenarioListEvent(GetScenarioListEvent.EVENT_GET_REMOTE_SCENARIO_LIST);
-			CairngormEventDispatcher.getInstance().dispatchEvent( event );
-		}
-		
+			var event : GetScenarioListEvent = new GetScenarioListEvent(GetScenarioListEvent.GET_REMOTE_SCENARIO_LIST, true);
+			dispatchEvent( event );
+		}	
+			
 		private function getDefaultScenarios():void
 		{
-			var event : GetScenarioListEvent = new GetScenarioListEvent(GetScenarioListEvent.EVENT_GET_DEFAULT_SCENARIO_LIST);
-			CairngormEventDispatcher.getInstance().dispatchEvent( event );
+			var event : GetScenarioListEvent = new GetScenarioListEvent(GetScenarioListEvent.GET_DEFAULT_SCENARIO_LIST, true);
+			dispatchEvent( event );
 		}
 		
 		
@@ -85,7 +83,7 @@
 					width="209" height="32" 
 					id="btnGetRemoteScenarioList" 
 					click="getRemoteScenarioList()"
-					visible = "{!model.loggedInAsGuest}"
+					visible = "{!userModel.loggedInAsGuest}"
 					icon="{ServerIcon}"					
 					/>
 				<mx:Button label="Get scenarios from disk"
@@ -106,14 +104,16 @@
 			
 			<mx:Spacer width="10"/>
 		
-			<mx:Panel height="100%" width="670" title="{model.scenarioListLocation}">
-				<mx:List 	selectable="false"
-							width="100%" 
-							height="100%" 
-							dataProvider="{model.currScenarioList}"
-							alternatingItemColors="[#F1F1F1,#F9F9F9]" 
-							itemRenderer="com.mcquilleninteractive.learnhvac.view.scenario.SelectScenarioItemRenderer" 
-							>
+			<mx:Panel height="100%" width="670" title="{scenarioLibraryModel.scenarioListLocation}">
+				
+				<mx:List 	
+					selectable="false"
+					width="100%" 
+					height="100%" 
+					dataProvider="{scenarioLibraryModel.currScenarioList}"
+					alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+					itemRenderer="com.mcquilleninteractive.learnhvac.view.scenario.SelectScenarioItemRenderer" 
+					>
 				
 				</mx:List>
 			</mx:Panel>

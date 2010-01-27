@@ -2,31 +2,37 @@ package com.mcquilleninteractive.learnhvac.event
 {
 	
 	import flash.events.Event;
-	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
 	import com.mcquilleninteractive.learnhvac.view.LongTermSimulation
 
-	public class LongTermSimulationEvent extends CairngormEvent{
+	public class LongTermSimulationEvent extends Event
+	{
 		
-		public static var EVENT_RUN : String = "run"
-		public static var EVENT_CANCEL : String = "cancel"
-		public static var EVENT_FAILED : String = "failed"
-		public static var EVENT_DONE : String = "done"
+		public static const SIM_START : String = "runLongTermSimulation";
+		public static const SIM_FAILED : String = "failedLongTermSimulation";
+		public static const SIM_CANCEL : String = "cancelLongTermSimulation";
+		public static const FILE_LOADED : String = "longTermSimulationFileLoaded";
+		public static const SIM_LOAD_COMPLETE : String = "doneLongTermSimulationLoad";
+		public static const SIM_COMPLETE : String = "completeLongTermSimulation";
 		
 		public var view:LongTermSimulation
 		public var setupVO : LongTermSimulationVO
+		public var runID:String
+		public var errorMessage:String
 		
-		public function LongTermSimulationEvent(type:String, view:LongTermSimulation=null, setupVO:LongTermSimulationVO=null)
-		{
-	      	super( type )
-	      	this.view = view
-     	}
-     	
-     	override public function clone() : Event{
-     	
-			return new LongTermSimulationEvent(EVENT_RUN, view, setupVO)
-		}		
+				
+		public function LongTermSimulationEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
+		{			
+			super(type, bubbles, cancelable);
+		}	
 		
+		override public function clone():Event
+        {
+            return new LongTermSimulationEvent(this.type, this.bubbles, this.cancelable );
+        }
+		
+     	
+     	
 	}
 	
 }

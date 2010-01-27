@@ -8,10 +8,8 @@
     
     <mx:Script>
     	<![CDATA[
-    		import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+    		import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
     		import com.mcquilleninteractive.learnhvac.vo.ScenarioListItemVO
-    		import com.adobe.cairngorm.control.CairngormEvent;
-			import com.adobe.cairngorm.control.CairngormEventDispatcher;
     		import com.mcquilleninteractive.learnhvac.util.Logger;
     		import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent;
     		import com.mcquilleninteractive.learnhvac.event.GetScenarioListEvent;
@@ -23,43 +21,41 @@
     		public function onInitialize():void
     		{	
     			Logger.debug("#SelectScenarioItem: registering listener")
-				CairngormEventDispatcher.getInstance().addEventListener(GetScenarioListEvent.EVENT_SCENARIO_LIST_LOADED, onScenarioListLoaded, false, 0,true)
-    		}
+			}
     		
+			
     		public function loadScenario():void
     		{
     			Logger.debug("#SelectScenarioItem: loading scenario")
-    			var model:LHModelLocator = LHModelLocator.getInstance()
     			var type:String
     			var fileName:String = ""
     			
     			var scenarioListItemVO:ScenarioListItemVO = ScenarioListItemVO(data)
     			
-    			var cgEvent:LoadScenarioEvent
+    			var event:LoadScenarioEvent
     			switch (scenarioListItemVO.sourceType)
     			{
     				case ScenarioListItemVO.SOURCE_LOCAL_FILE:
-	    				cgEvent =  new LoadScenarioEvent(LoadScenarioEvent.EVENT_LOAD_LOCAL_SCENARIO)
-	    				cgEvent.fileName = scenarioListItemVO.fileName
+	    				event =  new LoadScenarioEvent(LoadScenarioEvent.LOAD_LOCAL_SCENARIO, true)
+	    				event.fileName = scenarioListItemVO.fileName
     					break
     					
     				case ScenarioListItemVO.SOURCE_REMOTE:
-    					cgEvent =  new LoadScenarioEvent(LoadScenarioEvent.EVENT_LOAD_REMOTE_SCENARIO)
-    					cgEvent.scenID = scenarioListItemVO.scenID
+    					event =  new LoadScenarioEvent(LoadScenarioEvent.LOAD_REMOTE_SCENARIO, true)
+    					event.scenID = scenarioListItemVO.scenID
     					break
     					
     				case ScenarioListItemVO.SOURCE_DEFAULT:
-    					cgEvent =  new LoadScenarioEvent(LoadScenarioEvent.EVENT_LOAD_SCENARIO_XML)
-    					cgEvent.xml = scenarioListItemVO.scenarioXML
+    					event =  new LoadScenarioEvent(LoadScenarioEvent.LOAD_DEFAULT_SCENARIO, true)
+    					event.scenarioXML = scenarioListItemVO.scenarioXML
     					break
     					
     				default:
     					Logger.error("Unrecognized scenarioListItem type: " + scenarioListItemVO.sourceType)
     					
     			}
-    			
-    			
-    			CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+    			    			
+    			dispatchEvent(event)
     		}
     		
     		override public function set data( value:Object ) : void 
@@ -76,15 +72,16 @@
 			}
 
     		
+			[Mediate(event="GetScenarioListEvent.SCENARIO_LIST_LOADED")]
     		public function onScenarioListLoaded(event:GetScenarioListEvent):void
     		{
-    			Logger.debug("#SelectScenarioItem: trying to load scenarioThumbnail...")
+    			Logger.debug("trying to load scenarioThumbnail...", this)
     			scenarioThumbnail.load()
     		}
     		
     		protected function showDefaultImage():void
     		{
-    			Logger.debug("#SelectScenarioItem: couldn't find pic at : " + data.thumbnail_URL + " so using default image")
+    			Logger.warn("couldn't find pic at : " + data.thumbnail_URL + " so using default image", this)
     			scenarioThumbnail.source = defaultScenarioPic
     			scenarioThumbnail.invalidateProperties()
     		}

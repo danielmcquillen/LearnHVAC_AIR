@@ -3,14 +3,14 @@ package com.mcquilleninteractive.learnhvac.model
 
 	import com.mcquilleninteractive.learnhvac.util.DateUtil;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
-	
+	import org.swizframework.Swiz
 	import mx.collections.XMLListCollection;
 	
 		
 	public class SparkData implements IGraphDataModel
 	{
-		
-		public var sparkRunsModel		:SparkRunsModel
+				
+		public var sparkRunsModel		:ShortTermSimulationDataModel
 		public var dataArr				:Array
 		public var dataStructureXML		:XML
 		public var dateTimeID			:String = "Tstep" //this is the var within spark that marks time increments
@@ -19,8 +19,11 @@ package com.mcquilleninteractive.learnhvac.model
 		private var currYear			:String 	
 		private var totalElapsedTimeInSeconds:Number		
 		
-		public function SparkData(srModel:SparkRunsModel)
+		private var _scenarioModel:ScenarioModel
+		
+		public function SparkData(srModel:ShortTermSimulationDataModel)
 		{
+			
 			sparkRunsModel = srModel
 			dataArr = []
 			dataStructureXML  = createBaseXML()
@@ -79,7 +82,7 @@ package com.mcquilleninteractive.learnhvac.model
 				for (var j:Number = 0; j<varIDs.length; j++)
 				{
 					varID = varIDs[j]		
-					if (LHModelLocator.currUnits=="SI")
+					if (ApplicationModel.currUnits=="SI")
 					{
 						historyArr = dataArr[varID].historySI
 					}
@@ -121,16 +124,17 @@ package com.mcquilleninteractive.learnhvac.model
 			// load current data from Scenario Model
 			// place into array structure, and also build an XML structure for the tree selector
 			
-			var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-			var today:Date = scenarioModel.realtime_start_datetime
-			var epochTimeArr:Array = scenarioModel.epochTimeArr
+			if (_scenarioModel==null) _scenarioModel = Swiz.getBean("scenarioModel") as ScenarioModel
+			
+			var today:Date = _scenarioModel.realtime_start_datetime
+			var epochTimeArr:Array = _scenarioModel.epochTimeArr
 			
 			//clear out current XML structure
 			dataStructureXML = createBaseXML()
 			
 			var returnArr:Array = []
 			
-			for each (var sysNode:SystemNodeModel in scenarioModel.sysNodesArr)
+			for each (var sysNode:SystemNodeModel in _scenarioModel.sysNodesAC)
 			{
 				
 				//add component to XML structure
@@ -167,7 +171,7 @@ package com.mcquilleninteractive.learnhvac.model
 				tstepArr[i] = new Date(epochTimeArr[i])			
 			}
 			
-			totalElapsedTimeInSeconds = scenarioModel.elapsedTime
+			totalElapsedTimeInSeconds = _scenarioModel.elapsedTime
 						
 		}
 		

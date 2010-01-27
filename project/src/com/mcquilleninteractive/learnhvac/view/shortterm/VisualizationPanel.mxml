@@ -12,17 +12,17 @@
 	
 	<mx:Script>
 		<![CDATA[
-			
+		import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
+		import com.mcquilleninteractive.learnhvac.event.ZoneChangeEvent;		
+		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 		import com.mcquilleninteractive.particleengine.Particle;
 		import com.mcquilleninteractive.particleengine.ParticleEngine;
-		import com.adobe.cairngorm.control.CairngormEventDispatcher
-		import com.adobe.cairngorm.control.CairngormEvent
+		
 		import com.mcquilleninteractive.learnhvac.util.Logger	
-		import com.mcquilleninteractive.learnhvac.view.event.SimNavEvent
+		import com.mcquilleninteractive.learnhvac.event.SimNavEvent
 		import com.mcquilleninteractive.learnhvac.event.VisualizationEvent
 		import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
-		import com.mcquilleninteractive.learnhvac.event.AHUEvent
-		import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+		import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 		import com.mcquilleninteractive.learnhvac.model.ScenarioModel
         import mx.binding.utils.BindingUtils
         import mx.binding.utils.ChangeWatcher
@@ -43,6 +43,18 @@
 		private var cwArr:Array = [];
 		
 		
+		[Bindable]
+		[Autowire]
+		public var applicationModel:ApplicationModel
+		
+		[Bindable]
+		[Autowire]
+		public var scenarioModel:ScenarioModel
+				
+		[Bindable]
+		[Autowire]
+		public var longTermSimulationModel:LongTermSimulationModel
+		
 		[Embed(source='assets/PIDControl.swf', symbol='setPointControl3D')]
 		[Bindable]
      	private var SetPoint3DControlImage:Class
@@ -52,11 +64,8 @@
 		{
 			Logger.debug("#VisualizationPanel: onCreationComplete()")
 			
-			//listeners
-			CairngormEventDispatcher.getInstance().addEventListener(AHUEvent.EVENT_AHU_STARTED, onAHUEvent, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(AHUEvent.EVENT_AHU_STOPPED, onAHUEvent, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0,true)
-			miniNav.addEventListener(SimNavEvent.EVENT_NAVIGATION, simNavEvent)
+			//add listener for miniNav,since it's not a part of SWIZ environment
+			miniNav.addEventListener("miniNavChange", onMiniNavChange)
 			
 			overlaysArr = []
 			
@@ -102,25 +111,38 @@
 							
 		}	
 		
+		[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 		public function onScenarioLoaded(evt:ScenarioLoadedEvent):void
 		{
-			Logger.debug("#VizPanel: onScenarioLoaded()")
-			LHModelLocator.getInstance().scenarioModel.ltSettingsModel.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onLTSettingsChange, false, 0,true)
+			Logger.debug("onScenarioLoaded()",this)
 			currNode = ScenarioModel.SN_ROOF	
 			initBindings()
 			pe.initPE()
 			pe.setScene(currNode)
-			Logger.debug("#VizPanel: animPanel.playIntroAnim()")
 			playIntroAnim()
 		}
 		
-		/* The only reason we listen to changes to the LTSettings class
-		   is to watch for a zone change. If the zone is 5, we show the zone 5 system view hack image, otherwise we hide it*/
-		public function onLTSettingsChange(event:PropertyChangeEvent):void
+		[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
+		public function onShortTermSimStopped(event:ShortTermSimulationEvent):void
 		{
-			if (event.property=="zoneOfInterest" && currNode==ScenarioModel.SN_SYSTEM)
+			pe.stopPE()
+			//stop fan if it's visible in this node
+			if (currNode == ScenarioModel.SN_FAN || currNode == ScenarioModel.SN_ROOF || currNode == ScenarioModel.SN_SYSTEM)
 			{
-				imgCoreZoneSystemView.visible = (event.newValue==5)
+				fan.currentState = currNode + "_OFF"
+			}
+		}
+		
+		
+		
+		/* If the zone is 5, we show the zone 5 system view hack image, otherwise we hide it*/
+		[Mediate(event="ZoneChangeEvent.ZONE_CHANGED")]
+		public function onLTSettingsChange(event:ZoneChangeEvent):void
+		{
+			//only has an affect if we're looking at the system view
+			if (currNode==ScenarioModel.SN_SYSTEM)
+			{
+				imgCoreZoneSystemView.visible = (event.toZone==5)
 			}
 			
 		}
@@ -172,9 +194,7 @@
 		}
 		
 		private function initBindings():void
-		{
-			var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-			
+		{						
 			while (cwArr.length>0)
 			{
 				ChangeWatcher(cwArr.pop()).unwatch()
@@ -182,13 +202,13 @@
 			
 			//setup any binding of viz objects to scenarioModel
 			//mixing box
-			cwArr.push(BindingUtils.bindSetter(setDampersOA, scenModel.getSysVar("MXOAPosDamperReal"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setDampersEA, scenModel.getSysVar("MXEAPosDamperReal"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setDampersRA, scenModel.getSysVar("MXRAPosDamperReal"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setDampersOA, scenarioModel.getSysVar("MXOAPosDamperReal"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setDampersEA, scenarioModel.getSysVar("MXEAPosDamperReal"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setDampersRA, scenarioModel.getSysVar("MXRAPosDamperReal"), "currValue" ))
 			//damper			
-			cwArr.push(BindingUtils.bindSetter(setVAVDamper, scenModel.getSysVar("VAVPos"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setVAVDamper, scenarioModel.getSysVar("VAVPos"), "currValue" ))
 			//FPS bar 
-			cwArr.push(BindingUtils.bindSetter(onFPSBar, LHModelLocator.getInstance(), "showFramesPerSecondBar"))
+			cwArr.push(BindingUtils.bindSetter(onFPSBar, applicationModel, "showFramesPerSecondBar"))
 			
 		}
 		
@@ -216,50 +236,44 @@
 			vavDamper.setDamper(value)
 		}
 		
-		public function onAHUEvent(evt:CairngormEvent):void
+		[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
+		public function onShortTermSimStarted(event:ShortTermSimulationEvent):void
 		{
-			Logger.debug("#VizPanel: onAHUEvent received type: " +evt.type)
-			var event:AHUEvent = AHUEvent(evt)
-			switch (event.type)
+			pe.startPE()
+			//start fan if it's visible in this node
+			if (currNode == ScenarioModel.SN_FAN || currNode == ScenarioModel.SN_ROOF || currNode == ScenarioModel.SN_SYSTEM)
 			{
-				case AHUEvent.EVENT_AHU_STARTED:
-					pe.startPE()
-					//start fan if it's visible in this node
-					if (currNode == ScenarioModel.SN_FAN || currNode == ScenarioModel.SN_ROOF || currNode == ScenarioModel.SN_SYSTEM)
-					{
-						fan.currentState = currNode + "_ON"	
-					}
-					break
-					
-				case AHUEvent.EVENT_AHU_STOPPED:
-					pe.stopPE()
-					//stop fan if it's visible in this node
-					if (currNode == ScenarioModel.SN_FAN || currNode == ScenarioModel.SN_ROOF || currNode == ScenarioModel.SN_SYSTEM)
-					{
-						fan.currentState = currNode + "_OFF"
-					}
-					break
-				
-				default:
-					Logger.error("#VizPanel: onAHUEvent: unrecognized event type: " + event.type)
-				
+				fan.currentState = currNode + "_ON"	
 			}
 		}
 		
-		public function simNavEvent(e:SimNavEvent):void
+		
+		public function onMiniNavChange(event:Event):void
 		{
-			if (currNode == e.node) return
+			var newNode:String = miniNav.newNode
+			navigateTo(newNode)			
+		}
+		
+		protected function navigateTo(newNode:String):void
+		{
+			if (currNode == newNode) return			
 			hideNode()
-			//move to new view	
-			currNode = e.node	
+			currNode = newNode	
 			animPanel.navigateTo(currNode)
 		}
-					
+		
+		[Mediate(event="SimNavEvent.NAVIGATION")]		
+		public function onSimNavEvent(event:SimNavEvent):void
+		{
+			Logger.debug("onSimNavEvent()",this)
+			navigateTo(event.node)			
+			
+		}
+						
 		public function showNode():void
 		{
 			Logger.debug("#VizPanel: showNode(). currNode:" + currNode)
 			
-			var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
 			//Sets the current node's overlays after the animation has completed
 			var currOverlay:String = "overlay"+currNode
 			for (var overlay:String in overlaysArr)
@@ -286,7 +300,7 @@
 				case ScenarioModel.SN_FAN:
 					//set fan according to AHU state
 					fan.visible = true
-					switch (scenModel.ahuStatus)
+					switch (scenarioModel.ahuStatus)
 					{
 						case ScenarioModel.AHU_OFF:
 							fan.currentState = "Fan_OFF"
@@ -307,7 +321,7 @@
 					vavDamper.visible = true
 					try
 					{
-						vavDamper.setDamper(scenModel.getSysVar("VAVPos").currValue )
+						vavDamper.setDamper(scenarioModel.getSysVar("VAVPos").currValue )
 					}
 					catch (e:Error)
 					{
@@ -320,11 +334,11 @@
 					try
 					{
 						Logger.debug("#VizPanel: showNode() setting dampers to current values...")
-						Logger.debug("#VizPanel: showNode() MXOAPosDamperReal: " +scenModel.getSysVar("MXOAPosDamperReal").currValue )
+						Logger.debug("#VizPanel: showNode() MXOAPosDamperReal: " +scenarioModel.getSysVar("MXOAPosDamperReal").currValue )
 						
-						setDampersOA( scenModel.getSysVar("MXOAPosDamperReal").currValue )
-						setDampersEA( scenModel.getSysVar("MXEAPosDamperReal").currValue )
-						setDampersRA( scenModel.getSysVar("MXRAPosDamperReal").currValue )
+						setDampersOA( scenarioModel.getSysVar("MXOAPosDamperReal").currValue )
+						setDampersEA( scenarioModel.getSysVar("MXEAPosDamperReal").currValue )
+						setDampersRA( scenarioModel.getSysVar("MXRAPosDamperReal").currValue )
 					}
 					catch (e:Error)
 					{
@@ -335,7 +349,7 @@
 				case ScenarioModel.SN_ROOF:
 					//set fan according to AHU state
 					fan.visible = true
-					switch (scenModel.ahuStatus)
+					switch (scenarioModel.ahuStatus)
 					{
 						case ScenarioModel.AHU_OFF:
 							fan.currentState = "RF_OFF"
@@ -349,11 +363,11 @@
 				
 				case ScenarioModel.SN_SYSTEM:
 				
-					if (scenModel.ltSettingsModel.zoneOfInterest==5) imgCoreZoneSystemView.visible = true
+					if (longTermSimulationModel.zoneOfInterest==5) imgCoreZoneSystemView.visible = true
 				
 					fan.visible = true
 					//set fan according to AHU state
-					switch (scenModel.ahuStatus)
+					switch (scenarioModel.ahuStatus)
 					{
 						case ScenarioModel.AHU_OFF:
 							fan.currentState = "SYS_OFF"
@@ -387,15 +401,15 @@
 			}
 			
 			//start PE if AHU is on
-			if (scenModel.ahuStatus==ScenarioModel.AHU_ON)
+			if (scenarioModel.ahuStatus==ScenarioModel.AHU_ON)
 			{
 				pe.startPE()
 			}
 			
-			//finally tell other windows to update by				
-			//rebroadcasting event within cairngorm framework
-			var cgEvent:CairngormEvent = new VisualizationEvent(VisualizationEvent.EVENT_NAVIGATION_CHANGE_NODE, currNode)
-			CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+			//finally tell other windows to update			
+			var evt:VisualizationEvent = new VisualizationEvent(VisualizationEvent.NAVIGATION_CHANGE_NODE, true)
+			evt.toNode = currNode
+			dispatchEvent(evt)
 	
 		}
 			

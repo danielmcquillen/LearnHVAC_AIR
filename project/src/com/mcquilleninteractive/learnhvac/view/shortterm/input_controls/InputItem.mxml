@@ -6,21 +6,17 @@
 			paddingTop="5"
 			paddingLeft="6" 
 			horizontalScrollPolicy="off"
-			verticalScrollPolicy="off"
-			creationComplete="onCreationComplete()">
+			verticalScrollPolicy="off">
 	
 
 	
 	<mx:Script>
 		<![CDATA[
-			import com.adobe.cairngorm.CairngormError
 			import mx.events.ValidationResultEvent
 			import mx.validators.NumberValidator
 			import com.mcquilleninteractive.learnhvac.event.LongTermImportEvent
 			import com.mcquilleninteractive.learnhvac.util.Logger
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-   			import com.adobe.cairngorm.control.CairngormEvent
-   			import com.adobe.cairngorm.control.CairngormEventDispatcher
    			import com.mcquilleninteractive.learnhvac.event.SysVarInfoPopupEvent
 			import mx.managers.DragManager
       	  	import mx.core.DragSource
@@ -55,16 +51,17 @@
 			public  var isDirty:Boolean = false; //flag for user change to input value
 			
 			[Bindable]
-			private var sysVarEnabled:Boolean = true
+			private var sysVarEnabled:Boolean = true;
+			 				
 			
- 			
-			public function onCreationComplete():void
+			[Mediate(event="SetUnitsEvent.SET_UNITS")]
+			private function onUnitsChange(event:SetUnitsEvent):void
 			{
-				CairngormEventDispatcher.getInstance().addEventListener(SetUnitsEvent.EVENT_SET_UNITS_TO_IP, onUnitsChange, false, 0,true)
-				CairngormEventDispatcher.getInstance().addEventListener(SetUnitsEvent.EVENT_SET_UNITS_TO_SI, onUnitsChange, false, 0,true)
-				CairngormEventDispatcher.getInstance().addEventListener(LongTermImportEvent.RUN_CHANGED, onLTRunToImportChanged, false, 0,true)
+				//give the updates a sec to finish before resetting validator and bg
+				this.callLater(refresh)
 			}
 			
+			[Mediate(event="LongTermImportEvent.RUN_CHANGED")]
 			public function onLTRunToImportChanged(event:LongTermImportEvent):void
 			{
 				if (event.runToImport==ScenarioModel.LT_IMPORT_NONE)
@@ -136,11 +133,6 @@
 				}
       		}
       		
-      		private function onUnitsChange(event:SetUnitsEvent):void
-			{
-				//give the updates a sec to finish before resetting validator and bg
-				this.callLater(refresh)
-			}
       		
       	
 			public function resetBg():void
@@ -162,19 +154,19 @@
 				//TEMP
 				numV.validate()
 				
-				var cgEvent:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.EVENT_SHOW_INFO)
-				cgEvent.sysVarDescription = data.description
-				cgEvent.lowValue = data.low_value
-				cgEvent.highValue = data.high_value
-				cgEvent.sysVarDisplayName = data.display_name
-				cgEvent.sysVarName = data.name
-				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+				var event:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.SHOW_INFO, true)
+				event.sysVarDescription = data.description
+				event.lowValue = data.low_value
+				event.highValue = data.high_value
+				event.sysVarDisplayName = data.display_name
+				event.sysVarName = data.name
+				dispatchEvent(event)
 			}
 			
 			public function hideInfoPanel():void
 			{
-				var cgEvent:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.EVENT_HIDE_INFO)
-				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent)
+				var event:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.HIDE_INFO, true)
+				dispatchEvent(event)
 			}
 									
 			public function onDrag(event:MouseEvent):void

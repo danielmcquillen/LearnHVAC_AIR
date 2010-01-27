@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<swiz:BeanLoader
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:swiz="http://swiz.swizframework.org"
+	xmlns:model="com.mcquilleninteractive.learnhvac.model.*"
+	xmlns:business="com.mcquilleninteractive.learnhvac.business.*"
+	xmlns:controller="com.mcquilleninteractive.learnhvac.controller.*">
+	
+	<model:ApplicationModel id="applicationModel" />
+	<model:ScenarioLibraryModel id="scenarioLibraryModel" />
+	<model:GraphManager id="graphManager" />
+	<model:ScenarioModel id="scenarioModel" />
+	<model:ShortTermSimulationModel id="shortTermSimulationModel" />
+	<model:ShortTermSimulationDataModel id="shortTermSimulationDataModel" />
+	<model:LongTermSimulationModel id="longTermSimlulationModel" />
+	<model:LongTermSimulationDataModel id="longTermSimlulationDataModel" />
+	<model:UserModel id="userModel" />
+	
+	<controller:LoginController id="loginController" />
+	<controller:ApplicationController id="applicationController" />
+	<controller:ScenarioLibraryController id="scenarioLibraryController" />
+	<controller:ChartController id="chartController" />
+	<controller:ShortTermSimulationController id="shortTermSimulationController" />
+	<controller:LongTermSimulationController id="longTermSimulationController" />
+	
+	<business:ShortTermSimulationDelegate id="shortTermSimulationDelegate"/>
+	<business:LongTermSimulationDelegate id="longTermSimulationDelegate"/>
+	<business:LocalScenarioDelegate id="localScenarioDelegate"/>
+	<business:RemoteScenarioDelegate id="remoteScenarioDelegate"/>
+	<business:UserDelegate id="userDelegate" />
+			
+	<mx:RemoteObject id="scenarioService" 
+		destination="ScenarioService"
+		showBusyCursor="true"
+		/>
+		
+	<mx:RemoteObject id="userService" 
+		destination="UserService" 
+		showBusyCursor="true"
+		/>
+		
+		
+
+</swiz:BeanLoader>

@@ -1,14 +1,15 @@
 package com.mcquilleninteractive.learnhvac.business 
 {
 	
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
-	import com.mcquilleninteractive.learnhvac.command.LongTermSimulationCommand;
 	import com.mcquilleninteractive.learnhvac.err.EPlusParseError;
 	import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent;
-	import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
-	import com.mcquilleninteractive.learnhvac.model.LTSettingsModel;
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+	import com.mcquilleninteractive.learnhvac.event.EnergyPlusEvent;
+	import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent;
+	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
 	import flash.desktop.NativeProcess;
@@ -17,16 +18,26 @@ package com.mcquilleninteractive.learnhvac.business
 	import flash.events.ProgressEvent;
 	import flash.filesystem.*;
 	import flash.system.Capabilities;
-	
+	import flash.events.Event
 	import mx.controls.Alert;
+	import org.swizframework.Swiz;
+	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
+	import flash.events.EventDispatcher;
 
 	
-	public class LongTermSimulationDelegate 
+	public class LongTermSimulationDelegate extends EventDispatcher
 	{
-		protected var command:LongTermSimulationCommand
 		
-		protected var _energyPlusPath:String = "Local Settings/Application Data/LearnHVAC/energyplus/"
-		
+		[Autowire]
+		public var scenarioModel:ScenarioModel
+				
+		[Autowire]
+		public var longTermSimulationModel:LongTermSimulationModel
+						
+		[Autowire]
+		public var longTermSimulationDataModel:LongTermSimulationDataModel
+			
+		protected var _energyPlusPath:String = ApplicationModel.baseStoragePath + "energyplus/"
 		protected var _ePlusExe:File
 		protected var _includeFilesDir:File
 		protected var _paramBaseFile:File		
@@ -36,14 +47,12 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		protected var _process:NativeProcess	
 		protected var _stream:FileStream
-		protected var _readTries:Number = 0
 		protected var _runID:String 			
-		protected var _processID:Number = 0 //returned from ZINC when starting eplus process
+		protected var _processID:Number = 0; //returned from ZINC when starting eplus process
+					
 			
-		public function LongTermSimulationDelegate(command : LongTermSimulationCommand)
-		{
-			this.command = command
-			
+		public function LongTermSimulationDelegate()
+		{						
 			var baseDir:File = File.userDirectory.resolvePath(_energyPlusPath)
 			
 			_ePlusExe = baseDir.resolvePath("LearnHVACEPlusLauncher.exe")
@@ -57,41 +66,25 @@ package com.mcquilleninteractive.learnhvac.business
 			
 		}
 				
-		public function runLongTermSimulation():Boolean
+		public function runLongTermSimulation():void
 		{
-						
-			Logger.debug(" runLongTermSimulation() called...", this)	
-			
-			var ltSettings:LTSettingsModel = LHModelLocator.getInstance().scenarioModel.ltSettingsModel	
-			
-			/* CODE FOR TEST MODE */			
-			if (LHModelLocator.testMode)
-			{				
-				return true
-			}			
-			/* END CODE FOR TEST MODE */
-			
-			//error checks
-			//make sure all include files are present
-			
-			//check .bat file
-			
+			Logger.debug(" runLongTermSimulation() called...", this)		
 			if (_ePlusExe.exists==false)
 			{
-				Logger.warn(" couldn't find eplus file " + _ePlusExe.nativePath, this)
-				mx.controls.Alert.show("Couldn't find the required EnergyPlus file (" + _ePlusExe.nativePath +"). This file is required.","Error")
-				return false
+				var msg:String = "Couldn't find the required EnergyPlus file (" + _ePlusExe.nativePath +"). This file is required."
+				Logger.error("runLongTermSimulation() error: " + msg, this)
+				throw new Error(msg)				
 			}
 	
 			//Check weather file exists...and if so copy to In.epw
-			var weatherFile:File = File.userDirectory.resolvePath(_energyPlusPath+ "Weather/" + ltSettings.weatherFile)
+			var weatherFile:File = File.userDirectory.resolvePath(_energyPlusPath+ "Weather/" + longTermSimulationModel.weatherFile)
 			var inEPWFile:File = File.userDirectory.resolvePath(_energyPlusPath + "In.epw")
 			
 			if (weatherFile.exists==false)
 			{
 				Logger.warn(" couldn't find selected weather file " + weatherFile.nativePath, this)
-				mx.controls.Alert.show("The weather file for the city you selected ("+ltSettings.weatherFile+") is not in the energyplus\\Weather folder. Please select another city.","Error")
-				return false
+				msg = "The weather file for the city you selected ("+longTermSimulationModel.weatherFile+") is not in the energyplus\\Weather folder. Please select another city."
+				throw new Error(msg)
 			}
 			else
 			{
@@ -109,27 +102,19 @@ package com.mcquilleninteractive.learnhvac.business
 			{
 				var includeFile:File = _includeFilesDir.resolvePath(fileName)
 				if (includeFile.exists==false)
-				{
-					if (fileName=="Param_LgOff.inc") //I know this one is fatal if not found, are other as well?
-					{
-						Logger.warn(" couldn't find .inc file " + includeFile.nativePath, this)
-						mx.controls.Alert.show("Couldn't find Param_LgOff.inc in the EnergyPlus folder. This file is necessary to run the Long Term Simulation.","Error")
-					}
-					else
-					{
-						Logger.warn(" couldn't find .inc file " + includeFile.nativePath, this)
-						mx.controls.Alert.show("Couldn't find " + fileName +" in the EnergyPlus IncFiles folder. Simulation may not work or may be inaccurate.","Warning")	
-					}
+				{					
+					Logger.warn(" couldn't find .inc file " + includeFile.nativePath, this)
+					msg = "Couldn't find " + fileName +" in the EnergyPlus IncFiles folder. This file is required."	
+					throw new Error(msg)
 				}	
 			}
 				
-			_runID = ltSettings.runID
+			_runID = longTermSimulationModel.runID
 			Logger.debug(" runID set to : " + _runID, this)			
 			Logger.debug(" checking if output files exist...if so, delete them...")
-						
-			
-			//TODO: Clear out existing output, if present			
-		
+									
+			//Clear out existing output, if present	
+			/*This isn't working after first run...E+ is somehow holding onto files				
 			if (_eplusOutVarsFile.exists)
 			{
 				//Logger.debug("#BSD: deleting existing BasicOutput.csv from energyplus")
@@ -140,14 +125,13 @@ package com.mcquilleninteractive.learnhvac.business
 				catch(e:Error)
 				{
 					Logger.warn(" couldn't delete " + _eplusOutVarsFile.nativePath, this)
-					mx.controls.Alert.show("Couldn't delete " + _eplusOutVarsFile.name +" in the EnergyPlus IncFiles folder. Please close this file if open.","Warning")	
-					
-				}
-				
+					msg = "Couldn't delete " + _eplusOutVarsFile.name +" in the EnergyPlus IncFiles folder before running simulation. Please close this file if open."
+					throw new Error(msg)
+				}				
 			}
+			
 			if (_eplusOutputMeterFile.exists)
 			{
-				//Logger.debug("#BSD: deleting existing BasicOutput.csv from energyplus")
 				try
 				{
 					_eplusOutputMeterFile.deleteFile()
@@ -155,11 +139,12 @@ package com.mcquilleninteractive.learnhvac.business
 				catch(e:Error)
 				{
 					Logger.warn(" couldn't delete " + _eplusOutputMeterFile.nativePath, this)
-					mx.controls.Alert.show("Couldn't delete " + _eplusOutputMeterFile.name +" in the EnergyPlus IncFiles folder. Please close this file if open.","Warning")	
-					
+					msg = "Couldn't delete " + _eplusOutputMeterFile.name +" in the EnergyPlus IncFiles folder before running simulation. Please close this file if open."	
+					throw new Error(msg)
 				}
 				
 			}
+			*/
 			
 						
 			////////////////////////////////////////					
@@ -168,7 +153,6 @@ package com.mcquilleninteractive.learnhvac.business
 			
 			Logger.debug(" buildilng .inc file...")
 			var lhInc:String 
-			var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
 			lhInc = "\n"
 			lhInc += "!  Parameter File for Large Office Prototype\n\n"
 			lhInc += "! ***************************************************************\n"
@@ -177,57 +161,57 @@ package com.mcquilleninteractive.learnhvac.business
 						
 			//write in .inc lines, substituting in values from SPARK
 			lhInc += "\n! Variables for general setup"
-			lhInc += "\n##def1 LH_ScenarioName	   " + scenModel.name
-			lhInc += "\n##def1 LH_weatherFile      " + ltSettings.weatherFile
-			Logger.debug("startDate: " + ltSettings.startDate)
-			Logger.debug("stopDate: " + ltSettings.stopDate)
-			lhInc += "\n##def1 LH_startMonth         " + (ltSettings.startDate.month + 1)
-			lhInc += "\n##def1 LH_startDay         " + ltSettings.startDate.date
-			lhInc += "\n##def1 LH_stopMonth         " + (ltSettings.stopDate.month + 1)
-			lhInc += "\n##def1 LH_stopDay          " + ltSettings.stopDate.date
-			lhInc += "\n##def1 LH_WDD_startMonth   " + (ltSettings.wddStartDate.month + 1)
-			lhInc += "\n##def1 LH_WDD_startDay     " + ltSettings.wddStartDate.date
-			lhInc += "\n##def1 LH_WDD_stopMonth    " + (ltSettings.wddStopDate.month + 1)
-			lhInc += "\n##def1 LH_WDD_stopDay    " + ltSettings.wddStopDate.date
-			lhInc += "\n##def1 LH_WDD_typeOfDD     " + ltSettings.wddTypeOfDD
-			lhInc += "\n##def1 LH_SDD_startMonth    " + (ltSettings.sddStartDate.month + 1)
-			lhInc += "\n##def1 LH_SDD_startDay    " + ltSettings.sddStartDate.date
-			lhInc += "\n##def1 LH_SDD_stopMonth    " + (ltSettings.sddStopDate.month + 1)
-			lhInc += "\n##def1 LH_SDD_stopDay    " + ltSettings.sddStopDate.date
-			lhInc += "\n##def1 LH_SDD_typeOfDD    " + ltSettings.sddTypeOfDD
+			lhInc += "\n##def1 LH_ScenarioName	   " + scenarioModel.name
+			lhInc += "\n##def1 LH_weatherFile      " + longTermSimulationModel.weatherFile
+			Logger.debug("startDate: " + longTermSimulationModel.startDate)
+			Logger.debug("stopDate: " + longTermSimulationModel.stopDate)
+			lhInc += "\n##def1 LH_startMonth         " + (longTermSimulationModel.startDate.month + 1)
+			lhInc += "\n##def1 LH_startDay         " + longTermSimulationModel.startDate.date
+			lhInc += "\n##def1 LH_stopMonth         " + (longTermSimulationModel.stopDate.month + 1)
+			lhInc += "\n##def1 LH_stopDay          " + longTermSimulationModel.stopDate.date
+			lhInc += "\n##def1 LH_WDD_startMonth   " + (longTermSimulationModel.wddStartDate.month + 1)
+			lhInc += "\n##def1 LH_WDD_startDay     " + longTermSimulationModel.wddStartDate.date
+			lhInc += "\n##def1 LH_WDD_stopMonth    " + (longTermSimulationModel.wddStopDate.month + 1)
+			lhInc += "\n##def1 LH_WDD_stopDay    " + longTermSimulationModel.wddStopDate.date
+			lhInc += "\n##def1 LH_WDD_typeOfDD     " + longTermSimulationModel.wddTypeOfDD
+			lhInc += "\n##def1 LH_SDD_startMonth    " + (longTermSimulationModel.sddStartDate.month + 1)
+			lhInc += "\n##def1 LH_SDD_startDay    " + longTermSimulationModel.sddStartDate.date
+			lhInc += "\n##def1 LH_SDD_stopMonth    " + (longTermSimulationModel.sddStopDate.month + 1)
+			lhInc += "\n##def1 LH_SDD_stopDay    " + longTermSimulationModel.sddStopDate.date
+			lhInc += "\n##def1 LH_SDD_typeOfDD    " + longTermSimulationModel.sddTypeOfDD
 			
 			//lhInc += "\n##def1 LH_DD_heating       " + setupVO.ddHeating
 			//lhInc += "\n##def1 LH_DD_cooling       " + setupVO.ddCooling
 			//lhInc += "\n##def1 LH_DD_other         " + setupVO.ddOther
 			
-			lhInc += "\n##def1 LH_timeStepEP       " + ltSettings.timeStepEP
-			lhInc += "\n##def1 LH_Orientation " + ltSettings.northAxis + "\n"
+			lhInc += "\n##def1 LH_timeStepEP       " + longTermSimulationModel.timeStepEP
+			lhInc += "\n##def1 LH_Orientation " + longTermSimulationModel.northAxis + "\n"
 			
 			lhInc += "\n\n! Variables for building setup"
-			lhInc += "\n##def1 LH_Orientation      " + ltSettings.northAxis
-			lhInc += "\n##def1 LH_zoneOfInterest   " + ltSettings.zoneOfInterest
-			lhInc += "\n##def1 LH_region           " + ltSettings.region
-			lhInc += "\n##def1 LH_location           " + ltSettings.city
-			lhInc += "\n##def1 LH_shell            " + ltSettings.shell
+			lhInc += "\n##def1 LH_Orientation      " + longTermSimulationModel.northAxis
+			lhInc += "\n##def1 LH_zoneOfInterest   " + longTermSimulationModel.zoneOfInterest
+			lhInc += "\n##def1 LH_region           " + longTermSimulationModel.region
+			lhInc += "\n##def1 LH_location           " + longTermSimulationModel.city
+			lhInc += "\n##def1 LH_shell            " + longTermSimulationModel.shell
 			
 			lhInc += "\n\n! Variables for building geometry " 
-			lhInc += "\n##def1 LH_stories          " + ltSettings.stories
-			lhInc += "\n##def1 LH_storyHeight        " + ltSettings._storyHeight		//SI Value
-			lhInc += "\n##def1 LH_width            " + ltSettings._buildingWidth		//SI Value
-			lhInc += "\n##def1 LH_length           " + ltSettings._buildingLength		//SI Value
-			lhInc += "\n##def1 LH_WWR_North        " + ltSettings.windowRatioNorth
-			lhInc += "\n##def1 LH_WWR_South        " + ltSettings.windowRatioSouth
-			lhInc += "\n##def1 LH_WWR_East        " + ltSettings.windowRatioEast
-			lhInc += "\n##def1 LH_WWR_West        " + ltSettings.windowRatioWest
-			lhInc += "\n##def1 LH_WWR_Bldg         " + ltSettings.ratioBldg
+			lhInc += "\n##def1 LH_stories          " + longTermSimulationModel.stories
+			lhInc += "\n##def1 LH_storyHeight        " + longTermSimulationModel._storyHeight		//SI Value
+			lhInc += "\n##def1 LH_width            " + longTermSimulationModel._buildingWidth		//SI Value
+			lhInc += "\n##def1 LH_length           " + longTermSimulationModel._buildingLength		//SI Value
+			lhInc += "\n##def1 LH_WWR_North        " + longTermSimulationModel.windowRatioNorth
+			lhInc += "\n##def1 LH_WWR_South        " + longTermSimulationModel.windowRatioSouth
+			lhInc += "\n##def1 LH_WWR_East        " + longTermSimulationModel.windowRatioEast
+			lhInc += "\n##def1 LH_WWR_West        " + longTermSimulationModel.windowRatioWest
+			lhInc += "\n##def1 LH_WWR_Bldg         " + longTermSimulationModel.ratioBldg
 			
 			lhInc += "\n\n! Variables for building envlope construction"
-			lhInc += "\n##def1 LH_massLevel        " + ltSettings.massLevel
+			lhInc += "\n##def1 LH_massLevel        " + longTermSimulationModel.massLevel
 			
 			lhInc += "\n\n! Variables for internal loads"
-			lhInc += "\n##def1 LH_lightingPeakLoad " + ltSettings._lightingPeakLoad		//SI Value
-			lhInc += "\n##def1 LH_equipPeakLoad    " + ltSettings._equipPeakLoad		//SI Value
-			lhInc += "\n##def1 LH_areaPerPerson    " + ltSettings._areaPerPerson		//SI Value
+			lhInc += "\n##def1 LH_lightingPeakLoad " + longTermSimulationModel._lightingPeakLoad		//SI Value
+			lhInc += "\n##def1 LH_equipPeakLoad    " + longTermSimulationModel._equipPeakLoad		//SI Value
+			lhInc += "\n##def1 LH_areaPerPerson    " + longTermSimulationModel._areaPerPerson		//SI Value
 			
 			/* *************** */
 			/* SPARK VARIABLES */
@@ -235,49 +219,49 @@ package com.mcquilleninteractive.learnhvac.business
 			
 			lhInc += "\n\n! SPK Variables for temp of room & supply air"
 			
-			var tRoomSPHeat:SystemVariable = scenModel.getSysVar("TRoomSP_Heat")
-			var tRoomSPCool:SystemVariable = scenModel.getSysVar("TRoomSP_Cool")
+			var tRoomSPHeat:SystemVariable = scenarioModel.getSysVar("TRoomSP_Heat")
+			var tRoomSPCool:SystemVariable = scenarioModel.getSysVar("TRoomSP_Cool")
 			
 			//lhInc += "\n##def1 SPK_TRoomSP       " + tRoomSP_val
 			lhInc += "\n##def1 SPK_HRoomSP       " + tRoomSPHeat.baseSIValue
 			lhInc += "\n##def1 SPK_CRoomSP       " + tRoomSPCool.baseSIValue
 			
-			var tSupS:SystemVariable = scenModel.getSysVar("TSupS")			
+			var tSupS:SystemVariable = scenarioModel.getSysVar("TSupS")			
 			lhInc += "\n##def1 SPK_TSupS         " + tSupS.baseSIValue
 			lhInc += "\n##def1 SPK_DCSupS        15 ! For now set this = 15 C"
 			lhInc += "\n##def1 SPK_DHSupS        35 ! For now set this = 35 C"
 
-			var rmQSens:SystemVariable = scenModel.getSysVar("RmQSENS") 
+			var rmQSens:SystemVariable = scenarioModel.getSysVar("RmQSENS") 
 			var rmQSens_val:Number = rmQSens.baseSIValue
 			lhInc += "\n\n! SPK Variable for total room internal load" 
 			lhInc += "\n##def1 SPK_RmQSENS         " + rmQSens.baseSIValue
 
 	
-			var vavPosMin:SystemVariable = scenModel.getSysVar("VAVposMin") 
+			var vavPosMin:SystemVariable = scenarioModel.getSysVar("VAVposMin") 
 			lhInc += "\n\n! SPK Variable for equip max/min settings"
 			lhInc += "\n##def1 SPK_VAVminpos       " + vavPosMin.baseSIValue
 			
-			var fanpowerTot:SystemVariable = scenModel.getSysVar("FanpowerTot") 
+			var fanpowerTot:SystemVariable = scenarioModel.getSysVar("FanpowerTot") 
 			lhInc += "\n##def1 SPK_FanpowerTot     "+ fanpowerTot.baseSIValue
 			
-			var hcUA:SystemVariable = scenModel.getSysVar("HCUA") 
+			var hcUA:SystemVariable = scenarioModel.getSysVar("HCUA") 
 			lhInc += "\n##def1 SPK_HCUA     "+ hcUA.baseSIValue
 			
-			var vavHCUA:SystemVariable = scenModel.getSysVar("VAVHCUA") 
+			var vavHCUA:SystemVariable = scenarioModel.getSysVar("VAVHCUA") 
 			lhInc += "\n##def1 SPK_VAVHCUA     "+ vavHCUA.baseSIValue
 			
-			var ccUA:SystemVariable = scenModel.getSysVar("CCUA") 
+			var ccUA:SystemVariable = scenarioModel.getSysVar("CCUA") 
 			lhInc += "\n##def1 SPK_CCUA     "+ ccUA.baseSIValue
 						
-			var pAtm:SystemVariable = scenModel.getSysVar("PAtm") 
+			var pAtm:SystemVariable = scenarioModel.getSysVar("PAtm") 
 			lhInc += "\n##def1 SPK_PAtm     "+ pAtm.baseSIValue
 			
 			
-			var mxTOut:SystemVariable = scenModel.getSysVar("MXTOut") 
+			var mxTOut:SystemVariable = scenarioModel.getSysVar("MXTOut") 
 			lhInc += "\n##def1 SPK_MXTOut     "+ mxTOut.baseSIValue
 			
 			
-			var mxTwOut:SystemVariable = scenModel.getSysVar("MXTwOut") 
+			var mxTwOut:SystemVariable = scenarioModel.getSysVar("MXTwOut") 
 			lhInc += "\n##def1 SPK_MXTwOut     "+ mxTwOut.baseSIValue
 						 
 			// load base .inc file to which we'll add variables
@@ -290,8 +274,8 @@ package com.mcquilleninteractive.learnhvac.business
 			catch(e:Error)
 			{
 				Logger.error(" couldn't load Param_LgOff.inc file", this)
-				mx.controls.Alert.show("Couldn't load " + _paramBaseFile.name + ".","Error")
-				return false
+				msg = "Couldn't load " + _paramBaseFile.name + "."
+				throw new Error(msg)
 			}
 			
 			var outputParamLgOff:String = lhInc + "\n\n" + paramLgOff
@@ -309,8 +293,8 @@ package com.mcquilleninteractive.learnhvac.business
 			catch(e:Error)
 			{
 				Logger.error(" couldn't save " + _paramFile.nativePath + "file. Error: " + e.message, this)
-				mx.controls.Alert.show("Couldn't save " + _paramFile.name + ". Error: " + e.message,"Error")
-				return false
+				msg = "Couldn't save " + _paramFile.name + ". Error: " + e.message
+				throw new Error(msg)
 			}			
 			 
 			
@@ -318,7 +302,6 @@ package com.mcquilleninteractive.learnhvac.business
 			// STARTUP ENERGY PLUS
 			////////////////////////////////////////
 						
-
 			try
 			{
 				//run energyPlus via proxy
@@ -326,8 +309,8 @@ package com.mcquilleninteractive.learnhvac.business
 				
 				if (Capabilities.os.toLowerCase().indexOf("mac") > -1)
 				{
-					Alert.show("can't run EPlus on mac just yet.")
-					return false
+					msg = "can't run EnergyPlus on mac just yet. :-("
+					throw new Error(msg)
 				}
 				_process = new NativeProcess()								
 				var startupInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo()
@@ -340,13 +323,11 @@ package com.mcquilleninteractive.learnhvac.business
 			} 
 			catch(error:Error)
 			{
-				var msg:String =  "Couldn't launch runEPlusHelper.exe"
+				msg =  "Couldn't launch runEPlusHelper.exe. See log for details."
 				Logger.error(msg + " error: " + error, this)
-				mx.controls.Alert.show(msg)
-				return false	
+				throw new Error(msg)
 			}
-									
-			return true
+							
 		}
 		
 		
@@ -358,7 +339,11 @@ package com.mcquilleninteractive.learnhvac.business
 		public function onStandardOutput(event:ProgressEvent):void
 		{
 			var text:String = _process.standardOutput.readUTFBytes(_process.standardOutput.bytesAvailable)
-			Logger.debug("onProcessOutput text: " + text, this)
+			
+			var evt:EnergyPlusEvent = new EnergyPlusEvent(EnergyPlusEvent.ENERGY_PLUS_OUTPUT,true)
+			evt.output = text
+			Swiz.dispatchEvent(evt)
+			
 		}
 
 		public function onStandardError(event:ProgressEvent):void
@@ -377,9 +362,11 @@ package com.mcquilleninteractive.learnhvac.business
 			else
 			{
 				//TODO: Need to do check to make sure E+ ended correctly			
-				var msg:String = "Output files weren't generated. Please see log and energplus error files for details."
-				Logger.error( msg, this)
-				mx.controls.Alert.show(msg)
+				var evt:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				var message:String = "Output files weren't generated. Please see log and energplus error files for details."
+				Logger.error( message, this)
+				evt.errorMessage = message
+				Swiz.dispatchEvent(evt)
 			}			
 		}
 				
@@ -394,19 +381,22 @@ package com.mcquilleninteractive.learnhvac.business
 		public function loadOutputFiles():void
 		{
 			Logger.debug(" Output file finished. Loading ...", this)
+			
+			//TODO Better error reporting when simulation fails	
 															
 			try
 			{
-				Logger.debug(" Trying to read... (try #"+ _readTries+")", this)
 				var stream:FileStream = new FileStream()
 				stream.open (_eplusOutVarsFile, FileMode.READ)				
 				var basicOutputData:String  = stream.readUTFBytes(stream.bytesAvailable)
 			}
 			catch(error:Error)
 			{
-				Logger.error("couldn't read the LgOff.csv output file. Error: " + error), this
-				Alert.show("Error while trying to read the EnergyPlus LgOff.csv file.  \n\nError msg: " + error)
-				command.setupFailed()
+				Logger.error("couldn't read the LgOff.csv output file. Error: " + error), this				
+				var msg:String = "Error while trying to read the EnergyPlus LgOff.csv file."
+				event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				event.errorMessage = msg
+				Swiz.dispatchEvent(event)
 				return
 			}
 		
@@ -419,45 +409,53 @@ package com.mcquilleninteractive.learnhvac.business
 			catch(error:Error)
 			{
 				Logger.error("LTSD: couldn't read the LgOffMeter.csv output file. Error: " + error, this)
-				mx.controls.Alert.show("Error while trying to read the EnergyPlus LgOffMeter.csv file.  \n\nError msg: " + error)
-				command.setupFailed()
+				msg = "Error while trying to read the EnergyPlus LgOffMeter.csv file."
+				event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				event.errorMessage = msg
+				Swiz.dispatchEvent(event)
 				return				
 			}
-			
-			//the rest of this won't be run if mdm.FileSystem.loadFile throws an error
-			
+						
 			//make sure files have something in them...
 			if (basicMeterData == null)
 			{
 				Logger.error("basicMeterData file is empty!", this)
-				mx.controls.Alert.show("There was an error during the E+ run: no data available in LgOffMeter.csv.")
+				msg = "There was an error during the E+ run: no data available in LgOffMeter.csv."				
+				event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				event.errorMessage = msg
+				Swiz.dispatchEvent(event)
 				return
 			}
 			if (basicOutputData == null)
 			{
 				Logger.error("basicOutputData file is empty!", this)
-				mx.controls.Alert.show("There was an error during the E+ run: no data available in LgOff.csv.")
+				msg = "There was an error during the E+ run: no data available in LgOff.csv."				
+				event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				event.errorMessage = msg
+				Swiz.dispatchEvent(event)
 				return
 			}
-				
 			
-			//update models...models will parse data
-			var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
+			var event:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.FILE_LOADED, true)
+			Swiz.dispatchEvent(event)
+							
 			try
 			{
-				scenarioModel.ePlusRunsModel.loadEPlusOutput(basicOutputData, basicMeterData, _runID)
+				longTermSimulationDataModel.loadEPlusOutput(basicOutputData, basicMeterData, _runID)
 			}
 			catch (err:EPlusParseError)
 			{
 				Logger.error("had trouble parsing E+ output. Err: " + err, this)
-				mx.controls.Alert.show("There were some errors when parsing EnergyPlus output. Some data may be missing. Error: " + err)
-			}
+				msg = "Error when parsing EnergyPlus output. Error: " + err
+				event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				event.errorMessage = msg
+				Swiz.dispatchEvent(event)
+			}			
+		
+			Logger.debug("Finished simulation. runID was: " + _runID,this)
 			
-			//launch event (for the modal dialog)
-			var ePlusDataEvent:ScenarioDataLoadedEvent = new ScenarioDataLoadedEvent(ScenarioDataLoadedEvent.EVENT_EPLUS_FILE_LOADED)
-			CairngormEventDispatcher.getInstance().dispatchEvent(ePlusDataEvent)			
-			
-			command.setupFinished(_runID)
+			var evt:Event = new Event(LongTermSimulationEvent.SIM_LOAD_COMPLETE, true)
+			dispatchEvent(evt)
 		}
 		 
 

@@ -12,6 +12,9 @@ package com.mcquilleninteractive.learnhvac.model
 	public class SystemVariable
 	{
 		
+		[Autowire]
+		public var scenarioModel:ScenarioModel
+		
 		public static var INPUT:String = "INPUT"
 		public static var OUTPUT:String = "OUTPUT"
 		
@@ -60,7 +63,7 @@ package com.mcquilleninteractive.learnhvac.model
 		//Holds the current SI value of the variable
 		private var _baseSIValue:Number = 0		
 		
-		public var _units:String = LHModelLocator.UNITS_IP
+		public var _units:String = ApplicationModel.UNITS_IP
 		public var lastValue:Number //used as part of interface highlighting...Remembers the last value of this variable sent to SPARK		
 		
 		//history for graphing
@@ -69,16 +72,13 @@ package com.mcquilleninteractive.learnhvac.model
 		private var _historySI:Array = []	// holds history for current simulation
 		private var _historyIP:Array = [] // holds history for current simulation in IP ... only populated/refreshed when requested by graph
 		
-		private var model:LHModelLocator
-		private var scenModel:ScenarioModel
 	         
 		// create a ChangeWatcher.
 		public var watcher:ChangeWatcher
 
 		public function SystemVariable()
 		{			
-			scenModel = LHModelLocator.getInstance().scenarioModel
-			watcher =  BindingUtils.bindSetter(recordValue, scenModel, "currStep")
+			watcher =  BindingUtils.bindSetter(recordValue, scenarioModel, "currStep")
 		}
 	
 		//this getter is used for labels
@@ -159,7 +159,7 @@ package com.mcquilleninteractive.learnhvac.model
 			
 		public function set currValue(value:Number):void
 		{				
-			if(_units==LHModelLocator.UNITS_IP && convertIPtoSI!=null)
+			if(_units==ApplicationModel.UNITS_IP && convertIPtoSI!=null)
 			{
 				//use conversion function if it exists for this sysVar
 				_baseSIValue = convertIPtoSI(value)
@@ -173,7 +173,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function get currValue():Number
 		{												
-			if(_units==LHModelLocator.UNITS_IP && convertSItoIP!=null)
+			if(_units==ApplicationModel.UNITS_IP && convertSItoIP!=null)
 			{
 				return convertSItoIP(_baseSIValue)
 			}
@@ -197,11 +197,11 @@ package com.mcquilleninteractive.learnhvac.model
 		{
 			switch (_units)
 			{
-				case LHModelLocator.UNITS_IP:
+				case ApplicationModel.UNITS_IP:
 					return unit_ip
-				case LHModelLocator.UNITS_SI:
+				case ApplicationModel.UNITS_SI:
 					return unit_si
-				case LHModelLocator.UNITS_NONE:
+				case ApplicationModel.UNITS_NONE:
 					return ""
 				default:
 					Logger.error("SystemVariable: " + this.name + ". Unrecognized _units:" + _units)
@@ -257,7 +257,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function get low_value():Number
 		{
-			if(_units == LHModelLocator.UNITS_IP && convertSItoIP!=null)
+			if(_units == ApplicationModel.UNITS_IP && convertSItoIP!=null)
 			{
 				return convertSItoIP(_low_value)
 			} 
@@ -273,7 +273,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function get high_value():Number
 		{
-			if(_units == LHModelLocator.UNITS_IP && convertSItoIP!=null)
+			if(_units == ApplicationModel.UNITS_IP && convertSItoIP!=null)
 			{
 				return convertSItoIP(_high_value)
 			} 
@@ -430,11 +430,11 @@ package com.mcquilleninteractive.learnhvac.model
 		public function convert(p_value:Number, p_toUnits:String):Number
 		{
 			Logger.debug("convert() value: " + p_value + " units: " + p_toUnits, this)
-			if(p_toUnits==LHModelLocator.UNITS_SI && convertIPtoSI!=null)
+			if(p_toUnits==ApplicationModel.UNITS_SI && convertIPtoSI!=null)
 			{
 				return convertIPtoSI(p_value)
 			} 
-			else if (p_toUnits==LHModelLocator.UNITS_IP && convertSItoIP!=null)
+			else if (p_toUnits==ApplicationModel.UNITS_IP && convertSItoIP!=null)
 			{
 				return convertIPtoSI(p_value)		
 			}
@@ -498,8 +498,7 @@ package com.mcquilleninteractive.learnhvac.model
 		public function destroy():void
 		{
 			watcher.unwatch(); 
-    		model = null
-			scenModel = null
+			scenarioModel = null
 		}
 		
 	}

@@ -2,20 +2,22 @@
 package com.mcquilleninteractive.learnhvac.event{
 	
 	import flash.events.Event;
-	import com.adobe.cairngorm.control.CairngormEvent;
 
-	public class ViewMovieEvent extends CairngormEvent{
+	public class ViewMovieEvent extends Event
+	{
 		
-		public static var EVENT_VIEW_MOVIE: String = "viewMovie"
+		public static const VIEW_MOVIE: String = "viewMovie"
 		
-		public function ViewMovieEvent(){
-	      	super( EVENT_VIEW_MOVIE )
-     	}
-     	
-     	override public function clone() : Event{
-			return new ViewMovieEvent()
-		}		
+		public function ViewMovieEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
+		{
+			super(type, bubbles, cancelable);
+		}
 		
+		
+		override public function clone():Event
+        {
+            return new ViewMovieEvent(this.type, this.bubbles, this.cancelable );
+        }
 	}
 	
 }

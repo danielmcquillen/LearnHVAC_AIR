@@ -18,7 +18,6 @@
 		<![CDATA[
 		
 		import com.mcquilleninteractive.learnhvac.util.Logger
-		import com.adobe.cairngorm.control.CairngormEventDispatcher
 		import mx.managers.PopUpManager
 		
 		public function onInit():void

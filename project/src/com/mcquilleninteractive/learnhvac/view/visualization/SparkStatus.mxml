@@ -11,50 +11,35 @@
 	<mx:Script>
 		<![CDATA[
 					
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
-			import com.mcquilleninteractive.learnhvac.event.SparkEvent
-			import com.mcquilleninteractive.learnhvac.event.AHUEvent
-			import com.mcquilleninteractive.learnhvac.business.SparkService	
+			
+			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
 			
 			public function onCreationComplete():void
-			{
-				//listen for the more generic AHU events to know if SPARK is ON or OFF
-				//This might be a problem later...might need to add the more granular
-				//SPARK ON and OFF events
-				 var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
-				
-				dispatcher.addEventListener(SparkEvent.SPARK_ON, onSparkOn)
-				dispatcher.addEventListener(SparkEvent.SPARK_OFF, onSparkOff)
-				dispatcher.addEventListener(SparkEvent.SPARK_CRASHED, onSparkCrash)
-				dispatcher.addEventListener(SparkEvent.SPARK_INTERVAL_TIMEOUT, onSparkCrash)
-				dispatcher.addEventListener(SparkEvent.SPARK_STARTUP_TIMEOUT, onSparkCrash)
-				
+			{				
 				//this isn't working?...
 				var filter1:DropShadowFilter = new DropShadowFilter()
-				statusCanvas.filters.push(filter1)			
-				
-				
+				statusCanvas.filters.push(filter1)							
 			}
 		
-			public function onSparkOn(event:SparkEvent):void
+			[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
+			public function onSimStarted(event:ShortTermSimulationEvent):void
 			{
-				//TODO: spin cog
 				indicator.gotoAndPlay("running")
-				txtStatus.text = "SPARK RUNNING OK"
+				txtStatus.text = "SIMULATION RUNNING"
 			}
 		
-			public function onSparkOff(event:SparkEvent):void
+			[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
+			public function onSimStopped(event:ShortTermSimulationEvent):void
 			{
-				//TODO: stop cog
 				indicator.gotoAndStop("stopped")
-				txtStatus.text = "SPARK OFF"
+				txtStatus.text = "SIMULATION OFF"
 			}
 		
-			public function onSparkCrash(event:SparkEvent):void
-			{
-				
+			[Mediate(event="ShortTermSimulationEvent.SIM_CRASHED")]
+			public function onSimCrashed(event:ShortTermSimulationEvent):void
+			{				
 				indicator.gotoAndStop("crashed")	
-				txtStatus.text =  event.code + " : " + event.msg
+				txtStatus.text =  event.code + " : " + event.errorMessage
 			}
 			     
 		]]>

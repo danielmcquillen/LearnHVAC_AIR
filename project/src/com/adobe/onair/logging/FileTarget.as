@@ -23,28 +23,29 @@
 package com.adobe.onair.logging
 {
 	
-	import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	
 	import flash.filesystem.*;
 	
 	import mx.core.mx_internal;
 	import mx.logging.targets.LineFormattedTarget;
+	import org.swizframework.Swiz;
 	
 	use namespace mx_internal;
 
 	public class FileTarget extends LineFormattedTarget
 	{
 		
-		private var model:LHModelLocator
+		private var model:ApplicationModel
 		private var logFile:File		
 		public function FileTarget()
 		{
-			logFile = File.userDirectory.resolvePath("Application Data/LearnHVAC/logs/application-log.txt")
+			logFile = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "logs/application-log.txt")
 			if (logFile.exists)
 			{
 				logFile.deleteFile()			
 			}
-			model = LHModelLocator.getInstance()
+			model = Swiz.getBean("applicationModel") as ApplicationModel
 		}
 		
 		public function get logURI():String

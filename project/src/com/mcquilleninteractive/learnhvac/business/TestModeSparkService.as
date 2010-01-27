@@ -2,9 +2,7 @@
 package com.mcquilleninteractive.learnhvac.business
 {
 	
-	import com.adobe.cairngorm.control.CairngormEventDispatcher;
-	import com.mcquilleninteractive.learnhvac.event.SparkEvent;
-	import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.testData.TestSparkOutputData;
 	import com.mcquilleninteractive.learnhvac.util.Logger;

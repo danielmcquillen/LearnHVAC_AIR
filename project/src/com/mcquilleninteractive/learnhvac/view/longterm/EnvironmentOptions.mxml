@@ -10,8 +10,9 @@
 
 	<mx:Script>
 		<![CDATA[
-			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel;
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 			
 			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
 			import com.mcquilleninteractive.learnhvac.util.Logger
@@ -19,13 +20,20 @@
 			import mx.validators.Validator			
 			import mx.collections.ArrayCollection
 			
+		
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel
+			
+			[Bindable]	
+			[Autowire]		
+			public var longTermSimulationModel:LongTermSimulationModel
+			
 			public var _errorMsg:String
 			public var _errorMsgArr:Array = []
 			
 			private var _validatorsArr:Array;
 			
-			[Bindable]
-			private var _ltSettings:LTSettingsModel;
 			
 			[Bindable]
 			private var _inputsEnabled:Boolean
@@ -44,34 +52,33 @@
 			{				
 				//do nothing				
 			}
-						
+			
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function onScenarioLoaded():void
 			{				
-				_ltSettings = LHModelLocator.getInstance().scenarioModel.ltSettingsModel
-				_inputsEnabled = _ltSettings.buildingPropertiesEnabled
-				
-				cboRegion.dataProvider = _ltSettings.regionsAC
-				cboRegion.selectedIndex = _ltSettings.regionSelectedIndex
+				_inputsEnabled = longTermSimulationModel.buildingPropertiesEnabled				
+				cboRegion.dataProvider = longTermSimulationModel.regionsAC
+				cboRegion.selectedIndex = longTermSimulationModel.regionSelectedIndex
 				
 				switch(cboRegion.selectedItem.data)
 				{
 					case "Northeast":
-						cboCity.dataProvider = _ltSettings.northeastCitiesAC
+						cboCity.dataProvider = longTermSimulationModel.northeastCitiesAC
 						break
 						
 					case "South":
-						cboCity.dataProvider = _ltSettings.southCitiesAC
+						cboCity.dataProvider = longTermSimulationModel.southCitiesAC
 						break
 						
 					case "Pacific":
-						cboCity.dataProvider = _ltSettings.pacificCitiesAC
+						cboCity.dataProvider = longTermSimulationModel.pacificCitiesAC
 						break
 					
 					default:
 						Logger.error("#LTS: onRegionChange() unrecognized data: " + cboRegion.selectedItem.data)
 				}
 				
-				cboCity.selectedIndex = _ltSettings.citySelectedIndex
+				cboCity.selectedIndex = longTermSimulationModel.citySelectedIndex
 				
 			}
 				
@@ -123,21 +130,21 @@
 					
 			public function onRegionChange():void
 			{
-				_ltSettings.regionSelectedIndex = cboRegion.selectedIndex
+				longTermSimulationModel.regionSelectedIndex = cboRegion.selectedIndex
 				switch(cboRegion.selectedItem.data)
 				{
 					case "Northeast":
-						cboCity.dataProvider = _ltSettings.northeastCitiesAC
+						cboCity.dataProvider = longTermSimulationModel.northeastCitiesAC
 						cboCity.selectedIndex = 0
 						break
 						
 					case "South":
-						cboCity.dataProvider = _ltSettings.southCitiesAC
+						cboCity.dataProvider = longTermSimulationModel.southCitiesAC
 						cboCity.selectedIndex = 0
 						break
 						
 					case "Pacific":
-						cboCity.dataProvider = _ltSettings.pacificCitiesAC
+						cboCity.dataProvider = longTermSimulationModel.pacificCitiesAC
 						cboCity.selectedIndex = 0
 						break
 					
@@ -148,7 +155,7 @@
 			
 			public function onCityChange():void
 			{
-				_ltSettings.citySelectedIndex = cboCity.selectedIndex
+				longTermSimulationModel.citySelectedIndex = cboCity.selectedIndex
 			}
 			
 			

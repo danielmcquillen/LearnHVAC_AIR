@@ -6,12 +6,11 @@
 		<![CDATA[
 		
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
-			import com.adobe.cairngorm.control.CairngormEvent;
 			import mx.containers.Canvas;
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
+			
 			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			import com.mcquilleninteractive.learnhvac.util.Logger
 		
@@ -19,20 +18,20 @@
    			protected var currFlowUnits:String = ""
    			protected var currFuelUnits:String = ""
    			protected var currPowerUnits:String = ""
-			protected var model:LHModelLocator
-			protected var scenModel:ScenarioModel
+			protected var model:ApplicationModel
 			
 			
-			
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel
 			
 			public function updateUnits():void
 			{						
-				if (model==null) model = LHModelLocator.getInstance()
-				if (model!=null) 
+				if (scenarioModel!=null) 
 				{
-					currTempUnits = LHModelLocator.currentTempUnits()
-					currFlowUnits = " " + model.scenarioModel.getSysVar("BOIwaterflow").units
-					currFuelUnits = " " + model.scenarioModel.getSysVar("BOIfuel").units
+					currTempUnits = ApplicationModel.currentTempUnits()
+					currFlowUnits = " " + scenarioModel.getSysVar("BOIwaterflow").units
+					currFuelUnits = " " + scenarioModel.getSysVar("BOIfuel").units
 				}
 				
 				

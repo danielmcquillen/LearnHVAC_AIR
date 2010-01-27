@@ -10,10 +10,10 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.adobe.cairngorm.control.CairngormEvent;
+			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 			import mx.collections.ArrayCollection;
 			
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			import com.mcquilleninteractive.learnhvac.model.SystemVariable
 			import com.mcquilleninteractive.learnhvac.util.ColorSetting
@@ -23,8 +23,6 @@
 			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
-			
 			[Bindable]
 			private var powerTotalsAC:ArrayCollection 
 			private var _sysVarBOIfuel:SystemVariable 
@@ -32,44 +30,42 @@
 			private var _sysVarFanpowerTot:SystemVariable 
 			private var _sysVarCHLpumppow:SystemVariable 
 			private var _valuesArr:Array 
-			
+						             
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel
+                    			
 			public function onPreInit():void
 			{	
 				_valuesArr = [{group:"System Energy Use", BOIfuel:12, CHLcomppow:5, FanpowerTot:2, CHLpumppow: 3}]							
-				powerTotalsAC = new ArrayCollection(_valuesArr)
-				
-				//add listeners		
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
-	   			dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0, true)
-	   			dispatcher.addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged, false, 0, true)	
-				dispatcher.addEventListener(ScenarioModel.SHORT_TERM_OUTPUT_LOADED, onShortTermOutputLoaded, false, 0, true)
-				
-				
+				powerTotalsAC = new ArrayCollection(_valuesArr)				
+							
 				//when this graph is first shown, a scenario will already have been loaded, so call onScenarioLoaded once to get it set up correctly
 				onScenarioLoaded(null)
 			}
 			
-			public function onScenarioLoaded(event:CairngormEvent):void
-			{
-				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-				
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
+			public function onScenarioLoaded(event:ScenarioLoadedEvent):void
+			{				
 				//the number and type of sysVar isn't going to change much, so I'm not going to use 
 				//binding, I'm just going to keep a ref and then update when the outputs are loaded
-				_sysVarBOIfuel = scenModel.getSysVar("BOIfuel")
-				_sysVarCHLcomppow = scenModel.getSysVar("CHLcomppow")
-				_sysVarFanpowerTot = scenModel.getSysVar("FanpowerTot")
-				_sysVarCHLpumppow = scenModel.getSysVar("CHLpumppow")				
+				_sysVarBOIfuel = scenarioModel.getSysVar("BOIfuel")
+				_sysVarCHLcomppow = scenarioModel.getSysVar("CHLcomppow")
+				_sysVarFanpowerTot = scenarioModel.getSysVar("FanpowerTot")
+				_sysVarCHLpumppow = scenarioModel.getSysVar("CHLpumppow")				
 				
 				getRelevantValues()
 				
 			}
 			
-			public function onUnitsChanged(event:CairngormEvent):void
+			[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]			
+			public function onUnitsChanged(event:SetUnitsCompleteEvent):void
 			{
 				getRelevantValues()				
 			}
 			
-			public function onShortTermOutputLoaded(event:CairngormEvent):void
+			[Mediate(event="ShortTermSimulationEvent.OUTPUT_UPDATED")]	
+			public function onShortTermOutputUpdated(event:ShortTermSimulationEvent):void
 			{
 				getRelevantValues()
 			}
@@ -86,17 +82,9 @@
 			private function onClose():void
 			{
 				Logger.debug("closing window: " + this, this)
-				removeListeners()
 			}
 			
-			private function removeListeners():void
-			{
-				Logger.debug("removing listeners.", this)
-				var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
-				dispatcher.removeEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded)
-	   			dispatcher.removeEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged)	
-				dispatcher.removeEventListener(ScenarioModel.SHORT_TERM_OUTPUT_LOADED, onShortTermOutputLoaded)
-			}
+			
 			
 		]]>
 	</mx:Script>

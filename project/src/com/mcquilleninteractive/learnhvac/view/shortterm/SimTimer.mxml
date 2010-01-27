@@ -10,14 +10,19 @@
 	<mx:Script>
 		<![CDATA[
 			
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
-			import com.mcquilleninteractive.learnhvac.event.SparkEvent
+			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
 			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
             import mx.binding.utils.BindingUtils
             import mx.binding.utils.ChangeWatcher
             import com.mcquilleninteractive.learnhvac.util.Logger
+            
+            
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel
+
             
            	[Embed(source='assets/img/bg_sim_control.png')]
 			[Bindable]
@@ -42,18 +47,11 @@
             public var cw:ChangeWatcher
             
 			public function onCC():void
-			{
-				
-			    var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance()
-				dispatcher.addEventListener(SparkEvent.SPARK_ON, onSparkOn)
-				dispatcher.addEventListener(SparkEvent.SPARK_OFF, onSparkOff)
-				dispatcher.addEventListener(SparkEvent.SPARK_CRASHED, onSparkCrash)
-				dispatcher.addEventListener(SparkEvent.SPARK_INTERVAL_TIMEOUT, onSparkTimeout)
-				dispatcher.addEventListener(SparkEvent.SPARK_STARTUP_TIMEOUT, onSparkTimeout)
-				dispatcher.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded)
-				init()
+			{				
+			   init()
 			}
 			
+			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function onScenarioLoaded(event:ScenarioLoadedEvent):void
 			{
 				init()
@@ -65,37 +63,33 @@
 				{
 					cw.unwatch()
 				}
-				cw = BindingUtils.bindSetter(function(currTime:String):void{simTimer.text=String(currTime)}, LHModelLocator.getInstance().scenarioModel, "currTime" )			
+				cw = BindingUtils.bindSetter(function(currTime:String):void{simTimer.text=String(currTime)}, scenarioModel, "currTime" )			
 			}
 			
-			
-			public function onSparkOn(event:SparkEvent):void
+			[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
+			public function onShortTermSimulationStarted(event:ShortTermSimulationEvent):void
 			{	
 				bgError.visible = false
 				bgOff.visible = true			
 				simStatus.text = "OK"
 			}
 		
-			public function onSparkOff(event:SparkEvent):void
+			[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
+			public function onShortTermSimulationStopped(event:ShortTermSimulationEvent):void
 			{
 				bgError.visible = false
 				bgOff.visible = true		
 				simStatus.text = "OFF"
 			}
-		
-			public function onSparkCrash(event:SparkEvent):void
+			
+			[Mediate(event="ShortTermSimulationEvent.SIM_CRASHED")]
+			public function onShortTermSimulationCrash(event:ShortTermSimulationEvent):void
 			{
 				bgOff.visible = false
 				bgError.visible = true		
-				simStatus.text =  "SPARK ERROR"
+				simStatus.text =  "SIMULATION ERROR"
 			}
 			
-			public function onSparkTimeout(event:SparkEvent):void
-			{
-				bgOff.visible = false
-				bgError.visible = true		
-				simStatus.text = "TIMEOUT"
-			}
 			
 		]]>
 	</mx:Script>

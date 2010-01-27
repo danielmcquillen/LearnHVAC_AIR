@@ -15,8 +15,8 @@
 		<![CDATA[
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 			
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
-			import com.mcquilleninteractive.learnhvac.model.LTSettingsModel
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel
 			import com.mcquilleninteractive.learnhvac.model.SystemVariable
 			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO	
 			import com.mcquilleninteractive.learnhvac.util.Logger
@@ -29,8 +29,14 @@
 			private var _errorMsgArr:Array = []
 			private var _validatorsArr:Array 
 			
-			[Bindable]
-			private var _ltSettings:LTSettingsModel
+			
+			[Bindable]	
+			[Autowire]		
+			public var scenarioModel:ScenarioModel	
+			
+			[Bindable]	
+			[Autowire]		
+			public var longTermSimulationModel:LongTermSimulationModel	
 			
 			protected function onCC():void
 			{
@@ -50,8 +56,7 @@
 			
 			public function resetValues():void
 			{
-				var scenModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
-				var sysVar:SystemVariable = SystemVariable(scenModel.getSysVar("TRoomSP"))
+				var sysVar:SystemVariable = SystemVariable(scenarioModel.getSysVar("TRoomSP"))
 	
 				var tRoomSP:Number = sysVar.currValue
 				
@@ -59,7 +64,7 @@
 				txtZoneCoolingSetpointTemp.text = (tRoomSP+1).toString()
 								
 				//set input limits (range depends on units)
-				if (LHModelLocator.currUnits)
+				if (ApplicationModel.currUnits)
 				{
 					vldZoneHeatingSetpointTemp.minValue = tRoomSP - 5
 					vldZoneHeatingSetpointTemp.maxValue = tRoomSP
@@ -148,7 +153,7 @@
 		
 		<mx:FormItem paddingTop="5" label="Zone Heating Setpoint">
 			<mx:HBox>
-				<mx:TextInput id="txtZoneHeatingSetpointTemp"  width="70" restrict="0-9.-" text="{_ltSettings.zoneHeatingSetpointTemp}"  />
+				<mx:TextInput id="txtZoneHeatingSetpointTemp"  width="70" restrict="0-9.-" text="{longTermSimulationModel.zoneHeatingSetpointTemp}"  />
 				<mx:Label text="" id="lblZoneHeatingSetpointTempUnits"/>
 			</mx:HBox>
 		</mx:FormItem>
@@ -157,7 +162,7 @@
 		<mx:Spacer height="15"/>
 		<mx:FormItem paddingTop="5" label="Zone Cooling Setpoint">
 			<mx:HBox>
-				<mx:TextInput id="txtZoneCoolingSetpointTemp"  width="70" restrict="0-9.-" text="{_ltSettings.zoneCoolingSetpointTemp}"  />
+				<mx:TextInput id="txtZoneCoolingSetpointTemp"  width="70" restrict="0-9.-" text="{longTermSimulationModel.zoneCoolingSetpointTemp}"  />
 				<mx:Label text="" id="lblZoneCoolingSetpointTempUnits"/>
 			</mx:HBox>
 		</mx:FormItem>

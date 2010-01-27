@@ -10,7 +10,7 @@
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 			import com.mcquilleninteractive.learnhvac.model.EPlusData;
 			import com.mcquilleninteractive.learnhvac.model.IGraphDataModel;
-			import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import mx.collections.XMLListCollection;
 	 		import com.mcquilleninteractive.learnhvac.util.Logger            
 	 		import mx.events.DragEvent

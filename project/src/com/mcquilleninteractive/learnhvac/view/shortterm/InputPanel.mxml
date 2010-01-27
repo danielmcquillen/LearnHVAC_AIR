@@ -15,14 +15,12 @@
 	<mx:Script>
 		<![CDATA[
 			
-		import com.mcquilleninteractive.learnhvac.model.EPlusRunsModel;				
-		import com.mcquilleninteractive.learnhvac.command.LoadScenarioCommand;
+		import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
 		import mx.collections.SortField
 		import mx.collections.Sort
 		import com.mcquilleninteractive.learnhvac.event.VisualizationEvent
-		import com.adobe.cairngorm.model.ModelLocator
 		import mx.collections.ArrayCollection
-		import com.mcquilleninteractive.learnhvac.model.LHModelLocator
+		import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 		import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel
 		import com.mcquilleninteractive.learnhvac.model.SystemVariable
@@ -30,20 +28,21 @@
 		import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent
 		import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
 		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
-		import com.mcquilleninteractive.learnhvac.event.AHUEvent
-		import com.mcquilleninteractive.learnhvac.event.AutoEvent
-		import com.mcquilleninteractive.learnhvac.event.ResetInputsToInitialValuesEvent
+		import com.mcquilleninteractive.learnhvac.event.ResetInputsEvent
 		import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
 		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel
-		import com.adobe.cairngorm.control.CairngormEventDispatcher
-		import com.adobe.cairngorm.control.CairngormEvent
+		
 		import mx.controls.Alert
 		import mx.collections.ListCollectionView
 		import mx.binding.utils.BindingUtils
 		import mx.events.ItemClickEvent;
         import mx.controls.TabBar;
 				
-	
+
+		[Bindable]
+		[Autowire]
+		public var scenarioModel:ScenarioModel
+
 		private var INPUTS_PANEL : Number = 0
 		private var FAULTS_PANEL : Number = 1
 		private var LONG_TERM_INPUT_PANEL : Number = 2
@@ -97,39 +96,26 @@
 			faultLists[ScenarioModel.SN_COOLINGTOWER] = lstFaultItemsCTW
 			faultLists[ScenarioModel.SN_PLANT] = lstFaultItemsPLT
 			
-			CairngormEventDispatcher.getInstance().addEventListener(AHUEvent.EVENT_AHU_STARTED, onAHUStart, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(AHUEvent.EVENT_AHU_STOPPED, onAHUStop, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, onScenarioLoaded, false, 0,true)
-			
-			//listen for my own automation events
-			CairngormEventDispatcher.getInstance().addEventListener(AutoEvent.EVENT_INPUT_PANEL, onAuto, false, 0,true)
 			
 		}
 		
+		[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 		public function onScenarioLoaded(event:ScenarioLoadedEvent):void
 		{
-			Logger.debug("#InputPanel: scenario loaded...now building input panels.")
+			Logger.debug("onScenarioLoaded()",this)
 			buildInputPanels()
 		}
-
 		
-
-		
-		public function onAuto(event:AutoEvent):void
+		[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
+		public function onShortTermSimStart(event:ShortTermSimulationEvent):void
 		{
-			if (event.type == AutoEvent.EVENT_INPUT_PANEL)
-			{
-				Logger.debug("#InputPanel: Auto: trying to apply cmd: " + event.cmd)
-				try
-				{
-					this[event.cmd].apply(this, event.args)
-				}
-				catch(e:Error)
-				{
-					Logger.error("#Auto: couldn't apply function : " + event.cmd + " to Input panel")
-				}
-			}
-			
+			btnUpdate.enabled = true	
+		}
+		
+		[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
+		public function onShortTermSimStop(event:ShortTermSimulationEvent):void
+		{
+			btnUpdate.enabled = false
 		}
 		
 		
@@ -147,17 +133,7 @@
 			}
 		}
 		
-		public function onAHUStart(event:AHUEvent):void
-		{
-			Logger.debug("#InputPanel: onAHUStart: event: " + event)
-			btnUpdate.enabled = true	
-		}
 		
-		public function onAHUStop(event:AHUEvent):void
-		{
-			Logger.debug("#InputPanel: onAHUStop: event: " + event)
-			btnUpdate.enabled = false
-		}
 		
 		public function filterInputPanel(item:Object):Boolean {
 			return 	item.typeID=="INPUT" && 
@@ -172,14 +148,12 @@
 		}
 		
 		public function buildInputPanels():void
-		{
-		    var model : LHModelLocator = LHModelLocator.getInstance()
-			
+		{			
        	  	Logger.debug("#InputPanel: buildInputPanels() called.")
        	  	inputPanelsArr = new ArrayCollection()
        	  	faultPanelsArr = new ArrayCollection()
 			
-			for each (var sysNode:SystemNodeModel in model.scenarioModel.sysNodesArr)
+			for each (var sysNode:SystemNodeModel in scenarioModel.sysNodesAC)
 			{
 			
 				//assign each systemNodeModel's sysVarsArr to a respective list control
@@ -208,7 +182,7 @@
 			}
 			
 			//build comboBox
-			cboSysNode.dataProvider = model.scenarioModel.sysNodesArr
+			cboSysNode.dataProvider = scenarioModel.sysNodesAC
 			
 		}
 		
@@ -259,9 +233,9 @@
 			if (cbxSyncToNav.selected)
 			{
 				//update the combo box
-				cboSysNode.selectedIndex = LHModelLocator.getInstance().scenarioModel.currNodeIndex
+				cboSysNode.selectedIndex = scenarioModel.currNodeIndex
 				//update the subpanels
-				updateInputPanelView(LHModelLocator.getInstance().scenarioModel.currNode)
+				updateInputPanelView(scenarioModel.currNode)
 			}
 		}
 		
@@ -306,10 +280,9 @@
 	
 		
 		
-		public function resetToInitial():void{
-			Logger.debug("#InputPanel: resetToInitial()");
-			var cgEvent : ResetInputsToInitialValuesEvent = new ResetInputsToInitialValuesEvent();
-			CairngormEventDispatcher.getInstance().dispatchEvent( cgEvent );			
+		public function resetToInitial():void
+		{
+			dispatchEvent( new ResetInputsEvent(ResetInputsEvent.RESET_SHORT_TERM_INPUTS_TO_INITIAL_VALUES, true))			
 		}
 		
 		/* Returns an error message if there are errors, otherwise returns empty string 
@@ -321,7 +294,6 @@
 		public function areInputsValid(actionType:String):Boolean
 		{
 		
-			var scenarioModel:ScenarioModel = LHModelLocator.getInstance().scenarioModel
 			inputsErrorMsg = "" 
 			
 			//Check individual panels to make sure each entered value is within limits
@@ -378,8 +350,8 @@
 		{
 			if (areInputsValid("forStartup")==true)
 			{
-				var cgEvent : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.EVENT_UPDATE_AHU);
-				CairngormEventDispatcher.getInstance().dispatchEvent(cgEvent);
+				var event : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_UPDATE, true);
+				dispatchEvent(event);
 			}
 			else
 			{
@@ -414,7 +386,7 @@
 					 paddingBottom="10">
    	 
    	
-	<importControls:STOptions id="optionsPanel" visible="true"/> 
+	<importControls:ShortTermOptions id="optionsPanel" visible="true"/> 
    	 
 				     
 	<mx:Canvas id="inputsAndFaults"
