@@ -7,6 +7,7 @@ package com.mcquilleninteractive.learnhvac.controller
 	import com.mcquilleninteractive.learnhvac.util.Logger
 	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel;
 	import com.mcquilleninteractive.learnhvac.business.ShortTermSimulationDelegate;
+	import com.mcquilleninteractive.learnhvac.business.IShortTermSimulationDelegate;
 	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 	import com.mcquilleninteractive.learnhvac.event.ResetInputsEvent;
@@ -28,16 +29,19 @@ package com.mcquilleninteractive.learnhvac.controller
 		public var scenarioModel:ScenarioModel
 		
 		[Bindable]
-		[Autowire]
-		public var delegate:ShortTermSimulationDelegate
+		[Autowire(bean="shortTermSimulationDelegate")]
+		public var delegate:IShortTermSimulationDelegate
 		
 		public function ShortTermSimulationController()
-		{			
+		{
+						
 		}
 		
 		public function initialize():void
 		{
-			delegate.addEventListener(ShortTermSimulationDelegate.OUTPUT_RECEIVED, onOutputReceived)
+			delegate.addEventListener(ShortTermSimulationEvent.SIM_STARTED, simulationStarted)
+			delegate.addEventListener(ShortTermSimulationEvent.SIM_STOPPED, simulationStopped)
+			delegate.addEventListener(ShortTermSimulationEvent.SIM_UPDATED, simulationOutputUpdated)
 		}
 		
 		public function onOutputReceived(event:Event):void
@@ -80,34 +84,7 @@ package com.mcquilleninteractive.learnhvac.controller
 			delegate.update()
 		}
 		
-		
-		[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
-		public function simulationStarted(event:ShortTermSimulationEvent):void
-		{
-			shortTermSimulationModel.currentState = ShortTermSimulationModel.STATE_RUNNING
-			Logger.debug("simulationStarted()",this)
-		}
-		
-		[Mediate(event="ShortTermSimulationEvent.OUTPUT_UPDATED")]
-		public function simulationOutputUpdated(event:ShortTermSimulationEvent):void
-		{
-			Logger.debug("simulationOutputUpdated()",this)
-		}
-		
-		[Mediate(event="ShortTermSimulationEvent.SIM_ERROR")]
-		public function simulationError(event:ShortTermSimulationEvent):void
-		{
-			shortTermSimulationModel.currentState = ShortTermSimulationModel.STATE_RUNNING
-			Logger.debug("simulationError()",this)
-		}
-		
-		[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
-		public function simulationStopped(event:ShortTermSimulationEvent):void
-		{
-			shortTermSimulationModel.currentState = ShortTermSimulationModel.STATE_OFF
-			Logger.debug("simulationError()",this)
-		}
-		
+			
 		[Mediate(event="ShortTermSimulationEvent.SIM_CRASHED")]
 		public function simulationCrashed(event:ShortTermSimulationEvent):void
 		{
@@ -139,6 +116,43 @@ package com.mcquilleninteractive.learnhvac.controller
 			}
 		}
 
+		
+		/* ****************** */
+		/* DELEGATE LISTENERS */
+		/* ****************** */
+		
+		/* The following functions handle events coming from the delegate.
+		   The controller will handle the events first, and then broadcast to
+		   all listeners via Swiz after its own function is complete */
+		
+		public function simulationStarted(event:ShortTermSimulationEvent):void
+		{
+			shortTermSimulationModel.currentState = ShortTermSimulationModel.STATE_RUNNING
+			Logger.debug("simulationStarted()",this)
+			Swiz.dispatchEvent(event)
+		}
+		
+		public function simulationOutputUpdated(event:ShortTermSimulationEvent):void
+		{
+			Logger.debug("simulationOutputUpdated()",this)
+			Swiz.dispatchEvent(event)
+		}
+		
+		public function simulationError(event:ShortTermSimulationEvent):void
+		{
+			shortTermSimulationModel.currentState = ShortTermSimulationModel.STATE_RUNNING
+			Logger.debug("simulationError()",this)
+			Swiz.dispatchEvent(event)
+		}
+		
+		public function simulationStopped(event:ShortTermSimulationEvent):void
+		{
+			shortTermSimulationModel.currentState = ShortTermSimulationModel.STATE_OFF
+			Logger.debug("simulationError()",this)
+			Swiz.dispatchEvent(event)
+		}
+		
+		/* END DELEGATE FUNCTIONS */
 		
 
 	}

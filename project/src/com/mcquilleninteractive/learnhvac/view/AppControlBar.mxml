@@ -79,26 +79,7 @@
 			
 			private var settingsPopup:SettingsPanel
 									
-			public function screenChange(index:Number):void
-			{
-				if (appMenuBar==null) return
-				
-				Logger.debug("#AppControlBar: screenChange called. index: " + index)
-				switch (index)
-				{
-					case ApplicationModel.PANEL_LONG_TERM_SIMULATION:
-					case ApplicationModel.PANEL_SHORT_TERM_SIMULATION:
-					case ApplicationModel.PANEL_ANALYSIS:
-						appTabBar.visible = true
-						appMenuBar.visible = true
-						break
-					case ApplicationModel.PANEL_SELECT_SCENARIO:
-						appTabBar.visible = false		
-						appMenuBar.visible = false			
-						break
-				}				
-			}
-			
+					
 			public function onNewScenario():void
 			{
 				Alert.show("Are you sure you start a new Scenario?", "New Scenario", Alert.OK|Alert.CANCEL, null, onNewScenarioAlertListener)
@@ -270,44 +251,9 @@
 		]]>
 	</mx:Script>		
 				
- 	<mx:MenuBar id="appMenuBar" labelField="@label"
- 	 	height="30"
- 	 	alpha="0.0" 
- 	 	x="0" y="0"
- 	 	visible="false"
- 	 	menuStyleName="appMenuBar" 
- 	 	itemClick="menuHandler(event);" 
- 	 	color="#FFFFFF">
- 	 
-		<mx:XMLList>
-    		<menuitem label="Scenario" >
-    		    <menuitem label="New Scenario" data="newScenario"/>
-   	 		</menuitem>
-
-   	 		<!--
-   	 		<menuitem label="Simulation Data" >
-   	    	 	<menuitem label="Long-Term" groupName="one">
-   	    	 		<menuitem label="load run1" data="loadEPlusInitial"/>
-   	    	 		<menuitem label="load run2" data="loadEPlusComparison"/>
-    				<menuitem label="save run1 data" data="saveEPlusInitial"/>
-    				<menuitem label="save run2 data" data="saveEPlusComparison"/>
-   	    	 	</menuitem>
-        		<menuitem label="Real-Time" groupName="two">
-   	    	 		<menuitem label="load run1 data" data="loadSparkInitial"/>
-   	    	 		<menuitem label="load run2 data" data="loadSparkComparison"/>
-    				<menuitem label="save run1 data" data="saveSparkInitial"/>
-    				<menuitem label="save run2 data" data="saveSparkComparison"/>
-        		</menuitem>
-     
-    		</menuitem>
-			-->
-			
-		</mx:XMLList>
-		
-	</mx:MenuBar>
-
+ 
     <mx:HBox id="scenarioTabs"
-    		 	x="390"
+    		 	x="10"
     		 	y="7"
        		  	backgroundAlpha="0"
     		 	height="30"

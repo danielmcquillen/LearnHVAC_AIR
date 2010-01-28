@@ -10,6 +10,7 @@ package com.mcquilleninteractive.learnhvac.event{
 		public static const SIM_UPDATE : String = "updateShortTermSimulation";
 		public static const SIM_STOP : String = "stopShortTermSimulation";
 		
+		
 		//these are the responses from the simulation
 		public static const SIM_STARTED:String = "shortTermSimulationStarted"
 		public static const SIM_UPDATED:String = "shortTermSimulationUpdated"

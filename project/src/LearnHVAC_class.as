@@ -1,6 +1,4 @@
 
-import com.adobe.cairngorm.control.CairngormEvent;
-;
 import com.adobe.onair.logging.FileTarget;
 import com.adobe.onair.logging.TextAreaTarget;
 import com.mcquilleninteractive.learnhvac.business.GraphManager;
@@ -105,10 +103,10 @@ private function onUncaughtError(e:UncaughtErrorEvent):void
     }
 }
 
-public function onLoggedIn(event:CairngormEvent):void
-{
-	
-	Logger.debug("#LearnHVAC app: onLoggedIn called...trying to stop SplashScreen")
+[Mediate(event="LoggedInEvent.LOGGGED_IN")]
+public function onLoggedIn(event:LoggedInEvent):void
+{	
+	Logger.debug("onLoggedIn called...trying to stop SplashScreen", this)
 	loginPanel.visible = false
 	loginPanel.splashScreen.stopAnim()
 	mainCanvas.visible = true

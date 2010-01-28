@@ -2,9 +2,10 @@ package com.mcquilleninteractive.learnhvac.business
 {
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;	
 	import com.mcquilleninteractive.learnhvac.util.Logger
-	import flash.events.EventDispatcher
+	import flash.events.EventDispatcher
+	import flash.events.IEventDispatcher;
 		
-	public class ShortTermSimulationDelegate extends EventDispatcher
+	public class ShortTermSimulationDelegate extends EventDispatcher implements IShortTermSimulationDelegate
 	{
 		
 		public static const OUTPUT_RECEIVED:String = "shortTermOutputReceived";
@@ -17,8 +18,7 @@ package com.mcquilleninteractive.learnhvac.business
 		}
 		
 		public function start():void
-		{
-			
+		{			
 		}
 		
 		public function stop():void

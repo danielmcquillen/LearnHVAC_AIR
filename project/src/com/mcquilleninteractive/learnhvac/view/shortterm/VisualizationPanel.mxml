@@ -149,13 +149,13 @@
 		
 		public function onIntroAnimStarted():void
 		{
-			Logger.debug("#VizPanel: onIntroAnimStarted()")
+			Logger.debug("onIntroAnimStarted()", this)
 			dispatchEvent(new Event("introAnimStarted()"))
 		}
 		
 		public function onIntroAnimFinished():void
 		{
-			Logger.debug("#VizPanel: onIntroAnimFinished()")
+			Logger.debug("onIntroAnimFinished()", this)
 			dispatchEvent(new Event("introAnimFinished"))
 			
 			//make sure mixing box is in correct state

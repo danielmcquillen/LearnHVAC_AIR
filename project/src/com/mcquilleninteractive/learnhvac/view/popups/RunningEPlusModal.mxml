@@ -16,13 +16,11 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.mcquilleninteractive.learnhvac.event.EnergyPlusEvent;
-			import org.swizframework.Swiz;
-		
+		import com.mcquilleninteractive.learnhvac.event.EnergyPlusEvent;		
 		import com.mcquilleninteractive.learnhvac.util.Logger
 		import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent
 		import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent	
-		import com.adobe.cairngorm.control.CairngormEventDispatcher
+		import org.swizframework.Swiz;
 		import mx.managers.PopUpManager
 		
 		[Bindable]
@@ -30,10 +28,6 @@
 		
 		public function onCreationComplete():void
 		{
-			Logger.debug("#RunningEPlusModal: setting up listeners...")
-			CairngormEventDispatcher.getInstance().addEventListener(LongTermSimulationEvent.SIM_FAILED, onSetupFailed, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.EPLUS_FILE_LOADED, onEPlusFileLoaded, false, 0,true)
-			CairngormEventDispatcher.getInstance().addEventListener(ScenarioDataLoadedEvent.EPLUS_DATA_PARSED, onEPlusDataParsed, false, 0,true)
 					
 		}
 		
@@ -43,23 +37,26 @@
 			_output = event.output
 		}
 		
+		[Mediate(event="ScenarioDataLoadedEvent.EPLUS_FILE_LOADED")]
 		public function onEPlusFileLoaded(event:ScenarioDataLoadedEvent):void
 		{
-			Logger.debug("#RunningEPlusModal: onEPlusFileLoaded() called")
+			Logger.debug("onEPlusFileLoaded() called", this)
 			//change popup status
 			lblStatus.text = "Parsing loaded data..."
 			
 		}
 		
+		[Mediate(event="ScenarioDataLoadedEvent.EPLUS_DATA_PARSED")]
 		public function onEPlusDataParsed(event:ScenarioDataLoadedEvent):void
 		{
-			Logger.debug("#RunningEPlusModal: onEPlusDataParsed() called. Removing modal popup.")
+			Logger.debug("onEPlusDataParsed() called. Removing modal popup.", this)
 			//clean up refs before destroying this popup
 			removeListeners()
 			PopUpManager.removePopUp(this)	
 		}
 		
-		public function onSetupFailed(event:LongTermSimulationEvent):void
+		[Mediate(event="LongTermSimulationEvent.SIM_FAILED")]
+		public function onSimFailed(event:LongTermSimulationEvent):void
 		{
 			removeListeners()
 			PopUpManager.removePopUp(this)				
@@ -67,19 +64,14 @@
 		
 		private function onCancel():void
 		{
-			Logger.debug("#RunningEPlusModal: onCancel() called")
+			Logger.debug("onCancel() called", this)
 			var event:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_CANCEL, true)
 			dispatchEvent(event)
 			removeListeners()
 			PopUpManager.removePopUp(this)
 		}
 		
-		private function removeListeners():void
-		{
-			CairngormEventDispatcher.getInstance().removeEventListener(ScenarioDataLoadedEvent.EPLUS_FILE_LOADED, onEPlusFileLoaded)
-			CairngormEventDispatcher.getInstance().removeEventListener(ScenarioDataLoadedEvent.EPLUS_DATA_PARSED, onEPlusDataParsed)
-			CairngormEventDispatcher.getInstance().removeEventListener(LongTermSimulationEvent.SIM_FAILED, onSetupFailed)
-		}
+		
 		
 		]]>
 	</mx:Script>

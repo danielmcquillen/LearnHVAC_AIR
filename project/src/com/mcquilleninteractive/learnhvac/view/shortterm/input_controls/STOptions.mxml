@@ -24,8 +24,6 @@
 			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel					
 			import com.mcquilleninteractive.learnhvac.event.*
 			
-			import com.adobe.cairngorm.control.CairngormEventDispatcher
-			import com.adobe.cairngorm.control.CairngormEvent
 			import mx.collections.ArrayCollection
 			import mx.controls.dataGridClasses.DataGridColumn			
 			import mx.controls.Alert

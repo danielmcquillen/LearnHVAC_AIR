@@ -9,26 +9,24 @@ package com.mcquilleninteractive.learnhvac.model
 	
 	[Bindable]
 	public class ApplicationModel extends EventDispatcher
-	{	
+	{
 		public static const baseStoragePath:String = "Local Settings/Application Data/LearnHVAC/"
-						
-		public var isFirstStartup:Boolean = false
 		
-		public static var buildVersion:String = "1.0.1"
-		public static var testMode:Boolean = false	
-				
+		//This flag will cause certain functions to use dummy or already created data
+		//(e.g. existing E+ output is loaded rather than running simulation)	
+		public static var testMode:Boolean = false
+		
 		// available values for the main viewstack
 		// defined as contants to help uncover errors at compile time instead of run time
 		public static const PANEL_SELECT_SCENARIO : Number = 0
 		public static const PANEL_LONG_TERM_SIMULATION : Number =	1
 		public static const PANEL_SHORT_TERM_SIMULATION : Number =	2
 		public static const PANEL_ANALYSIS : Number = 3
-				
 		
-		// viewstack starts out on the login screen
-		public var viewing : Number = PANEL_SELECT_SCENARIO
-		
+		public var viewing:uint = PANEL_SELECT_SCENARIO		
+		public var isFirstStartup:Boolean = false				
 		public var loggedIn: Boolean = false
+		
 				
 		// SERVER INFO
 		public var serverList:ArrayCollection

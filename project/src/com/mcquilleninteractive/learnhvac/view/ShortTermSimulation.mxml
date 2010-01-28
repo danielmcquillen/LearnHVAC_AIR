@@ -201,9 +201,7 @@
 					
    		[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 		public function onScenarioLoaded(event:Event):void
-		{
-			Logger.debug("#Simulation: onScenarioLoaded()...now trying to hook up combo.")
-			
+		{			
 			//show modal
 			simModal = PopUpManager.createPopUp(this.parent, SimulationModal, true)
 			PopUpManager.centerPopUp(simModal)
@@ -214,7 +212,6 @@
 		
 		public function onIntroAnimFinished(e:Event):void
 		{
-			Logger.debug("#ShortTermSimulation: onInputPanelsLoaded()...hiding modal.  ")
 			try
 			{
 				PopUpManager.removePopUp(simModal)

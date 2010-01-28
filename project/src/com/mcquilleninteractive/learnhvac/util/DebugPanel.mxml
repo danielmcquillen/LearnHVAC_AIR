@@ -43,7 +43,6 @@
 					textAreaTarget.includeLevel = true
 					textAreaTarget.level = LogEventLevel.DEBUG
 					Log.addTarget(textAreaTarget)
-					txtDebug.text += ApplicationModel.buildVersion
 				}
 			
 				public function onPanelClose(evt:Event):void

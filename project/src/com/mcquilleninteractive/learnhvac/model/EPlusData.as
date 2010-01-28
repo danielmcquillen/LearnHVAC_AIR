@@ -17,7 +17,7 @@ package com.mcquilleninteractive.learnhvac.model
 		public var longTermSimulationDataModel		:LongTermSimulationDataModel
 		public var dataArr				:Array					//holds arrays that hold values for each variable
 		public var dataXML				:XML 
-		public var dataLoaded			:Boolean = true
+		public var dataLoaded			:Boolean = false
 		public var dateTimeID			:String = "Date/Time"
 		
 		public var hourlyMeterDataAC	:ArrayCollection = new ArrayCollection() //AC used for graphing hourly data
@@ -480,7 +480,7 @@ package com.mcquilleninteractive.learnhvac.model
 					
 					var hourlyData:Object = {}
 					hourlyData.date = parseDateString(meterValsArr[0], true)
-					//Brian Coffey says to skip lines 2 and 3
+					//Brian Coffey says to skip cols 2 and 3
 					//hourlyData.gas = Number(meterValsArr[1])/3600
 					//hourlyData.facility = Number(meterValsArr[2])/3600
 					hourlyData.lighting = Number(meterValsArr[3])/3600

@@ -4,6 +4,7 @@ package com.mcquilleninteractive.learnhvac.business
 	import com.mcquilleninteractive.learnhvac.err.EPlusParseError;
 	import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent;
 	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
 	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
@@ -21,12 +22,14 @@ package com.mcquilleninteractive.learnhvac.business
 	import flash.events.Event
 	import mx.controls.Alert;
 	import org.swizframework.Swiz;
-	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
 	import flash.events.EventDispatcher;
 
 	
 	public class LongTermSimulationDelegate extends EventDispatcher
 	{
+		
+		[Autowire]
+		public var applicationModel:ApplicationModel
 		
 		[Autowire]
 		public var scenarioModel:ScenarioModel
@@ -75,6 +78,16 @@ package com.mcquilleninteractive.learnhvac.business
 				Logger.error("runLongTermSimulation() error: " + msg, this)
 				throw new Error(msg)				
 			}
+			
+			_runID = longTermSimulationModel.runID
+			
+			//if this is test mode, just jump straight to reading output
+			if (ApplicationModel.testMode)
+			{
+				loadOutputFiles()
+				return
+			}
+	
 	
 			//Check weather file exists...and if so copy to In.epw
 			var weatherFile:File = File.userDirectory.resolvePath(_energyPlusPath+ "Weather/" + longTermSimulationModel.weatherFile)
@@ -109,7 +122,6 @@ package com.mcquilleninteractive.learnhvac.business
 				}	
 			}
 				
-			_runID = longTermSimulationModel.runID
 			Logger.debug(" runID set to : " + _runID, this)			
 			Logger.debug(" checking if output files exist...if so, delete them...")
 									
@@ -403,7 +415,7 @@ package com.mcquilleninteractive.learnhvac.business
 			//try to read meter
 			try
 			{
-				_stream.open (_eplusOutputMeterFile, FileMode.READ)				
+				stream.open (_eplusOutputMeterFile, FileMode.READ)				
 				var basicMeterData:String  = stream.readUTFBytes(stream.bytesAvailable)
 			}
 			catch(error:Error)
@@ -437,7 +449,7 @@ package com.mcquilleninteractive.learnhvac.business
 			}
 			
 			var event:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.FILE_LOADED, true)
-			Swiz.dispatchEvent(event)
+			dispatchEvent(event)
 							
 			try
 			{
@@ -449,12 +461,12 @@ package com.mcquilleninteractive.learnhvac.business
 				msg = "Error when parsing EnergyPlus output. Error: " + err
 				event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
 				event.errorMessage = msg
-				Swiz.dispatchEvent(event)
+				dispatchEvent(event)
 			}			
 		
 			Logger.debug("Finished simulation. runID was: " + _runID,this)
 			
-			var evt:Event = new Event(LongTermSimulationEvent.SIM_LOAD_COMPLETE, true)
+			var evt:Event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_COMPLETE, true)
 			dispatchEvent(evt)
 		}
 		 

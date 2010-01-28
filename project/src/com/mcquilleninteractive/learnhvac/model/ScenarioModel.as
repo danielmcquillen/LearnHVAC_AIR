@@ -564,7 +564,19 @@ package com.mcquilleninteractive.learnhvac.model
 			updateTimer(0)
 		}
 			
-			
+	
+		public function traceSystemVariables():void
+		{
+			Logger.debug("Tracing system variables in model:",this)
+			for each (var sysNode:SystemNodeModel in sysNodesAC)
+			{
+				Logger.debug("  NODE: " + sysNode.name,this)
+				for each (var sysVar:SystemVariable in sysNode.sysVarsArr)
+				{
+					Logger.debug("      " + sysVar.name + " : " + sysVar.currValue,this)
+				}
+			}	
+		}		
 			
 	}
 }

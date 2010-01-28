@@ -137,7 +137,11 @@ package com.mcquilleninteractive.learnhvac.model
 			return EPlusData(eplusRuns[runID])
 		}
 		
-		
+		public function runLoaded(runID:String):Boolean
+		{
+			if (eplusRuns[runID]==null) return false
+			return EPlusData(eplusRuns[runID]).dataLoaded
+		}
 		
 		
 	}

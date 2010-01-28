@@ -12,7 +12,6 @@ package com.mcquilleninteractive.learnhvac.event
 		public static const SIM_FAILED : String = "failedLongTermSimulation";
 		public static const SIM_CANCEL : String = "cancelLongTermSimulation";
 		public static const FILE_LOADED : String = "longTermSimulationFileLoaded";
-		public static const SIM_LOAD_COMPLETE : String = "doneLongTermSimulationLoad";
 		public static const SIM_COMPLETE : String = "completeLongTermSimulation";
 		
 		public var view:LongTermSimulation

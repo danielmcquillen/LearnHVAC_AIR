@@ -90,14 +90,23 @@
 	    	[Mediate(event="LongTermSimulationEvent.SIM_COMPLETE")]
 	    	public function onLongTermSimComplete(event:LongTermSimulationEvent):void
 	    	{
+	    		Logger.debug("onLongTermSimComplete()",this)
 	    		setChartData()
 	    	}
 	    	
 	    	public function setChartData():void
 	    	{
+	    		Logger.debug("setChartData() _runID: " + _runID,this)
+	    		if (!longTermSimulationDataModel.runLoaded(_runID)) return
 	    		if (scenarioModel!=null)
 	    		{
 	    			dataAC = longTermSimulationDataModel.getEPlusData(_runID).hourlyMeterDataAC
+	    	   		var obj:Object = dataAC.getItemAt(0)
+	    	   		Logger.debug("first element of dataAC: " + obj,this)
+	    	   		for (var s:String in obj)
+					{
+						Logger.debug("first object in hourlyMeterDataAC" + s + " : " + obj[s], this)
+					}
 	    	   		dataAC.refresh()
 	    		}
 	    		else

@@ -17,8 +17,9 @@ package com.mcquilleninteractive.learnhvac.controller
 	import org.swizframework.Swiz;
 	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
 	import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
+	import org.swizframework.factory.IInitializingBean;
 	
-	public class LongTermSimulationController extends AbstractController
+	public class LongTermSimulationController extends AbstractController implements IInitializingBean
 	{
 		[Autowire]
 		public var scenarioModel:ScenarioModel
@@ -34,6 +35,14 @@ package com.mcquilleninteractive.learnhvac.controller
 		
 		public function LongTermSimulationController()
 		{
+			
+		}
+		
+		public function initialize():void
+		{
+			delegate.addEventListener(LongTermSimulationEvent.SIM_COMPLETE, simulationComplete)
+			delegate.addEventListener(LongTermSimulationEvent.FILE_LOADED, simulationFileLoaded)
+			delegate.addEventListener(LongTermSimulationEvent.SIM_FAILED, simulationFailed)
 		}
 	
 		
@@ -60,7 +69,7 @@ package com.mcquilleninteractive.learnhvac.controller
 			{
 				Logger.error("error when calling runLongTermSimulation on delegate: e: " +err, this)  
 				Alert.show("Simulation Error: " + err.message, "Simulation Error")
-				simulationFailed()
+				simulationFailed(null)
 			}						
 		}
 						
@@ -73,23 +82,6 @@ package com.mcquilleninteractive.learnhvac.controller
 			longTermSimulationDataModel.continueParsing = false
 		}		
 		
-		[Mediate(event="LongTermSimulationEvent.SIM_FAILED")]
-		public function longTermSimulationFailed(event:LongTermSimulationEvent):void
-		{
-			Logger.debug("longTermSimulationError()", this)						
-			PopUpManager.removePopUp(_popUp)		
-			Alert.show("Long-term simulation failed. " + event.errorMessage, "Simulation Failed")
-		}
-		
-		[Mediate(event="LongTermSimulationEvent.SIM_LOAD_COMPLETE")]
-		public function longTermSimulationLoadComplete(event:LongTermSimulationEvent):void
-		{
-			Logger.debug("longTermSimulationFinished()", this)						
-			PopUpManager.removePopUp(_popUp)
-			scenarioModel.importLongTermVars()		
-			Swiz.dispatchEvent(new LongTermSimulationEvent(LongTermSimulationEvent.SIM_COMPLETE))			
-			Alert.show("Long-term simulation finished. Use the Analysis section to view results.","Simulation Finished")
-		}		
 		
 		[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
 		public function onUnitsChanged(event:SetUnitsCompleteEvent):void
@@ -98,14 +90,39 @@ package com.mcquilleninteractive.learnhvac.controller
 			longTermSimulationDataModel.onUnitsChange(event.units)			
 		}
 
+		/* ****************** */
+		/* DELEGATE LISTENERS */
+		/* ****************** */
 		
-		public function simulationFailed():void
+		/* The following functions handle events coming from the delegate.
+		   The controller will handle the events first, and then broadcast to
+		   all listeners via Swiz after its own function is complete */
+		  		   
+		public function simulationFileLoaded(event:LongTermSimulationEvent):void
 		{
-			Logger.debug("simulationFailed()", this)
-			PopUpManager.removePopUp(_popUp)
-			
+			Logger.debug("simulationFileLoaded()", this)
+			Swiz.dispatchEvent(event.clone())	
+		}   
+		   
+		public function simulationFailed(event:LongTermSimulationEvent):void
+		{
+			Logger.debug("simulationFailed()", this)						
+			PopUpManager.removePopUp(_popUp)	
+			Swiz.dispatchEvent(event)	
+			Alert.show("Long-term simulation failed. " + event.errorMessage, "Simulation Failed")
 		}
 		
+		public function simulationComplete(event:LongTermSimulationEvent):void
+		{
+			Logger.debug("simulationComplete()", this)						
+			PopUpManager.removePopUp(_popUp)
+			scenarioModel.importLongTermVars()		
+			Swiz.dispatchEvent(event)			
+			Alert.show("Long-term simulation finished. Use the Analysis section to view results.","Simulation Finished")
+		}		
+		
+		/* END DELEGATE FUNCTIONS */
+
 
 	}
 }

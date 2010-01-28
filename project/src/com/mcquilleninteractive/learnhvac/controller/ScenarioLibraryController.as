@@ -223,6 +223,7 @@ package com.mcquilleninteractive.learnhvac.controller
 				if (success)
 				{
 					Logger.debug("Scenario " + scenarioModel.name + " loaded. Starting...",this)
+					scenarioModel.traceSystemVariables()
 					startScenario()
 				}
 				else
