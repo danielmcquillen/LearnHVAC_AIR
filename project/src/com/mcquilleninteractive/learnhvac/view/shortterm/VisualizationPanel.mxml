@@ -12,12 +12,12 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 		import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
 		import com.mcquilleninteractive.learnhvac.event.ZoneChangeEvent;		
 		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 		import com.mcquilleninteractive.particleengine.Particle;
-		import com.mcquilleninteractive.particleengine.ParticleEngine;
-		
+		import com.mcquilleninteractive.particleengine.ParticleEngine;		
 		import com.mcquilleninteractive.learnhvac.util.Logger	
 		import com.mcquilleninteractive.learnhvac.event.SimNavEvent
 		import com.mcquilleninteractive.learnhvac.event.VisualizationEvent
@@ -51,6 +51,10 @@
 		[Autowire]
 		public var scenarioModel:ScenarioModel
 				
+		[Bindable]
+		[Autowire]
+		public var shortTermSimulationModel:ShortTermSimulationModel
+		
 		[Bindable]
 		[Autowire]
 		public var longTermSimulationModel:LongTermSimulationModel
@@ -127,9 +131,12 @@
 		{
 			pe.stopPE()
 			//stop fan if it's visible in this node
-			if (currNode == ScenarioModel.SN_FAN || currNode == ScenarioModel.SN_ROOF || currNode == ScenarioModel.SN_SYSTEM)
+			if (	currNode == ScenarioModel.SN_FAN 
+					|| currNode == ScenarioModel.SN_ROOF 
+					|| currNode == ScenarioModel.SN_SYSTEM)
 			{
-				fan.currentState = currNode + "_OFF"
+				fan.currentState = currNode + "_OFF"				
+				Logger.debug("Setting fan to state: " + fan.currentState, this)
 			}
 		}
 		
@@ -241,9 +248,12 @@
 		{
 			pe.startPE()
 			//start fan if it's visible in this node
-			if (currNode == ScenarioModel.SN_FAN || currNode == ScenarioModel.SN_ROOF || currNode == ScenarioModel.SN_SYSTEM)
+			if (	currNode == ScenarioModel.SN_FAN || 
+					currNode == ScenarioModel.SN_ROOF ||
+					currNode == ScenarioModel.SN_SYSTEM)
 			{
 				fan.currentState = currNode + "_ON"	
+				Logger.debug("Setting fan to state: " + fan.currentState, this)
 			}
 		}
 		
@@ -300,12 +310,13 @@
 				case ScenarioModel.SN_FAN:
 					//set fan according to AHU state
 					fan.visible = true
-					switch (scenarioModel.ahuStatus)
+					switch (shortTermSimulationModel.currentState)
 					{
-						case ScenarioModel.AHU_OFF:
+						case ShortTermSimulationModel.STATE_OFF:
+						case ShortTermSimulationModel.STATE_PAUSED:
 							fan.currentState = "Fan_OFF"
 							break
-						case ScenarioModel.AHU_ON:
+						case ShortTermSimulationModel.STATE_RUNNING:
 							fan.currentState = "Fan_ON"
 							break
 					}
@@ -349,12 +360,13 @@
 				case ScenarioModel.SN_ROOF:
 					//set fan according to AHU state
 					fan.visible = true
-					switch (scenarioModel.ahuStatus)
+					switch (shortTermSimulationModel.currentState)
 					{
-						case ScenarioModel.AHU_OFF:
+						case ShortTermSimulationModel.STATE_OFF:
+						case ShortTermSimulationModel.STATE_PAUSED:
 							fan.currentState = "RF_OFF"
 							break
-						case ScenarioModel.AHU_ON:
+						case ShortTermSimulationModel.STATE_RUNNING:
 							fan.currentState = "RF_ON"
 							break
 					}
@@ -367,12 +379,13 @@
 				
 					fan.visible = true
 					//set fan according to AHU state
-					switch (scenarioModel.ahuStatus)
+					switch (shortTermSimulationModel.currentState)
 					{
-						case ScenarioModel.AHU_OFF:
+						case ShortTermSimulationModel.STATE_OFF:
+						case ShortTermSimulationModel.STATE_PAUSED:
 							fan.currentState = "SYS_OFF"
 							break
-						case ScenarioModel.AHU_ON:
+						case ShortTermSimulationModel.STATE_RUNNING:
 							fan.currentState = "SYS_ON"
 							break
 					}
@@ -401,7 +414,7 @@
 			}
 			
 			//start PE if AHU is on
-			if (scenarioModel.ahuStatus==ScenarioModel.AHU_ON)
+			if (shortTermSimulationModel.currentState==ShortTermSimulationModel.STATE_RUNNING)
 			{
 				pe.startPE()
 			}
@@ -448,11 +461,9 @@
 				case ScenarioModel.SN_DIFFUSER:
 					break
 				
-				
 				case ScenarioModel.SN_VAV:
 					vavDamper.visible = false
 					break
-				
 				
 				case ScenarioModel.SN_MIXINGBOX:
 					mixingBox.currentState = "hidden"
@@ -470,7 +481,6 @@
 				case ScenarioModel.SN_PLANT:
 					break
 					
-				
 				case ScenarioModel.SN_ROOF:
 					fan.visible = false
 					mixingBox.currentState = "hidden"

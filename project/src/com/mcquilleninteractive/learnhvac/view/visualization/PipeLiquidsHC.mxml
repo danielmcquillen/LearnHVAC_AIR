@@ -10,6 +10,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 			import mx.binding.utils.ChangeWatcher;
 		
 			// NOTE: For some reason databinding isn't working with systemVariable.baseSIValue...
@@ -30,6 +31,10 @@
 			[Bindable]
 			[Autowire]
 			public var scenarioModel:ScenarioModel		
+			
+			[Bindable]
+			[Autowire]
+			public var shortTermSimulationModel:ShortTermSimulationModel		
 									
 			public var _active:Boolean = false
 			public var model:ApplicationModel
@@ -117,7 +122,7 @@
 					//user has entered system node where this component should be visible
 					//get latest current values if AHU is on
 					
-					if (scenarioModel.ahuStatus == ScenarioModel.AHU_ON)
+					if (shortTermSimulationModel.currentState == ShortTermSimulationModel.STATE_RUNNING)
 					{
 						updatePipes()				
 					}

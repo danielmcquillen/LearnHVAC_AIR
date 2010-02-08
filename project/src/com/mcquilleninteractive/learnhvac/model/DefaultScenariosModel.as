@@ -13,7 +13,7 @@ package com.mcquilleninteractive.learnhvac.model
 	{
 				
 		[Embed(source="/assets/scenarios/DefaultScenario.xml", mimeType="application/octet-stream")]
-		public var BasicScenarioXML:Class;
+		public var basicScenarioXML:Class;
 		
 		public var defaultScenariosAC:ArrayCollection
 		
@@ -29,12 +29,19 @@ package com.mcquilleninteractive.learnhvac.model
 			scenObj.thumbnail_URL = "http://admin.learnhvac.org/thumbnails/pic_scenario_spring.png"
 			
 			//so stupid that I can't just embed the xml as mimeType='text/xml' or something 
-			var ba:ByteArray = new BasicScenarioXML() as ByteArray;			
+			var ba:ByteArray = new basicScenarioXML() as ByteArray;			
 			scenObj.scenarioXML = XML(ba.readUTFBytes(ba.length));
 					
 			defaultScenariosAC.addItem(scenObj)
 		
 		}
+		
+		public function get defaultScenarioXML():XML
+		{
+			var ba:ByteArray = new basicScenarioXML() as ByteArray;			
+			return XML(ba.readUTFBytes(ba.length));
+		}
+		
 		
 		
 

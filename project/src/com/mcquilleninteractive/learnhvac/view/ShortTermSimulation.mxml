@@ -21,11 +21,10 @@
 		import com.mcquilleninteractive.learnhvac.view.popups.ShortTermSimulationPopup
 		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
 		import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
-		import mx.core.IFlexDisplayObject;
-		import mx.containers.Panel;
 		import com.mcquilleninteractive.learnhvac.model.DialogManager
 		import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 		import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel
+		import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel
 		import com.mcquilleninteractive.learnhvac.event.ViewMovieEvent;
 		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
 		import com.mcquilleninteractive.learnhvac.event.ResetInputsEvent
@@ -39,11 +38,13 @@
 		import com.mcquilleninteractive.learnhvac.event.SysVarInfoPopupEvent	
 		import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent	
 		import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent
-		import com.mcquilleninteractive.learnhvac.util.Logger
-		
-		import com.mcquilleninteractive.learnhvac.event	.SimNavEvent   
+		import com.mcquilleninteractive.learnhvac.event.SimNavEvent   
 		import com.mcquilleninteractive.learnhvac.view.popups.HCLiquidsSchematicPanel
 		import com.mcquilleninteractive.learnhvac.view.popups.CCLiquidsSchematicPanel
+		import com.mcquilleninteractive.learnhvac.util.Logger		
+		
+		import mx.core.IFlexDisplayObject;
+		import mx.containers.Panel;
 		import mx.managers.PopUpManager
 		import flash.events.Event
 		import mx.controls.Alert
@@ -65,6 +66,11 @@
 		[Bindable]
 		[Autowire]
 		public var scenarioModel:ScenarioModel
+		
+		[Bindable]
+		[Autowire]
+		public var shortTermSimulationModel:ShortTermSimulationModel
+		
 		
 		[Bindable]
 		[Embed(source='assets/img/long_term_import_icon.png')]
@@ -134,7 +140,7 @@
 			//turn off AHU and Spark
 			if (scenarioModel != null)
 			{
-				if (scenarioModel.ahuStatus==ScenarioModel.AHU_ON)
+				if (shortTermSimulationModel.currentState == ShortTermSimulationModel.STATE_RUNNING)
 				{
 					stopSimulation()
 				}	

@@ -14,6 +14,7 @@
 	<model:ShortTermSimulationDataModel id="shortTermSimulationDataModel" />
 	<model:LongTermSimulationModel id="longTermSimlulationModel" />
 	<model:LongTermSimulationDataModel id="longTermSimlulationDataModel" />
+	<model:DefaultScenariosModel id="defaultScenariosModel" />
 	<model:UserModel id="userModel" />
 	
 	<controller:LoginController id="loginController" />

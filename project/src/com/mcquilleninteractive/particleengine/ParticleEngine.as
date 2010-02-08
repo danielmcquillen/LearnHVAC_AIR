@@ -6,6 +6,7 @@ package com.mcquilleninteractive.particleengine
 	;
 	import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.util.ColorSetting;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
@@ -243,7 +244,8 @@ package com.mcquilleninteractive.particleengine
 		}
 
 			
-		public function setParticleEngine(evt:Object):void
+		//TEMP function name is setParticleEngine
+		public function spe(evt:Object):void
 		{
 			if (evt.setting == "full" || evt.setting=="reduced"){
 				if (evt.setting=="full")
@@ -296,7 +298,7 @@ package com.mcquilleninteractive.particleengine
 					particleMax = particleMax_DEFAULT
 			}
 			
-			if (running==false && evt.currAHUStatus == ScenarioModel.AHU_ON)
+			if (running==false && evt.currAHUStatus == ShortTermSimulationModel.STATE_RUNNING)
 			{
 				startPE()
 			}

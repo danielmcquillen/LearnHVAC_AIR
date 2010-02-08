@@ -8,7 +8,7 @@ package com.mcquilleninteractive.learnhvac.model
 		public static const STATE_RUNNING:String = "running"
 		public static const STATE_PAUSED:String = "paused"
 				
-		protected var _currentState:String
+		protected var _currentState:String = STATE_OFF
 				
 		public function ShortTermSimulationModel()
 		{

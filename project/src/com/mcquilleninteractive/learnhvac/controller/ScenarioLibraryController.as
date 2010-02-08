@@ -2,31 +2,30 @@ package com.mcquilleninteractive.learnhvac.controller
 {
 	
 	
-	import com.mcquilleninteractive.learnhvac.event.GetScenarioListEvent
-	import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
-	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
-	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
-	import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
 	import com.mcquilleninteractive.learnhvac.business.LocalScenarioDelegate;
-	import com.mcquilleninteractive.learnhvac.util.Logger
 	import com.mcquilleninteractive.learnhvac.business.RemoteScenarioDelegate;
-	import com.mcquilleninteractive.learnhvac.vo.ScenarioListItemVO;
+	import com.mcquilleninteractive.learnhvac.event.GetScenarioListEvent;
 	import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent;
+	import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+	import com.mcquilleninteractive.learnhvac.model.DefaultScenariosModel;
+	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
+	import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
+	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 	import com.mcquilleninteractive.learnhvac.model.UserModel;
-	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
+	import com.mcquilleninteractive.learnhvac.util.Logger;
+	import com.mcquilleninteractive.learnhvac.vo.ScenarioListItemVO;
 	
-	import org.swizframework.controller.AbstractController	
-	import org.swizframework.Swiz	
-	
-	import mx.controls.Alert
 	import mx.collections.ArrayCollection;
-	import mx.rpc.IResponder;
-	import mx.rpc.events.FaultEvent;
-	import mx.rpc.remoting.RemoteObject;
-	import mx.rpc.events.ResultEvent;
+	import mx.controls.Alert;
 	import mx.rpc.AsyncToken;
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
+	
+	import org.swizframework.Swiz;
+	import org.swizframework.controller.AbstractController;
 	
 	public class ScenarioLibraryController  extends AbstractController
 	{
@@ -50,6 +49,9 @@ package com.mcquilleninteractive.learnhvac.controller
 		
 		[Autowire]
 		public var remoteScenarioDelegate:RemoteScenarioDelegate
+		
+		[Autowire]
+		public var defaultScenariosModel:DefaultScenariosModel
 		
 		//this array describes how the nodes should be ordered in the array collection -- for navigation
 		private var sortOrderArr:Array = ["SYS","MX", "Fan","Flt","HC","CC","Fan","VAV","DIF","PLT","BOI","CHL","CTW","SPK"]
@@ -175,7 +177,7 @@ package com.mcquilleninteractive.learnhvac.controller
 			else 
 			{
 				Logger.debug("data.result is null", this);
-				mx.controls.Alert.show( "No scenarios are available from the server. This means that either no scenarios are available, or there is an error on the server. A message has been sent to the administrators.  Please use local scenarios for the time being." );
+				mx.controls.Alert.show( "No scenarios are available from the server. This means that either no scenarios are available, or there is an error on the server. Please use local scenarios for the time being." );
 			}
 		}
 	
@@ -273,14 +275,20 @@ package com.mcquilleninteractive.learnhvac.controller
 		[Mediate(event="LoadScenarioEvent.LOAD_DEFAULT_SCENARIO")]		
 		public function onLoadDefaultScenario(event:LoadScenarioEvent):void
 		{	
-			//TODO		
-			
-			/*
+			//TODO					
 			Logger.debug("onLoadDefaultScenarioCommand()", this)	
-			var scenarioXML:XML = event.xml
-			result = delegate.populateScenarioModel(defaultScenarioXML)
-			loadSuccess(result)
-			*/	
+			var success:Boolean = populateScenarioModel(defaultScenariosModel.defaultScenarioXML)
+			if (success)
+			{
+				Logger.debug("Default scenario loaded. Starting...",this)
+				scenarioModel.traceSystemVariables()
+				startScenario()
+			}
+			else
+			{
+				Logger.error("Couldn't load deafult scenario", this)
+				Alert.show("Couldn't load the defaul scenario");
+			}		
 		}		
 		
 		/*

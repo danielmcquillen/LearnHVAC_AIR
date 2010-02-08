@@ -26,12 +26,7 @@ package com.mcquilleninteractive.learnhvac.model
 				
 		[Autowire]
 		public var longTermSimulationDataModel:LongTermSimulationDataModel
-		
-		//state of AHU 
-		public static var AHU_ON:String = "AHUon"
-		public static var AHU_OFF:String = "AHUoff"
-		public static var AHU_PAUSED:String = "AHUpaused"
-				
+			
 		//Output from short-term sim
 		public static var SHORT_TERM_OUTPUT_LOADED:String = "shortTermDataLoaded"
 		
@@ -70,7 +65,6 @@ package com.mcquilleninteractive.learnhvac.model
 		// values for short-term simulation
 		public var currNode:String  					//node user is viewing
 		public var currNodeIndex:Number = 0				//index of node user is viewing (index within sysNodesAC) 
-		public var ahuStatus:String 
 		
 		
 		// meta-information for scenario externally loaded
@@ -225,7 +219,6 @@ package com.mcquilleninteractive.learnhvac.model
 		public function initialize():void
 		{
 			clearScenario()
-			ahuStatus = ScenarioModel.AHU_OFF
 			lookupArr = []
 		}
 		
@@ -242,7 +235,6 @@ package com.mcquilleninteractive.learnhvac.model
 		{
 			Logger.debug(": resetting.")
 			clearScenario()
-			ahuStatus = ScenarioModel.AHU_OFF
 				
 		}
 		
