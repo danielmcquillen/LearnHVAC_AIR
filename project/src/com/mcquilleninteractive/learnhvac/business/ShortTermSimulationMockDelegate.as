@@ -50,7 +50,7 @@ package com.mcquilleninteractive.learnhvac.business
 			dispatchEvent(evt)
 		}
 		
-		public function update():void
+		public function update(inputSysVarsArr:Array):void
 		{		
 			Logger.debug("update()",this)
 			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_UPDATED, false)

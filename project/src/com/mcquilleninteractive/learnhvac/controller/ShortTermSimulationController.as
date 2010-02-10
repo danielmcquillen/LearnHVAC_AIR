@@ -1,19 +1,18 @@
 package com.mcquilleninteractive.learnhvac.controller
 {
-	import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
-	import com.mcquilleninteractive.learnhvac.event.SetPointEvent;	
-	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
-	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
-	import com.mcquilleninteractive.learnhvac.util.Logger
-	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel;
-	import com.mcquilleninteractive.learnhvac.business.ShortTermSimulationDelegate;
 	import com.mcquilleninteractive.learnhvac.business.IShortTermSimulationDelegate;
+	import com.mcquilleninteractive.learnhvac.event.ResetInputsEvent;
+	import com.mcquilleninteractive.learnhvac.event.SetPointEvent;
+	import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
+	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel;
+	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
-	import com.mcquilleninteractive.learnhvac.event.ResetInputsEvent;
+	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
-	import org.swizframework.controller.AbstractController
-	import org.swizframework.Swiz
+	import org.swizframework.Swiz;
+	import org.swizframework.controller.AbstractController;
 	import org.swizframework.factory.IInitializingBean;
 
 	
@@ -81,7 +80,9 @@ package com.mcquilleninteractive.learnhvac.controller
 		[Mediate(event="ShortTermSimulationEvent.SIM_UPDATE")]	
 		public function update():void
 		{
-			delegate.update()
+			//pass in an array of input system variables to be sent to simulation
+			var inputSysVarsArr:Array = scenarioModel.getInputSysVars()			
+			delegate.update(inputSysVarsArr)
 		}
 		
 			

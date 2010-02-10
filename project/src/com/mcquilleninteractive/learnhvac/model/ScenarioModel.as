@@ -1,6 +1,5 @@
 package com.mcquilleninteractive.learnhvac.model
 {
-	import com.mcquilleninteractive.learnhvac.business.TestModeSparkService
 	import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 	import com.mcquilleninteractive.learnhvac.util.DateUtil;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
@@ -121,8 +120,9 @@ package com.mcquilleninteractive.learnhvac.model
 		//Values are LT_IMPORT_NONE, LongTermSimulationDataModel.RUN_1, or LongTermSimulationDataModel.RUN_2
 		public var importLongTermVarsFromRun:String = LT_IMPORT_NONE
 		
-		private var _floorOfInterest:uint = 1
-		private var _zoneOfInterest:uint = 1
+		protected var _floorOfInterest:uint = 1
+		protected var _zoneOfInterest:uint = 1
+		protected var _inputSysVarsArr:Array = []
 		
 		/////////////////////////////////////
 		// CONSTRUCTOR FUNCTIONS
@@ -213,6 +213,28 @@ package com.mcquilleninteractive.learnhvac.model
 		}
 			
 			
+		public function getInputSysVars():Array
+		{
+			var returnArr:Array = []
+			if (_inputSysVarsArr.length==0)
+			{
+				//TODO: only send input variables that have changed
+				return _inputSysVarsArr
+			}
+			for each (var sysNode:SystemNodeModel in sysNodesAC)
+			{
+				for each (var sysVar:SystemVariable in sysNode.sysVarsArr)
+				{
+					if (sysVar.typeID == SystemVariable.INPUT)
+					{
+						_inputSysVarsArr.push(sysVar)
+					}
+					
+				}	
+			}
+			return _inputSysVarsArr
+		}
+			
 		/* Function: initialize
 		*  Initializes model, wiping out any current settings 
 		*/
@@ -220,6 +242,7 @@ package com.mcquilleninteractive.learnhvac.model
 		{
 			clearScenario()
 			lookupArr = []
+			_inputSysVarsArr = []
 		}
 		
 		public function clearScenario():void

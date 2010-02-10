@@ -1,0 +1,29 @@
+Modelica Interaction Notes
+=============================================
+
+
+From Michael Wetter Email 12/18/09:
+
+
+The string that is exchanged between server and client is defined as follows:
+a b c d e f g1 g2
+where
+a=1 is the version number,
+b is a flag, defined as
+ +1: simulation reached end time.
+  0: normal operation
+ -1: simulation terminates due to an (unspecified) error.
+ -10: simulation terminates due to error during initialization.
+ -20: simulation terminates due to error during time integration. 
+c = number of doubles to be exchanged,
+d = 0 [number of integers to be exchanged],
+e = 0 [number of booleans to be exchanged],
+f = current simulation time in seconds
+g1 = first double, g2 = second double, etc.
+The string is terminated by '\n' and there is one space between each token.
+
+An example where 2 values are sent at time equals 60 looks like
+1 0 2 0 0 6.000000000000000e+01 9.958333333333334e+00 9.979166666666666e+00
+
+If you want to stop dymola because LearnHVAC reached its final time, you would send a '+1' as the flag
+1 1 2 0 0 6.000000000000000e+01 9.958333333333334e+00 9.979166666666666e+00
