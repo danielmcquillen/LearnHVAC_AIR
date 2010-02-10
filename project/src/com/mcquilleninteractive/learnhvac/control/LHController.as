@@ -3,6 +3,10 @@
 
 package com.mcquilleninteractive.learnhvac.control{
 	
+	/* This file is no longer used (from old Cairngorm framework) but I'm keeping here
+	   just to remember how the command were hooked up */
+	   
+	
 	import com.adobe.cairngorm.control.FrontController
 	import com.mcquilleninteractive.learnhvac.command.*
 	import com.mcquilleninteractive.learnhvac.event.*

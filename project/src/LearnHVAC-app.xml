@@ -13,9 +13,6 @@
 			the application. Optional.
 -->
 
-	
-	<!-- DMcQ: remove the "desktop" profile for testing within Flex Builer
-	     but add it when compiling (this to allow launching of apps in AIR 2.0) -->	
 	<supportedProfiles>extendedDesktop desktop</supportedProfiles>
 	
 	<!-- The application identifier string, unique to this application. Required. -->

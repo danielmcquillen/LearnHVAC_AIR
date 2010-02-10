@@ -195,6 +195,10 @@ protected function doFirstStartup():void
 		//copy the spark to the storage directory		
 		var sparkFile:File = File.applicationDirectory.resolvePath("spark")
 		var copySparkFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "spark")
+		if (copySparkFile.exists==false)
+		{
+			copySparkFile.createDirectory()
+		}
 		Logger.debug("Moving spark to : " +  copySparkFile.nativePath, this) 
 		copySparkFile.createDirectory()
 		sparkFile.copyTo(copySparkFile, true)
@@ -202,6 +206,10 @@ protected function doFirstStartup():void
 		//copy the energyplus to the storage directory	
 		var eplusFile:File = File.applicationDirectory.resolvePath("energyplus")
 		var copyEplusFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "energyplus")
+		if (copyEplusFile.exists==false)
+		{
+			copyEplusFile.createDirectory()
+		}
 		Logger.debug("Moving EnergyPlus to: " + copyEplusFile.nativePath, this) 
 		copyEplusFile.createDirectory()
 		eplusFile.copyTo(copyEplusFile, true)		
@@ -209,6 +217,10 @@ protected function doFirstStartup():void
 		//copy the included scenarios to the storage directory	
 		var scenariosFile:File = File.applicationDirectory.resolvePath("scenarios")
 		var copyScenariosFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "scenarios")
+		if (copyScenariosFile.exists==false)
+		{
+			copyScenariosFile.createDirectory()
+		}
 		Logger.debug("Moving scenarios to: " + copyScenariosFile.nativePath, this) 
 		copyScenariosFile.createDirectory()
 		scenariosFile.copyTo(copyScenariosFile, true)
