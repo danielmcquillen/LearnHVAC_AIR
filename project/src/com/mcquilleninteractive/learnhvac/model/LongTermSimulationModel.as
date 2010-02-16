@@ -1,14 +1,19 @@
 package com.mcquilleninteractive.learnhvac.model
 {
-	import com.mcquilleninteractive.learnhvac.util.Logger
-	import com.mcquilleninteractive.learnhvac.util.Conversions
-	
-	import mx.collections.ArrayCollection
+	import com.mcquilleninteractive.learnhvac.event.ZoneChangeEvent;
+	import com.mcquilleninteractive.learnhvac.util.Conversions;
+	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
 	import flash.events.EventDispatcher;
-	import flash.events.Event;
-	import com.mcquilleninteractive.learnhvac.event.ZoneChangeEvent;
+	
+	import mx.collections.ArrayCollection;
+	
 	import org.swizframework.Swiz;
+	
+	/** Class LongTermSimulationModel
+	 * 
+	 *  This class holds the data needed for each run of the long-term simulation (E+)
+	 */
 	
 	[Bindable]
 	public class LongTermSimulationModel extends EventDispatcher
@@ -25,61 +30,23 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public var buildingPropertiesEnabled:Boolean = false
 		
-		public var runID:String = LongTermSimulationDataModel.RUN_1 //default to run 1
-		
-		
+				
 		public function LongTermSimulationModel()
-		{
-			var arr:Array = [  	{label:"low", data:"low"},
-								{label:"medium", data:"medium"},
-								{label:"high", data:"high"} ]
-			
-			massLevelsAC = new ArrayCollection(arr)
+		{			
 		}
-
-
+					
+		/* *********** SIMULATION PROPERTIES *********** */
+						
+		protected var _runID:String = LongTermSimulationDataModel.RUN_1 //default to run 1
+		protected var _timeStepEP:int = 1
+		
 		/* *********** ZONE AND FLOOR *********** */
 		
+		protected var _zoneOfInterest:uint = 1
+		protected var _floorOfInterest:uint = 2
 		
-		private var _zoneOfInterest:uint = 1
-		private var _floorOfInterest:uint = 2
-
-		public function set zoneOfInterest(val:uint):void
-		{
-			var fromZone:uint = _zoneOfInterest
-			_zoneOfInterest = val
-			var evt:ZoneChangeEvent = new ZoneChangeEvent(ZoneChangeEvent.ZONE_CHANGED, true)
-			evt.toZone = val
-			evt.fromZone = fromZone
-			Swiz.dispatchEvent(evt)
-		}
-
-		public function get zoneOfInterest():uint
-		{
-			return _zoneOfInterest
-		}
-		
-		public function set floorOfInterest(val:uint):void
-		{
-			_floorOfInterest = val
-		}
-
-		public function get floorOfInterest():uint
-		{
-			return _floorOfInterest
-		}
-	
-		public function getCurrentZoneSize():Number
-		{
-			//temp
-			return 100
-		}
-
-
-
-
 		/* *********** ENVIRONMENT *********** */
-		
+				
 		public var regionsAC:ArrayCollection = new ArrayCollection([	{label:"Pacific", data:"Pacific"},
 																		{label:"Northeast", data:"Northeast"},
 																		{label:"South", data:"South"}
@@ -109,32 +76,235 @@ package com.mcquilleninteractive.learnhvac.model
 												]);
 		
 		
-		public var regionSelectedIndex:uint = 0
-		public var citySelectedIndex:uint = 0
-				
+		protected var _regionSelectedIndex:uint = 0
+		protected var _citySelectedIndex:uint = 0
+		
+		
 		/* *********** BUILDLING PROPERTIES *********** */
 		
 		public var windowTypesAC:ArrayCollection = new ArrayCollection( [	{label:"punch", data:"punch"},
 																			{label:"strip", data:"strip"}] )
-		public var windowTypeSelectedIndex:uint = 0
 		
-		public var shell:String = LongTermSimulationModel.SHELL_TYPE_NEW
-		public var stories:Number = 3
+		public var massLevelsAC:ArrayCollection = new ArrayCollection([ {label:"low", data:"low"},
+																		{label:"medium", data:"medium"},
+																		{label:"high", data:"high"} ])
+	
 		public var _storyHeight:Number = 3.6576 //12 feet
 		public var _buildingLength:Number = 24.38 
 		public var _buildingWidth:Number = 38.1
 		
-		public var windowStyle:String = LongTermSimulationModel.WINDOW_STYLE_PUNCH
-		public var northAxis:Number = 0;
+		protected var _windowTypeSelectedIndex:uint = 0
+		protected var _shell:String = LongTermSimulationModel.SHELL_TYPE_NEW
+		protected var _stories:int = 3		
+		protected var _windowStyle:String = LongTermSimulationModel.WINDOW_STYLE_PUNCH
+		protected var _northAxis:Number = 0;		
+		protected var _massLevelSelectedIndex:uint = 0		
+		protected var _windowRatioNorth:Number = .4;
+		protected var _windowRatioSouth:Number = .4;
+		protected var _windowRatioEast:Number = .4;
+		protected var _windowRatioWest:Number = .4;
+						
+		public var _areaPerPerson:Number = 10.764		//1.0 in IP
+		public var _equipPeakLoad:Number = 10.764		//1.0 in IP
+		public var _lightingPeakLoad:Number = 23.69		//255 sq. ft
 		
-		public var massLevelSelectedIndex:uint = 0
+			
+		/* *********** DATE PROPERTIES *********** */
 		
-		public var windowRatioNorth:Number = .4;
-		public var windowRatioSouth:Number = .4;
-		public var windowRatioEast:Number = .4;
-		public var windowRatioWest:Number = .4;
+		protected var _startDate:Date = new Date("",0,1)
+		protected var _stopDate:Date = new Date("",0, 31)
+				
+		protected var _wddStartDate:Date = new Date("",0,21)
+		protected var _wddStopDate:Date = new Date("", 0,21)
+		protected var _wddTypeOfDD:String = "Winter Typical"
 		
-		public var massLevelsAC:ArrayCollection 
+		protected var _sddStartDate:Date = new Date("", 5,21)
+		protected var _sddStopDate:Date = new Date("", 5,21)
+		protected var _sddTypeOfDD:String = "Summer Typical"
+				
+		protected var _weekdayBegin:int = 8
+		protected var _weekdayEnd:int = 17
+		protected var _holidayBegin:int = 10
+		protected var _holidayEnd:int = 15	
+		
+		protected var _ddCooling:String
+		protected var _ddHeating:String
+		protected var _ddOther:String	
+				
+		
+		/* *********** ZONE HEATING AND COOLING PROPERTIES *********** */
+		 
+       	protected var _zoneHeatingSetpointTemp:Number
+		protected var _zoneCoolingSetpointTemp:Number
+				
+				
+				
+				
+				
+				
+				
+				
+		
+		/* ****************************************** */
+		/* *********** GETTER AND SETTERS *********** */
+		/* ****************************************** */
+		
+		public function get runID():String
+		{
+			return _runID
+		}
+		public function set runID(value:String):void
+		{
+			_runID = value
+		}
+		
+		public function get zoneOfInterest():uint
+		{
+			return _zoneOfInterest
+		}					
+		public function set zoneOfInterest(val:uint):void
+		{
+			var fromZone:uint = _zoneOfInterest
+			_zoneOfInterest = val
+			var evt:ZoneChangeEvent = new ZoneChangeEvent(ZoneChangeEvent.ZONE_CHANGED, true)
+			evt.toZone = val
+			evt.fromZone = fromZone
+			Swiz.dispatchEvent(evt)
+		}
+			
+		public function get floorOfInterest():uint
+		{
+			return _floorOfInterest
+		}
+		public function set floorOfInterest(val:uint):void
+		{
+			_floorOfInterest = val
+		}
+		
+		public function get citySelectedIndex():uint
+		{
+			return _citySelectedIndex
+		}
+		public function set citySelectedIndex(val:uint):void
+		{
+			_citySelectedIndex = val
+		}
+
+		public function get timeStepEP():uint
+		{
+			return _timeStepEP
+		}
+		public function set timeStepEP(val:uint):void
+		{
+			_timeStepEP = val
+		}
+
+		public function get regionSelectedIndex():uint
+		{
+			return _regionSelectedIndex
+		}
+		public function set regionSelectedIndex(val:uint):void
+		{
+			_regionSelectedIndex = val
+		}		
+	
+		public function getCurrentZoneSize():Number
+		{			
+			//temp
+			return 100
+		}
+		
+		
+		public function get windowTypeSelectedIndex():uint
+		{
+			return _windowTypeSelectedIndex
+		}
+		
+		public function set windowTypeSelectedIndex(value:uint):void
+		{
+			_windowTypeSelectedIndex = value
+		}
+		
+		public function get shell():String
+		{
+			return _shell
+		}		
+		public function set shell(value:String):void
+		{
+			_shell = value
+		}
+		
+		public function get stories():int
+		{
+			return _stories
+		}		
+		public function set stories(value:int):void
+		{
+			_stories = value
+		}
+		
+		public function get windowStyle():String
+		{
+			return _windowStyle
+		}		
+		public function set windowStyle(value:String):void
+		{
+			_windowStyle = value
+		}
+	
+		public function get northAxis():Number
+		{
+			return _northAxis
+		}		
+		public function set northAxis(value:Number):void
+		{
+			_northAxis = value
+		}
+	
+		public function get massLevelSelectedIndex():uint
+		{
+			return _massLevelSelectedIndex
+		}		
+		public function set massLevelSelectedIndex(value:uint):void
+		{
+			_massLevelSelectedIndex = value
+		}
+		
+		public function get windowRatioNorth():Number
+		{
+			return _windowRatioNorth
+		}		
+		public function set windowRatioNorth(value:Number):void
+		{
+			_windowRatioNorth = value
+		}
+		
+		public function get windowRatioSouth():Number
+		{
+			return _windowRatioSouth
+		}		
+		public function set windowRatioSouth(value:Number):void
+		{
+			_windowRatioSouth = value
+		}
+				
+		public function get windowRatioEast():Number
+		{
+			return _windowRatioEast
+		}		
+		public function set windowRatioEast(value:Number):void
+		{
+			_windowRatioEast = value
+		}
+		
+		public function get windowRatioWest():Number
+		{
+			return _windowRatioWest
+		}		
+		public function set windowRatioWest(value:Number):void
+		{
+			_windowRatioWest = value
+		}
 		
 		public function get massLevel():String
 		{
@@ -154,6 +324,8 @@ package com.mcquilleninteractive.learnhvac.model
 					regionSelectedIndex = i
 			}
 		}
+		
+		
 				
 		public function get weatherFile():String
 		{							
@@ -342,11 +514,7 @@ package com.mcquilleninteractive.learnhvac.model
 		}
 		
 		
-		/* *********** LOADS PROPERTIES *********** */
 		
-		public var _equipPeakLoad:Number = 10.7639104		//1.0
-		public var _lightingPeakLoad:Number = 10.7639104 	//1.0 
-		public var _areaPerPerson:Number = 23.69  			//255 sq ft / person
 		
 		public function get equipPeakLoad():Number
 		{
@@ -420,35 +588,50 @@ package com.mcquilleninteractive.learnhvac.model
 			}
 		}
 		
+		public function get sddStartDate():Date { return _sddStartDate }
+		public function set sddStartDate(value:Date):void { _sddStartDate = value }
 		
+		public function get sddStopDate():Date { return _sddStopDate }
+		public function set sddStopDate(value:Date):void { _sddStopDate = value }
 		
-		/* *********** DATE PROPERTIES *********** */
+		public function get wddStartDate():Date { return _wddStartDate }
+		public function set wddStartDate(value:Date):void { _wddStartDate = value }
 		
-		public var startDate:Date = new Date("",0,1)
-		public var stopDate:Date = new Date("",0, 31)
-				
-		public var wddStartDate:Date = new Date("",0,21)
-		public var wddStopDate:Date = new Date("", 0,21)
-		public var wddTypeOfDD:String = "Winter Typical"
+		public function get wddStopDate():Date { return _wddStopDate }
+		public function set wddStopDate(value:Date):void { _wddStopDate = value }
 		
-		public var sddStartDate:Date = new Date("", 5,21)
-		public var sddStopDate:Date = new Date("", 5,21)
-		public var sddTypeOfDD:String = "Summer Typical"
-				
-		public var weekdayBegin:Number = 8
-		public var weekdayEnd:Number = 17
-		public var holidayBegin:Number = 10
-		public var holidayEnd:Number = 15	
+		public function get startDate():Date { return _startDate }
+		public function set startDate(value:Date):void { _startDate = value }
 		
-		public var ddCooling:String
-		public var ddHeating:String
-		public var ddOther:String
-				
+		public function get stopDate():Date { return _stopDate }
+		public function set stopDate(value:Date):void { _stopDate = value }
 		
-		/* *********** ZONE HEATING AND COOLING PROPERTIES *********** */
-		 
-       	protected var _zoneHeatingSetpointTemp:Number
-		protected var _zoneCoolingSetpointTemp:Number
+		public function get sddTypeOfDD():String { return _sddTypeOfDD }
+		public function set sddTypeOfDD(value:String):void { _sddTypeOfDD = value }
+		
+		public function get wddTypeOfDD():String { return _wddTypeOfDD }
+		public function set wddTypeOfDD(value:String):void  { _wddTypeOfDD = value }
+		
+		public function get weekdayBegin():int { return _weekdayBegin }
+		public function set weekdayBegin(value:int):void  { _weekdayBegin = value }
+		
+		public function get weekdayEnd():int { return _weekdayEnd }
+		public function set weekdayEnd(value:int):void  { _weekdayEnd = value }
+		
+		public function get holidayBegin():int { return _holidayBegin }
+		public function set holidayBegin(value:int):void  { _holidayBegin = value }
+		
+		public function get holidayEnd():int { return _holidayEnd }
+		public function set holidayEnd(value:int):void  { _holidayEnd = value }
+		
+		public function get ddCooling():String { return _ddCooling }
+		public function set ddCooling(value:String):void  { _ddCooling = value }
+		
+		public function get ddHeating():String { return _ddHeating }
+		public function set ddHeating(value:String):void  { _ddHeating = value }
+		
+		public function get ddOther():String { return _ddOther }
+		public function set ddOther(value:String):void  { _ddOther = value }
 		
 				
         public function set zoneHeatingSetpointTemp(value:Number):void
@@ -500,63 +683,7 @@ package com.mcquilleninteractive.learnhvac.model
         }
   
      
-		
-		/* *********** SIMUULATION PROPERTIES *********** */
-				
-		public var timeStepEP:Number = 1
-		
-		/*		
-			private function onBuildingAgeChange():void
-			{
-				var units:String = LHModelLocator.currUnits
-				
-				
-				switch (cboBuildingAge.selectedItem.data)
-				{
-					case "old":
-						if (units=="SI")
-						{
-							txtLightingPeakLoad.text = "16.4"
-							txtEquipPeakLoad.text = "5.38"
-						}
-						else
-						{
-							txtLightingPeakLoad.text = "1.5"
-							txtEquipPeakLoad.text = ".5"
-						}
-						break
-						
-					case "recent":
-						if (units=="SI")
-						{
-							txtLightingPeakLoad.text = "13.99"
-							txtEquipPeakLoad.text = "8.07"
-						}
-						else
-						{
-							txtLightingPeakLoad.text = "1.3"
-							txtEquipPeakLoad.text = ".75"
-						}
-						break
-						
-					case "new":
-						if (units=="SI")
-						{
-							txtLightingPeakLoad.text = "10.76"
-							txtEquipPeakLoad.text = "10.76"
-						}
-						else
-						{
-							txtLightingPeakLoad.text = "1.0"
-							txtEquipPeakLoad.text = "1.0"
-						}
-						break
-						
-					default:
-						Logger.error("#LTS: onBuildingAgeChange() unrecognized data: " + cboBuildingAge.selectedItem.data)
-				}				
-			}*/
-		
+	
 
 	}
 }

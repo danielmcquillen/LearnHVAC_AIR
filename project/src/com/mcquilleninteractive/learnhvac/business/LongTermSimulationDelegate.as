@@ -2,27 +2,25 @@ package com.mcquilleninteractive.learnhvac.business
 {
 	
 	import com.mcquilleninteractive.learnhvac.err.EPlusParseError;
-	import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent;
+	import com.mcquilleninteractive.learnhvac.event.EnergyPlusEvent;
+	import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent;
 	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
 	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
-	import com.mcquilleninteractive.learnhvac.event.EnergyPlusEvent;
-	import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent;
-	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
 	import flash.desktop.NativeProcess;
 	import flash.desktop.NativeProcessStartupInfo;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.NativeProcessExitEvent;
 	import flash.events.ProgressEvent;
 	import flash.filesystem.*;
 	import flash.system.Capabilities;
-	import flash.events.Event
-	import mx.controls.Alert;
+	
 	import org.swizframework.Swiz;
-	import flash.events.EventDispatcher;
 
 	
 	public class LongTermSimulationDelegate extends EventDispatcher
@@ -164,19 +162,88 @@ package com.mcquilleninteractive.learnhvac.business
 			////////////////////////////////////////
 			
 			Logger.debug(" buildilng .inc file...")
-			var lhInc:String 
-			lhInc = "\n"
-			lhInc += "!  Parameter File for Large Office Prototype\n\n"
-			lhInc += "! ***************************************************************\n"
-			lhInc += "! Learn HVAC-specific values are included below\n"
-			lhInc += "! ***************************************************************\n"
+			var lhInc:String = buildOutputString()
+									 
+			// load base .inc file to which we'll add variables
+			try
+			{
+				var stream:FileStream = new FileStream()
+				stream.open(_paramBaseFile, FileMode.READ)
+				var paramLgOff:String = stream.readUTFBytes(stream.bytesAvailable)
+			}
+			catch(e:Error)
+			{
+				Logger.error(" couldn't load Param_LgOff.inc file", this)
+				msg = "Couldn't load " + _paramBaseFile.name + "."
+				throw new Error(msg)
+			}
+			
+			var outputParamLgOff:String = lhInc + "\n\n" + paramLgOff
+						
+			// save new version
+			try
+			{				
+				_stream.open(_paramFile, FileMode.WRITE)
+				_stream.writeUTFBytes(outputParamLgOff)
+				_stream.close()
+				Logger.debug(" output file written", this)
+				
+			}
+			catch(e:Error)
+			{
+				Logger.error(" couldn't save " + _paramFile.nativePath + "file. Error: " + e.message, this)
+				msg = "Couldn't save " + _paramFile.name + ". Error: " + e.message
+				throw new Error(msg)
+			}			
+			 
+			
+			////////////////////////////////////////						
+			// STARTUP ENERGY PLUS
+			////////////////////////////////////////
+						
+			try
+			{
+				//run energyPlus via proxy
+				var launchEPlusHelper:File = File.userDirectory.resolvePath(_energyPlusPath + "LearnHVACEPlusLauncher.exe")
+				
+				if (Capabilities.os.toLowerCase().indexOf("mac") > -1)
+				{
+					msg = "can't run EnergyPlus on mac just yet. :-("
+					throw new Error(msg)
+				}
+				_process = new NativeProcess()								
+				var startupInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo()
+				startupInfo.executable = launchEPlusHelper
+				startupInfo.workingDirectory = File.userDirectory.resolvePath(_energyPlusPath)
+				_process.addEventListener(NativeProcessExitEvent.EXIT, onProcessFinished)
+				_process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onStandardOutput)
+				_process.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onStandardError)
+				_process.start(startupInfo)								
+			} 
+			catch(error:Error)
+			{
+				msg =  "Couldn't launch runEPlusHelper.exe. See log for details."
+				Logger.error(msg + " error: " + error, this)
+				throw new Error(msg)
+			}
+							
+		}
+		
+		public function buildOutputString():String
+		{
+			var lhInc:String = ""
+			lhInc += "!  Parameter File for Large Office Prototype"
+			lhInc += "\n! ***************************************************************"
+			lhInc += "\n! Learn HVAC-specific values are included below"
+			lhInc += "\n! ***************************************************************"
 						
 			//write in .inc lines, substituting in values from SPARK
 			lhInc += "\n! Variables for general setup"
 			lhInc += "\n##def1 LH_ScenarioName	   " + scenarioModel.name
 			lhInc += "\n##def1 LH_weatherFile      " + longTermSimulationModel.weatherFile
-			Logger.debug("startDate: " + longTermSimulationModel.startDate)
-			Logger.debug("stopDate: " + longTermSimulationModel.stopDate)
+			
+			//make sure to add one to months, since Flex stores dates as
+			// 0 index and E+ wants them as 1 index.
 			lhInc += "\n##def1 LH_startMonth         " + (longTermSimulationModel.startDate.month + 1)
 			lhInc += "\n##def1 LH_startDay         " + longTermSimulationModel.startDate.date
 			lhInc += "\n##def1 LH_stopMonth         " + (longTermSimulationModel.stopDate.month + 1)
@@ -275,73 +342,9 @@ package com.mcquilleninteractive.learnhvac.business
 			
 			var mxTwOut:SystemVariable = scenarioModel.getSysVar("MXTwOut") 
 			lhInc += "\n##def1 SPK_MXTwOut     "+ mxTwOut.baseSIValue
-						 
-			// load base .inc file to which we'll add variables
-			try
-			{
-				var stream:FileStream = new FileStream()
-				stream.open(_paramBaseFile, FileMode.READ)
-				var paramLgOff:String = stream.readUTFBytes(stream.bytesAvailable)
-			}
-			catch(e:Error)
-			{
-				Logger.error(" couldn't load Param_LgOff.inc file", this)
-				msg = "Couldn't load " + _paramBaseFile.name + "."
-				throw new Error(msg)
-			}
 			
-			var outputParamLgOff:String = lhInc + "\n\n" + paramLgOff
-			
-			
-			// save new version
-			try
-			{				
-				_stream.open(_paramFile, FileMode.WRITE)
-				_stream.writeUTFBytes(outputParamLgOff)
-				_stream.close()
-				Logger.debug(" output file written", this)
-				
-			}
-			catch(e:Error)
-			{
-				Logger.error(" couldn't save " + _paramFile.nativePath + "file. Error: " + e.message, this)
-				msg = "Couldn't save " + _paramFile.name + ". Error: " + e.message
-				throw new Error(msg)
-			}			
-			 
-			
-			////////////////////////////////////////						
-			// STARTUP ENERGY PLUS
-			////////////////////////////////////////
-						
-			try
-			{
-				//run energyPlus via proxy
-				var launchEPlusHelper:File = File.userDirectory.resolvePath(_energyPlusPath + "LearnHVACEPlusLauncher.exe")
-				
-				if (Capabilities.os.toLowerCase().indexOf("mac") > -1)
-				{
-					msg = "can't run EnergyPlus on mac just yet. :-("
-					throw new Error(msg)
-				}
-				_process = new NativeProcess()								
-				var startupInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo()
-				startupInfo.executable = launchEPlusHelper
-				startupInfo.workingDirectory = File.userDirectory.resolvePath(_energyPlusPath)
-				_process.addEventListener(NativeProcessExitEvent.EXIT, onProcessFinished)
-				_process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onStandardOutput)
-				_process.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onStandardError)
-				_process.start(startupInfo)								
-			} 
-			catch(error:Error)
-			{
-				msg =  "Couldn't launch runEPlusHelper.exe. See log for details."
-				Logger.error(msg + " error: " + error, this)
-				throw new Error(msg)
-			}
-							
+			return lhInc
 		}
-		
 		
 			
 		/* *************************** */

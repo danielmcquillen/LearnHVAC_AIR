@@ -82,7 +82,10 @@
 			public function onCC():void
 			{
 				
-				longTermInputPanelsArr = [runOptions, buildingPropertyOptions, environmentOptions, loadOptions]
+				longTermInputPanelsArr = [	ltOptions, 
+											buildingPropertyOptions, 
+											environmentOptions, 
+											loadOptions]
 				
 				for each (var options:ILongTermOptionsPanel in longTermInputPanelsArr)
 				{
@@ -93,22 +96,7 @@
 				
 				
 			}
-									
-			public function onElevationViewChange(event:Event):void
-			{
-				currElevationView = event.currentTarget.selectedItem.data	
-				buildingPropertyOptions.setElevationView(currElevationView)
-
-				//draw floors
-				var width:Number = buildingPropertyOptions.getWidthForElevation()
-				var windowRatio:Number = buildingPropertyOptions.getWindowRatioForElevation()
-				
-				elevationView.drawFloors(	width, 
-											longTermSimulationModel.stories, 
-											longTermSimulationModel.storyHeight, 
-											windowRatio, 
-											longTermSimulationModel.windowStyle)
-			}							
+			
 														
 			
 			public function onShow():void
@@ -118,8 +106,10 @@
 				// shut the simulation down when the user navigated to this form,
 				// so the SPARK variables should not change.
 				
-				runOptions.resetValues()
-												
+				ltOptions.resetValues()
+				buildingPropertyOptions.resetValues()
+				environmentOptions.resetValues()
+				loadOptions.resetValues()								
 			}
 			
 			
@@ -186,7 +176,7 @@
 			[Mediate(event="LongTermSimulationEvent.SIM_CANCEL")]				
 			public function onCancelEPlusRun(event:LongTermSimulationEvent):void
 			{
-				//Nothing to do. Just allow user to start entering values again...
+				// Update any input UI's that need to be updated if sim is canceled 
 			}
 			
 			protected function onZoneSelectorChange(event:Event):void
@@ -214,13 +204,37 @@
 				onZoneSelectorResize()
 			}
 			
-			/* updates the size of the zoneSelector after a view has changes the zoneSelector properties 
-				(the options panels don't know what the zsCanvas height and width are  so this operation has to happen in this class) */
+			
+			
+			/* updates the size of the zoneSelector after an input panel 
+			   has changed the zoneSelector properties 
+			   (the options panels don't know what the zsCanvas 
+			   height and width are  so this operation has to 
+			   happen in this class) */
+			   
 			private function onZoneSelectorResize():void
 			{
 				zoneSelector.setComponentSize(zsCanvas.width, zsCanvas.height)
 				zsCanvas.invalidateProperties()
 			}
+				
+			/* updates elevation view when size of building changes in a different view */
+									
+			public function onElevationViewChange(event:Event):void
+			{
+				currElevationView = event.currentTarget.selectedItem.data	
+				buildingPropertyOptions.setElevationView(currElevationView)
+
+				//draw floors
+				var width:Number = buildingPropertyOptions.getWidthForElevation()
+				var windowRatio:Number = buildingPropertyOptions.getWindowRatioForElevation()
+				
+				elevationView.drawFloors(	width, 
+											longTermSimulationModel.stories, 
+											longTermSimulationModel.storyHeight, 
+											windowRatio, 
+											longTermSimulationModel.windowStyle)
+			}							
 			
 		]]>
 		
@@ -241,7 +255,8 @@
 			
 			<head:GlassHeaders headerTitle="SIMULATION CONTROLS"/>			
 		
-			<mx:TabNavigator id="tbnSetup"  creationPolicy="all"  
+			<mx:TabNavigator id="tbnSetup"  
+				creationPolicy="all"  
 				width="100%" 
 				height="100%" 
 				styleName="tabNavigator"  
@@ -250,7 +265,7 @@
 			    paddingTop="0"
 			    paddingLeft="0"
 				>		
-				<longterm:LTOptions id="runOptions"/>				
+				<longterm:LongTermSimulationRunOptions id="ltOptions"/>				
 				<longterm:EnvironmentOptions id="environmentOptions" />
 				<longterm:BuildingPropertyOptions id="buildingPropertyOptions" buildingPropsChange="onBuildingPropsChange(event)" />
 				<longterm:LoadOptions id="loadOptions" />	   		

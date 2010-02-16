@@ -12,8 +12,8 @@
 	<model:ScenarioModel id="scenarioModel" />
 	<model:ShortTermSimulationModel id="shortTermSimulationModel" />
 	<model:ShortTermSimulationDataModel id="shortTermSimulationDataModel" />
-	<model:LongTermSimulationModel id="longTermSimlulationModel" />
-	<model:LongTermSimulationDataModel id="longTermSimlulationDataModel" />
+	<model:LongTermSimulationModel id="longTermSimulationModel" />
+	<model:LongTermSimulationDataModel id="longTermSimulationDataModel" />
 	<model:DefaultScenariosModel id="defaultScenariosModel" />
 	<model:UserModel id="userModel" />
 	

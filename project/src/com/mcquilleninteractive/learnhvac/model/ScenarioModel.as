@@ -11,6 +11,25 @@ package com.mcquilleninteractive.learnhvac.model
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	
+	/** ScenarioModel
+	 *  
+	 *  The ScenarioModel contains all the data that describes a specific scenario.
+	 *  It manages the state of each SystemVariable that defines a scenario, as well
+	 *  as the accompanying educational material such as video, help text, etc. It
+	 *  also manages the states of the views of components that are dependent on the
+	 *  scenario definition for part or all of their initial state (e.g. the Scenario
+	 *  as defined by the instructor may want the outputPanel hidden. That visibility is
+	 *  controlled here).
+	 *  
+	 *  The ScenarioModel should not manage the data that's specific to a specific simulation
+	 *  run, either long-term or short-term. That data is held in the LongTermSimulationModel
+	 *  and ShortTermSimulationModel and the related LongTermSimulationDataModel and 
+	 *  ShortTermSimulationDatamodel.
+	 * 
+	 *  Most visual displays will listen to this model for updates and get retrieve this model's
+	 *  data to display when those updates happen.
+	 */
+	
 	[Bindable]
 	public class ScenarioModel extends EventDispatcher
 	{
@@ -67,13 +86,13 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		
 		// meta-information for scenario externally loaded
-		public var id:String 
-		public var scenID:String 
+		public var id:int 								//primary key ID of scenario
+		public var scenID:String 						//Text-based ID for scenario
 		public var name:String 
 		public var short_description:String
-		public var goal:String
+		public var goal:String							//as in didactic goal as described by Instructor
 		public var thumbnail_URL:String
-		public var movieURL:String
+		public var movieURL:String						//URL of a movie that explains a certain concept
 		
 		//dates 
 		public var allow_longterm_date_change:Boolean = true

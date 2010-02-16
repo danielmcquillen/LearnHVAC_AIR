@@ -133,6 +133,11 @@
 				longTermSimulationModel.regionSelectedIndex = cboRegion.selectedIndex
 				switch(cboRegion.selectedItem.data)
 				{
+					case "Pacific":
+						cboCity.dataProvider = longTermSimulationModel.pacificCitiesAC
+						cboCity.selectedIndex = 0
+						break
+					
 					case "Northeast":
 						cboCity.dataProvider = longTermSimulationModel.northeastCitiesAC
 						cboCity.selectedIndex = 0
@@ -141,12 +146,7 @@
 					case "South":
 						cboCity.dataProvider = longTermSimulationModel.southCitiesAC
 						cboCity.selectedIndex = 0
-						break
-						
-					case "Pacific":
-						cboCity.dataProvider = longTermSimulationModel.pacificCitiesAC
-						cboCity.selectedIndex = 0
-						break
+						break					
 					
 					default:
 						Logger.error("#LTS: onRegionChange() unrecognized data: " + cboRegion.selectedItem.data)

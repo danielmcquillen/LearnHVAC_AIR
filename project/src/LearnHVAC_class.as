@@ -1,28 +1,30 @@
 
 import com.adobe.onair.logging.FileTarget;
 import com.adobe.onair.logging.TextAreaTarget;
-import com.mcquilleninteractive.learnhvac.business.GraphManager;
 import com.mcquilleninteractive.learnhvac.event.LoggedInEvent;
-import com.mcquilleninteractive.learnhvac.event.LoginEvent;
-import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
 import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
-import com.mcquilleninteractive.learnhvac.model.DefaultScenariosModel;
+import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
+import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 import com.mcquilleninteractive.learnhvac.settings.LearnHVACSettings;
 import com.mcquilleninteractive.learnhvac.util.HTMLToolTip;
 import com.mcquilleninteractive.learnhvac.util.Logger;
 
-import flash.data.EncryptedLocalStore
-import flash.filesystem.*
+import testSuites.testSuite1.*;
+import org.flexunit.listeners.UIListener;
+import org.flexunit.runner.FlexUnitCore;
+
+import flash.data.EncryptedLocalStore;
+import flash.events.Event;
+import flash.filesystem.*;
+
 import mx.logging.Log;
 import mx.logging.LogEventLevel;
 import mx.logging.targets.TraceTarget;
-import mx.managers.PopUpManager;
 import mx.managers.ToolTipManager;
-import flash.events.Event;
+
+import net.digitalprimates.fluint.ui.TestRunner;
+
 import org.swizframework.Swiz;
-import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
-import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
-import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
 
 [Bindable]
 private var _applicationModel:ApplicationModel
@@ -35,19 +37,16 @@ private var traceTarget:TraceTarget
 private var textAreaTarget:TextAreaTarget
 private var fileTarget:FileTarget
 private var settings:LearnHVACSettings
-
+private var core:FlexUnitCore;
 
 
 /*************** lifecycle event handlers *****************/
 
 
 private function onPreInit():void
-{
-	
-	initSettings()
-	
-	initLog()
-	
+{	
+	initSettings()	
+	initLog()	
 	Logger.debug("getting beans...", this)
 	_applicationModel = Swiz.getBean("applicationModel") as ApplicationModel
 	_ascenarioLibraryModel = Swiz.getBean("scenarioLibraryModel") as ScenarioLibraryModel
@@ -78,8 +77,18 @@ public function onInit():void
 public function onCC():void
 {
 	//intercept close function
-	this.addEventListener(Event.CLOSING, onAppClose, false, 0, true)			
+	this.addEventListener(Event.CLOSING, onAppClose, false, 0, true)	
+	
+	//TESTING: UNCOMMENT TO RUN TESTS
+	runTests()		
 }	
+
+protected function runTests():void
+{
+	core = new FlexUnitCore();
+	core.addListener(new UIListener(uiListener));
+	core.run( TestSuite1 );
+}
 
 private function onAppComplete():void
 {

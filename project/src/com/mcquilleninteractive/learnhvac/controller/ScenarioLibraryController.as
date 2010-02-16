@@ -528,6 +528,13 @@ package com.mcquilleninteractive.learnhvac.controller
 			Logger.warn("ScenarioDelegate: getSysNodeIndex() unrecognized sysNodeID: " + sysNodeID)
 			return 0
 		}
+		
+		// FOR TESTING 
+		public function loadDataForTest():void
+		{
+			populateScenarioModel(defaultScenariosModel.defaultScenarioXML)			
+		}
+
 
 	}
 }

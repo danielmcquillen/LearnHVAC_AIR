@@ -8,6 +8,7 @@
 	xmlns:view="com.mcquilleninteractive.learnhvac.view.*"
 	xmlns:util="com.mcquilleninteractive.learnhvac.util.*"    
 	xmlns:ext="nl.wv.extenders.panel.*"
+	xmlns:adobe="http://www.adobe.com/2009/flexUnitUIRunner"
 	xmlns:swizframework="org.swizframework.*"
 	xmlns:myComps="*"
     preinitialize="onPreInit()"
@@ -151,7 +152,8 @@ building has been developed by two national laboratories and is excluded from th
 	
 	</mx:Canvas>	
 		
-			
-	
+	<!--
+	<adobe:TestRunnerBase id="uiListener" width="100%" height="100%"  />
+	-->
 
 </mx:WindowedApplication>

@@ -1,0 +1,48 @@
+
+Project Notes
+=============================================
+
+This is a loose collection of notes which can be transformed into more detailed documentation when the time comes.
+
+
+Coding Conventions
+=============================================
+
+SI Units and Getter/Setters
+.............................................
+We need to manage SI and IP units at the model level, and the current way I'm handling
+this is to keep all values as SI values and then display or update these values through getters and
+setters. These core SI values are declared as public variables that look like private vars
+
+	public var _looksLikePrivate:String   //due to underscore
+	
+That way, when a class needs to manipulate the SI file directly, it can access the SI value directly
+via the public var with underscore. 
+
+When the model variable is accessed through views, the underscored variable is modified through
+getters and setters, such as
+ 
+ 	public function get looksLikePrivateDueToUnderscore():String
+ 	public function set looksLikePrivateDueToUnderscore(value:String):void
+ 	
+ 
+
+
+
+User Interface Notes
+=============================================
+
+Notes on the UI design and some of the conventions.
+
+Input Panel
+..............................................
+
+The input panel is populated with all system variables with attribute type="INPUT"
+The variables are arranged in separate lists, only one of which is shown at a time.
+The current list showing is selected by a drop down.
+
+The background of the input field for each variable in a list is white by default.
+If the user changes the value, the background changes to yellow.
+If the current value is outside the bounds set by the varibles low_value and high_value
+properties, the box is shown with a red border and a red rollover warning flag.
+

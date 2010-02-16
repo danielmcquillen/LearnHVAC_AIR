@@ -23,8 +23,7 @@
 			
 			import mx.collections.ArrayCollection
 			import mx.validators.Validator
-			
-			
+						
 			[Bindable]
 			[Autowire]
 			public var scenarioModel:ScenarioModel	
