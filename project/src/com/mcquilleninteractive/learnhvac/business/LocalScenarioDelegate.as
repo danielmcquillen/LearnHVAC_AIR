@@ -44,7 +44,7 @@ package com.mcquilleninteractive.learnhvac.business
 			var filesError:Number = 0
 			var fileCount:Number = 0
 			var totalScenarios:Number = xmlFilesArr.length
-			Logger.debug("#ScenarioListLoaderLocal: xmlFiles.length: "+ xmlFilesArr.length)
+			Logger.debug("xmlFiles.length: "+ xmlFilesArr.length, this)
 		
 			_localScenarioListAC = new ArrayCollection()
 		
@@ -61,7 +61,7 @@ package com.mcquilleninteractive.learnhvac.business
 				var scenObj:ScenarioListItemVO = new ScenarioListItemVO()
 							
 				scenObj.fileName = scenFile.name
-				Logger.debug("#LSLL: filename: " + scenObj.fileName)
+				Logger.debug("filename: " + scenObj.fileName,this)
 				scenObj.scenID = currScenXML.@id
 				scenObj.name = currScenXML.@name
 				scenObj.short_description = currScenXML.@short_description
@@ -73,7 +73,7 @@ package com.mcquilleninteractive.learnhvac.business
 				var t:String = currScenXML.@thumbnail_URL
 				t = t.slice(t.lastIndexOf("/")+1	)
 				scenObj.thumbnail_URL = File.applicationDirectory.resolvePath("scenarios/thumbnails/" + t).nativePath
-				Logger.debug("#LocalScenarioListLoader: thumbnailURL : " + scenObj.thumbnail_URL)
+				Logger.debug("thumbnailURL : " + scenObj.thumbnail_URL, this)
 				_localScenarioListAC.addItem(scenObj)						
 			}			
 			return _localScenarioListAC				

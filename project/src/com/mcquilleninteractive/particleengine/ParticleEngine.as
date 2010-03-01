@@ -139,7 +139,6 @@ package com.mcquilleninteractive.particleengine
 		
 		public function ParticleEngine():void
 		{
-			Logger.debug("#PE: constructor called ###################################")
 			cacheAsBitmap = true
 			
 			//setup particle manager

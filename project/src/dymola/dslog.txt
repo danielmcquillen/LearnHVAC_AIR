@@ -1,0 +1,36 @@
+Log-file of program dymosim.exe
+(generated: Tue Feb 23 14:31:33 2010)
+
+dymosim.exe started
+Model: Buildings.Controls.Continuous.OffTimer
+... "dsin.txt" loading (dymosim input file)
+... "dsu.txt" loading (input signals u)
+
+... Warning message from dymosim.exe
+The following model input signals are assumed to be zero during
+simulation, since file "dsu.txt" could not be opened
+(No such file or directory):
+   u
+
+... "dsres.mat" creating (simulation result file)
+
+Integration started at T = 0 using integration method DASSL
+(DAE multi-step solver (dassl/dasslrt of Petzold modified by Dynasim))
+Integration terminated successfully at T = 1
+   CPU-time for integration      : 0.468 seconds
+   CPU-time for one GRID interval: 0.936 milli-seconds
+   Number of result points       : 501
+   Number of GRID   points       : 501
+   Number of (successful) steps  : 19
+   Number of F-evaluations       : 37
+   Number of H-evaluations       : 519
+   Number of Jacobian-evaluations: 18
+   Number of (model) time events : 0
+   Number of (U) time events     : 0
+   Number of state    events     : 0
+   Number of step     events     : 0
+   Minimum integration stepsize  : 2e-006
+   Maximum integration stepsize  : 0.476
+   Maximum integration order     : 1
+Calling terminal section
+... "dsfinal.txt" creating (final states)

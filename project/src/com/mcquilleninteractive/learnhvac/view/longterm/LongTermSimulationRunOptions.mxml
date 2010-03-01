@@ -72,8 +72,6 @@
 				dfStartDate.selectedDate = longTermSimulationModel.startDate
 				dfStopDate.selectedDate = longTermSimulationModel.stopDate
 				
-				//get import vars
-				_sysVarsAC = scenarioModel.getLongTermExportSysVars()
 			}
 			
 			
@@ -210,7 +208,7 @@
 			
 	<mx:DataGrid id="dgSparkVars"
 		width="100%" height="350"
-		dataProvider="{_sysVarsAC}"
+		dataProvider="{scenarioModel.sysVarsImportedFromShortTermAC}"
 		selectable="false"
 		>
 		<mx:columns>

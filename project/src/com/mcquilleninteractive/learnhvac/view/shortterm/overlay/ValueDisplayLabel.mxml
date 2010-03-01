@@ -54,10 +54,8 @@
 			{		
 				_sysVar = scenarioModel.getSysVar(_sysVarName)
 				
-				Logger.debug("# label for " + _sysVarName + " now getting sysVar: " + _sysVar, this)
 				if (_sysVar!=null)
 				{
-					Logger.debug("setting label with sysVar: " + _sysVar.name, this)
 					_units = _sysVar.units
 				}				
 				else

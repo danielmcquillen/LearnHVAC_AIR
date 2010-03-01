@@ -9,7 +9,7 @@
 		<mx:Script>
 			<![CDATA[
 				import com.mcquilleninteractive.learnhvac.model.EPlusData;
-				import com.mcquilleninteractive.learnhvac.vo.SparkInputVarsVO;
+				import com.mcquilleninteractive.learnhvac.vo.LongTermValuesForShortTermSimVO;
 				import com.mcquilleninteractive.learnhvac.event.DebugEvent;
 				import com.mcquilleninteractive.learnhvac.business.LongTermSimulationDelegate;
 				import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
@@ -186,7 +186,7 @@
 											msg += "\n  Floor: " + (j+1).toString()
 											for (var k:uint=0;k<5;k++)
 											{
-												var vo:SparkInputVarsVO = zoneDataArr[i][j][k] as SparkInputVarsVO
+												var vo:LongTermValuesForShortTermSimVO = zoneDataArr[i][j][k] as LongTermValuesForShortTermSimVO
 												msg += "\n    Zone: " + (k + 1).toString()
 												msg += "\n        equip.: " + vo._electricEquipmentHeatGain
 												msg += "\n      lighting: " + vo._lightingHeatGain
@@ -210,7 +210,7 @@
 												msg += "\n  Floor: " + (j+1).toString()
 												for (k=0;k<5;k++)
 												{
-													vo = zoneDataArr[i][j][k] as SparkInputVarsVO
+													vo = zoneDataArr[i][j][k] as LongTermValuesForShortTermSimVO
 													msg += "\n    Zone: " + (k + 1).toString()
 													msg += "\n        equip.: " + vo._electricEquipmentHeatGain
 													msg += "\n      lighting: " + vo._lightingHeatGain

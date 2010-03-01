@@ -3,7 +3,7 @@ package com.mcquilleninteractive.learnhvac.model
 	import com.mcquilleninteractive.learnhvac.err.EPlusParseError;
 	import com.mcquilleninteractive.learnhvac.util.DateUtil;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
-	import com.mcquilleninteractive.learnhvac.vo.SparkInputVarsVO;
+	import com.mcquilleninteractive.learnhvac.vo.LongTermValuesForShortTermSimVO;
 	
 	import mx.collections.ArrayCollection;
 	import org.swizframework.Swiz;
@@ -86,11 +86,9 @@ package com.mcquilleninteractive.learnhvac.model
 		}
 		
 		
-		/* Finds the spark inputs for a given dateTime (will only match by the hour) */
-		public function getSparkInputs(dateTime:Date, floorOfInterest:uint, zoneOfInterest:uint):SparkInputVarsVO
-		{
-			
-			
+		/* Finds the inputs for a given dateTime (will only match by the hour) */
+		public function getLongTermInputs(dateTime:Date, floorOfInterest:uint, zoneOfInterest:uint):LongTermValuesForShortTermSimVO
+		{				
 			Logger.debug("getSparkInputs() dateTime: " + dateTime, this)
 			
 			var dataArrLength:int = dataArr[dateTimeID].length
@@ -110,7 +108,7 @@ package com.mcquilleninteractive.learnhvac.model
 				
 				if (dateTime <= d1)
 				{					
-					var vo:SparkInputVarsVO = SparkInputVarsVO(zoneDataArr[i][floorOfInterest-1][zoneOfInterest-1])
+					var vo:LongTermValuesForShortTermSimVO = LongTermValuesForShortTermSimVO(zoneDataArr[i][floorOfInterest-1][zoneOfInterest-1])
 					if (vo==null)
 					{
 						Logger.error("getSparkInputs() have date for row " + i + " (" + d1.toUTCString() + " ) but there's no SparkInputVarsVO in zoneDataArr", this)
@@ -302,7 +300,7 @@ package com.mcquilleninteractive.learnhvac.model
 					zoneDataArr[rowIndex][j] = new Array(5) //five zones
 					for (var k:uint=0;k<5;k++)
 					{
-						zoneDataArr[rowIndex][j][k] = new SparkInputVarsVO()
+						zoneDataArr[rowIndex][j][k] = new LongTermValuesForShortTermSimVO()
 					}
 				}		
 								
@@ -347,7 +345,7 @@ package com.mcquilleninteractive.learnhvac.model
 						{
 							//object has properies {floor: , zone: , voVarName: }
 							var obj:Object = zoneColLookUpArr[col]
-							var vo:SparkInputVarsVO = zoneDataArr[rowIndex][obj.floor-1][obj.zone-1]
+							var vo:LongTermValuesForShortTermSimVO = zoneDataArr[rowIndex][obj.floor-1][obj.zone-1]
 							vo.setValue(obj.voVarName, val)
 							vo.rowIndex = rowIndex
 							vo._tAirOut = tAirOut

@@ -37,8 +37,8 @@ package com.mcquilleninteractive.learnhvac.model
 		public var atol:String
 		public var disabled:Boolean = false
 		private var _output_graph_no:Number
-		public var isImportedFromLongTermSim:Boolean = false
-		public var isExportedToLongTermSim:Boolean = false
+		public var isImportedFromLongTermSimToShortTermSim:Boolean = false
+		public var isImportedFromShortTermSimToLongTermSim:Boolean = false
 		
 		//CONVERSIONS
 		private var _unit_si:String
@@ -102,10 +102,8 @@ package com.mcquilleninteractive.learnhvac.model
 		/**  Adds conversions functions based on units SI and IP strings. Function assumes that _unit_si and _unit_ip attributes have already been set. */
 		public function setConversionFunctions():void
 		{	
-			Logger.debug("setConversionFunction: sysVarName: " + name, this)	
 			if (this._unit_si=="" || this._unit_ip=="")
 			{
-				Logger.debug("no conversion function needed",this)
 				return
 			}				
 			convertSItoIP = Conversions.getConversionFunction(this._unit_si, this._unit_ip)

@@ -235,12 +235,12 @@
 		<mx:Image id="imgLTImportIcon" 
 					source="{this.iconLTImportDisabled}" 
 			  		toolTip="This variable will be imported from the Long Term Simulation, but no long-term run has been selected."
-			  		visible="{this.data.isImportedFromLongTermSim}"
+			  		visible="{this.data.isImportedFromLongTermSimToShortTermSim}"
 			  />
 		<mx:Image id="imgLTExportIcon" 
 					source="{iconLTExport}" 
 			  		toolTip="This variable is exported to the Long Term Simulation"
-			  		visible="{this.data.isExportedToLongTermSim}"
+			  		visible="{this.data.isImportedFromShortTermSimToLongTermSim}"
 			  />
 		
 	</mx:VBox>

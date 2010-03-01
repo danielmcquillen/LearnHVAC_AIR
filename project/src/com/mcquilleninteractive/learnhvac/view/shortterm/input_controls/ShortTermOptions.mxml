@@ -83,8 +83,7 @@
 			}
 						
 			public function reset():void
-			{				
-				dgLongTermSimImportVars.dataProvider = new ArrayCollection()				
+			{							
 				shortTermSimulationDataModel.currRunID = ShortTermSimulationDataModel.RUN_1
 				cboRun.selectedIndex = 0
 				
@@ -185,8 +184,6 @@
 						if (longTermSimulationDataModel.run1Loaded)
 						{
 							scenarioModel.importLongTermVarsFromRun = LongTermSimulationDataModel.RUN_1	
-							scenarioModel.getLongTermExportSysVars()
-							dgLongTermSimImportVars.dataProvider = scenarioModel.sysVarsImportedFromLongTermAC
 						}
 						else
 						{					
@@ -202,8 +199,6 @@
 						if (longTermSimulationDataModel.run2Loaded)
 						{
 							scenarioModel.importLongTermVarsFromRun = LongTermSimulationDataModel.RUN_2	
-							scenarioModel.getLongTermExportSysVars()
-							dgLongTermSimImportVars.dataProvider = scenarioModel.sysVarsImportedFromLongTermAC
 						}
 						else
 						{
@@ -347,6 +342,7 @@
   				dragEnabled="true"
   				dropEnabled="false"
 				selectable="false"
+			    dataProvider="{scenarioModel.sysVarsImportedFromLongTermAC}"
   				>
 			<mx:columns>
 				<mx:DataGridColumn headerText="Name" dataField="display_name" minWidth="200" />

@@ -2,16 +2,13 @@
 import com.adobe.onair.logging.FileTarget;
 import com.adobe.onair.logging.TextAreaTarget;
 import com.mcquilleninteractive.learnhvac.event.LoggedInEvent;
+import com.mcquilleninteractive.learnhvac.event.LoginEvent;
 import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
 import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 import com.mcquilleninteractive.learnhvac.settings.LearnHVACSettings;
 import com.mcquilleninteractive.learnhvac.util.HTMLToolTip;
 import com.mcquilleninteractive.learnhvac.util.Logger;
-
-import testSuites.testSuite1.*;
-import org.flexunit.listeners.UIListener;
-import org.flexunit.runner.FlexUnitCore;
 
 import flash.data.EncryptedLocalStore;
 import flash.events.Event;
@@ -22,9 +19,10 @@ import mx.logging.LogEventLevel;
 import mx.logging.targets.TraceTarget;
 import mx.managers.ToolTipManager;
 
-import net.digitalprimates.fluint.ui.TestRunner;
-
+import org.flexunit.runner.FlexUnitCore;
 import org.swizframework.Swiz;
+
+import testSuites.testSuite1.*;
 
 [Bindable]
 private var _applicationModel:ApplicationModel
@@ -38,6 +36,8 @@ private var textAreaTarget:TextAreaTarget
 private var fileTarget:FileTarget
 private var settings:LearnHVACSettings
 private var core:FlexUnitCore;
+
+private var _autoLoginForTest:Boolean = true
 
 
 /*************** lifecycle event handlers *****************/
@@ -85,14 +85,22 @@ public function onCC():void
 
 protected function runTests():void
 {
-	core = new FlexUnitCore();
-	core.addListener(new UIListener(uiListener));
-	core.run( TestSuite1 );
+	//core = new FlexUnitCore();
+	//core.addListener(new UIListener(uiListener));
+	//core.run( TestSuite1 );
 }
 
 private function onAppComplete():void
 {
-    loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError);	
+    loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError);
+    
+    if (_autoLoginForTest)
+    {
+    	var evt:LoginEvent = new LoginEvent(LoginEvent.LOGIN,true)
+    	evt.username = "daniel"
+    	evt.password = "pid123"
+    	Swiz.dispatchEvent(evt)
+    }	
 }
 
 

@@ -3,7 +3,7 @@ package com.mcquilleninteractive.learnhvac.model
 	import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 	import com.mcquilleninteractive.learnhvac.util.DateUtil;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
-	import com.mcquilleninteractive.learnhvac.vo.SparkInputVarsVO;
+	import com.mcquilleninteractive.learnhvac.vo.LongTermValuesForShortTermSimVO;
 	
 	import flash.events.EventDispatcher;
 	
@@ -75,8 +75,21 @@ package com.mcquilleninteractive.learnhvac.model
 		// for holding scenario data
 		public var sysNodesAC:ArrayCollection 			= new ArrayCollection()			// array to hold sysNodes (which hold system variables)
 		public var sysNodesForNavAC:ArrayCollection 	= new ArrayCollection()			// another array to hold sysNodes used for user navigation (e.g. SPARK not included)
+		
 		public var sysVarsImportedFromLongTermAC:ArrayCollection = new ArrayCollection()// holds group of SysVars that are imported from LongTerm into ShortTerm sim
-		public var varsToImportArr:Array = ["TAirOut","TwAirOut", "RmQSENS"]			//CONFIGURE THIS TO CHANGE WHICH VARS ARE TO BE IMPORTED FROM E+
+		public var sysVarsImportedFromShortTermAC:ArrayCollection = new ArrayCollection()//holds group of SystVars that are imported form ShortTerm into LongTerm sim
+		
+		//CONFIGURE THIS TO CHANGE WHICH VARS ARE TO BE IMPORTED FROM LONG-TERM INTO SHORT-TERM
+		public var longTermVarsToImportArr:Array = ["TAirOut",
+														"TwAirOut", 
+														"RmQSENS"]			
+														
+		//CONFIGURE THIS TO CHANGE WHICH VARS ARE TO BE IMPORTED FROM SHORT-TERM INTO LONG-TERM
+		public var shortTermVarsToImportArr:Array = [	"TRoomSP_Heat", 
+														"TRoomSP_Cool",
+											  			"TSupS",
+											  			"VAVposMin",
+											  			"PAtm"];			
 					
 		// OTHER CLASS PROPERTIES
 			
@@ -137,7 +150,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		//Tells scenario model which long term simulation to import variables from into short-term sim (selected by user)
 		//Values are LT_IMPORT_NONE, LongTermSimulationDataModel.RUN_1, or LongTermSimulationDataModel.RUN_2
-		public var importLongTermVarsFromRun:String = LT_IMPORT_NONE
+		protected var _importLongTermVarsFromRun:String = LT_IMPORT_NONE
 		
 		protected var _floorOfInterest:uint = 1
 		protected var _zoneOfInterest:uint = 1
@@ -202,6 +215,17 @@ package com.mcquilleninteractive.learnhvac.model
 
 		}
 		
+		public function set importLongTermVarsFromRun(run:String):void
+		{
+			_importLongTermVarsFromRun = run
+			//if the run is changed, make sure to import the correct values immediately if they're available
+			importLongTermVars()
+		}
+		
+		public function get importLongTermVarsFromRun():String
+		{
+			return _importLongTermVarsFromRun
+		}
 	
 		
 		public function getSysVar(sysVarName:String):SystemVariable
@@ -445,8 +469,7 @@ package com.mcquilleninteractive.learnhvac.model
 			Logger.debug ("importLongTermVars() importLongTermVarsFromRun: " + importLongTermVarsFromRun)
 				
 			if (importLongTermVarsFromRun==ScenarioModel.LT_IMPORT_NONE) return 
-															
-			var sparkInputsVO:SparkInputVarsVO 
+												
 			var ePlusData:EPlusData = longTermSimulationDataModel.getEPlusData(importLongTermVarsFromRun)	
 						
 			if (ePlusData==null)
@@ -457,7 +480,7 @@ package com.mcquilleninteractive.learnhvac.model
 			
 			//try
 			//{		
-				sparkInputsVO = ePlusData.getSparkInputs(currDateTime, _floorOfInterest, _zoneOfInterest)
+				var incomingLTvalues:LongTermValuesForShortTermSimVO  = ePlusData.getLongTermInputs(currDateTime, _floorOfInterest, _zoneOfInterest)
 			//}
 			//catch(err:Error)
 			//{
@@ -465,9 +488,9 @@ package com.mcquilleninteractive.learnhvac.model
 			//	return
 			//}
 			
-			if (sparkInputsVO==null)
+			if (incomingLTvalues==null)
 			{
-				Logger.warn("sparkInputsVO returned from ePlusData was null.", this)
+				Logger.warn("shortTermInputsVO returned from ePlusData was null.", this)
 				return
 			}
 			else
@@ -475,13 +498,13 @@ package com.mcquilleninteractive.learnhvac.model
 				//make sure to grab "base" values, which are SI units, from sparkInputs
 								
 				var rmQSensVar:SystemVariable = getSysVar("RmQSENS")
-				rmQSensVar.baseSIValue = sparkInputsVO.getRmQSens("SI")
+				rmQSensVar.baseSIValue = incomingLTvalues.getRmQSens("SI")
 				
 				var tAirOut:SystemVariable = getSysVar("TAirOut")
-				tAirOut.baseSIValue = sparkInputsVO._tAirOut
+				tAirOut.baseSIValue = incomingLTvalues._tAirOut
 				
 				var twAirOut:SystemVariable = getSysVar("TwAirOut")
-				twAirOut.baseSIValue = sparkInputsVO._twAirOut
+				twAirOut.baseSIValue = incomingLTvalues._twAirOut
 						
 			}
 		}
@@ -492,31 +515,27 @@ package com.mcquilleninteractive.learnhvac.model
 		public function initLongTermImports():void
 		{
 			this.sysVarsImportedFromLongTermAC = new ArrayCollection()	
-			for each (var name:String in varsToImportArr)
+			for each (var name:String in longTermVarsToImportArr)
 			{
-				sysVarsImportedFromLongTermAC.addItem(this.getSysVar(name))
+				var sysVar:SystemVariable = getSysVar(name)
+				sysVar.isImportedFromLongTermSimToShortTermSim = true
+				sysVarsImportedFromLongTermAC.addItem(sysVar)
 			}
 		}
-		 
-		 
-		/* This is more of a utility function: it returns a collection of systemVariables that are imported from E+*/
-		public function getLongTermExportSysVars():ArrayCollection
+		
+		public function initShortTermImports():void
 		{
-			var resultAC:ArrayCollection = new ArrayCollection()
-			var len:Number = sysNodesAC.length
-			for (var i:Number=0; i<len;i++)
+			this.sysVarsImportedFromShortTermAC = new ArrayCollection()
+			for each (var name:String in shortTermVarsToImportArr)
 			{
-				var s:SystemNodeModel = sysNodesAC[i] as SystemNodeModel
-				var len2:Number = sysNodesAC[i].sysVarsArr.length
-				for (var j:Number=0; j<len2; j++)
-				{
-					var sysVar:SystemVariable = s.sysVarsArr[j]
-					if (sysVar.isExportedToLongTermSim) resultAC.addItem(sysVar)
-				}
+				var sysVar:SystemVariable = getSysVar(name)
+				sysVar.isImportedFromShortTermSimToLongTermSim = true
+				this.sysVarsImportedFromShortTermAC.addItem(sysVar)
 			}
-			return resultAC
-		}
-				
+		} 
+		 
+		 
+		 			
 		public function setRealTimeStartDate(d:Date):void
 		{
 			Logger.debug("setRealTimeStartDate()",this)
@@ -601,7 +620,9 @@ package com.mcquilleninteractive.learnhvac.model
 	
 		public function traceSystemVariables():void
 		{
+			Logger.debug("**********************************",this)
 			Logger.debug("Tracing system variables in model:",this)
+			Logger.debug("**********************************",this)
 			for each (var sysNode:SystemNodeModel in sysNodesAC)
 			{
 				Logger.debug("  NODE: " + sysNode.name,this)

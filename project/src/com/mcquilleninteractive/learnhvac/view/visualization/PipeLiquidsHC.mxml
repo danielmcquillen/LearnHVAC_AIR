@@ -43,8 +43,7 @@
 						
 				
 			public function onCreationComplete():void
-			{
-				Logger.debug("#PipeLiquidsHC onCreationComplete()")			
+			{	
 			}
 			
 			[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]

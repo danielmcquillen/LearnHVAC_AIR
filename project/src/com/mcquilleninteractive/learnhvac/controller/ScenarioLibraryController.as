@@ -423,7 +423,6 @@ package com.mcquilleninteractive.learnhvac.controller
 				sysNode.id = systemNodeXML.@id;
 				sysNode.sortOrderIndex = getSysNodeSortIndex(sysNode.id)
 				sysNode.name = systemNodeXML.@name;
-				Logger.debug("#ScenarioDelegate: creating new node: " + sysNode.name)
 				
 				//add to scenarioModel
 				scenarioModel.sysNodesAC.addItem(sysNode)
@@ -434,7 +433,6 @@ package com.mcquilleninteractive.learnhvac.controller
 				{
 					var sysVar:SystemVariable = new SystemVariable();
 					sysNode.sysVarsArr.addItem(sysVar)
-					Logger.debug("#ScenarioDelegate:      sysVar :"  + sysVarXML.@name)
 					
 					for each (var attr:XML in sysVarXML.@*)
 					{
@@ -468,38 +466,15 @@ package com.mcquilleninteractive.learnhvac.controller
 					{
 						scenarioModel.timeScale  = sysVar.currValue
 					}
-					
-					
-					
 				}
 			}
 			
-			//TEMP -> sysVar information in XML should have a boolean property for isImportedFromEPlus
-			//        until this is done, we assign here to correct vars
-			var ltImportsArr:Array = ["RmQSENS","TAirOut", "TwAirOut"]
-			for each (var name:String in ltImportsArr)
-			{
-				sysVar = scenarioModel.getSysVar(name)
-				sysVar.isImportedFromLongTermSim = true
-			}
 			
-			var ltExportsArr:Array =		 ["TRoomSP_Heat",
-											"TRoomSP_Cool",
-											"TSupS",
-											"VAVposMin",
-											"PAtm"];
-											//	"HCUA",	"CCUA", "VAVHCUA",
-			for each (name in ltExportsArr)
-			{
-				sysVar = scenarioModel.getSysVar(name)
-				sysVar.isExportedToLongTermSim = true
-			}				
-			//END TEMP	
-																	
+			scenarioModel.initShortTermImports()																	
 			scenarioModel.initLongTermImports()						
 			scenarioModel.setSort()
 			
-			Logger.debug("#ScenarioDelegate: finished mapping XML to model")
+			Logger.debug("finished mapping XML to model", this)
 			return true
 		}
 		
@@ -525,7 +500,7 @@ package com.mcquilleninteractive.learnhvac.controller
 				if (sortOrderArr[i] == sysNodeID)
 					return i
 			}
-			Logger.warn("ScenarioDelegate: getSysNodeIndex() unrecognized sysNodeID: " + sysNodeID)
+			Logger.warn("getSysNodeIndex() unrecognized sysNodeID: " + sysNodeID, this)
 			return 0
 		}
 		

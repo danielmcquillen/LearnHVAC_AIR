@@ -19,7 +19,7 @@ package com.mcquilleninteractive.learnhvac.business
 		
 	public class ShortTermSimulationDelegate extends EventDispatcher implements IShortTermSimulationDelegate
 	{
-		public static const SOCKET_PORT:String = "3000"
+		public static const SOCKET_PORT:Number = 3001
 		public static const OUTPUT_RECEIVED:String = "shortTermOutputReceived";
 		public static const MODELICA_VERSION:String = "1"	
 		
@@ -36,25 +36,43 @@ package com.mcquilleninteractive.learnhvac.business
 		protected var _modelicaSocket:Socket
 		protected var _modelicaExe:File 
 		protected var _modelicaDir:File
-		protected var _modelicaProcess:NativeProcess
+		protected var _modelicaProcess:NativeProcess = new NativeProcess()
 		
 		public function ShortTermSimulationDelegate() 
 		{
 			//TEMP
 			_modelicaDir = File.applicationDirectory.resolvePath("modelica")
-			_modelicaExe = _modelicaDir.resolvePath("modelica.exe")
-			
+			_modelicaExe = _modelicaDir.resolvePath("dymosim.exe")	
 		}
 		
 		
 		public function start():void
-		{			
+		{
+			Logger.debug("start()",this)
+			this.launchModelica()	
 		}
 		
 		public function stop():void
 		{
 			
 		}
+		
+		public function sendTestValue(time:Number):void
+		{
+			Logger.debug("sendTestValue()",this)
+			var inputArr:Array = [1]
+			var msg:String = this.formatInputToModelica(inputArr)
+			Logger.debug("outgoing msg: " + msg ,this)
+			_modelicaSocket.writeUTFBytes(msg)
+			_modelicaSocket.flush()
+			
+			//now wait for results
+			Logger.debug("reading output..." ,this)
+			var outputBA:ByteArray = new ByteArray();
+			var output:String = "" + outputBA
+			Logger.debug("output:" + output,this)
+		}
+		
 		
 		/*Sends an array of system variables to the Modelica simulation*/
 		public function update(inputSysVarsArr:Array):void
@@ -82,18 +100,21 @@ package com.mcquilleninteractive.learnhvac.business
 		public function setupSocket():void
 		{
 			Logger.debug("setupSocket()",this)
+			Logger.debug("exe : " + _modelicaExe.nativePath + " exists: " + _modelicaExe.exists.toString(),this)
+		
 			// Initialize the server directory 
 			try
 			{
 				_serverSocket = new ServerSocket();
 				_serverSocket.addEventListener(Event.CONNECT, socketConnectHandler);
-				_serverSocket.bind(Number(SOCKET_PORT));
+				_serverSocket.bind(SOCKET_PORT)
 				_serverSocket.listen();
 			}
 			catch (error:Error)
 			{
-				Logger.error("Error opening socket server on 3000. Error: " + error, this)
-				Alert.show("Port 3000 may be in use. Please close any applications using this port and try again.", "Error");
+				var msg:String = "Error when opening socket server on " + SOCKET_PORT + " " + error
+				Logger.error(msg, this )
+				Alert.show(msg, "Socket Error");
 			}
 		}
 		
@@ -187,7 +208,7 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		protected function formatInputToModelica(inputSysVarsArr:Array):String
 		{
-			var out:String 
+			var out:String = ""
 			out += MODELICA_VERSION
 			out += " " + FLAG_NORMAL_OPERATION
 			out += " " + inputSysVarsArr.length
