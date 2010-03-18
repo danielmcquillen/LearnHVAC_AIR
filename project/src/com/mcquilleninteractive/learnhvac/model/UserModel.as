@@ -14,8 +14,8 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public var username:String
 		public var password:String
-		public var first_name:String
-		public var last_name:String
+		public var firstName:String
+		public var lastName:String
 		public var role:Number
 		public var loggedInAsGuest:Boolean = false
 		

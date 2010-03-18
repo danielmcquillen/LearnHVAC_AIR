@@ -9,7 +9,7 @@
 	paddingRight="0"
 	height="35"
 	styleName="appControlBar"
-	xmlns:view="com.mcquilleninteractive.learnhvac.view.*">
+	xmlns:view="com.mcquilleninteractive.learnhvac.view.*" xmlns:components="com.mcquilleninteractive.learnhvac.components.*">
     
 	
 	<mx:Script>
@@ -115,41 +115,6 @@
 				}
 			}
 			
-			public function menuHandler(event:MenuEvent):void
-			{
-				var cmd:String = event.item.@data
-				switch(cmd)
-				{
-					case "newScenario":
-						onNewScenario()
-						break
-					case "loadEPlusInitial":
-						onLoadEPlus(LongTermSimulationDataModel.RUN_1)
-						break
-					case "loadEPlusComparison":
-						onLoadEPlus(LongTermSimulationDataModel.RUN_2)
-						break
-					case "loadSparkInitial":
-						onLoadSpark(ShortTermSimulationDataModel.RUN_1)
-						break
-					case "loadSparkComparison":
-						onLoadSpark(ShortTermSimulationDataModel.RUN_2)
-						break
-					case "saveEPlusInitial":
-						onSaveEPlus(LongTermSimulationDataModel.RUN_1)
-						break
-					case "saveEPlusComparison":
-						onSaveEPlus(ShortTermSimulationDataModel.RUN_2)
-						break
-					case "saveSparkInitial":
-						onSaveSpark(ShortTermSimulationDataModel.RUN_1)
-						break
-					case "saveSparkComparison":
-						onSaveSpark(ShortTermSimulationDataModel.RUN_2)
-						break
-					
-				}
-			}
 		
 			public function onTabClick(event:ItemClickEvent):void
 			{
@@ -161,7 +126,7 @@
                 	case "eplus":
                 		applicationModel.viewing = ApplicationModel.PANEL_LONG_TERM_SIMULATION
                 		break
-                	case "spark": 	             		
+                	case "modelica": 	             		
 						applicationModel.viewing = ApplicationModel.PANEL_SHORT_TERM_SIMULATION
                 		break
                 	case "analysis":
@@ -210,7 +175,7 @@
           	
           	public function onLoadSpark(runID:String):void
           	{
-          		var event:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.LOAD_SPARK_DATA_EVENT, true)
+          		var event:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.LOAD_MODELICA_DATA_EVENT, true)
           		event.runID = runID
           		dispatchEvent(event)
           	}
@@ -224,7 +189,7 @@
           	
           	public function onSaveSpark(runID:String):void
           	{
-          		var event:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.SAVE_SPARK_DATA_EVENT, true)
+          		var event:ScenarioDataEvent = new ScenarioDataEvent(ScenarioDataEvent.SAVE_MODELICA_DATA_EVENT, true)
 				event.runID = runID
           		dispatchEvent(event)
           	}
@@ -233,7 +198,7 @@
 			{
 			 	var pnlDebug:DebugPanel = new DebugPanel()
 				PopUpManager.addPopUp(pnlDebug, this)
-				pnlDebug.width=400
+				pnlDebug.width=800
 				pnlDebug.height=600
 				PopUpManager.centerPopUp(pnlDebug)
 					
@@ -277,7 +242,7 @@
 			<mx:dataProvider>       
 				<mx:Object label="Real-time Sim."  
 						icon="{BuildingIcon}"
-						data="spark"/>
+						data="modelica"/>
 				<mx:Object label="Long-term Sim." 
 						icon="{SunIcon}"
 						data="eplus"/>
@@ -300,7 +265,13 @@
 		horizontalScrollPolicy="off"
 		verticalScrollPolicy="off"
 		>
-		    		
+		    <components:UnitsButton
+		    			id="btnUnits"
+       					width="35"
+       					height="100%"			
+       					styleName="btnNavIcon"		    
+			    		toolTip="Toggle units"	
+				/>
 		
 			<mx:Button id="btnDebug" 
        					width="35"

@@ -4,6 +4,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 		
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
 			import mx.containers.Canvas;
@@ -38,7 +39,21 @@
 								
 			}
 		
-			
+			public function setLabels(varArr:Array):void
+			{
+				for each (var sysVarName:String in varArr)
+				{
+					var sysVar:SystemVariable = scenarioModel.getSysVar(sysVarName)
+					if (sysVar)
+					{
+						this["lbl"+sysVar.name].visible = this["lbl"+sysVar.name+"_Title"].visible = sysVar.visible
+					}
+					else
+					{
+						Logger.warn("couldn't find sysVar: " + sysVarName, this)
+					}
+				}
+			}
 		]]>
 	</mx:Script>
 	

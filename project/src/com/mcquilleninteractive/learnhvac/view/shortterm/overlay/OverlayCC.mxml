@@ -39,14 +39,11 @@
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{						
 				Logger.debug("scenarioLoaded()", this)	
-																	
-				//set visibility of labels				
-				lblCCTAirEnt.visible=lblCCTAirEnt_Title.visible=scenarioModel.getSysVar("CCTAirEnt").visible
-				lblCCTAirLvg.visible=lblCCTAirLvg_Title.visible=scenarioModel.getSysVar("CCTAirLvg").visible
-				lblCHLevapout.visible=lblCHLevapout_Title.visible=scenarioModel.getSysVar("CHLevapout").visible
-				lblCCTLiqLvg.visible=lblCCTLiqLvg_Title.visible=scenarioModel.getSysVar("CCTLiqLvg").visible
-				lblCCpos.visible=lblCCpos_Title.visible=scenarioModel.getSysVar("CCpos").visible
-			
+															//set visibility of labels							
+				var varArr:Array = ["CCTAirEnt","CCTAirLvg","CHLTLiqSup",
+									"CCTLiqLvg","CCPos"	]
+									
+				setLabels(varArr)					
 			}
 			
 			public function onCCValveClick(event:Event):void
@@ -67,7 +64,7 @@
 				overSkin="{CCValveOn}"
 				downSkin="{CCValveOn}" />
 	
-	<mx:Label id="lblCCpos_Title"  
+	<mx:Label id="lblCCPos_Title"  
 				x="110" y="360"
 				textAlign="right"
 				width="120" 
@@ -76,8 +73,8 @@
 			    color="0x000000"
 				/>
 			
-	<overlay:ValueDisplayLabel id="lblCCpos" 
-		sysVarName="CCpos"
+	<overlay:ValueDisplayLabel id="lblCCPos" 
+		sysVarName="CCPos"
 		usePercent="true"
 		x="110" y="380"
 		width="120" 
@@ -108,10 +105,10 @@
 		styleName="overlayValue"
 		x="500" y="170" />
 					 
-	<mx:Label id="lblCHLevapout_Title" text="Entering Liq. Temp: " styleName="overlayTitle"
+	<mx:Label id="lblCHLTLiqSup_Title" text="Entering Liq. Temp: " styleName="overlayTitle"
 			x="385" y="278"/>
-	<overlay:ValueDisplayLabel id="lblCHLevapout" 
-		sysVarName="CCTLiqEnt"
+	<overlay:ValueDisplayLabel id="lblCHLTLiqSup" 
+		sysVarName="CHLTLiqSup"
 		text="0" 
 		styleName="overlayValue"
 		x="385" y="298" />

@@ -10,6 +10,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 			import mx.binding.utils.ChangeWatcher;
 		
@@ -27,9 +28,8 @@
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
 			
-			
-			[Bindable]
 			[Autowire]
+			[Bindable]
 			public var scenarioModel:ScenarioModel		
 			
 			[Bindable]
@@ -38,7 +38,6 @@
 									
 			public var _active:Boolean = false
 			public var model:ApplicationModel
-			public var scenModel:ScenarioModel
 			public var cwArr:Array = [] //keep an array of the change watchers for the init routines
 						
 				
@@ -52,64 +51,38 @@
 				updatePipes()
 			}
 			
+			[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]
+			public function onShortTermSimUpdate(event:ShortTermSimulationEvent):void
+			{				
+				updatePipes()
+			}
+			
 			[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
 			public function onShortTermSimStopped(event:ShortTermSimulationEvent):void
 			{
 				liquidsHC.turnAllPipesOff()
 			}
 					
-			
-			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
-			public function scenarioLoaded(e:Event):void
-			{	
-				Logger.debug("#PipeHC: scenarioLoaded()")	
-				initBindings()
-			}
-			
-			public function initBindings():void
-			{
-				while (cwArr.length>0)
-				{
-					ChangeWatcher(cwArr.pop()).unwatch()
-				}
-				
-				Logger.debug("#PipeHC: initBindings()")
-							
-				//setup bindings for temperature	
-				cwArr.push(BindingUtils.bindSetter(setTLiqEnt, scenarioModel.getSysVar("HCTLiqEnt"), "currValue" ))
-				cwArr.push(BindingUtils.bindSetter(setTLiqLvg, scenarioModel.getSysVar("HCTLiqLvg"), "currValue" ))
-				cwArr.push(BindingUtils.bindSetter(setTLiqbypass, scenarioModel.getSysVar("HCTLiqbypass"), "currValue" ))
-				cwArr.push(BindingUtils.bindSetter(setTLiqLvgValve, scenarioModel.getSysVar("HCTLiqLvgValve"), "currValue" ))
-				
-				
-				//setup bindings for mass flow
-				cwArr.push(BindingUtils.bindSetter(setmLiqLvgValve, scenarioModel.getSysVar("HCmLiqLvgValve"), "currValue" ))
-				cwArr.push(BindingUtils.bindSetter(setmLiqEnt, scenarioModel.getSysVar("HCmLiqEnt"), "currValue" ))
-				cwArr.push(BindingUtils.bindSetter(setmLiqbypass, scenarioModel.getSysVar("HCmLiqbypass"), "currValue" ))
-				cwArr.push(BindingUtils.bindSetter(setmLiqLvg, scenarioModel.getSysVar("HCmLiqLvg"), "currValue" ))
-				
-			}
-			
 		
+			
+							
 			
 			public function updatePipes():void
 			{
-				try
-				{
-					setTLiqEnt(scenModel.getSysVar("HCTLiqEnt").baseSIValue)
-					setTLiqLvg(scenModel.getSysVar("HCTLiqLvg").baseSIValue)
-					setTLiqbypass(scenModel.getSysVar("HCTLiqbypass").baseSIValue)
-					setTLiqLvgValve(scenModel.getSysVar("HCTLiqLvgValve").baseSIValue)
-							
-					setmLiqLvgValve(scenModel.getSysVar("HCmLiqLvgValve").baseSIValue)
-					setmLiqEnt(scenModel.getSysVar("HCmLiqEnt").baseSIValue)
-					setmLiqbypass(scenModel.getSysVar("HCmLiqbypass").baseSIValue)
-					setmLiqLvg(scenModel.getSysVar("HCmLiqLvg").baseSIValue)
-				}					
-				catch(e:Error)
-				{
-					Logger.error("#PipeLiquidsHC: couldn't set a field value when trying to updatePipes()")
-				}	
+					var boiTLiqSup:SystemVariable = scenarioModel.getSysVar("BOITLiqSup")
+					setTLiqEnt(boiTLiqSup.baseSIValue)
+					setTLiqbypass(boiTLiqSup.baseSIValue)
+					
+					var hcTLiqLvg:SystemVariable = scenarioModel.getSysVar("HCTLiqLvg")
+					setTLiqLvg(hcTLiqLvg.baseSIValue)
+					setTLiqLvgValve(hcTLiqLvg.baseSIValue)
+										
+					var boiTLiqFlw:SystemVariable = scenarioModel.getSysVar("BOILiqFlw")
+					setmLiqLvgValve(boiTLiqFlw.baseSIValue)
+					setmLiqEnt(boiTLiqFlw.baseSIValue)
+					setmLiqbypass(boiTLiqFlw.baseSIValue)
+					setmLiqLvg(boiTLiqFlw.baseSIValue)
+				
 			}
 			
 			public function set active(state:Boolean):void
@@ -136,82 +109,52 @@
 			
 			public function setTLiqEnt(value:Number):void
 			{
-				if (!_active) return
-				//get SI value manually -- see note above
-				value = scenModel.getSysVar("HCTLiqEnt").baseSIValue
-				
+				if (!_active) return				
 				liquidsHC.setTemp(value, 0)
 				liquidsHC.setTemp(value, 1)
 			}			
 					
 			public function setTLiqbypass(value:Number):void
 			{
-				if (!_active) return
-				
-				//get SI value manually -- see note above
-				value = scenModel.getSysVar("HCTLiqbypass").baseSIValue
-				
+				if (!_active) return				
 				liquidsHC.setTemp(value, 2)
 			}
 			
 			public function setTLiqLvg(value:Number):void
 			{
 				
-				if (!_active) return
-				
-				//get SI value manually -- see note above
-				value = scenModel.getSysVar("HCTLiqLvg").baseSIValue
-				
+				if (!_active) return			
 				liquidsHC.setTemp(value, 3)
 			}
 			
 			public function setTLiqLvgValve(value:Number):void
 			{
 				if (!_active) return
-								
-				//get SI value manually -- see note above
-				value = scenModel.getSysVar("HCTLiqLvgValve").baseSIValue
 				liquidsHC.setTemp(value, 4)
 			}
 						
 			public function setmLiqLvgValve(value:Number):void
 			{
-				if (!_active) return
-				
-				//get SI value manually -- see note above
-				value = scenModel.getSysVar("HCmLiqLvgValve").baseSIValue
-				
+				if (!_active) return				
 				liquidsHC.setFlow(value, 0)
 				liquidsHC.setFlow(value, 4)
 			}
 			
 			public function setmLiqEnt(value:Number):void
 			{
-				if (!_active) return
-				
-				//get SI value manually -- see note above
-				value = scenModel.getSysVar("HCmLiqEnt").baseSIValue
-				
+				if (!_active) return				
 				liquidsHC.setFlow(value, 1)
 			}
 			
 			public function setmLiqbypass(value:Number):void
 			{
-				if (!_active) return
-				
-				//get SI value manually -- see note above
-				value = scenModel.getSysVar("HCmLiqbypass").baseSIValue
-				
+				if (!_active) return				
 				liquidsHC.setFlow(value, 2)
 			}
 			
 			public function setmLiqLvg(value:Number):void
 			{
-				if (!_active) return
-				
-				//get SI value manually -- see note above
-				value = scenModel.getSysVar("HCmLiqLvg").baseSIValue
-				
+				if (!_active) return				
 				liquidsHC.setFlow(value, 3)
 			}
 					

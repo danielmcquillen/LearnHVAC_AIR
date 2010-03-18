@@ -208,9 +208,9 @@
 			
 			//setup any binding of viz objects to scenarioModel
 			//mixing box
-			cwArr.push(BindingUtils.bindSetter(setDampersOA, scenarioModel.getSysVar("MXOAPosDamperReal"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setDampersEA, scenarioModel.getSysVar("MXEAPosDamperReal"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setDampersRA, scenarioModel.getSysVar("MXRAPosDamperReal"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setDampersIA, scenarioModel.getSysVar("MXIntDampPos"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setDampersEA, scenarioModel.getSysVar("MXExDampPos"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setDampersRA, scenarioModel.getSysVar("MXRtnDampPos"), "currValue" ))
 			//damper			
 			cwArr.push(BindingUtils.bindSetter(setVAVDamper, scenarioModel.getSysVar("VAVPos"), "currValue" ))
 			//FPS bar 
@@ -223,7 +223,7 @@
 			animPanel.fpsVisible = state
 		}
 		
-		public function setDampersOA(value:Number):void
+		public function setDampersIA(value:Number):void
 		{
 			mixingBox.setDamper("OA", value)		
 		}
@@ -344,11 +344,11 @@
 					try
 					{
 						Logger.debug("#VizPanel: showNode() setting dampers to current values...")
-						Logger.debug("#VizPanel: showNode() MXOAPosDamperReal: " +scenarioModel.getSysVar("MXOAPosDamperReal").currValue )
+						Logger.debug("#VizPanel: showNode() MXIntDampPos: " +scenarioModel.getSysVar("MXIntDampPos").currValue )
 						
-						setDampersOA( scenarioModel.getSysVar("MXOAPosDamperReal").currValue )
-						setDampersEA( scenarioModel.getSysVar("MXEAPosDamperReal").currValue )
-						setDampersRA( scenarioModel.getSysVar("MXRAPosDamperReal").currValue )
+						setDampersIA( scenarioModel.getSysVar("MXIntDampPos").currValue )
+						setDampersEA( scenarioModel.getSysVar("MXExDampPos").currValue )
+						setDampersRA( scenarioModel.getSysVar("MXRtnDampPos").currValue )
 					}
 					catch (e:Error)
 					{
@@ -566,8 +566,8 @@
 	<!-- nav -->
 	<myComps:MiniNav  id="miniNav" x="315" y="250"   />
 		
-	<!-- spark status indicator -->
-	<viz:SparkStatus id="sparkStatusIndicator" x="476" y="-1" />
+	<!--  status indicator -->
+	<viz:ShortTermSimStatus id="shortTermSimStatus" x="476" y="-1" />
 	
 	
 		

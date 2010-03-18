@@ -2,21 +2,21 @@ package com.mcquilleninteractive.learnhvac.controller
 {
 	
 	
-	import com.mcquilleninteractive.learnhvac.event.GetScenarioListEvent
-	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
-	import com.mcquilleninteractive.learnhvac.util.Logger
-	
-	import org.swizframework.controller.AbstractController
-	import mx.controls.Alert
-	import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent;
-	import mx.collections.ArrayCollection;
-	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
-	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
-	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
-	import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
-	import org.swizframework.Swiz;
+	import com.mcquilleninteractive.learnhvac.event.GetScenarioListEvent;
 	import com.mcquilleninteractive.learnhvac.event.LoggedInEvent;
 	import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
+	import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
+	import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent;
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
+	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+	import com.mcquilleninteractive.learnhvac.util.Logger;
+	
+	import mx.collections.ArrayCollection;
+	
+	import org.swizframework.Swiz;
+	import org.swizframework.controller.AbstractController;
 	
 	public class ApplicationController  extends AbstractController
 	{
@@ -34,7 +34,13 @@ package com.mcquilleninteractive.learnhvac.controller
 		public function loggedIn(event:LoggedInEvent):void
 		{
 			applicationModel.loggedIn = true
-			applicationModel.viewing = ApplicationModel.PANEL_SELECT_SCENARIO			
+			applicationModel.viewing = ApplicationModel.PANEL_SELECT_SCENARIO	
+			
+			if (ApplicationModel.testMode)
+			{
+				var evt : GetScenarioListEvent = new GetScenarioListEvent(GetScenarioListEvent.GET_DEFAULT_SCENARIO_LIST, true);
+				Swiz.dispatchEvent( evt );
+			}	
 		}
 		
 		[Mediate(event="LogoutEvent.LOGOUT")]

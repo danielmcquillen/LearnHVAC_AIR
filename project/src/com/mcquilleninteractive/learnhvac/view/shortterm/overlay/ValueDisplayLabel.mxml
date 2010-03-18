@@ -67,9 +67,9 @@
 				onShortTermOutputUpdated(null)
 			}
 			
-			[Mediate(event="ShortTermSimulationEvent.OUTPUT_UPDATED")]
+			[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]
 			public function onShortTermOutputUpdated(event:ShortTermSimulationEvent):void
-			{
+			{				
 				if (_sysVar==null)
 				{
 					Logger.warn("Can't find system variable " + _sysVarName + " for ValueDisplayLabel", this)	

@@ -64,16 +64,16 @@ package com.mcquilleninteractive.learnhvac.business
 				Logger.debug("filename: " + scenObj.fileName,this)
 				scenObj.scenID = currScenXML.@id
 				scenObj.name = currScenXML.@name
-				scenObj.short_description = currScenXML.@short_description
+				scenObj.shortDescription = currScenXML.@shortDescription
 				scenObj.sourceType = ScenarioListItemVO.SOURCE_LOCAL_FILE
 				
 				// grab name of thumbnail. If the user grabbed this xml straight from the web
 				// this thumbnail URL probably has a complete web URL (e.g. http://www.learnhvac.org:3000/thumbnails/mypic.jpg")
 				// so remove everything except what's between the last "/" and then end of the string
-				var t:String = currScenXML.@thumbnail_URL
+				var t:String = currScenXML.@thumbnailURL
 				t = t.slice(t.lastIndexOf("/")+1	)
-				scenObj.thumbnail_URL = File.applicationDirectory.resolvePath("scenarios/thumbnails/" + t).nativePath
-				Logger.debug("thumbnailURL : " + scenObj.thumbnail_URL, this)
+				scenObj.thumbnailURL = File.applicationDirectory.resolvePath("scenarios/thumbnails/" + t).nativePath
+				Logger.debug("thumbnailURL : " + scenObj.thumbnailURL, this)
 				_localScenarioListAC.addItem(scenObj)						
 			}			
 			return _localScenarioListAC				

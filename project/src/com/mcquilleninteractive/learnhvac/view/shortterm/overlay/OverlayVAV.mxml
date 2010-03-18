@@ -47,24 +47,25 @@
 																
 				onShortTermOutputUpdated(null) //show initial values
 				
-				//set visibility of labels				
-				lblVAVPos.visible = lblVAVPos_Title.visible = scenarioModel.getSysVar("VAVPos").visible
-				lblVAVDAMPTp.visible = lblVAVDAMPTp_Title.visible = scenarioModel.getSysVar("VAVDAMPTp").visible
-				lblVAVHCTAirLvg.visible = lblVAVHCTAirLvg_Title.visible = scenarioModel.getSysVar("VAVHCTAirLvg").visible
-				lblVAVHCTAirEnt.visible = lblVAVHCTAirEnt_Title.visible = scenarioModel.getSysVar("VAVHCTAirEnt").visible
-				lblFanmAirEnt.visible = lblFanmAirEnt_Title.visible = scenarioModel.getSysVar("FanmAirEnt").visible
-				lblVAVHCpos.visible = lblVAVHCpos_Title.visible = scenarioModel.getSysVar("VAVHCpos").visible
+				//set visibility of labels	
+				var varArr:Array = ["VAVDampPos","VAVTAirLvg","FANTAirLvg",
+									"FANAirFlw","FANAirFlw","VAVRhcPos"]
+				
+				setLabels(varArr)				
 				
 			}
-				
-			[Mediate(event="ShortTermSimulationEvent.OUTPUT_UPDATED")]
+			
+			
+			
+			
+			[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]
 			public function onShortTermOutputUpdated(event:ShortTermSimulationEvent):void
 			{											
 				//enabled light
-       			setHeatingCoilEnabled(scenarioModel.getSysVar("VAVHCStatus").currValue)
+       			//setHeatingCoilEnabled(scenarioModel.getSysVar("VAVHCStatus").currValue)
 			}
+			/*
 			
-							
 			public function setHeatingCoilEnabled(value:Number):void
 			{
 				if (value==1)
@@ -80,66 +81,97 @@
 					lblReheatCoilStatus.text = "OFF"
 				}
 			}
+			*/
 			
 			
 		]]>
 	</mx:Script>
 	
 			
-	<mx:Label id="lblVAVPos_Title" text="Damper Position: " styleName="overlayTitle"
-			color="0xFFFFFF" x="100" y="148"  width="150" textAlign="right" />
-	<overlay:ValueDisplayLabel id="lblVAVPos" 
+	<mx:Label id="lblVAVDampPos_Title" 
+		text="Damper Position: " 
+		styleName="overlayTitle"
+		color="0xFFFFFF" 
+		x="100" y="148"  
+		width="150" 
+		textAlign="right" />
+	<overlay:ValueDisplayLabel id="lblVAVDampPos" 
 		text="" 
 		styleName="overlayValue" 
-		sysVarName="VAVPos"
+		sysVarName="VAVDampPos"
 	    usePercent="true"
 		color="0xFFFFFF" 
 		x="255" y="148" />
 			
-	<mx:Label id="lblVAVHCTAirLvg_Title" text="Air Temp: " styleName="overlayTitle"
-			color="0xFFFFFF" x="35" y="200"  width="100" textAlign="right" />
+	<mx:Label id="lblVAVTAirLvg_Title" 
+		text="Air Temp: " 
+		styleName="overlayTitle"
+		color="0xFFFFFF" 
+		x="35" y="200"  
+		width="100" 
+		textAlign="right" />
 	<overlay:ValueDisplayLabel 
-		id="lblVAVHCTAirLvg" 
+		id="lblVAVTAirLvg" 
 		text="0" 
 		styleName="overlayValue" 
-		sysVarName="VAVHCTAirLvg"
+		sysVarName="VAVTAirLvg"
 		color="0xFFFFFF" 
 		x="35" y="220" 
 		width="100" 
 		textAlign="right"/>
 	
-			
-	<mx:Label id="lblVAVDAMPTp_Title" text="Air Flow: " styleName="overlayTitle"
-			color="0xFFFFFF" x="350" y="300"  width="100"  />
-	<overlay:ValueDisplayLabel id="lblVAVDAMPTp" text="0" 
-		styleName="overlayValue" 
-		sysVarName="VAVDAMPTp"
+	<!--
+	<mx:Label id="lblVAVTAirEnt_Title" 
+		text="Air Temp: " 
+		styleName="overlayTitle"
 		color="0xFFFFFF" 
-		x="293" y="320" 
+		x="35" y="200"  
 		width="100" 
-		textAlign="right"  />	
+		textAlign="right" />
+	<overlay:ValueDisplayLabel 
+		id="lblVAVTAirEnt" 
+		text="0" 
+		styleName="overlayValue" 
+		sysVarName="VAVTAirEnt"
+		color="0xFFFFFF" 
+		x="35" y="220" 
+		width="100" 
+		textAlign="right"/>
+	-->
+	
 			
-	<mx:Label id="lblVAVHCTAirEnt_Title" text="Air Temp: " styleName="overlayTitle"
-			color="0xFFFFFF" x="420" y="70"  width="100" textAlign="right" />
-	<overlay:ValueDisplayLabel id="lblVAVHCTAirEnt" 
+	<mx:Label id="lblFANTAirLvg_Title" 
+		text="Air Temp: " 
+		styleName="overlayTitle"
+		color="0xFFFFFF" 
+		x="420" y="70"  
+		width="100" 
+		textAlign="right" />
+	<overlay:ValueDisplayLabel id="lblFANTAirLvg" 
 		text="0" styleName="overlayValue" 
-		sysVarName="VAVHCTAirEnt"
+		sysVarName="FANTAirLvg"
 		color="0xFFFFFF"
 		x="420" y="90"
 		width="100" 
 		textAlign="right"/>	
 			
-	<mx:Label id="lblFanmAirEnt_Title" text="Air Flow: " styleName="overlayTitle"
-			color="0xFFFFFF" x="420" y="120"  width="100" textAlign="right" />
-	<overlay:ValueDisplayLabel id="lblFanmAirEnt" 
+	<mx:Label id="lblFANAirFlw_Title" 
+		text="Air Flow: " 
+		styleName="overlayTitle"
+		color="0xFFFFFF" 
+		x="420" y="120"  
+		width="100" 
+		textAlign="right" />
+	<overlay:ValueDisplayLabel id="lblFANAirFlw" 
 		text="0" 
 		styleName="overlayValue" 
-		sysVarName="FanmAirEnt"
+		sysVarName="FANAirFlw"
 		color="0xFFFFFF" 
 		x="420" y="140" 
 		width="100" 
 		textAlign="right" />		
 	
+	<!--
 	<mx:Image id="lightOn" 
 				source="{VAVLightOn}"
 				visible="false"
@@ -150,7 +182,7 @@
 				toolTip="VAV Heating Coil is disabled"  
 				source="{VAVLightOff}" 
 				x="180" y="280"/>
-				
+	-->
 		
 			
 	<mx:Label id="lblTEMP_Title" 
@@ -161,7 +193,8 @@
 		y="305"  
 		width="100" 
 		textAlign="right" />
-		
+	
+	<!--
 	<mx:Label id="lblReheatCoilStatus" 
 		text="OFF" 
 		styleName="overlayTitle" 
@@ -170,8 +203,8 @@
 		y="305"
 		width="100" 
 		textAlign="left"/>		
-		
-	<mx:Label id="lblVAVHCpos_Title"
+	-->
+	<mx:Label id="lblVAVRhcPos_Title"
 		text="Valve Pos.: "
 		styleName="overlayTitle"
 		toolTip="VAV Reheat Coil Valve Position (percent open)"
@@ -181,8 +214,8 @@
 		textAlign="right"/>
 		
 	<overlay:ValueDisplayLabel 	
-		id="lblVAVHCpos"
-		sysVarName="VAVHCpos"
+		id="lblVAVRhcPos"
+		sysVarName="VAVRhcPos"
 		usePercent="true"
 		text=""
 		styleName="overlayValue"

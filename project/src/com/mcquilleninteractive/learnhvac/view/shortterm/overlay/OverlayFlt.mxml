@@ -27,7 +27,7 @@
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{																																			
 				//set visibility of labels	
-				lblFltpreDrop.visible=lblFltpreDrop_Title.visible=scenarioModel.getSysVar("FltpreDrop").visible
+				lblFLTPDrop.visible=lblFLTPDrop_Title.visible=scenarioModel.getSysVar("FLTPDrop").visible
 			}
 			
 			
@@ -36,11 +36,11 @@
 	</mx:Script>
 	
 	
-	<mx:Label id="lblFltpreDrop_Title" text="Pressure Drop: "  styleName="overlayTitle"
+	<mx:Label id="lblFLTPDrop_Title" text="Pressure Drop: "  styleName="overlayTitle"
 					 x="430" y="100"/>
-	<overlay:ValueDisplayLabel id="lblFltpreDrop"
+	<overlay:ValueDisplayLabel id="lblFLTPDrop"
 		precision="7"
-		sysVarName="FltpreDrop" 
+		sysVarName="FLTPDrop" 
 		text="0" 
 		styleName="overlayValue"
 		x="430" y="117"/>

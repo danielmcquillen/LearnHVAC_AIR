@@ -1,6 +1,8 @@
 package com.mcquilleninteractive.learnhvac.business
 {
+	import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
 	import flash.desktop.NativeProcess;
@@ -10,24 +12,39 @@ package com.mcquilleninteractive.learnhvac.business
 	import flash.events.NativeProcessExitEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.ServerSocketConnectEvent;
+	import flash.events.TimerEvent;
 	import flash.filesystem.File;
 	import flash.net.ServerSocket;
 	import flash.net.Socket;
 	import flash.utils.ByteArray;
+	import flash.utils.Timer;
 	
 	import mx.controls.Alert;
+
+	/* Manages communication between Learn HVAC and the modelica (Dymola) process
+	   		- Converts inputs into string for Modelica consumption
+	   		- Parses Modelica output string for LH
+			
+			Documentation on protocol is at bottom of class
+	
+	*/
 		
 	public class ShortTermSimulationDelegate extends EventDispatcher implements IShortTermSimulationDelegate
 	{
 		public static const SOCKET_PORT:Number = 3001
 		public static const OUTPUT_RECEIVED:String = "shortTermOutputReceived";
-		public static const MODELICA_VERSION:String = "1"	
-		
-		public static const FLAG_END_TIME:Number = 1  			// simulation reached end time.
-		public static const FLAG_NORMAL_OPERATION:Number = 0 	// normal operation
-		public static const SIM_FATAL_ERROR:Number = -1 		// simulation terminates due to an (unspecified) error.
- 		public static const SIM_FATAL_INIT:Number = -10			// simulation terminates due to error during initialization.
- 		public static const SIM_FATAL_INTEGRATION:Number = -20;	// simulation terminates due to error during time integration. 	
+		public static const MODELICA_VERSION:String = "1"
+			
+		// simulation reached end time.
+		public static const FLAG_END_TIME:Number = 1  			
+		// normal operation
+		public static const FLAG_NORMAL_OPERATION:Number = 0 	
+		// simulation terminates due to an (unspecified) error.
+		public static const SIM_FATAL_ERROR:Number = -1 		
+		// simulation terminates due to error during initialization.
+ 		public static const SIM_FATAL_INIT:Number = -10			
+ 		// simulation terminates due to error during time integration. 	
+ 		public static const SIM_FATAL_INTEGRATION:Number = -20;	
 			
 		[Autowire]
 		public var scenarioModel:ScenarioModel
@@ -37,92 +54,136 @@ package com.mcquilleninteractive.learnhvac.business
 		protected var _modelicaExe:File 
 		protected var _modelicaDir:File
 		protected var _modelicaProcess:NativeProcess = new NativeProcess()
+		protected var _timer:Timer
+		protected var _simTime:int = 0
+		protected var _startupInfo:NativeProcessStartupInfo
+		
+		//local refs to arrays in ScenarioModel	
+		protected var _inputSysVarsArr:Array= []	
+		protected var _outputSysVarsArr:Array= []
+		
+		//to avoid counting each time
+		protected var _outputsSysVarsArrLength:uint 
 		
 		public function ShortTermSimulationDelegate() 
 		{
 			//TEMP
 			_modelicaDir = File.applicationDirectory.resolvePath("modelica")
-			_modelicaExe = _modelicaDir.resolvePath("dymosim.exe")	
+			_modelicaExe = _modelicaDir.resolvePath("dymosim.exe")
+			
+			_timer = new Timer(1000)
+			_timer.addEventListener(TimerEvent.TIMER, onTimer)
+			
+			setupModelicaProcess()	
 		}
-		
-		
+				
+		/** This function starts the Nativeprocess for modelica and then waits for a 
+		 *  connection from the Modelica process. When a connection and the first set 
+		 *  of variables are received, the delegate sets a timer and, after the delay,
+		 *  sends the next increment of input variables, whether or not the user has
+		 *  changed any of them.
+		 * 
+		 * 
+		 * */		
+				
 		public function start():void
 		{
 			Logger.debug("start()",this)
-			this.launchModelica()	
+			openSocket()
+			launchModelicaProcess()	
 		}
 		
 		public function stop():void
 		{
-			
+			closeSocket()
+			_timer.stop()
+			_modelicaProcess.exit(true)
+			_simTime = 0
 		}
 		
-		public function sendTestValue(time:Number):void
+		public function onTimer(event:TimerEvent):void
 		{
-			Logger.debug("sendTestValue()",this)
-			var inputArr:Array = [1]
-			var msg:String = this.formatInputToModelica(inputArr)
-			Logger.debug("outgoing msg: " + msg ,this)
-			_modelicaSocket.writeUTFBytes(msg)
-			_modelicaSocket.flush()
-			
-			//now wait for results
-			Logger.debug("reading output..." ,this)
-			var outputBA:ByteArray = new ByteArray();
-			var output:String = "" + outputBA
-			Logger.debug("output:" + output,this)
+			sendInput()
 		}
-		
-		
+
+		public function get simTime():int
+		{
+			return _simTime
+		}
+									
 		/*Sends an array of system variables to the Modelica simulation*/
-		public function update(inputSysVarsArr:Array):void
-		{	
-			Logger.debug("update()",this)
-			if (_modelicaSocket.connected)
+		public function sendInput():void
+		{						
+			if (_inputSysVarsArr.length==0)
 			{
-				var inputToModelica:String = formatInputToModelica(inputSysVarsArr)
+				_inputSysVarsArr = scenarioModel.getInputSysVars() //these should already be sorted by index
+			}
+			
+			if (_modelicaSocket.connected)
+			{			
+				var inputToModelica:String = formatInputToModelica(_inputSysVarsArr, _simTime)
+				Logger.debug("input :  " + inputToModelica,this)
 				_modelicaSocket.writeUTFBytes(inputToModelica)
+				_modelicaSocket.flush()	
+				
+			}
+			else
+			{
+				Logger.error("Can't sendInput() since socket isn't connected.",this)
 			}
 		}
 		
-		public function onOutputReceived():void
+		public function receiveOutput(output:String):void
 		{
-			Logger.debug("onOutputReceived()",this)
 			//Do all the things we need to do to parse the Modelica output
-			var step:uint = 1 // this will be read in from Modelica			
-			scenarioModel.updateTimer(step);			
+			_simTime ++		
+			_timer.start()		
+			this.parseOutputFromModelica(output)
+			
+			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED, true)
+			
+			dispatchEvent(evt)
 		}
 
 		/* ****************** */
 		/*  SOCKET FUNCTIONS  */
 		/* ****************** */
-
-		public function setupSocket():void
-		{
-			Logger.debug("setupSocket()",this)
-			Logger.debug("exe : " + _modelicaExe.nativePath + " exists: " + _modelicaExe.exists.toString(),this)
 		
-			// Initialize the server directory 
+		public function openSocket():void
+		{
 			try
 			{
+				if (_serverSocket) 
+				{
+					this.closeSocket()
+				}
 				_serverSocket = new ServerSocket();
 				_serverSocket.addEventListener(Event.CONNECT, socketConnectHandler);
 				_serverSocket.bind(SOCKET_PORT)
-				_serverSocket.listen();
+				_serverSocket.listen();				
 			}
 			catch (error:Error)
 			{
 				var msg:String = "Error when opening socket server on " + SOCKET_PORT + " " + error
 				Logger.error(msg, this )
 				Alert.show(msg, "Socket Error");
-			}
+			}			
+		}
+		
+		public function closeSocket():void
+		{
+			_serverSocket.removeEventListener(Event.CONNECT, socketConnectHandler);
+			_serverSocket.close()
+			_serverSocket = null
 		}
 		
 		
 		
 		protected function socketConnectHandler(event:ServerSocketConnectEvent):void
 		{
-			Logger.debug("socketConnectHandler()",this) 
+			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_STARTED,true)
+			dispatchEvent(evt)
+			
 			_modelicaSocket = event.socket;
 			_modelicaSocket.addEventListener(ProgressEvent.SOCKET_DATA, socketDataHandler);
 		}
@@ -130,14 +191,12 @@ package com.mcquilleninteractive.learnhvac.business
 		protected function socketDataHandler(event:ProgressEvent):void
 		{
 			try
-			{
-				Logger.debug("socketDataHandler()",this)				
+			{			
 				var bytes:ByteArray = new ByteArray();
 				_modelicaSocket.readBytes(bytes);
 				var outputFromModelica:String = "" + bytes;			
-				Logger.debug("output data from Modelica: " + outputFromModelica,this)	
-				this.parseOutputFromModelica(outputFromModelica)				
-				_modelicaSocket.flush();
+				_modelicaSocket.flush();		
+				receiveOutput(outputFromModelica)		
 			}
 			catch (error:Error)
 			{
@@ -152,33 +211,44 @@ package com.mcquilleninteractive.learnhvac.business
 		/*  MODELICA PROCESS         */
 		/* ************************* */
 		
-		protected function launchModelica():void
+		protected function setupModelicaProcess():void
 		{
-			Logger.debug("launchModelica()",this)
-															
-			var startupInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo()
-			startupInfo.executable = _modelicaExe
-			startupInfo.workingDirectory = _modelicaDir
+			 _startupInfo = new NativeProcessStartupInfo()
+			_startupInfo.executable = _modelicaExe
+			_startupInfo.workingDirectory = _modelicaDir
 			
 			_modelicaProcess.addEventListener(NativeProcessExitEvent.EXIT, onModelicaProcessExit)
 			_modelicaProcess.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onModelicaStandardOutput)
 			_modelicaProcess.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onModelicaStandardError)
 			
+		}
+		
+		protected function launchModelicaProcess():void
+		{		
+			if (_modelicaProcess.running)
+			{
+				_modelicaProcess.exit(true)
+			}
+																
 			try
 			{
-				_modelicaProcess.start(startupInfo)
+				_modelicaProcess.start(_startupInfo)
 			}
 			catch (err:Error)
 			{				
 				Logger.error("launchModelica() Error starting process: "+ err, this)
 				Alert.show("Cannot start Modelica. Please try again or contact support for help.")
 			}
-			
-				
 		}
+		
 		public function onModelicaProcessExit(event:NativeProcessExitEvent):void
 		{
-			Logger.debug("onModelicaProcessExit() " + event, this)
+			Logger.error("event.exitCode : " + event.exitCode, this)
+			_timer.stop()
+			//todo : launch a crashed event if exit code indicates error
+			
+			var evt:ShortTermSimulationEvent= new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_STOPPED, true)
+			dispatchEvent(evt)
 		}
 		
 		public function onModelicaStandardOutput(event:ProgressEvent):void
@@ -191,6 +261,8 @@ package com.mcquilleninteractive.learnhvac.business
 		{
 			var text:String = _modelicaProcess.standardError.readUTFBytes(_modelicaProcess.standardError.bytesAvailable)
 			Logger.error("Modelica process error: " + text, this)			
+			Alert.show(text, "Modelica Error")
+			
 		}
 		
 		
@@ -200,21 +272,61 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		protected function parseOutputFromModelica(outputFromModelica:String):void
 		{
-			//TODO: parse output from Modelica and place into model directly
+			Logger.debug("Output string from modelica:" + outputFromModelica, this)
 			
-			//TODO: Error checks to make sure data is OK
+			if (_outputSysVarsArr.length==0)
+			{
+				_outputSysVarsArr = scenarioModel.getOutputSysVars()
+				_outputsSysVarsArrLength = _outputSysVarsArr.length
+			}
 			
+			var outArr:Array = outputFromModelica.split(" ")
+			
+			var status:Number = outArr[1]
+			var numOutputs:Number = outArr[2]
+			// outArr[3] num integers
+			// outArr[4] num boolean
+			// outArr[5] sim time
+			
+			//check flag for exit
+			if (outArr[1]==FLAG_END_TIME)
+			{				
+				stop()
+				var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_ERROR, true)
+				evt.errorMessage = "Modelica unexpectedly reached 'simulation end time'"
+				dispatchEvent(evt)
+				return
+			}
+			
+			for (var i:uint = 0; i<_outputsSysVarsArrLength; i++)
+			{
+				var sysVar:SystemVariable = SystemVariable(_outputSysVarsArr[i])
+				sysVar.baseSIValue = outArr[i+5]			
+							
+			}
+						
 		}
 		
-		protected function formatInputToModelica(inputSysVarsArr:Array):String
+		protected function formatInputToModelica(inputSysVarsArr:Array, simTime:int):String
 		{
+			var inputs:String = ""
+			var len:uint = inputSysVarsArr.length
+			
+			for(var i:uint=0;i<len;i++)
+			{
+				inputs += " " + inputSysVarsArr[i].baseSIValue	
+			}		
+			
+			
 			var out:String = ""
 			out += MODELICA_VERSION
 			out += " " + FLAG_NORMAL_OPERATION
-			out += " " + inputSysVarsArr.length
+			out += " " + len
 			out += " 0" //never integers
 			out += " 0" //never booleans
-			out += "  "
+			out += " " + _simTime
+			out += inputs
+			out += "\n"
 			return out
 		}
 		

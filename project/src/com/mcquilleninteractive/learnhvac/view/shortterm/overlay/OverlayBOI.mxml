@@ -38,10 +38,11 @@
 				this.graphics.drawCircle(165,360,5)
 				
 				//fuel rate
+				/*
 				this.graphics.moveTo(395,415)
 				this.graphics.lineTo(395,335)
 				this.graphics.drawCircle(395,330,5)
-								
+				*/				
 				
 			}
 								
@@ -49,13 +50,12 @@
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{						
 				Logger.debug("scenarioLoaded()", this)						
-											
-				//set visibility of labels				
-				lblBOIfuel.visible=lblBOIfuel_Title.visible=scenarioModel.getSysVar("BOIfuel").visible
-				lblBOItout.visible=lblBOItout_Title.visible=scenarioModel.getSysVar("BOItout").visible
-				lblBOIwaterflow.visible=lblBOIwaterflow_Title.visible=scenarioModel.getSysVar("BOIwaterflow").visible
-				lblBOItin.visible=lblBOItin_Title.visible=scenarioModel.getSysVar("BOItin").visible
-			
+				
+				//set visibility of labels					
+				var varArr:Array = ["BOITLiqSup","BOILiqFlw","BOITLiqEnt"]
+									
+				setLabels(varArr) 	
+						
 			}
 			
 			
@@ -64,7 +64,7 @@
 	</mx:Script>
 	
 	
-	
+	<!--
 	<mx:Label id="lblBOIfuel_Title" text="Fuel Consumption Rate: "  styleName="overlayTitle"
 					 x="395" y="420"/>
 	<overlay:ValueDisplayLabel id="lblBOIfuel" text="0" 
@@ -73,13 +73,13 @@
 		textAlign="left" 
 		sysVarName="BOIfuel"
 		width="150"/>
-				
+	-->		
 	
 	
-	<mx:Label id="lblBOItout_Title" text="Temperature Out: "  styleName="overlayTitle"
+	<mx:Label id="lblBOITLiqSup_Title" text="Temperature Out: "  styleName="overlayTitle"
 					 x="15" y="40" textAlign="right" width="150"/>
-	<overlay:ValueDisplayLabel id="lblBOItout" 
-		sysVarName="BOItout"
+	<overlay:ValueDisplayLabel id="lblBOITLiqSup" 
+		sysVarName="BOITLiqSup"
 		text="0" 
 		styleName="overlayValue"
 		x="15" y="55" 
@@ -87,21 +87,21 @@
 		 width="150"/>
 		
 	
-	<mx:Label id="lblBOIwaterflow_Title" text="Water Flow Rate: "  styleName="overlayTitle"
+	<mx:Label id="lblBOILiqFlw_Title" text="Water Flow Rate: "  styleName="overlayTitle"
 					 x="15" y="75" textAlign="right" width="150"/>
-	<overlay:ValueDisplayLabel id="lblBOIwaterflow" text="0"
-		sysVarName="BOIwaterflow"
+	<overlay:ValueDisplayLabel id="lblBOILiqFlw" text="0"
+		sysVarName="BOILiqFlw"
 		styleName="overlayValue"
 		x="15" y="90" 
 		textAlign="right"
 		width="150"/>	
 		
 	
-	<mx:Label id="lblBOItin_Title" text="Temperature In: "  styleName="overlayTitle"
+	<mx:Label id="lblBOITLiqEnt_Title" text="Temperature In: "  styleName="overlayTitle"
 					 x="20" y="415" textAlign="right" width="150"/>
-	<overlay:ValueDisplayLabel id="lblBOItin" text="0" 
+	<overlay:ValueDisplayLabel id="lblBOITLiqEnt" text="0" 
 		styleName="overlayValue"
-		sysVarName="BOItin"
+		sysVarName="BOITLiqEnt"
 		x="20"
 		y="430" 
 		textAlign="right"

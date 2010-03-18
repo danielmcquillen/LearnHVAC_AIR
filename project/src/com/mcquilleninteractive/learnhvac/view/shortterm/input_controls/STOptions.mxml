@@ -356,7 +356,7 @@
 				selectable="false"
   				>
 			<mx:columns>
-				<mx:DataGridColumn headerText="Name" dataField="display_name" minWidth="200" />
+				<mx:DataGridColumn headerText="Name" dataField="displayName" minWidth="200" />
 				<mx:DataGridColumn headerText="Value" minWidth="50" dataField="currValue" labelFunction="formatValue" />
 				<mx:DataGridColumn headerText="Units" minWidth="50" dataField="units"  />
 			</mx:columns>	

@@ -8,7 +8,7 @@
 		
 		<mx:Script>
 			<![CDATA[
-				import com.mcquilleninteractive.learnhvac.model.EPlusData;
+				import com.mcquilleninteractive.learnhvac.model.data.EnergyPlusData
 				import com.mcquilleninteractive.learnhvac.vo.LongTermValuesForShortTermSimVO;
 				import com.mcquilleninteractive.learnhvac.event.DebugEvent;
 				import com.mcquilleninteractive.learnhvac.business.LongTermSimulationDelegate;
@@ -69,14 +69,13 @@
 					{
 						
 						case "help":
-							msg = "\n\nHELP\n======\n\nThis debugger has a few simple commands that help provide insight into the current state of SPARK (E+ info coming soon)" +
-									"\n  vars:all         - list all SPARK variables and their current values  (SI and IP)" +
-									"\n  vars:input       - list all input SPARK variables and their current values  (SI and IP)" + 
-									"\n  vars:output      - list all output SPARK variables and their current values  (SI and IP)" +
-									"\n  vars:[varname]   - list specific SPARK variables and current values  (SI and IP) e.g. vars:TAirOut"+
-									"\n\n  vars:LTtoST:[run1/run2]   - list specific SPARK variables and current values  (SI and IP) e.g. vars:TAirOut"+
-									"\n\n  load:eplus:[run1/run2]   - load long-term test data into 'run1' or 'run2'" +
-									"\n\n  testMode:[false/true]   - turn test mode on/off. In test mode, simulations use stored data (SPARK and E+ are not run)."
+							msg = "\n\nHELP\n======\n\nThis debugger has a few simple commands that help provide insight into the current state of the SystemVariables" +
+									"\n  vars:all         - list all variables and their current values  (SI and IP)" +
+									"\n  vars:input       - list all input variables and their current values  (SI and IP)" + 
+									"\n  vars:output      - list all output variables and their current values  (SI and IP)" +
+									"\n  vars:[varname]   - list specific variable and current values  (SI and IP) e.g. vars:SYSTAirDB"+
+									"\n\n  vars:LTtoST:[run1/run2]   - list specific SPARK variables and current values  (SI and IP) e.g. vars:TAirOut"
+									//"\n\n  testMode:[false/true]   - turn test mode on/off. In test mode, simulations use stored data (and E+ are not run)."
 							break
 						
 						case "testMode":
@@ -136,7 +135,7 @@
 									{
 										for each (sysVar in sysNode.sysVarsArr)
 										{
-											if (sysVar.typeID=="INPUT") msg = msg + sysVar.name + addSpaces(sysVar.name, 25) + sysVar.baseSIValue + addSpaces(sysVar.baseSIValue.toString(), 20) + sysVar.IPValue + "\n"
+											if (sysVar.ioType=="INPUT") msg = msg + sysVar.name + addSpaces(sysVar.name, 25) + sysVar.baseSIValue + addSpaces(sysVar.baseSIValue.toString(), 20) + sysVar.IPValue + "\n"
 										}
 									}
 									break
@@ -147,7 +146,7 @@
 									{
 										for each (sysVar in sysNode.sysVarsArr)
 										{
-											if (sysVar.typeID=="OUTPUT") msg = msg + sysVar.name + addSpaces(sysVar.name, 25) + sysVar.baseSIValue + addSpaces(sysVar.baseSIValue.toString(), 20) + sysVar.IPValue + "\n"
+											if (sysVar.ioType=="OUTPUT") msg = msg + sysVar.name + addSpaces(sysVar.name, 25) + sysVar.baseSIValue + addSpaces(sysVar.baseSIValue.toString(), 20) + sysVar.IPValue + "\n"
 										}
 									}
 									break
@@ -172,7 +171,7 @@
 									}				
 									
 									//get SparkInputVarsVOs and show values of each for each date
-									var ePlusData:EPlusData = longTermSimulationDataModel.getEPlusData(runID)
+									var ePlusData:EnergyPlusData = longTermSimulationDataModel.getEnergyPlusData(runID)
 									var zoneDataArr:Array = ePlusData.zoneDataArr
 									var dateArr:Array = ePlusData.dataArr[ePlusData.dateTimeID]
 									var len:uint = zoneDataArr.length
@@ -228,7 +227,7 @@
 								default:
 								
 									sysVar = scenarioModel.getSysVar(args[1])
-									var s:String = sysVar.name + " (" + sysVar.typeID + ")  "
+									var s:String = sysVar.name + " (" + sysVar.ioType + ")  "
 									if (sysVar!=null)
 									{
 										msg = msg + s + addSpaces(s, 25) + sysVar.baseSIValue + addSpaces(sysVar.baseSIValue.toString(), 20) + sysVar.IPValue + "\n"

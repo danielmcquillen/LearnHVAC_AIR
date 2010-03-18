@@ -2,17 +2,19 @@ package com.mcquilleninteractive.learnhvac.model
 {
 	import com.mcquilleninteractive.learnhvac.event.ZoneChangeEvent;
 	import com.mcquilleninteractive.learnhvac.util.Conversions;
-	import com.mcquilleninteractive.learnhvac.util.Logger;
-	
-	import flash.events.EventDispatcher;
-	
-	import mx.collections.ArrayCollection;
-	
+	import com.mcquilleninteractive.learnhvac.util.Logger;	
+	import flash.events.EventDispatcher;	
+	import mx.collections.ArrayCollection;	
 	import org.swizframework.Swiz;
 	
 	/** Class LongTermSimulationModel
 	 * 
-	 *  This class holds the data needed for each run of the long-term simulation (E+)
+	 *  This class holds the data needed to configure
+	 *  each run of the long-term simulation (E+). It does not hold the actual data
+	 *  that results from each run (that happens in LongTermSimulationDataModel).
+	 *  
+	 *  TODO: Add a memento so that when users switches between runs, this
+	 *        model will remember the settings for that run.
 	 */
 	
 	[Bindable]
@@ -137,14 +139,7 @@ package com.mcquilleninteractive.learnhvac.model
        	protected var _zoneHeatingSetpointTemp:Number
 		protected var _zoneCoolingSetpointTemp:Number
 				
-				
-				
-				
-				
-				
-				
-				
-		
+						
 		/* ****************************************** */
 		/* *********** GETTER AND SETTERS *********** */
 		/* ****************************************** */

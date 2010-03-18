@@ -1,15 +1,11 @@
 package com.mcquilleninteractive.learnhvac.controller
 {
 	
-	import com.mcquilleninteractive.learnhvac.util.Logger	
-	import com.mcquilleninteractive.learnhvac.event.ResetInputs
-	
-
-	import org.swizframework.controller.AbstractController;
-	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+	import com.mcquilleninteractive.learnhvac.event.ShortTermTimerEvent;
 	import com.mcquilleninteractive.learnhvac.event.ZoneChangeEvent;
-	import com.mcquilleninteractive.learnhvac.event.FloorChangeEvent;
-	import flash.events.Event;
+	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+	
+	import org.swizframework.controller.AbstractController;
 	
 	public class ScenarioController extends AbstractController
 	{
@@ -37,6 +33,17 @@ package com.mcquilleninteractive.learnhvac.controller
 			
 		}
 		
+		
+		[Mediate(event="ShortTermSimEvent")]
+		public function onTimer(event:ShortTermTimerEvent):void
+		{
+			// import long-term variables on the hour 						
+			if (event.currDateTime.minutes==0 && event.currDateTime.seconds== 0)
+			{
+				//import long term vars before next sending of vars to short term sim
+				scenarioModel.importLongTermVars()
+			}	
+		}
 		
 		
 	}

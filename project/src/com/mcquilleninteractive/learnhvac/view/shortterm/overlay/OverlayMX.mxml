@@ -43,16 +43,12 @@
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{																												
-				//set visibility of labels			
-				lblTAirOut.visible=lblTAirOut_Title.visible=scenarioModel.getSysVar("TAirOut").visible
-				lblMXTRet.visible=lblMXTRet_Title.visible=scenarioModel.getSysVar("MXTRet").visible
-				lblMXTMixReal.visible=lblMXTMixReal_Title.visible=scenarioModel.getSysVar("MXTRet").visible
-				lblMXEAPosDamperReal.visible=lblMXEAPosDamperReal_Title.visible=scenarioModel.getSysVar("MXEAPosDamperReal").visible
-				lblMXRAPosDamperReal.visible=lblMXRAPosDamperReal_Title.visible=scenarioModel.getSysVar("MXRAPosDamperReal").visible
-				lblMXOAPosDamperReal.visible=lblMXOAPosDamperReal_Title.visible=scenarioModel.getSysVar("MXOAPosDamperReal").visible
-		
-			
-   				
+				//set visibility of labels	
+				var varArr:Array = ["SYSTAirDB","MXTAirRet","MXTAirMix",
+									"MXIntDampPos","MXRtnDampPos","MXExDampPos"]
+				
+				setLabels(varArr)
+						
 			}
 			
 			
@@ -60,10 +56,10 @@
 		]]>
 	</mx:Script>	
 	
-	<mx:Label id="lblTAirOut_Title" text="Outside Air Dry Bulb Temp: "  styleName="overlayTitle"
+	<mx:Label id="lblSYSTAirDB_Title" text="Outside Air Dry Bulb Temp: "  styleName="overlayTitle"
 					 x="100" y="90" width="150" textAlign="right"/>
-	<overlay:ValueDisplayLabel id="lblTAirOut" text="0" 
-		sysVarName="TAirOut"
+	<overlay:ValueDisplayLabel id="lblSYSTAirDB" text="0" 
+		sysVarName="SYSTAirDB"
 		styleName="overlayValue"
 					 x="255" y="90"  textAlign="left" width="107"/>
 	
@@ -77,44 +73,67 @@
 					 />
 	-->				
 	
-	<mx:Label id="lblMXEAPosDamperReal_Title" text="Demanded&#13;position: " styleName="overlayTitle"
-					  x="30" y="150" height="40" textAlign="right" width="100" />	
-	<overlay:ValueDisplayLabel id="lblMXEAPosDamperReal" 		
-		sysVarName="MXEAPosDamperReal"
+	<mx:Label id="lblMXExDampPos_Title" 
+		text="Damper&#13;position: " 
+		styleName="overlayTitle"
+		x="30" y="150" 
+		height="40"
+		textAlign="right"
+		width="100" />	
+	<overlay:ValueDisplayLabel id="lblMXExDampPos" 		
+		sysVarName="MXExDampPos"
 		usePercent="true"
-		text="0" styleName="overlayValue"
-					  x="30" y="185"  textAlign="right" width="100"/>
+		text="0" 
+		styleName="overlayValue"
+		x="30" y="185"  
+		textAlign="right" 
+		width="100"/>
 	
 								
-	<mx:Label id="lblMXRAPosDamperReal_Title" text="Demanded&#13;position: " styleName="overlayTitle"
-					  x="260" y="150" height="40" textAlign="right" width="100" />	
-	<overlay:ValueDisplayLabel id="lblMXRAPosDamperReal"
-		sysVarName="MXRAPosDamperReal"
+	<mx:Label id="lblMXRtnDampPos_Title" 
+		text="Damper&#13;position: "
+		styleName="overlayTitle"
+		x="260" y="150" 
+		height="40" 
+		textAlign="right" 
+		width="100" />	
+	<overlay:ValueDisplayLabel id="lblMXRtnDampPos"
+		sysVarName="MXRtnDampPos"
 		usePercent="true"
-		 text="0" styleName="overlayValue"
-					  x="260" y="185"  textAlign="right" width="100"/>						
+		text="0" 
+		styleName="overlayValue"
+		x="260" y="185"  
+		textAlign="right"
+		width="100"/>						
 								
-	<mx:Label id="lblMXOAPosDamperReal_Title" text="Demanded&#13;position: " styleName="overlayTitle"
-					  x="595" y="85" height="40" textAlign="left" width="100" />	
-	<overlay:ValueDisplayLabel id="lblMXOAPosDamperReal"
-		sysVarName="MXOAPosDamperReal"
+	<mx:Label id="lblMXIntDampPos_Title"
+		text="Damper&#13;position: "
+		styleName="overlayTitle"
+		x="595" y="85" 
+		height="40" 
+		textAlign="left" 
+		width="100" />	
+	<overlay:ValueDisplayLabel id="lblMXIntDampPos"
+		sysVarName="MXIntDampPos"
 		usePercent="true"
 		text="0" styleName="overlayValue"
-					  x="595" y="125"  textAlign="left" width="100"/>		
+		x="595" y="125"  
+		textAlign="left" 
+		width="100"/>		
 								
 								
 					
-	<mx:Label id="lblMXTRet_Title" text="Return Air Temp: " styleName="overlayTitle"
+	<mx:Label id="lblMXTAirRet_Title" text="Return Air Temp: " styleName="overlayTitle"
 					  x="72" y="440" textAlign="right" width="100" />
-	<overlay:ValueDisplayLabel id="lblMXTRet" 
-		sysVarName="MXTRet"
+	<overlay:ValueDisplayLabel id="lblMXTAirRet" 
+		sysVarName="MXTAirRet"
 		text="0" styleName="overlayValue" 
 					  x="72" y="460"  textAlign="right" width="100"/>
 					
-	<mx:Label id="lblMXTMixReal_Title" text="Mixed Air Temp: " styleName="overlayTitle"
+	<mx:Label id="lblMXTAirMix_Title" text="Mixed Air Temp: " styleName="overlayTitle"
 					   color="0x000000" x="455" y="297" textAlign="right"/>
-	<overlay:ValueDisplayLabel id="lblMXTMixReal"
-		sysVarName="MXTMixReal"
+	<overlay:ValueDisplayLabel id="lblMXTAirMix"
+		sysVarName="MXTAirMix"
 		 text="0" styleName="overlayValue"
 					   color="0x000000" x="450" y="315"  textAlign="right"/>
 

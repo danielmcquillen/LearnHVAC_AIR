@@ -24,10 +24,10 @@
 			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel
 			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
-									
+			import org.swizframework.Swiz
 			
-			[Bindable]
 			[Autowire]
+			[Bindable]
 			public var scenarioModel:ScenarioModel											
 									
 			[Bindable]
@@ -40,11 +40,7 @@
 			{		
 			}
 			
-			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
-			public function scenarioLoaded(e:Event):void
-			{	
-				initBindings()
-			}
+			
 			
 			[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
 			public function onShortTermSimStarted(event:ShortTermSimulationEvent):void
@@ -52,33 +48,33 @@
 				updatePipes()
 			}
 			
+			[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]
+			public function onShortTermSimUpdate(event:ShortTermSimulationEvent):void
+			{				
+				updatePipes()
+			}
+			
+			
 			[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
 			public function onShortTermSimStopped(event:ShortTermSimulationEvent):void
 			{
 				liquidsCC.turnAllPipesOff()
 			}
 			
-			
-			public function initBindings():void
-			{				
-				BindingUtils.bindSetter(setTLiqEntValve, scenarioModel.getSysVar("CCTLiqEntValve"), "currValue" )
-				BindingUtils.bindSetter(setTLiqLvg, scenarioModel.getSysVar("CCTLiqLvg"), "currValue" )
-				BindingUtils.bindSetter(setmLiqEnt, scenarioModel.getSysVar("CCmLiqEnt"), "currValue" )
-			}	
-				
+						
 			
 			public function updatePipes():void
 			{
 				try
 				{
-					setTLiqEntValve(scenarioModel.getSysVar("CCTLiqEntValve").baseSIValue)
+					setTLiqEntValve(scenarioModel.getSysVar("CHLTLiqSup").baseSIValue)
 					setTLiqLvg(scenarioModel.getSysVar("CCTLiqLvg").baseSIValue)
-					setmLiqEnt(scenarioModel.getSysVar("CCmLiqEnt").baseSIValue)
-				}					
-				catch(e:Error)
+					setmLiqEnt(scenarioModel.getSysVar("CHLLiqFlw").baseSIValue	)			
+				}
+				catch(error:Error)
 				{
-					Logger.error("#PipeLiquidsCC: couldn't set a field value when trying to updatePipes()")
-				}	
+					Logger.error("Error getting variables for CC: " + error, this)
+				}
 			}
 				
 			public function set active(state:Boolean):void
@@ -105,10 +101,7 @@
 					
 			public function setTLiqEntValve(value:Number):void
 			{
-				if (!_active) return
-				
-				//get SI value manually -- see note above
-				value = scenarioModel.getSysVar("CCTLiqEntValve").baseSIValue
+				if (!_active) return				
 				liquidsCC.setTemp(value, 0)
 				liquidsCC.setTemp(value, 1)
 			}			
@@ -116,21 +109,14 @@
 			public function setTLiqLvg(value:Number):void
 			{
 				if (!_active) return
-				
-				//get SI value manually -- see note above
-				value = scenarioModel.getSysVar("CCTLiqLvg").baseSIValue
-				
+									
 				liquidsCC.setTemp(value, 2)
 				liquidsCC.setTemp(value, 3)
 			}
 					
 			public function setmLiqEnt(value:Number):void
 			{
-				if (!_active) return
-				
-				//get SI value manually -- see note above
-				value = scenarioModel.getSysVar("CCmLiqEnt").baseSIValue
-				
+				if (!_active) return						
 				liquidsCC.setFlow(value, 0)
 				liquidsCC.setFlow(value, 1)
 				liquidsCC.setFlow(value, 2)

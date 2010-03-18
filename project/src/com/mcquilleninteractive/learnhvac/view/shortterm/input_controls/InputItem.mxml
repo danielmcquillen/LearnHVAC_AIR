@@ -117,7 +117,7 @@
       		private function setBackground():void
       		{
       			// set background to yellow if value is different
-	      		// from last update to SPARK
+	      		// from last update 
 	      		
 	      		if (data.lastValue==null || data.currValue==null) return
 	      			
@@ -156,9 +156,9 @@
 				
 				var event:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.SHOW_INFO, true)
 				event.sysVarDescription = data.description
-				event.lowValue = data.low_value
-				event.highValue = data.high_value
-				event.sysVarDisplayName = data.display_name
+				event.lowValue = data.lowValue
+				event.highValue = data.highValue
+				event.sysVarDisplayName = data.displayName
 				event.sysVarName = data.name
 				dispatchEvent(event)
 			}
@@ -201,12 +201,15 @@
 	
 	<mx:NumberValidator id="numV" 
         source="{txtInputItem}" property="text" 
-        minValue="{data.low_value}" maxValue="{data.high_value}"
-        lowerThanMinError="The minimum allowed value is {data.low_value}"
-        exceedsMaxError="The maximum allowed value is {data.high_value}"
+        minValue="{data.lowValue}" maxValue="{data.highValue}"
+        lowerThanMinError="The minimum allowed value is {data.lowValue}"
+        exceedsMaxError="The maximum allowed value is {data.highValue}"
         />
        
-	<mx:Text width="135" height="50" id="lblVarName" text="{data.display_name}" toolTip="{data.display_name}" fontSize="10"/>
+	<mx:Text width="135" height="50" id="lblVarName" 
+		text="{data.displayName}" 
+		toolTip="{data.displayName}" 
+		fontSize="10"/>
 	<mx:TextInput 	id="txtInputItem"
 					width="65" 
 					height="20"

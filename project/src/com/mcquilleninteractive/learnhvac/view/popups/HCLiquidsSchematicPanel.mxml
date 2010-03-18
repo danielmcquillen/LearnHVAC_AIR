@@ -4,9 +4,8 @@
 				width="410" height="305" title="HEATING COIL VALVE INFO"
      			horizontalScrollPolicy="off"  
      			verticalScrollPolicy="off" 
-				creationComplete="onCreationComplete()"
 			    close="onPanelClose(event)"
-			   
+			    creationComplete="onCC()"
 		>
 		
 	<mx:Script>
@@ -34,20 +33,20 @@
             [Bindable] 
             [Autowire]
             protected var scenarioModel:ScenarioModel
-            
+                              
             [Bindable] 
             [Autowire]
             protected var applicationModel:ApplicationModel
-                  
            
+           public function onCC():void
+           {
+           		if (scenarioModel ==null) 
+           		{
+           			scenarioModel = Swiz.getBean("scenarioModel") as ScenarioModel
+                }
+                setBindings(null)
+           }
             
-			public function onCreationComplete():void
-			{
-				if (scenarioModel && applicationModel&& applicationModel.scenarioLoaded)
-				{
-					onScenarioLoaded(null);
-				}
-			}
 			
 			[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
 			public function onUnitsChange(event:SetUnitsCompleteEvent):void
@@ -66,27 +65,26 @@
 			
 			
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
-			public function onScenarioLoaded(e:Event):void
+			public function setBindings(e:ScenarioLoadedEvent):void
 			{
-				
-				Logger.debug("#HCLiquidsPanel: trying to bind values...")
-								
+																			
 				//HC Liquid temps:
-				BindingUtils.bindSetter(function(currVal:Number):void{tPipe1.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("HCTLiqEnt"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{tPipe2.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("HCTLiqEnt"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{tPipe3.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("HCTLiqbypass"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{tPipe1.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("BOITLiqSup"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{tPipe2.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("BOITLiqSup"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{tPipe3.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("BOITLiqSup"), "currValue" )
 				BindingUtils.bindSetter(function(currVal:Number):void{tPipe4.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("HCTLiqLvg"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{tPipe5.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("HCTLiqLvgValve"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{tPipe5.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("HCTLiqLvg"), "currValue" )
 				
 				//HC Liquid mass flow:
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe1.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("HCmLiqLvgValve"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe2.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("HCmLiqEnt"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe3.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("HCmLiqbypass"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe4.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("HCmLiqLvg"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe5.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("HCmLiqLvgValve"), "currValue" )
+				
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe1.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("BOILiqFlw"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe2.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("BOILiqFlw"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe3.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("BOILiqFlw"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe4.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("BOILiqFlw"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe5.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("BOILiqFlw"), "currValue" )
 				
 				//valve pos
-				BindingUtils.bindSetter(function(currVal:Number):void{pos.text=String(uint(currVal*100))+" %"}, scenarioModel.getSysVar("HCpos"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{pos.text=String(uint(currVal*100))+" %"}, scenarioModel.getSysVar("HCPos"), "currValue" )
 								  				    	 		
 			}
 			

@@ -7,7 +7,7 @@ package  com.mcquilleninteractive.learnhvac.vo
 	public class LongTermSimulationVO 
 	{
 		
-		public var runID:String  //corresponds to dataModel ID (for graphing SPARK or EPlus)		
+		public var runID:String  
 		public var currUnits:String = "IP"
 		
 		

@@ -32,7 +32,12 @@
 			
 			private function onCC() : void
 			{
-					
+				if (ApplicationModel.testMode)
+				{
+					username.text="daniel"
+					password.text = "pid123"
+					doLogin()
+				}
 			}
 			
 			[Mediate(event="LogoutEvent.LOGOUT")]

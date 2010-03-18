@@ -24,10 +24,11 @@
 	<controller:ShortTermSimulationController id="shortTermSimulationController" />
 	<controller:LongTermSimulationController id="longTermSimulationController" />
 	
-	<!--
+
 	<business:ShortTermSimulationDelegate id="shortTermSimulationDelegate"/>
-	-->
+	<!--
 	<business:ShortTermSimulationMockDelegate id="shortTermSimulationDelegate"/>
+	-->
 	<business:LongTermSimulationDelegate id="longTermSimulationDelegate"/>
 	<business:LocalScenarioDelegate id="localScenarioDelegate"/>
 	<business:RemoteScenarioDelegate id="remoteScenarioDelegate"/>

@@ -108,7 +108,7 @@
         }
                 
 		[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
-        public function onAHUEvent(event:ShortTermSimulationEvent):void
+        public function onShortTermSimStopped(event:ShortTermSimulationEvent):void
         {
         	controlBar.simStopped() //reset buttons      	
         }
@@ -255,11 +255,12 @@
 			if (pnlInput.areInputsValid("forStartup"))
 			{							
 				//show modal
+				/* Don't need this now since Modelica starts way faster than SPARK
 				_shortTermSimPopup = new ShortTermSimulationPopup()
 				PopUpManager.addPopUp(_shortTermSimPopup,this,true)
 				PopUpManager.centerPopUp(_shortTermSimPopup)				
 				controlBar.simStarted()
-				
+				*/
 				var event : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_START, true);
 				dispatchEvent(event);
 			}

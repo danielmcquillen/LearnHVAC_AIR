@@ -61,7 +61,7 @@
     		override public function set data( value:Object ) : void 
     		{
 				super.data = value;
-				if (value && value.thumbnail_URL==null)
+				if (value && (value.thumbnailURL==null || value.thumbnailURL==""))
 				{
 					scenarioThumbnail.source = new defaultScenarioPic()
 				}
@@ -81,7 +81,7 @@
     		
     		protected function showDefaultImage():void
     		{
-    			Logger.warn("couldn't find pic at : " + data.thumbnail_URL + " so using default image", this)
+    			Logger.warn("couldn't find pic at : " + data.thumbnailURL + " so using default image", this)
     			scenarioThumbnail.source = defaultScenarioPic
     			scenarioThumbnail.invalidateProperties()
     		}
@@ -98,7 +98,7 @@
         <mx:Canvas width="125" height="90">
         
         		<mx:Image id="scenarioThumbnail" 
-		    		source="{data.thumbnail_URL}"
+		    		source="{data.thumbnailURL}"
 		    		height="90" width="125" 
 		    	    ioError="showDefaultImage()"
 		    		 />
@@ -108,7 +108,7 @@
     
     <mx:VBox >
         <mx:Label text="{data.name}" styleName="itemHeader" />
-		<mx:Text text="{data.short_description}" width="400" height="35" />
+		<mx:Text text="{data.shortDescription}" width="400" height="35" />
 		<mx:Button label="Start Scenario" width="120" height="25" click="loadScenario()"/>
 	</mx:VBox>
 

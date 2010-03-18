@@ -12,6 +12,7 @@ package com.mcquilleninteractive.learnhvac.controller
 	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 	import com.mcquilleninteractive.learnhvac.model.UserModel;
@@ -42,6 +43,9 @@ package com.mcquilleninteractive.learnhvac.controller
 		public var scenarioLibraryModel:ScenarioLibraryModel
 		
 		[Autowire]
+		public var shortTermSimulationModel:ShortTermSimulationModel
+		
+		[Autowire]
 		public var longTermSimulationModel:LongTermSimulationModel
 		
 		[Autowire]
@@ -54,7 +58,7 @@ package com.mcquilleninteractive.learnhvac.controller
 		public var defaultScenariosModel:DefaultScenariosModel
 		
 		//this array describes how the nodes should be ordered in the array collection -- for navigation
-		private var sortOrderArr:Array = ["SYS","MX", "Fan","Flt","HC","CC","Fan","VAV","DIF","PLT","BOI","CHL","CTW","SPK"]
+		private var sortOrderArr:Array = ["SYS","MX", "FAN","FLT","HC","CC","VAV","DIF","PLT","BOI","CHL","CTW","DCT","RM"]
 		
 				
 		public function ScenarioLibraryController()	{}
@@ -164,8 +168,8 @@ package com.mcquilleninteractive.learnhvac.controller
 					vo.name = obj.name
 					vo.scenID = obj.scenID
 					vo.description = obj.description
-					vo.short_description = obj.short_description
-					vo.thumbnail_URL = obj.thumbnail_URL
+					vo.shortDescription = obj.short_description
+					vo.thumbnailURL = obj.thumbnail_URL
 					vo.sourceType = ScenarioListItemVO.SOURCE_REMOTE
 					scenarioLibraryModel.currScenarioList.addItem(vo)									
 				}				
@@ -325,26 +329,23 @@ package com.mcquilleninteractive.learnhvac.controller
 		public function populateScenarioModel(scenXML:XML):Boolean
 		{
 			
-			Logger.debug("#ScenarioDelegate: popuplateScenarioModel");
+			Logger.debug("popuplateScenarioModel", this);
 											
 			//get scenario meta-information
 			scenarioModel.id = scenXML.@id
 			scenarioModel.scenID = scenXML.@scenID
 			scenarioModel.name = scenXML.@name
-			scenarioModel.short_description  = scenXML.@short_description
+			scenarioModel.shortDescription  = scenXML.@shortDescription
 			scenarioModel.goal = scenXML.@goal
-			scenarioModel.thumbnail_URL = scenXML.@thumbnail_URL 
+			scenarioModel.thumbnailURL = scenXML.@thumbnailURL 
 			
 			
 			//get longterm date info
 			try
 			{
-				Logger.debug("#ScenarioDelegate: scenXML.longterm_start_date: " + scenXML.@longterm_start_date)
-				Logger.debug("#ScenarioDelegate: scenXML.@longterm_start_date.split(/	)[0]: " + scenXML.@longterm_start_date.split("/")[0])
-				
 				var startDate:Date = new Date()
 				
-				var start:String = scenXML.@longterm_start_date
+				var start:String = scenXML.@longtermStartDate
 				var startM:Number = Number(start.split("/")[0]) - 1
 				var startD:Number = Number(start.split("/")[1])
 				startDate.month = startM
@@ -352,35 +353,37 @@ package com.mcquilleninteractive.learnhvac.controller
 				longTermSimulationModel.startDate = startDate
 				
 				var stopDate:Date = new Date()
-				var stop:String = scenXML.@longterm_stop_date
+				var stop:String = scenXML.@longtermStopDate
 				var stopM:Number = Number(stop.split("/")[0]) - 1
 				var stopD:Number = Number(stop.split("/")[1])
 				stopDate.month = stopM
 				stopDate.date = stopD
 				longTermSimulationModel.stopDate = stopDate
 						
-				scenarioModel.allow_longterm_date_change = (scenXML.@allow_longterm_date_change == "true")
+				scenarioModel.allowLongtermDateChange = (scenXML.@allowLongtermDateChange == "true")
 			}
 			catch(err:Error)
 			{
-				Logger.error("#ScenarioDelegate: couldn't parse longterm date info: " + err.message)
+				Logger.error("couldn't parse longterm date info: " + err.message, this);
 			}
 			
 			
 			//get realtime datetime info
+			Logger.debug("trying to make date from: " + scenXML.@realtimeStartDatetime, this);
 			try
-			{
-				Logger.debug("#ScenarioDelegate: setting shortTermSim realtime_start_datetime: " + new Date(scenXML.@realtime_start_datetime.toString()))
-				scenarioModel.setRealTimeStartDate(new Date(scenXML.@realtime_start_datetime.toString()))
-				//Reset the timer to reflect the new starttime
-				scenarioModel.resetTimer()
+			{	
+				var d:Date = new Date(scenXML.@realtimeStartDatetime.toString())
+				Logger.debug("setting shortTermSim realtime_start_datetime: " + d, this);
+				scenarioModel.setRealTimeStartDate(d)
+						
 			}
 			catch(e:Error)
 			{
-				Logger.error("#ScenarioDelegate: couldn't change following into date for simulation start datetime: " + scenXML.@sim_start_datetime)
+				Logger.error("couldn't change into date for simulation start datetime: " + scenXML.@realtimeStartDatetime, this);
+				scenarioModel.setRealTimeStartDate(new Date())
 			}		
 			
-			scenarioModel.allow_realtime_datetime_change = (scenXML.@allow_realtime_datetime_change == "true")
+			scenarioModel.allowRealtimeDatetimeChange = (scenXML.@allowRealtimeDatetimeChange == "true")
 			
 			//assets
 			if (scenXML.scenarioMovie.@url != "")
@@ -432,13 +435,17 @@ package com.mcquilleninteractive.learnhvac.controller
 				for each (var sysVarXML:XML in systemNodeXML.*)
 				{
 					var sysVar:SystemVariable = new SystemVariable();
+					
+					//store system variable in main array
+					scenarioModel.sysVarsArr.push(sysVar)
+					//...and also in the arrayCollection with this node
 					sysNode.sysVarsArr.addItem(sysVar)
 					
 					for each (var attr:XML in sysVarXML.@*)
 					{
 						var attrName:String = attr.name()
 						//manually cast to boolean if need be
-						if (attrName =="is_fault" || attrName == "is_percentage" || attrName == "disabled")
+						if (attrName =="isFault" || attrName == "isPercentage" || attrName == "disabled")
 						{
 							if (attr.toXMLString() == "false") sysVar[attrName] = false; 
 							if (attr.toXMLString() == "true") sysVar[attrName] = true;
@@ -446,30 +453,28 @@ package com.mcquilleninteractive.learnhvac.controller
 						else 
 						{
 							sysVar[attrName] = attr.toXMLString() 
+							if (attrName=="index")
+							{
+								Logger.debug("setting sysVar " + sysVar.name + "index: " + sysVar.index + " attr: " + attr.toXMLString(),this)
+							}
 						}
 					}
 					
-					//sysVar._currValue = sysVar.convert(sysVar.initial_value, LHModelLocator.UNITS_IP);
 					sysVar.units = ApplicationModel.currUnits;
 					sysVar.setConversionFunctions()
 					sysVar.lastValue = sysVar.currValue
 
 					//-999 on a fault means it's not to be made active on start of the scenario.
 					//So, if it's not -999, then make fault active
-					if (sysVar.is_fault && sysVar.initial_value != -999)
+					if (sysVar.isFault && sysVar.initialValue != -999)
 					{
 						sysVar.faultIsActive = true
 					}
 					
-					//SETUP ANY MODEL LEVEL STUFF					
-					if (sysVar.name=="timeScale")
-					{
-						scenarioModel.timeScale  = sysVar.currValue
-					}
+					
 				}
 			}
-			
-			
+						
 			scenarioModel.initShortTermImports()																	
 			scenarioModel.initLongTermImports()						
 			scenarioModel.setSort()
@@ -487,11 +492,9 @@ package com.mcquilleninteractive.learnhvac.controller
 			applicationModel.bldgSetupEnabled = true
 			applicationModel.scenarioLoaded = true
 			var evt : ScenarioLoadedEvent = new ScenarioLoadedEvent(ScenarioLoadedEvent.SCENARIO_LOADED, true)
-			Swiz.dispatchEvent(evt)
-				
+			Swiz.dispatchEvent(evt)				
 		}
-		
-		
+				
 		protected function getSysNodeSortIndex(sysNodeID:String):Number
 		{
 			var len:uint = sortOrderArr.length

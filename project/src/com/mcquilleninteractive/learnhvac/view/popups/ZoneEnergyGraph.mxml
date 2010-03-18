@@ -38,13 +38,13 @@
 			[Bindable]
 			private var zoneTotalsAC:ArrayCollection 
 			
-			private var _sysVarVAVHCq:SystemVariable 
+			private var _sysVarVAVRhcQd:SystemVariable 
 			private var _valuesArr:Array 
 			
 			/* Specs from Brian
 			
 				zone level
-				   * reheat coil power - ? (but for now, can use VAVHCq)
+				   * reheat coil power - ? (but for now, can use VAVRhcQd)
 				   * lighting power - lighting load * size of zone 
 				   * equipment power (ie. plug loads) - equipment load * size of zone
 
@@ -53,7 +53,7 @@
 			
 			public function onPreInit():void
 			{	
-				_valuesArr = [{group:"Zone Energy Use", VAVHCq:12, lightingPower:5, equipPower:2}]		
+				_valuesArr = [{group:"Zone Energy Use", VAVRhcQd:12, lightingPower:5, equipPower:2}]		
 									
 				zoneTotalsAC = new ArrayCollection(_valuesArr)
 			
@@ -67,7 +67,7 @@
 			{
 				//the number and type of sysVar isn't going to change much, so I'm not going to use 
 				//binding, I'm just going to keep a ref and then update when the outputs are loaded
-				_sysVarVAVHCq = scenarioModel.getSysVar("VAVHCq")				
+				_sysVarVAVRhcQd = scenarioModel.getSysVar("VAVRhcQd")				
 				getRelevantValues()
 				
 			}
@@ -78,7 +78,7 @@
 				getRelevantValues()				
 			}
 			
-			[Mediate(event="ShortTermSimulationEvent.OUTPUT_UPDATED")]			
+			[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]			
 			public function onShortTermOutputUpdated(event:ShortTermSimulationEvent):void
 			{
 				getRelevantValues()
@@ -88,7 +88,7 @@
 			{
 				var obj:Object = zoneTotalsAC.getItemAt(0)
 				var zoneSize:Number = longTermSimulationModel.getCurrentZoneSize()				
-				obj.VAVHCq = _sysVarVAVHCq.currValue
+				obj.VAVRhcQd = _sysVarVAVRhcQd.currValue
 				obj.lightingPower = longTermSimulationModel.lightingPeakLoad * zoneSize
 				obj.equipPower = longTermSimulationModel.equipPeakLoad * zoneSize
 				zoneTotalsAC.refresh()
@@ -121,7 +121,7 @@
 		    showDataTips="true">
 	        
 	        <mx:series>
-	            <mx:ColumnSeries xField="group" yField="VAVHCq"  displayName="Reheat Coil Power" fill="{reheatFill}"  />
+	            <mx:ColumnSeries xField="group" yField="VAVRhcQd"  displayName="Reheat Coil Power" fill="{reheatFill}"  />
 	            <mx:ColumnSeries xField="group" yField="lightingPower"  displayName="Lighting Power" fill="{lightingFill}"  />
 	            <mx:ColumnSeries xField="group" yField="equipPower"  displayName="Equipment Power" fill="{equipFill}"  /> 
 	        </mx:series>

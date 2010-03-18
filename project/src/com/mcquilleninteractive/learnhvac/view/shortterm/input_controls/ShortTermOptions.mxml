@@ -19,7 +19,7 @@
 			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-			import com.mcquilleninteractive.learnhvac.model.EPlusData
+			import com.mcquilleninteractive.learnhvac.model.data.EnergyPlusData
 			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel		
 			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel					
 			import com.mcquilleninteractive.learnhvac.event.*
@@ -114,14 +114,14 @@
 			public function setDateTime():void
 			{				
 				if (scenarioModel==null) return				
-				Logger.debug("#VizPanelInfo: setting date time from model: " + scenarioModel.realtime_start_datetime)
-				timeStepper.value = scenarioModel.realtime_start_datetime
-				dateField.selectedDate = scenarioModel.realtime_start_datetime
-				timeStepper.enabled = scenarioModel.allow_realtime_datetime_change
-				dateField.enabled = scenarioModel.allow_realtime_datetime_change
+				Logger.debug("#VizPanelInfo: setting date time from model: " + shortTermSimulationModel.realtimeStartDatetime)
+				timeStepper.value = shortTermSimulationModel.realtimeStartDatetime
+				dateField.selectedDate = shortTermSimulationModel.realtimeStartDatetime
+				timeStepper.enabled = scenarioModel.allowRealtimeDatetimeChange
+				dateField.enabled = scenarioModel.allowRealtimeDatetimeChange
 				
 				//change toolTip to help user understand disabled
-				if (scenarioModel.allow_realtime_datetime_change)
+				if (scenarioModel.allowRealtimeDatetimeChange)
 				{
 					timeStepper.toolTip = "Select the start time for the real-time simulation"
 					dateField.toolTip = "Select the start date for the real-time simulation"
@@ -254,7 +254,7 @@
 				
 									
 		<mx:HBox width="100%" >				
-			<mx:Label text="Run to import:"  width="100"   paddingTop="5"/>
+			<mx:Label text="Import from run:"  width="110"   paddingTop="5"/>
 			<mx:ComboBox id="cboLongTermRun" 
 				selectedIndex="0"  
 				toolTip="Import data from long-term simulation stored in 'Run1' or 'Run2'"
@@ -345,7 +345,7 @@
 			    dataProvider="{scenarioModel.sysVarsImportedFromLongTermAC}"
   				>
 			<mx:columns>
-				<mx:DataGridColumn headerText="Name" dataField="display_name" minWidth="200" />
+				<mx:DataGridColumn headerText="Name" dataField="displayName" minWidth="200" />
 				<mx:DataGridColumn headerText="Value" minWidth="50" dataField="currValue" labelFunction="formatValue" />
 				<mx:DataGridColumn headerText="Units" minWidth="50" dataField="units"  />
 			</mx:columns>	

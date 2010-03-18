@@ -1,0 +1,14 @@
+ 
+Compiling and linking the model (Visual C++). 
+ 
+Setting environment for using Microsoft Visual Studio 2008 x86 tools.
+dsmodel.c
+dsmodel.c(200) : warning C4244: 'function' : conversion from 'double' to 'Integer', possible loss of data
+dsmodel.c(281) : warning C4244: 'function' : conversion from 'double' to 'Integer', possible loss of data
+dsmodel.c(314) : warning C4244: 'function' : conversion from 'double' to 'int', possible loss of data
+dsmodel.c(325) : warning C4244: 'function' : conversion from 'double' to 'Integer', possible loss of data
+dsmodel.c(330) : warning C4244: 'function' : conversion from 'double' to 'Integer', possible loss of data
+dsmodel.c(341) : warning C4244: 'function' : conversion from 'double' to 'int', possible loss of data
+ 
+Successful generation of Dymosim. 
+ 

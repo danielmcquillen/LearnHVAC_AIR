@@ -168,11 +168,11 @@ package com.mcquilleninteractive.particleengine
 				startPE()
 			}
 			
-			// TODO: for some obscure reason, MX doesn't show correct MXTRet when first 
+			// TODO: for some obscure reason, MX doesn't show correct MXTAirRet when first 
 			//       going to MX node, so update manually here
 			if (systemNode==ScenarioModel.SN_MIXINGBOX)
 			{
-				setMXTRet(scenarioModel.getSysVar("MXTRet").currValue)
+				setMXTAirRet(scenarioModel.getSysVar("MXTAirRet").currValue)
 			}
 			
 		}
@@ -206,19 +206,19 @@ package com.mcquilleninteractive.particleengine
 			try
 			{
 				setHCTAirEnt(scenarioModel.getSysVar("HCTAirEnt").currValue)
-				setHCTAirLvg(scenarioModel.getSysVar("HCTAirEnt").currValue)
+				setHCTAirLvg(scenarioModel.getSysVar("HCTAirLvg").currValue)
 				setCCTAirEnt(scenarioModel.getSysVar("CCTAirEnt").currValue)
 				setCCTAirLvg(scenarioModel.getSysVar("CCTAirLvg").currValue)
 				setFanTAirEnt(scenarioModel.getSysVar("FanTAirEnt").currValue)
 				setFanTAirLvg(scenarioModel.getSysVar("FanTAirLvg").currValue)
-				setMXRAPosDamperReal(scenarioModel.getSysVar("MXRAPosDamperReal").currValue)
-				setMXTRet(scenarioModel.getSysVar("MXTRet").currValue)
-				setMXTOut(scenarioModel.getSysVar("MXTOut").currValue)
-				setMXTmix(scenarioModel.getSysVar("MXTmix").currValue)
-				setVAVHCTAirEnt(scenarioModel.getSysVar("VAVHCTAirEnt").currValue)
-				setVAVHCTAirLvg(scenarioModel.getSysVar("VAVHCTAirLvg").currValue)
-				setVAVHCTAirLvg(scenarioModel.getSysVar("VAVHCTAirLvg").currValue)
-				setTRoom(scenarioModel.getSysVar("TRoom").currValue)
+				setMXRtnDampPos(scenarioModel.getSysVar("MXRtnDampPos").currValue)
+				setMXTAirRet(scenarioModel.getSysVar("MXTAirRet").currValue)
+				setSYSTAirDB(scenarioModel.getSysVar("SYSTAirDB").currValue)
+				setMXTAirMix(scenarioModel.getSysVar("MXTAirMix").currValue)
+				setVAVTAirEnt(scenarioModel.getSysVar("VAVTAirEnt").currValue)
+				setVAVTAirLvg(scenarioModel.getSysVar("VAVTAirLvg").currValue)
+				setVAVTAirLvg(scenarioModel.getSysVar("VAVTAirLvg").currValue)
+				setRMTemp(scenarioModel.getSysVar("RMTemp").currValue)
 				setTAirOut(scenarioModel.getSysVar("TAirOut").currValue)
 			}
 			catch(e:Error)
@@ -329,17 +329,16 @@ package com.mcquilleninteractive.particleengine
 			cwArr.push(BindingUtils.bindSetter(setHCTAirLvg, scenarioModel.getSysVar("HCTAirLvg"), "currValue" ))
 			cwArr.push(BindingUtils.bindSetter(setCCTAirEnt, scenarioModel.getSysVar("CCTAirEnt"), "currValue" ))
 			cwArr.push(BindingUtils.bindSetter(setCCTAirLvg, scenarioModel.getSysVar("CCTAirLvg"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setFanTAirEnt, scenarioModel.getSysVar("FanTAirEnt"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setFanTAirLvg, scenarioModel.getSysVar("FanTAirLvg"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setMXRAPosDamperReal, scenarioModel.getSysVar("MXRAPosDamperReal"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setMXTRet, scenarioModel.getSysVar("MXTRet"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setMXTOut, scenarioModel.getSysVar("MXTOut"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setMXTmix, scenarioModel.getSysVar("MXTmix"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setVAVHCTAirEnt, scenarioModel.getSysVar("VAVHCTAirEnt"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setVAVHCTAirLvg, scenarioModel.getSysVar("VAVHCTAirLvg"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setVAVHCTAirLvg, scenarioModel.getSysVar("VAVHCTAirLvg"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setTRoom, scenarioModel.getSysVar("TRoom"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setTAirOut, scenarioModel.getSysVar("TAirOut"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setFanTAirEnt, scenarioModel.getSysVar("FANTAirEnt"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setFanTAirLvg, scenarioModel.getSysVar("FANTAirLvg"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setMXRtnDampPos, scenarioModel.getSysVar("MXRtnDampPos"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setMXTAirRet, scenarioModel.getSysVar("MXTAirRet"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setSYSTAirDB, scenarioModel.getSysVar("SYSTAirDB"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setMXTAirMix, scenarioModel.getSysVar("MXTAirMix"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setVAVTAirEnt, scenarioModel.getSysVar("VAVTAirEnt"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setVAVTAirLvg, scenarioModel.getSysVar("VAVTAirLvg"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setRMTemp, scenarioModel.getSysVar("RMTemp"), "currValue" ))
+			cwArr.push(BindingUtils.bindSetter(setTAirOut, scenarioModel.getSysVar("SYSTAirDB"), "currValue" ))
 			
 			
 			Logger.debug("#PE: initPE() scenarioModel: " + scenarioModel)
@@ -433,12 +432,12 @@ package com.mcquilleninteractive.particleengine
 			currSysVarValuesArr["CHCTAirEnt"] = -999
 			currSysVarValuesArr["FanTAirEnt"] = -999
 			currSysVarValuesArr["FanTAirLvg"] = -999
-			currSysVarValuesArr["MXRAPosDamperReal"] = -999
-			currSysVarValuesArr["MXTRet"] = -999
-			currSysVarValuesArr["VAVHCTAirEnt"] = -999
-			currSysVarValuesArr["VAVHCTAirLvg"] = -999
+			currSysVarValuesArr["MXRtnDampPos"] = -999
+			currSysVarValuesArr["MXTAirRet"] = -999
+			currSysVarValuesArr["VAVTAirEnt"] = -999
+			currSysVarValuesArr["VAVTAirLvg"] = -999
 			currSysVarValuesArr["VAVPos"] = -999
-			currSysVarValuesArr["TRoom"] = -999
+			currSysVarValuesArr["RMTemp"] = -999
 			currSysVarValuesArr["TAirOut"] = -999
 			
 			//Setup default values for variables
@@ -473,22 +472,22 @@ package com.mcquilleninteractive.particleengine
 			//MX
 			sysNode = SN_MIXINGBOX
 			initScene(SN_MIXINGBOX)
-			setMXRAPosDamperReal(.9)
-			setMXTRet(40)
-			setMXTOut(10)
-			setMXTmix(30)
+			setMXRtnDampPos(.9)
+			setMXTAirRet(40)
+			setSYSTAirDB(10)
+			setMXTAirMix(30)
 			
 			//VAV
 			sysNode = SN_VAV
 			initScene(SN_VAV)
-			setVAVHCTAirEnt(25)
-			setVAVHCTAirLvg(45)
+			setVAVTAirEnt(25)
+			setVAVTAirLvg(45)
 			setVAVPos(0)
 			
 			//SYSTEM
 			sysNode = SN_SYSTEM
 			initScene(SN_SYSTEM)
-			setTRoom(35)
+			setRMTemp(35)
 			setTAirOut(20)
 		}
 		
@@ -616,7 +615,7 @@ package com.mcquilleninteractive.particleengine
 			}	
 		}
 		
-		public function setMXRAPosDamperReal(sysVarValue:Number):void
+		public function setMXRtnDampPos(sysVarValue:Number):void
 		{
 					
 			if (sysNode == SN_MIXINGBOX)
@@ -631,12 +630,12 @@ package com.mcquilleninteractive.particleengine
 			}	
 		}
 		
-		public function setMXTRet(sysVarValue:Number):void
+		public function setMXTAirRet(sysVarValue:Number):void
 		{
-			if (sysVarValue==currSysVarValuesArr["MXTRet"]) return
+			if (sysVarValue==currSysVarValuesArr["MXTAirRet"]) return
 			
-			var ct:ColorTransform = getColorObject("MXTRet",sysVarValue)
-			sysVarsArr["MXTRet"] = ct
+			var ct:ColorTransform = getColorObject("MXTAirRet",sysVarValue)
+			sysVarsArr["MXTAirRet"] = ct
 			
 			if (sysNode == SN_MIXINGBOX)
 			{
@@ -656,13 +655,13 @@ package com.mcquilleninteractive.particleengine
 				MXgoalColorB[9] = ct.blueOffset
 			}	
 		}
-		public function setMXTOut(sysVarValue:Number):void
+		public function setSYSTAirDB(sysVarValue:Number):void
 		{
 			
-			if (sysVarValue==currSysVarValuesArr["MXTOut"]) return
+			if (sysVarValue==currSysVarValuesArr["SYSTAirDB"]) return
 			
-			var ct:ColorTransform = getColorObject("MXTOut",sysVarValue)
-			sysVarsArr["MXTOut"] = ct
+			var ct:ColorTransform = getColorObject("SYSTAirDB",sysVarValue)
+			sysVarsArr["SYSTAirDB"] = ct
 			
 			if (sysNode == SN_MIXINGBOX)
 			{
@@ -673,13 +672,13 @@ package com.mcquilleninteractive.particleengine
 			}
 		}
 		
-		public function setMXTmix(sysVarValue:Number):void
+		public function setMXTAirMix(sysVarValue:Number):void
 		{
 			
-			if (sysVarValue==currSysVarValuesArr["MXTmix"]) return
+			if (sysVarValue==currSysVarValuesArr["MXTAirMix"]) return
 			
-			var ct:ColorTransform = getColorObject("MXTmix",sysVarValue)
-			sysVarsArr["MXTmix"] = ct
+			var ct:ColorTransform = getColorObject("MXTAirMix",sysVarValue)
+			sysVarsArr["MXTAirMix"] = ct
 			
 			
 			if (sysNode == SN_MIXINGBOX || sysNode == SN_SYSTEM)
@@ -701,13 +700,13 @@ package com.mcquilleninteractive.particleengine
 				SYSgoalColorB[2] = ct.blueOffset		
 			}	
 		}
-		public function setVAVHCTAirEnt(sysVarValue:Number):void
+		public function setVAVTAirEnt(sysVarValue:Number):void
 		{
 			
-			if (sysVarValue==currSysVarValuesArr["VAVHCTAirEnt"]) return
+			if (sysVarValue==currSysVarValuesArr["VAVTAirEnt"]) return
 			
-			var ct:ColorTransform = getColorObject("VAVHCTAirEnt",sysVarValue)
-			sysVarsArr["VAVHCTAirEnt"] = ct
+			var ct:ColorTransform = getColorObject("VAVTAirEnt",sysVarValue)
+			sysVarsArr["VAVTAirEnt"] = ct
 			
 			if (sysNode == SN_VAV)
 			{
@@ -720,13 +719,13 @@ package com.mcquilleninteractive.particleengine
 				}
 			}	
 		}
-		public function setVAVHCTAirLvg(sysVarValue:Number):void
+		public function setVAVTAirLvg(sysVarValue:Number):void
 		{
 			
-			if (sysVarValue==currSysVarValuesArr["VAVHCTAirLvg"]) return
+			if (sysVarValue==currSysVarValuesArr["VAVTAirLvg"]) return
 			
-			var ct:ColorTransform = getColorObject("VAVHCTAirLvg",sysVarValue)
-			sysVarsArr["VAVHCTAirLvg"] = ct
+			var ct:ColorTransform = getColorObject("VAVTAirLvg",sysVarValue)
+			sysVarsArr["VAVTAirLvg"] = ct
 			
 			if (sysNode == SN_VAV || sysNode == SN_DIFFUSER || sysNode == SN_SYSTEM)
 			{
@@ -764,12 +763,12 @@ package com.mcquilleninteractive.particleengine
 			}	
 		}
 		
-		public function setTRoom(sysVarValue:Number):void
+		public function setRMTemp(sysVarValue:Number):void
 		{
-			if (sysVarValue==currSysVarValuesArr["TRoom"]) return
+			if (sysVarValue==currSysVarValuesArr["RMTemp"]) return
 			
-			var ct:ColorTransform = getColorObject("TRoom",sysVarValue)
-			sysVarsArr["TRoom"] = ct
+			var ct:ColorTransform = getColorObject("RMTemp",sysVarValue)
+			sysVarsArr["RMTemp"] = ct
 			
 			if (sysNode == SN_DIFFUSER || sysNode == SN_SYSTEM)
 			{
@@ -798,10 +797,10 @@ package com.mcquilleninteractive.particleengine
 		
 		public function setTAirOut(sysVarValue:Number):void
 		{
-			if (sysVarValue==currSysVarValuesArr["TRoom"]) return
+			if (sysVarValue==currSysVarValuesArr["RMTemp"]) return
 			
-			var ct:ColorTransform = getColorObject("TRoom", sysVarValue)
-			sysVarsArr["TRoom"] = ct
+			var ct:ColorTransform = getColorObject("RMTemp", sysVarValue)
+			sysVarsArr["RMTemp"] = ct
 			
 			if (sysNode == SN_SYSTEM)
 			{

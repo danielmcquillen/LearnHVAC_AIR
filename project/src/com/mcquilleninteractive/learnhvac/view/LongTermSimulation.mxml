@@ -104,7 +104,7 @@
 				// when this form is shown, grab the relevant vars from the model
 				// to display to user for reference. Note that the application should have
 				// shut the simulation down when the user navigated to this form,
-				// so the SPARK variables should not change.
+				// so the Modelica variables should not change.
 				
 				ltOptions.resetValues()
 				buildingPropertyOptions.resetValues()

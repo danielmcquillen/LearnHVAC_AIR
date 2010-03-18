@@ -15,8 +15,8 @@ package com.mcquilleninteractive.learnhvac.vo
 		public var scenID:String
 		public var name:String
 		public var description:String
-		public var short_description:String
-		public var thumbnail_URL:String
+		public var shortDescription:String
+		public var thumbnailURL:String
 		public var level:Number
 		public var scenarioXML:XML
 		public var fileName:String

@@ -26,7 +26,7 @@
 			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
 			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.mcquilleninteractive.learnhvac.model.EPlusData
+			import com.mcquilleninteractive.learnhvac.model.data.EnergyPlusData
 			import com.mcquilleninteractive.learnhvac.util.Logger
 									
 			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
@@ -236,7 +236,8 @@
    			click="onViewWatch()"
    			styleName="sectionToolBarButton"
 			 />	 
-			 
+	
+	<!--
 	<mx:Button id="btnSystemEnergyGraph" 
    			width="35"
    			height="30"
@@ -246,6 +247,7 @@
    			click="onSystemEnergy()"
    			styleName="sectionToolBarButton"
 			 />	 
+	-->
 	<mx:Button id="btnZoneEnergyGraph" 
    			width="35"
    			height="30"

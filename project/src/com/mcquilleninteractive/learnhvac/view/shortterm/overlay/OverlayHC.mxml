@@ -36,15 +36,12 @@
 			
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
-			{						
-																
-				//set visibility of labels	
-				lblHCTAirEnt.visible=lblHCTAirEnt_Title.visible=scenarioModel.getSysVar("HCTAirEnt").visible
-				lblHCTAirLvg.visible=lblHCTAirLvg_Title.visible=scenarioModel.getSysVar("HCTAirLvg").visible
-				lblBOItout.visible=lblBOItout_Title.visible=scenarioModel.getSysVar("BOItout").visible
-				lblHCTLiqLvg.visible=lblHCTLiqLvg_Title.visible=scenarioModel.getSysVar("HCTLiqLvg").visible
-				lblHCpos.visible=lblHCpos_Title.visible=scenarioModel.getSysVar("HCpos").visible
-				  				
+			{																					
+				//set visibility of labels					
+				var varArr:Array = ["BOITLiqSup","HCPos","HCTAirEnt",
+									"HCTAirLvg","HCTLiqLvg"	]
+									
+				setLabels(varArr) 				  				
 			}
 			
 									
@@ -69,7 +66,7 @@
 				downSkin="{HCValveOn}" />
 		
 		
-	<mx:Label id="lblHCpos_Title"  
+	<mx:Label id="lblHCPos_Title"  
 				x="40" y="330"
 				textAlign="right"
 				width="120" 
@@ -78,8 +75,8 @@
 			    color="0x000000"
 				/>
 			
-	<overlay:ValueDisplayLabel id="lblHCpos" 
-				sysVarName="HCpos"
+	<overlay:ValueDisplayLabel id="lblHCPos" 
+				sysVarName="HCPos"
 				usePercent="true"
 				x="40" y="350"
 				width="120" 
@@ -124,14 +121,14 @@
 					   
 					   
 					   
-	<mx:Label id="lblBOItout_Title" 
+	<mx:Label id="lblBOITLiqSup_Title" 
 					x="300" y="258" 
 					text="Entering Liq. Temp: " 
 					styleName="overlayTitle"
 					  />
 					  
-	<overlay:ValueDisplayLabel id="lblBOItout" 
-				sysVarName="HCTLiqEnt"
+	<overlay:ValueDisplayLabel id="lblBOITLiqSup" 
+					sysVarName="BOITLiqSup"
 		 			x="300" y="278"
 		 			text="0" 
 		 			styleName="overlayValue"

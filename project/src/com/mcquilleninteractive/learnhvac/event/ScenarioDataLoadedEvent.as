@@ -1,39 +1,26 @@
-// ActionScript file
-// ActionScript file
 package com.mcquilleninteractive.learnhvac.event{
 	
-	import com.mcquilleninteractive.learnhvac.model.IGraphDataModel;
+	import com.mcquilleninteractive.learnhvac.model.data.IGraphDataModel;
 	import com.mcquilleninteractive.learnhvac.util.Logger
 	import flash.events.Event;
 
 	public class ScenarioDataLoadedEvent extends Event
 	{
-		
-		// There are two different event classes that handle AHU events
-		// The SimuationEvent class handles events that affect the AHU
-		// This class, AHUEvent, handles events coming out of the AHU itself
-		// Splitting the classes like this allows us to create components
-		// that respond to the true state of the AHU, not just what the user wants it to do
-				
-		// E+ output file has been loaded but not parsed
-		public static const EPLUS_FILE_LOADED : String = "EPlusFileLoaded";
-		// E+ output file has been parsed
-		public static const EPLUS_DATA_PARSED : String = "EPlusDataParsed";
+						
+		// loaded but not parsed
+		public static const ENERGY_PLUS_FILE_LOADED : String = "EPlusFileLoaded";
+		public static const ENERGY_PLUS_DATA_PARSED : String = "EPlusDataParsed";
 
-		// Spark output file has been loaded but not parsed
-		public static const SPARK_FILE_LOADED : String = "SparkFileLoaded";
-		// Spark file has been parsed
-		public static const SPARK_DATA_PARSED : String = "SparkDataParsed";
+		//loaded but not parsed
+		public static const SHORT_TERM_SYSVARS_LOADED : String = "ShortTermSysVarsLoaded";
 
 		public var graphDataModelID:String
 		public var graphDataModel:IGraphDataModel
-
 
 		public function ScenarioDataLoadedEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);
 		}
-		
 		
 		override public function clone():Event
         {

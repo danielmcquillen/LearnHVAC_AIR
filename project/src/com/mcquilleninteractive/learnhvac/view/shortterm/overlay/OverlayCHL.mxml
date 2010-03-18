@@ -23,25 +23,7 @@
 														
 				//graphics to help indicate where values refer
 				this.graphics.lineStyle(1,0xCCCCCC,1)
-				
-				//condout
-				this.graphics.moveTo(52, 165)
-				this.graphics.lineTo(42,165)
-				this.graphics.drawCircle(37,165,5)
-				
-				//condin
-				this.graphics.moveTo(240, 340)
-				this.graphics.lineTo(240,320)
-				this.graphics.drawCircle(240,315,5)
-				
-				
-				//condflow
-				this.graphics.moveTo(55, 220)
-				this.graphics.lineTo(45,220)
-				this.graphics.drawCircle(40,220,5)
-				
-				
-				
+			
 				//evapout
 				this.graphics.moveTo(412, 127)
 				this.graphics.lineTo(392,127)
@@ -51,42 +33,86 @@
 				this.graphics.moveTo(412, 177)
 				this.graphics.lineTo(392,177)
 				this.graphics.drawCircle(387,177,5)
-				
-				
-				//comppow
-				this.graphics.moveTo(345, 420)
-				this.graphics.lineTo(345,320)
-				this.graphics.drawCircle(345,315,5)
-				
+								
 				//evapin
 				this.graphics.moveTo(445, 325)
 				this.graphics.lineTo(445,290)
 				this.graphics.drawCircle(445,285,5)
 			
+				/*
+				//comppow
+				this.graphics.moveTo(345, 420)
+				this.graphics.lineTo(345,320)
+				this.graphics.drawCircle(345,315,5)
+					
+				//condout
+				this.graphics.moveTo(52, 165)
+				this.graphics.lineTo(42,165)
+				this.graphics.drawCircle(37,165,5)
+				
+				//condin
+				this.graphics.moveTo(240, 340)
+				this.graphics.lineTo(240,320)
+				this.graphics.drawCircle(240,315,5)
+								
+				//condflow
+				this.graphics.moveTo(55, 220)
+				this.graphics.lineTo(45,220)
+				this.graphics.drawCircle(40,220,5)
+				
+				*/
+				
 				
 			}
 
 
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
-			{															
-				//set visibility of labels		
-				lblCHLcondout.visible=lblCHLcondout_Title.visible=scenarioModel.getSysVar("CHLcondout").visible
-				lblCHLevapout.visible=lblCHLevapout_Title.visible=scenarioModel.getSysVar("CHLevapout").visible
-				lblCHLevapflow.visible=lblCHLevapflow_Title.visible=scenarioModel.getSysVar("CHLevapflow").visible
-				lblCHLcondflow.visible=lblCHLcondflow_Title.visible=scenarioModel.getSysVar("CHLcondflow").visible
-				lblCHLcondin.visible=lblCHLcondin_Title.visible=lblCHLcondin2_Title.visible=scenarioModel.getSysVar("CHLcondin").visible
-				lblCHLcomppow.visible=lblCHLcomppow_Title.visible=scenarioModel.getSysVar("CHLcomppow").visible
-				lblCHLevapin.visible=lblCHLevapin_Title.visible=scenarioModel.getSysVar("CHLevapin").visible
-				
-				
-					
+			{								
+				//set visibility of labels					
+				var varArr:Array = ["CHLLiqFlw","CHLTLiqSup","CHLTLiqEnt"]									
+				setLabels(varArr) 
+			
 			}
 
 			
 		]]>
 	</mx:Script>
 	
+	<mx:Label id="lblCHLTLiqEnt_Title" 
+		text="Chilled Water Inlet Temp"  
+		styleName="overlayTitle"
+		x="440" y="330" />
+	<overlay:ValueDisplayLabel id="lblCHLTLiqEnt" 
+		sysVarName="CHLTLiqEnt"
+		text="0"
+		styleName="overlayValue"
+		x="440" y="345"/>
+		
+		
+	<mx:Label id="lblCHLTLiqSup_Title" text="Chilled Water Outlet Temp"  styleName="overlayTitle"
+					 x="415" y="120" textAlign="left"/>
+	<overlay:ValueDisplayLabel id="lblCHLTLiqSup" 
+		sysVarName="CHLTLiqSup"
+		text="0" 
+		styleName="overlayValue"
+		x="415" y="135" 
+		textAlign="left"/>
+		
+			 
+					 
+	<mx:Label id="lblCHLLiqFlw_Title" text="Chilled Water Flow Rate"  styleName="overlayTitle"
+					 x="415" y="170" textAlign="left" />
+	<overlay:ValueDisplayLabel id="lblCHLLiqFlw"
+		sysVarName="CHLLiqFlw"
+		text="0" 
+		styleName="overlayValue"
+		x="415" 
+		y="185" 
+		textAlign="left" />
+					 
+					 
+	<!--
 	
 	
 	<mx:Label id="lblCHLcondout_Title" text="Condenser Water Outlet Temp"  styleName="overlayTitle"
@@ -110,26 +136,7 @@
 		textAlign="left"/>
 					 
 	
-	<mx:Label id="lblCHLevapout_Title" text="Chilled Water Outlet Temp"  styleName="overlayTitle"
-					 x="415" y="120" textAlign="left"/>
-	<overlay:ValueDisplayLabel id="lblCHLevapout" 
-		sysVarName="CHLevapout"
-		text="0" 
-		styleName="overlayValue"
-		x="415" y="135" 
-		textAlign="left"/>
-					 
-					 
-	<mx:Label id="lblCHLevapflow_Title" text="Chilled Water Flow Rate"  styleName="overlayTitle"
-					 x="415" y="170" textAlign="left" />
-	<overlay:ValueDisplayLabel id="lblCHLevapflow"
-		sysVarName="CHLevapflow"
-		text="0" 
-		styleName="overlayValue"
-		x="415" 
-		y="185" 
-		textAlign="left" />
-					 
+				
 					 
 					 
 					 
@@ -143,6 +150,8 @@
 		styleName="overlayValue"
 		x="235" y="370" />
 					 
+	
+					 
 	<mx:Label id="lblCHLcomppow_Title" text="Chiller Compressor Power"  styleName="overlayTitle"
 					 x="340" y="425" />
 	<overlay:ValueDisplayLabel id="lblCHLcomppow"
@@ -150,16 +159,6 @@
 		 text="0" 
 		 styleName="overlayValue"
 		 x="340" y="440" />
-					 
-	<mx:Label id="lblCHLevapin_Title" 
-		text="Chilled Water Inlet Temp"  
-		styleName="overlayTitle"
-		x="440" y="330" />
-	<overlay:ValueDisplayLabel id="lblCHLevapin" 
-		sysVarName="CHLevapin"
-		text="0"
-		styleName="overlayValue"
-		x="440" y="345"/>
-	
 		
-	</overlay:OverlayBase>
+	-->
+</overlay:OverlayBase>

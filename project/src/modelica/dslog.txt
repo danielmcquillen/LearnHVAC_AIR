@@ -1,0 +1,14 @@
+Log-file of program ./dymosim
+(generated: Wed Mar 03 12:36:35 2010)
+
+dymosim started
+Model: LH_v2.HVAC_v2
+... "dsin.txt" loading (dymosim input file)
+cliBCVTB.socketFD >= 0
+The following error was detected at time: 0
+Socket file descripter for BCVTB must be positive.
+   A negative value indicates that no connection
+   could be established. Check file 'utilSocket.log'.
+   Received: socketFD = -1
+The stack of functions is:
+Buildings.Utilities.IO.BCVTB.BaseClasses.establishClientSocket("socket.cfg")

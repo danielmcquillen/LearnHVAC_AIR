@@ -12,6 +12,7 @@
 		<mx:Script>
 	
 		<![CDATA[
+			import org.swizframework.Swiz;
 		
 			import mx.events.DragEvent;
 			import mx.collections.ListCollectionView
@@ -33,7 +34,6 @@
             
             
 			[Bindable]
-			[Autowire]
 			public var scenarioModel:ScenarioModel
 
             
@@ -47,10 +47,14 @@
 			
 			public function onCreationComplete():void
 			{  						    	
+				scenarioModel = Swiz.getBean("scenarioModel") as ScenarioModel
+				
 		    	//setup dataproviders
 				cboSysNode.dataProvider = scenarioModel.sysNodesAC
 				
 				buildOutputGrid()
+				
+				
 			}
 			
 			public function buildOutputGrid():void
@@ -60,7 +64,7 @@
 			
 			
 			public function filterOutputGrid (item:Object):Boolean {
-				return item.typeID=="OUTPUT" && item.applicationID=="PUBLIC" && item.is_fault == false
+				return item.ioType=="OUTPUT" && item.viewType=="PUBLIC" && item.isFault == false
 			}
 			
 			public function updateOutputValueView(newIndex:Number):void
@@ -154,8 +158,8 @@
 	 				 dragComplete="onDragComplete(event)"
   				  	  >
 			<mx:columns>
-				<mx:DataGridColumn headerText="Name" dataField="display_name" />
-				<mx:DataGridColumn headerText="Variable" dataField="name" />
+				<mx:DataGridColumn headerText="Name" dataField="displayName" />
+				<mx:DataGridColumn headerText="Variable" dataField="name" width="120" />
 				<mx:DataGridColumn headerText="Value" dataField="currValue" width="100" />
 				<mx:DataGridColumn headerText="Units" dataField="units" width="50" />
 			</mx:columns>	

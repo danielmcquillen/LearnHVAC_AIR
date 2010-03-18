@@ -24,6 +24,7 @@
 				this.graphics.lineStyle(1,0xCCCCCC,1)
 				
 				//temp out
+				/*
 				this.graphics.moveTo(425,150)
 				this.graphics.lineTo(425,185)
 				this.graphics.drawCircle(425,190,5)
@@ -31,17 +32,18 @@
 				this.graphics.moveTo(355,400)
 				this.graphics.lineTo(400,400)
 				this.graphics.drawCircle(405,400,5)
-				
+				*/
 			}
 
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{																												
-				//set visibility of labels		
+				//set visibility of labels	
+				/*	
 				lblCHLcondout.visible=lblCHLcondout_Title.visible=scenarioModel.getSysVar("CHLcondout").visible
 				lblCTWtout.visible=lblCTWtout_Title.visible=scenarioModel.getSysVar("CTWtout").visible
 				lblCHLcondflow.visible=lblCHLcondflow_Title.visible=scenarioModel.getSysVar("CHLcondflow").visible		
-								
+				*/			
 			}
 
 
@@ -50,7 +52,7 @@
 	</mx:Script>
 	
 	
-	
+	<!--
 	<mx:Label id="lblCHLcondout_Title" text="Inlet Water Temp.: "  styleName="overlayTitle"
 					 x="200" y="395" textAlign="right" width="150"/>
 	<overlay:ValueDisplayLabel id="lblCHLcondout" text="0" 
@@ -76,5 +78,6 @@
 		sysVarName="CHLcondflow"
 		text="0" styleName="overlayValue"
 		x="420" y="130" />
-		
+	-->
+	
 </overlay:OverlayBase>

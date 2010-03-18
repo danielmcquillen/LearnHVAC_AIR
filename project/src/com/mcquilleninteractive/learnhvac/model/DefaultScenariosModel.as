@@ -2,9 +2,7 @@ package com.mcquilleninteractive.learnhvac.model
 {
 	
 	import com.mcquilleninteractive.learnhvac.vo.ScenarioListItemVO;
-	
 	import flash.utils.ByteArray;
-	
 	import mx.collections.ArrayCollection;
 	
 	
@@ -24,9 +22,9 @@ package com.mcquilleninteractive.learnhvac.model
 			var scenObj:ScenarioListItemVO = new ScenarioListItemVO();	
 			scenObj.scenID = "DefaultBasicScenario";
 			scenObj.name = "Basic Scenario";
-			scenObj.short_description = "The basic scenario has all features enabled and is meant to provide a platform for experimentation with Learn HVAC.";
+			scenObj.shortDescription = "The basic scenario has all features enabled and is meant to provide a platform for experimentation with Learn HVAC.";
 			scenObj.sourceType = ScenarioListItemVO.SOURCE_DEFAULT;
-			scenObj.thumbnail_URL = "http://admin.learnhvac.org/thumbnails/pic_scenario_spring.png"
+			scenObj.thumbnailURL = "http://admin.learnhvac.org/thumbnails/pic_scenario_spring.png"
 			
 			//so stupid that I can't just embed the xml as mimeType='text/xml' or something 
 			var ba:ByteArray = new basicScenarioXML() as ByteArray;			

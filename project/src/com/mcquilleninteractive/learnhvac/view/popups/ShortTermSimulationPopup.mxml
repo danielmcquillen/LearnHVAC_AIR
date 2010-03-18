@@ -41,6 +41,7 @@
 			}
 		}
 		
+		[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
 		[Mediate(event="ShortTermSimulationEvent.SIM_CRASHED")]
 		public function onShortTermSimCrashed(event:ShortTermSimulationEvent):void
 		{
@@ -60,21 +61,10 @@
 		]]>
 	</mx:Script>
 	
-	<mx:Canvas>
-		
-		<mx:Label id="lblStatus" x="0" y="5" text="Starting SPARK Simulation..." textAlign="center" width="100%" height="100%"/>
-		
-		<myComps:LoadingBarSmall x="220" y="30" />
-		
-		<mx:Button label="Cancel" click="onCancel()" width="90" x="265" y="75"/>	
-		<!--
-		<mx:Button id="btnCancelSpark" 
-	 		label="Cancel" 
-	 		x="240" y="80"
-	 		width="120" height="30"
-	 		click="onCancel()"
-		 />-->
-	
+	<mx:Canvas>		
+		<mx:Label id="lblStatus" x="0" y="5" text="Starting Short-term Simulation..." textAlign="center" width="100%" height="100%"/>
+		<myComps:LoadingBarSmall x="220" y="30" />		
+		<mx:Button label="Cancel" click="onCancel()" width="90" x="265" y="75"/>		
 	</mx:Canvas>	
 
 		

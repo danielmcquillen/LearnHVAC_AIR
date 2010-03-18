@@ -1,0 +1,2 @@
+utilSocket: Establishing socket based on file socket.cfg.
+ERROR: Could not obtain socket port number. Return value = -1.

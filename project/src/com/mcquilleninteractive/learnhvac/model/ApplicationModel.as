@@ -49,9 +49,6 @@ package com.mcquilleninteractive.learnhvac.model
 		public static var ANIMATION_SPEED_REDUCED:String = "reduced"
 		public static var ANIMATION_SPEED_NONE:String = "none"
 		
-		public var sparkStartupDelay:Number = 20
-		public var sparkIntervalDelay:Number = .9
-		public var sparkMaxReadsPerStep:Number = 30 //number of times SparkService will read same step increment before assuming SPARK is dead
 		public var animationSpeed:String = ApplicationModel.ANIMATION_SPEED_FULL
 		
 		//flag for start units -- this is static to allow for quicker access

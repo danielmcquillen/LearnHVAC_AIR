@@ -23,17 +23,19 @@
 				
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]					
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
-			{																
-				//set visibility of labels			
-				lblTAirOut.visible=lblTAirOut_Title.visible=scenarioModel.getSysVar("TAirOut").visible		   				
+			{	
+				//set visibility of labels	
+				var varArr:Array = ["SYSTAirDB"]
+				
+				setLabels(varArr)
 			}
 						
 		]]>
 	</mx:Script>
-	<mx:Label id="lblTAirOut_Title" text="Outside Air Dry Bulb Temp: " 
+	<mx:Label id="lblSYSTAirDB_Title" text="Outside Air Dry Bulb Temp: " 
 					color="0xFFFFFF" x="20" y="30"/>
-	<overlay:ValueDisplayLabel id="lblTAirOut" 
-		sysVarName="TAirOut"
+	<overlay:ValueDisplayLabel id="lblSYSTAirDB" 
+		sysVarName="SYSTAirDB"
 		text="24" styleName="overlayValue"
 					color="0xFFFFFF" x="180" y="30" />
 	

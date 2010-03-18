@@ -6,18 +6,18 @@ package com.mcquilleninteractive.learnhvac.event{
 	public class ShortTermSimulationEvent extends Event
 	{
 		
+		//these are actions that should be performed against simulation
 		public static const SIM_START : String = "startShortTermSimulation";
 		public static const SIM_UPDATE : String = "updateShortTermSimulation";
 		public static const SIM_STOP : String = "stopShortTermSimulation";
 		
 		
-		//these are the responses from the simulation
+		//these are the responses based on simulation output
 		public static const SIM_STARTED:String = "shortTermSimulationStarted"
-		public static const SIM_UPDATED:String = "shortTermSimulationUpdated"
+		public static const SIM_OUTPUT_RECEIVED:String = "shortTermSimulationSimOutputReceived"
 		public static const SIM_STOPPED:String = "shortTermSimulationStopped"
 		public static const SIM_ERROR:String = "shortTermSimulationError"
 		public static const SIM_CRASHED:String = "shortTermSimulationCrashed"
-		public static const OUTPUT_UPDATED:String ="shortTermSimulationOutputUpdated"
 		
 		public var code:int
 		public var errorMessage:String

@@ -4,11 +4,11 @@
 	height="36"
 	horizontalScrollPolicy="off"
 	verticalScrollPolicy="off"
-	creationComplete="onCC()"
 	>
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 			
 			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
@@ -21,7 +21,7 @@
             
 			[Bindable]
 			[Autowire]
-			public var scenarioModel:ScenarioModel
+			public var shortTermSimulationModel:ShortTermSimulationModel
 
             
            	[Embed(source='assets/img/bg_sim_control.png')]
@@ -42,30 +42,16 @@
             
             public var onColor:Number = 0x86c09e
             public var offColor:Number = 0x1d89dc
-            public var errorColor:Number = 0xe19893
+            public var errorColor:Number = 0xe19893;
             
-            public var cw:ChangeWatcher
-            
-			public function onCC():void
-			{				
-			   init()
-			}
 			
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function onScenarioLoaded(event:ScenarioLoadedEvent):void
 			{
-				init()
+				//nothing to do yet
 			}
 			
-			public function init():void
-			{
-				if (cw!= null)
-				{
-					cw.unwatch()
-				}
-				cw = BindingUtils.bindSetter(function(currTime:String):void{simTimer.text=String(currTime)}, scenarioModel, "currTime" )			
-			}
-			
+						
 			[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
 			public function onShortTermSimulationStarted(event:ShortTermSimulationEvent):void
 			{	
@@ -116,6 +102,7 @@
 			
 	<mx:Label 	id="simTimer"
 				styleName="simTimer"
+				text="{shortTermSimulationModel.currTimeDisplay}"
 				x="55" y="9"
 				color="#FFFFFF"
 		/>

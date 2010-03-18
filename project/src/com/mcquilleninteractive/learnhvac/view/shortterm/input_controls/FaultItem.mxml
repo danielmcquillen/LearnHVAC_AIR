@@ -101,7 +101,7 @@
       				cboActivate.visible = !data.disabled
       				btnDisabled.visible = data.disabled
  	     			
-      				if (data.fault_widget_type==SystemVariable.FAULT_CHECKBOX)
+      				if (data.faultWidgetType==SystemVariable.FAULT_CHECKBOX)
       				{
       					//hide controls associated with slider
       					lblLeftLabel.visible = false
@@ -109,7 +109,7 @@
       					sldFaultValue.visible = false
       					lblCurrFaultValue.visible = false
       				}
-      				else if (data.fault_widget_type==SystemVariable.FAULT_SLIDER)
+      				else if (data.faultWidgetType==SystemVariable.FAULT_SLIDER)
       				{
       					//show controls associated with slider
       					lblLeftLabel.visible = true
@@ -120,14 +120,14 @@
 						sldFaultValue.enabled = data.faultIsActive && (!data.disabled)
       				
       					//set only first and last tickmark
-      					sldFaultValue.tickValues = [data.low_value, data.high_value]
+      					sldFaultValue.tickValues = [data.lowValue, data.highValue]
       				
       					//make sure current value is showing
       					if (lblCurrFaultValue.text=="")  lblCurrFaultValue.text = sldFaultValue.value.toString()
       				}
       				else
       				{
-      					Logger.error("#FaultItem: unrecognized fault_widget_type: " + data.fault_widget_type)
+      					Logger.error("#FaultItem: unrecognized faultWidgetType: " + data.faultWidgetType)
       				}
       			//}
       		}
@@ -167,9 +167,9 @@
 			{
 				var event:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.SHOW_INFO, true)
 				event.sysVarDescription = data.description
-				event.lowValue = data.low_value
-				event.highValue = data.high_value
-				event.sysVarDisplayName = data.display_name
+				event.lowValue = data.lowValue
+				event.highValue = data.highValue
+				event.sysVarDisplayName = data.displayName
 				event.sysVarName = data.name
 				dispatchEvent(event)
 			}
@@ -237,7 +237,7 @@
 		
     	<mx:Label 	id="lblTitle"
 					x="35" y="2" 
-				  	text="{data.display_name}"
+				  	text="{data.displayName}"
 				  	textAlign="left"
 				  	color="0x222222"
 				  	width="220"
@@ -247,7 +247,7 @@
     		
     	<mx:Label 	id="lblLeftLabel"
 					x="35" y="19" 
-				  	text="{data.left_label}"
+				  	text="{data.leftLabel}"
 				  	textAlign="left"
 				  	color="0x999999"
 		/>
@@ -255,7 +255,7 @@
 		<mx:Label 	id="lblRightLabel"
 					x="130" y="19" 
 					width="100"
-				  	text="{data.right_label}"
+				  	text="{data.rightLabel}"
 				  	textAlign="right"
 				  	color="0x999999"
 		/>
@@ -265,8 +265,8 @@
 					width="185"
 					height="25" 
 				    value="{data.currValue}"
-					minimum="{data.low_value}"
-					maximum="{data.high_value}"
+					minimum="{data.lowValue}"
+					maximum="{data.highValue}"
 					dataTipFormatFunction="sliderDataTip"
 					change="sliderChange(event)"
 					thumbDownSkin="{SliderDragger}" 

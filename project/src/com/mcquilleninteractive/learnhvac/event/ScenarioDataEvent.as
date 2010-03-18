@@ -2,7 +2,7 @@
 package com.mcquilleninteractive.learnhvac.event{
 	
 	/* This event is meant for starting the process of loading
-	   stored scenario data, either from SPARK or E+. The user
+	   stored scenario data, either from Modelica or E+. The user
 	   will be loading this information so they can review in the analysis section
 	   or configure the scenario before running */
 	
@@ -11,9 +11,9 @@ package com.mcquilleninteractive.learnhvac.event{
 	public class ScenarioDataEvent extends Event
 	{
 		
-		public static const SAVE_SPARK_DATA_EVENT: String = "saveSparkDataEvent"
+		public static const SAVE_MODELICA_DATA_EVENT: String = "saveModelicakDataEvent"
 		public static const SAVE_EPLUS_DATA_EVENT: String = "saveEPlusDataEvent"
-		public static const LOAD_SPARK_DATA_EVENT: String = "loadSparkDataEvent"
+		public static const LOAD_MODELICA_DATA_EVENT: String = "loadModelicaDataEvent"
 		public static const LOAD_EPLUS_DATA_EVENT: String = "loadEPlusDataEvent"
 		public static const UPDATE_SIM_VARS_WITH_EPLUS_DATA:String = "updateSimVarsWithEPlusData"
 				

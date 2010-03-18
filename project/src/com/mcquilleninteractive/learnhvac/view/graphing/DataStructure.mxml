@@ -7,9 +7,8 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
-			import com.mcquilleninteractive.learnhvac.model.EPlusData;
-			import com.mcquilleninteractive.learnhvac.model.IGraphDataModel;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import com.mcquilleninteractive.learnhvac.model.data.*
 			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import mx.collections.XMLListCollection;
 	 		import com.mcquilleninteractive.learnhvac.util.Logger            
@@ -74,6 +73,7 @@
 				initTree(gdModel)
 				this.txtStartDateTime.text = gdModel.getStartDateTime()
 				this.txtStopDateTime.text = gdModel.getStopDateTime()
+				callLater(expandAll)
 			}
 			
 			public function initTree(gdModel:IGraphDataModel):void
@@ -81,7 +81,6 @@
 				treVariables.graphDataModel = gdModel
 				dataStructure = gdModel.getDataStructureXML().Campus.Building
 				treVariables.invalidateProperties()
-				callLater(collapseAll)
 			}
 			
 			
@@ -195,6 +194,8 @@
 	 		dragEnabled="true"
 	 		dragMoveEnabled="false"
 	 		dropEnabled="false"
+	 	    openDuration="50"
+	 	    
 	 		 />
 	
 	</mx:VBox>

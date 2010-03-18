@@ -38,15 +38,16 @@
 			{						
 																				
 				//set visibility of labels	
-				lblFanpowerTot.visible=lblFanpowerTot_Title.visible=scenarioModel.getSysVar("FanpowerTot").visible
-				//lblFannReal.visible=lblFannReal_Title.visible=scenarioModel.getSysVar("FannReal").visible
-				lblFanTAirEnt.visible=lblFanTAirEnt_Title.visible=scenarioModel.getSysVar("FanTAirEnt").visible
-				lblFanmAirEnt.visible=lblFanmAirEnt_Title.visible=scenarioModel.getSysVar("FanmAirEnt").visible
-				lblFanTAirLvg.visible=lblFanTAirLvg_Title.visible=scenarioModel.getSysVar("FanTAirLvg").visible
-				//lblFanmAirLvg.visible=lblFanmAirLvg_Title.visible=scenarioModel.getSysVar("FanmAirLvg").visible
-				lblFanpStatReal.visible=lblFanpStatReal_Title.visible=scenarioModel.getSysVar("FanpStatReal").visible	
+				lblFANPwr.visible=lblFANPwr_Title.visible=scenarioModel.getSysVar("FANPwr").visible
+				lblFANSpd.visible=lblFANSpd_Title.visible=scenarioModel.getSysVar("FANSpd").visible	
+				lblCCTAirLvg.visible=lblCCTAirLvg_Title.visible=scenarioModel.getSysVar("CCTAirLvg").visible
+				lblFANAirFlw.visible=lblFANAirFlw_Title.visible=scenarioModel.getSysVar("FANAirFlw").visible
+				lblFANTAirLvg.visible=lblFANTAirLvg_Title.visible=scenarioModel.getSysVar("FANTAirLvg").visible
+				lblDCTStPre.visible=lblDCTStPre_Title.visible=lblDCTStPre2_Title.visible=scenarioModel.getSysVar("DCTStPre").visible	
 			
-   				
+   				//lblFannReal.visible=lblFannReal_Title.visible=scenarioModel.getSysVar("FannReal").visible
+				//lblFanmAirLvg.visible=lblFanmAirLvg_Title.visible=scenarioModel.getSysVar("FanmAirLvg").visible
+				
 			}
 			
 						
@@ -55,53 +56,84 @@
 		]]>
 	</mx:Script>
 	
-	<mx:Label id="lblFanpowerTot_Title" text="Fan Power: " styleName="overlayTitle"
-					   x="70" y="95" width="120" textAlign="right"/>
-	<overlay:ValueDisplayLabel id="lblFanpowerTot"
-		sysVarName="FanpowerTot"
+	<mx:Label id="lblFANPwr_Title" 
+		text="Fan Power: " 
+		styleName="overlayTitle"
+		x="70" 
+		y="95"
+		width="120" 
+		textAlign="right"/>
+	<overlay:ValueDisplayLabel id="lblFANPwr"
+		sysVarName="FANPwr"
 		text="0" styleName="overlayValue"
-					   x="70" y="110"  width="120" textAlign="right"/>
-	<!--				 
-	<mx:Label id="lblFannReal_Title" text="Fan Rotation Speed: " styleName="overlayTitle"
+		x="70" y="110"  
+		width="120" 
+		textAlign="right"/>
+		
+	<mx:Label id="lblFANSpd_Title" text="Fan Rotation Speed: " styleName="overlayTitle"
 					   x="70" y="142"  width="120" textAlign="right"/>
-	<overlay:ValueDisplayLabel id="lblFannReal"
-		sysVarName="FannReal" text="0" width="120" styleName="overlayValue"
-					   x="70" y="158" textAlign="right"/>
-	--> 				 
-	<mx:Label id="lblFanTAirEnt_Title" text="Air Temp: " styleName="overlayTitle"
-					   x="7" y="218" />
-	<overlay:ValueDisplayLabel id="lblFanTAirEnt"
-		sysVarName="FanTAirEnt"
-		 text="0" styleName="overlayValue"
-					   x="7" y="234" />
-					 
-	<mx:Label id="lblFanmAirEnt_Title" text="Air Flow: " styleName="overlayTitle"
-					   x="7" y="268" />
-	<overlay:ValueDisplayLabel id="lblFanmAirEnt"
-		sysVarName="FanmAirEnt" text="0" styleName="overlayValue"
-					   x="7" y="284" />
-					 
-	<mx:Label id="lblFanTAirLvg_Title" text="Air Temp: " styleName="overlayTitle"
-					   x="571" y="126" />
-	<overlay:ValueDisplayLabel id="lblFanTAirLvg"
-		sysVarName="FanTAirLvg" text="0" styleName="overlayValue"
-					   x="571" y="142" />
+	<overlay:ValueDisplayLabel id="lblFANSpd"
+		sysVarName="FANSpd" 
+		text="0" 
+		width="120" 
+		styleName="overlayValue"
+		x="70" y="158" 
+		textAlign="right"/>
+				 
+				 
+	<mx:Label id="lblCCTAirLvg_Title" 
+		text="Air Temp: " 
+		styleName="overlayTitle"
+		x="7" y="218" />
+	<overlay:ValueDisplayLabel id="lblCCTAirLvg"
+		sysVarName="CCTAirLvg"
+		styleName="overlayValue"
+		text="0" 
+		x="7" y="234" />
+					   
+	<mx:Label id="lblFANTAirLvg_Title" 
+		text="Air Temp: " 
+		styleName="overlayTitle"
+		x="571" y="126" />
+	<overlay:ValueDisplayLabel id="lblFANTAirLvg"
+		sysVarName="FANTAirLvg" 
+		text="0" 
+		styleName="overlayValue"
+		x="571" y="142" />
 	
-	<!--				 
+					 
+					 
+	<mx:Label id="lblFANAirFlw_Title" 
+		text="Air Flow: " 
+		styleName="overlayTitle"
+		x="7" y="268" />
+	<overlay:ValueDisplayLabel id="lblFANAirFlw"
+		sysVarName="FANAirFlw" text="0" styleName="overlayValue"
+		x="7" y="284" />
+					 
+
+					 
+	<mx:Label id="lblDCTStPre_Title" 
+		text="Duct Static" 
+		styleName="overlayTitle"
+		x="571" y="295" />
+	<mx:Label id="lblDCTStPre2_Title" 
+		text="Pressure" 
+		styleName="overlayTitle"
+		x="571" y="312" />
+	<overlay:ValueDisplayLabel 
+		id="lblDCTStPre"
+		sysVarName="DCTStPre" 
+		text="0" 
+		styleName="overlayValue"
+		x="571" y="325" />
+	
+		<!--				 
 	<mx:Label id="lblFanmAirLvg_Title" text="Air Flow: " styleName="overlayTitle"
 					   x="571" y="168" />
 	<overlay:ValueDisplayLabel id="lblFanmAirLvg"
 		sysVarName="FanmAirLvg" text="0" styleName="overlayValue"
 					 color="0xFFFFFF" x="571" y="184" />
-	-->
-					 
-	<mx:Label id="lblFanpStatReal_Title" text="Duct Static" styleName="overlayTitle"
-					   x="571" y="295" />
-	<mx:Label id="lblFanpStatReal2_Title" text="Pressure" styleName="overlayTitle"
-					   x="571" y="312" />
-	<overlay:ValueDisplayLabel id="lblFanpStatReal"
-		sysVarName="FanpStatReal" text="0" styleName="overlayValue"
-					   x="571" y="325" />
-	
-	
+		-->	 
+	 	
 </overlay:OverlayBase>

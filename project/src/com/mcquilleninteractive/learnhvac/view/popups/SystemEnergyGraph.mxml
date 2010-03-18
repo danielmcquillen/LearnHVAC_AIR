@@ -64,7 +64,7 @@
 				getRelevantValues()				
 			}
 			
-			[Mediate(event="ShortTermSimulationEvent.OUTPUT_UPDATED")]	
+			[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]	
 			public function onShortTermOutputUpdated(event:ShortTermSimulationEvent):void
 			{
 				getRelevantValues()
@@ -72,10 +72,17 @@
 			
 			private function getRelevantValues():void
 			{
-				_valuesArr[0].BOIfuel = _sysVarBOIfuel.currValue
-				_valuesArr[0].CHLcomppow = _sysVarCHLcomppow.currValue
-				_valuesArr[0].FanpowerTot = _sysVarFanpowerTot.currValue
-				_valuesArr[0].CHLpumppow = _sysVarCHLpumppow.currValue
+				try
+				{
+					_valuesArr[0].BOIfuel = _sysVarBOIfuel.currValue
+					_valuesArr[0].CHLcomppow = _sysVarCHLcomppow.currValue
+					_valuesArr[0].FanpowerTot = _sysVarFanpowerTot.currValue
+					_valuesArr[0].CHLpumppow = _sysVarCHLpumppow.currValue
+				}
+				catch(error:Error)
+				{
+					Logger.error("getRelevantValues() Couldn't get energy variable. Error: " + error, this)
+				}
 				powerTotalsAC.refresh()
 			}
 			

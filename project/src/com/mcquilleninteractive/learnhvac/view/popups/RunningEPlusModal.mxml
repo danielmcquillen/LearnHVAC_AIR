@@ -37,7 +37,7 @@
 			_output = event.output
 		}
 		
-		[Mediate(event="ScenarioDataLoadedEvent.EPLUS_FILE_LOADED")]
+		[Mediate(event="ScenarioDataLoadedEvent.ENERGY_PLUS_FILE_LOADED")]
 		public function onEPlusFileLoaded(event:ScenarioDataLoadedEvent):void
 		{
 			Logger.debug("onEPlusFileLoaded() called", this)
@@ -46,7 +46,7 @@
 			
 		}
 		
-		[Mediate(event="ScenarioDataLoadedEvent.EPLUS_DATA_PARSED")]
+		[Mediate(event="ScenarioDataLoadedEvent.ENERGY_PLUS_DATA_PARSED")]
 		public function onEPlusDataParsed(event:ScenarioDataLoadedEvent):void
 		{
 			Logger.debug("onEPlusDataParsed() called. Removing modal popup.", this)

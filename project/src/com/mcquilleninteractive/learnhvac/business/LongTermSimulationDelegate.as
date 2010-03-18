@@ -237,7 +237,7 @@ package com.mcquilleninteractive.learnhvac.business
 			lhInc += "\n! Learn HVAC-specific values are included below"
 			lhInc += "\n! ***************************************************************"
 						
-			//write in .inc lines, substituting in values from SPARK
+			//write in .inc lines, substituting in values from MODELICA
 			lhInc += "\n! Variables for general setup"
 			lhInc += "\n##def1 LH_ScenarioName	   " + scenarioModel.name
 			lhInc += "\n##def1 LH_weatherFile      " + longTermSimulationModel.weatherFile
@@ -292,51 +292,57 @@ package com.mcquilleninteractive.learnhvac.business
 			lhInc += "\n##def1 LH_equipPeakLoad    " + longTermSimulationModel._equipPeakLoad		//SI Value
 			lhInc += "\n##def1 LH_areaPerPerson    " + longTermSimulationModel._areaPerPerson		//SI Value
 			
-			/* *************** */
-			/* SPARK VARIABLES */
-			/* *************** */
+			/* ****************** */
+			/* MODELICA VARIABLES */
+			/* ****************** */
+			
+			/* Note...at some point we need to change up the variable names 
+			   encoded in the E+ input template. I'm leaving as SPK_ for now
+			   but should be MDL_
+			*/
 			
 			lhInc += "\n\n! SPK Variables for temp of room & supply air"
 			
-			var tRoomSPHeat:SystemVariable = scenarioModel.getSysVar("TRoomSP_Heat")
-			var tRoomSPCool:SystemVariable = scenarioModel.getSysVar("TRoomSP_Cool")
+			var tRoomSPHeat:SystemVariable = scenarioModel.getSysVar("SysTRmSPHeat")
+			var tRoomSPCool:SystemVariable = scenarioModel.getSysVar("SYSTRmSPCool")
 			
 			//lhInc += "\n##def1 SPK_TRoomSP       " + tRoomSP_val
 			lhInc += "\n##def1 SPK_HRoomSP       " + tRoomSPHeat.baseSIValue
 			lhInc += "\n##def1 SPK_CRoomSP       " + tRoomSPCool.baseSIValue
 			
-			var tSupS:SystemVariable = scenarioModel.getSysVar("TSupS")			
+			var tSupS:SystemVariable = scenarioModel.getSysVar("SYSTSupS")			
 			lhInc += "\n##def1 SPK_TSupS         " + tSupS.baseSIValue
 			lhInc += "\n##def1 SPK_DCSupS        15 ! For now set this = 15 C"
 			lhInc += "\n##def1 SPK_DHSupS        35 ! For now set this = 35 C"
 
-			var rmQSens:SystemVariable = scenarioModel.getSysVar("RmQSENS") 
+			var rmQSens:SystemVariable = scenarioModel.getSysVar("SYSRmQSens") 
 			var rmQSens_val:Number = rmQSens.baseSIValue
 			lhInc += "\n\n! SPK Variable for total room internal load" 
 			lhInc += "\n##def1 SPK_RmQSENS         " + rmQSens.baseSIValue
 
 	
-			var vavPosMin:SystemVariable = scenarioModel.getSysVar("VAVposMin") 
+			var vavPosMin:SystemVariable = scenarioModel.getSysVar("VAVMinPos") 
 			lhInc += "\n\n! SPK Variable for equip max/min settings"
 			lhInc += "\n##def1 SPK_VAVminpos       " + vavPosMin.baseSIValue
 			
-			var fanpowerTot:SystemVariable = scenarioModel.getSysVar("FanpowerTot") 
-			lhInc += "\n##def1 SPK_FanpowerTot     "+ fanpowerTot.baseSIValue
+			var fanpower:SystemVariable = scenarioModel.getSysVar("FANPwr") 
+			lhInc += "\n##def1 SPK_FanpowerTot     "+ fanpower.baseSIValue
 			
-			var hcUA:SystemVariable = scenarioModel.getSysVar("HCUA") 
+			var hcUA:SystemVariable = scenarioModel.getSysVar("HCQd") 
 			lhInc += "\n##def1 SPK_HCUA     "+ hcUA.baseSIValue
 			
-			var vavHCUA:SystemVariable = scenarioModel.getSysVar("VAVHCUA") 
+			var vavHCUA:SystemVariable = scenarioModel.getSysVar("VAVRhcQd") 
 			lhInc += "\n##def1 SPK_VAVHCUA     "+ vavHCUA.baseSIValue
 			
-			var ccUA:SystemVariable = scenarioModel.getSysVar("CCUA") 
+			var ccUA:SystemVariable = scenarioModel.getSysVar("CCQd") 
 			lhInc += "\n##def1 SPK_CCUA     "+ ccUA.baseSIValue
 						
-			var pAtm:SystemVariable = scenarioModel.getSysVar("PAtm") 
-			lhInc += "\n##def1 SPK_PAtm     "+ pAtm.baseSIValue
-			
-			
-			var mxTOut:SystemVariable = scenarioModel.getSysVar("MXTOut") 
+			//We don't have PAtm right now (3/11/2010) so just use default value			
+			//var pAtm:SystemVariable = scenarioModel.getSysVar("PAtm") 
+			//lhInc += "\n##def1 SPK_PAtm     "+ pAtm.baseSIValue
+			lhInc += "\n##def1 SPK_PAtm     101325.0"
+						
+			var mxTOut:SystemVariable = scenarioModel.getSysVar("SYSTempDB") 
 			lhInc += "\n##def1 SPK_MXTOut     "+ mxTOut.baseSIValue
 			
 			

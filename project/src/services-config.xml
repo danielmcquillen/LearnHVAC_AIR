@@ -35,9 +35,12 @@
  		<channels>
  		
 			<channel-definition id="learnhvac-amf" class="mx.messaging.channels.AMFChannel">
-			
+				
 				<endpoint uri="http://client.learnhvac.org/weborb" class="flex.messaging.endpoints.AMFEndpoint"/>
-								
+				
+				<!--
+				<endpoint uri="http://localhost:3000/weborb" class="flex.messaging.endpoints.AMFEndpoint"/>
+					-->		
 			</channel-definition>
 			
 		</channels>

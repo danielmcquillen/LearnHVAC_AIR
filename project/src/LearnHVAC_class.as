@@ -3,6 +3,7 @@ import com.adobe.onair.logging.FileTarget;
 import com.adobe.onair.logging.TextAreaTarget;
 import com.mcquilleninteractive.learnhvac.event.LoggedInEvent;
 import com.mcquilleninteractive.learnhvac.event.LoginEvent;
+import com.mcquilleninteractive.learnhvac.event.SettingsEvent;
 import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
 import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
@@ -55,8 +56,7 @@ private function onPreInit():void
 
 public function onInit():void
 {
-	ToolTipManager.toolTipClass = HTMLToolTip;
-	
+	ToolTipManager.toolTipClass = HTMLToolTip;	
 
 	Logger.debug("#LH: logging is all setup!")
 
@@ -147,7 +147,16 @@ protected function onAppClose(event:Event):void
 
 public function initSettings():void
 {
+	//TODO: load settings from file...
+	//for now just set properties and then launch an event as if these were read in
 	settings = new LearnHVACSettings()
+	
+	ApplicationModel.currUnits = "SI"
+	
+	var evt:SettingsEvent = new SettingsEvent(SettingsEvent.SETTINGS_LOADED, true)
+	Swiz.dispatchEvent(evt)
+	
+	
 }
 
 public function initLog():void
@@ -209,16 +218,16 @@ protected function doFirstStartup():void
 		EncryptedLocalStore.setItem("firstInstallDate", dateBA)
 		
 		
-		//copy the spark to the storage directory		
-		var sparkFile:File = File.applicationDirectory.resolvePath("spark")
-		var copySparkFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "spark")
-		if (copySparkFile.exists==false)
+		//copy the modelica File to the storage directory		
+		var modelicaFile:File = File.applicationDirectory.resolvePath("modelica")
+		var copyModelicaFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "modelica")
+		if (copyModelicaFile.exists==false)
 		{
-			copySparkFile.createDirectory()
+			copyModelicaFile.createDirectory()
 		}
-		Logger.debug("Moving spark to : " +  copySparkFile.nativePath, this) 
-		copySparkFile.createDirectory()
-		sparkFile.copyTo(copySparkFile, true)
+		Logger.debug("Moving modelica to : " +  copyModelicaFile.nativePath, this) 
+		copyModelicaFile.createDirectory()
+		modelicaFile.copyTo(copyModelicaFile, true)
 				
 		//copy the energyplus to the storage directory	
 		var eplusFile:File = File.applicationDirectory.resolvePath("energyplus")

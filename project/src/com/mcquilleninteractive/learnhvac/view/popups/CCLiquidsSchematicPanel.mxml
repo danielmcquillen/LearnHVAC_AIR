@@ -41,10 +41,11 @@
          
 			public function onCreationComplete():void
 			{
-				if (scenarioModel && applicationModel&& applicationModel.scenarioLoaded)
-				{
-					onScenarioLoaded(null);
-				}
+				if (scenarioModel ==null) 
+           		{
+           			scenarioModel = Swiz.getBean("scenarioModel") as ScenarioModel
+                }
+				setBindings(null)
 			}
 			
 			
@@ -66,21 +67,19 @@
 			
 			
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
-			public function onScenarioLoaded(e:Event):void
-			{
-				
-				Logger.debug("#CCLiquidsPanel: trying to bind values...")
+			public function setBindings(e:Event):void
+			{				
 								
 				//CC Liquid temps:
 				BindingUtils.bindSetter(function(currVal:Number):void{tPipe1.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("CCTLiqEnt"), "currValue" )
 				BindingUtils.bindSetter(function(currVal:Number):void{tPipe2.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("CCTLiqLvg"), "currValue" )
 				
 				//CC Liquid mass flow:
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe1.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("CCmLiqEnt"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe2.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("CCmLiqEnt"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe1.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("CHLLiqFlw"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{mPipe2.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("CHLLiqFlw"), "currValue" )
 				
 				//valve pos
-				BindingUtils.bindSetter(function(currVal:Number):void{pos.text=String(uint(currVal*100))+"%"}, scenarioModel.getSysVar("CCpos"), "currValue" )
+				BindingUtils.bindSetter(function(currVal:Number):void{pos.text=String(uint(currVal*100))+"%"}, scenarioModel.getSysVar("CCPos"), "currValue" )
 				
 				    	 		
 			}

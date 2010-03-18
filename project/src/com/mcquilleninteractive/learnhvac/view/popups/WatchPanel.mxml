@@ -87,7 +87,7 @@
   				  	 dragEnabled="false"
   				  	 dropEnabled="true"
   				  	 showDataTips="true"
-  				  	 dataTipField="display_name"
+  				  	 dataTipField="displayName"
   				  	 dragDrop="doDragDrop(event)"
   				  	 keyUp="onKeyUp(event)" 
   				  	 allowMultipleSelection="true"

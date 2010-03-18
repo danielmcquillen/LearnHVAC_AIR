@@ -31,8 +31,8 @@ package com.mcquilleninteractive.learnhvac.controller
 			Logger.debug("Login()",this)	
 			if (event.loggingInAsGuest)
 			{
-				userModel.first_name = ""
-				userModel.last_name = ""
+				userModel.firstName = ""
+				userModel.lastName = ""
 				userModel.username = "guest"
 				userModel.role = UserModel.ROLE_GUEST
 				userModel.loggedInAsGuest = true
@@ -52,8 +52,8 @@ package com.mcquilleninteractive.learnhvac.controller
 			Logger.debug("onLoginResult() " ,this)
 			if (re.result)
 			{
-				userModel.first_name = re.result[0]
-				userModel.last_name = re.result[1]				
+				userModel.firstName = re.result[0]
+				userModel.lastName = re.result[1]				
 				userModel.loggedInAsGuest = false
 				Swiz.dispatchEvent( new LoggedInEvent(LoggedInEvent.LOGGED_IN))				
 			}

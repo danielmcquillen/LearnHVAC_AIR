@@ -119,7 +119,7 @@
 				iptTemp.text = "80"				
 			}
 								
-			[Mediate(event="ShortTermSimulationEvent.OUTPUT_UPDATED")]
+			[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]
 			public function onShortTermOutputUpdated(event:ShortTermSimulationEvent):void
 			{
 				var currTemp:String = scenarioModel.getSysVar("TRoomSP").currValue.toString()

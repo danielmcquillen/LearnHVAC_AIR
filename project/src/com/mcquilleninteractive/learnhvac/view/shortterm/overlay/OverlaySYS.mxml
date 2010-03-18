@@ -54,21 +54,18 @@
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{		
 				
-				Logger.debug("scenarioLoaded()", this)				
-								
-				//set visibility of labels				
-				lblTAirOut.visible = lblTAirOut_Title.visible = scenarioModel.getSysVar("TAirOut").visible
-				lblTwAirOut.visible = lblTwAirOut_Title.visible = scenarioModel.getSysVar("TwAirOut").visible
-				lblHCposReal.visible = lblHCposReal_Title.visible= scenarioModel.getSysVar("HCposReal").visible
-				lblCCposReal.visible = lblCCposReal_Title.visible =  scenarioModel.getSysVar("CCposReal").visible
-				lblTRoom.visible = lblTRoom_Title.visible =  scenarioModel.getSysVar("TRoom").visible
-				lblMXEAPosDamperReal.visible = scenarioModel.getSysVar("MXEAPosDamperReal").visible
-				lblMXOAPosDamperReal.visible = scenarioModel.getSysVar("MXOAPosDamperReal").visible
-				lblMXRAPosDamperReal.visible = scenarioModel.getSysVar("MXRAPosDamperReal").visible			
-				lblTSupMea.visible= lblTSupMea_Title.visible =  scenarioModel.getSysVar("TsupMea").visible
-				lblVAVHCTAirLvg.visible = lblVAVHCTAirLvg_Title.visible = scenarioModel.getSysVar("VAVHCTAirLvg").visible
-				lblVAVDAMPos.visible = lblVAVDAMPos_Title.visible = scenarioModel.getSysVar("VAVDAMPos").visible
-				lblVAVHCpos.visible = lblVAVHCpos_Title.visible = scenarioModel.getSysVar("VAVHCpos").visible
+				
+				//set visibility of labels					
+				var varArr:Array = ["SYSTAirDB","HCPos","CCPos",
+									"RMTemp","VAVTAirLvg","VAVDampPos",
+									"VAVRhcPos" 	]
+									
+				setLabels(varArr) 
+				return
+				
+				lblMXExDampPos.visible = scenarioModel.getSysVar("MXExDampPos").visible
+				lblMXRtnDampPos.visible = scenarioModel.getSysVar("MXRtnDampPos").visible
+				lblMXIntDampPos.visible = scenarioModel.getSysVar("MXIntDampPos").visible			
 				
 			}
 			
@@ -79,7 +76,7 @@
 	
 	<!-- outside info-->
 	
-	<mx:Label 	id="lblTAirOut_Title"
+	<mx:Label 	id="lblSYSTAirDB_Title"
 		text="DB Temp: "  
 		toolTip="Outdoor Air Dry Bulb Temperature"
 		styleName="overlayTitle" 
@@ -87,15 +84,15 @@
 		y="35"/>
 		
 	<overlay:ValueDisplayLabel 	
-		id="lblTAirOut" 
-		sysVarName="TAirOut"
+		id="lblSYSTAirDB" 
+		sysVarName="SYSTAirDB"
 		text="0" 
 		styleName="overlayValue" 
 		toolTip="Outdoor Air Dry Bulb Temperature"
 		x="70"
 		y="35"/>
 			
-			
+	<!--
 	<mx:Label id="lblTwAirOut_Title" 
 		text="WB Temp: "  
 		toolTip="Outdoor Air Wet Bulb Temperature" 
@@ -111,11 +108,12 @@
 		toolTip="Outdoor Air Wet Bulb Temperature"
 		x="70" 
 		y="55"/>
-				
+	-->
+	
 	<!-- supply air temp -->
 
 	<mx:Label
-		id="lblTSupMea_Title"
+		id="lblFANTAirLvg_Title"
 		text="Supply Air Temp: "
 		styleName="overlayTitle" 
 		textAlign="right"
@@ -123,26 +121,26 @@
 		x="460" y="45"/>
 		
 	<overlay:ValueDisplayLabel 	
-		id="lblTSupMea" 
-		sysVarName="TAirSup"
+		id="lblFANTAirLvg" 
+		sysVarName="FANTAirLvg"
 		text="0" 
 		styleName="overlayValue" 
 		textAlign="right"
 		width="150"
 		x="460" y="60"/>
-	
+	 
 			
 	
 	<!-- HC and CC -->
 	<mx:Label 	
-		id="lblValvePosition" 
+		id="lblValvePos" 
 		text="Valve Pos." 
 		styleName="overlayTitle" 
 		x="363" y="35" color="0xCCCCCC"/>
 			 
 			 
 	<mx:Label 
-		id="lblHCposReal_Title" 
+		id="lblHCPos_Title" 
 		text="HC:" 
 		styleName="overlayTitle" 
 		toolTip="Heating Coil valve (percent open)"
@@ -151,8 +149,8 @@
 		y="55"/>
 		
 	<overlay:ValueDisplayLabel 	
-		id="lblHCposReal" 
-		sysVarName="HCposReal"
+		id="lblHCPos" 
+		sysVarName="HCPos"
 		usePercent="true"
 		text="0 %" 
 		styleName="overlayValue" 
@@ -162,7 +160,7 @@
 			 
 			 
 	<mx:Label 
-		id="lblCCposReal_Title" 
+		id="lblCCPos_Title" 
 		text="CC:" 
 		styleName="overlayTitle" 
 		width="60"
@@ -170,8 +168,8 @@
 		x="405" y="55"/>
 		
 	<overlay:ValueDisplayLabel 	
-		id="lblCCposReal" 
-		sysVarName="CCposReal"
+		id="lblCCPos" 
+		sysVarName="CCPos"
 		usePercent="true"
 		text="0 %" 
 		styleName="overlayValue" 
@@ -183,7 +181,7 @@
 	<!-- ROOM -->
 			
 	<mx:Label 
-		id="lblTRoom_Title" 
+		id="lblRMTemp_Title" 
 		text="Room Temp: " 
 		styleName="overlayTitle" 
 		x="250" 
@@ -192,8 +190,8 @@
 		textAlign="right" />
 		
 	<overlay:ValueDisplayLabel 	
-		id="lblTRoom" 
-		sysVarName="TRoom"
+		id="lblRMTemp" 
+		sysVarName="RMTemp"
 		text="84" 
 		styleName="overlayValue"
 		x="248" 
@@ -205,7 +203,7 @@
 	<!-- VAV -->
 	
 	<mx:Label
-		id="lblVAVHCTAirLvg_Title" 
+		id="lblVAVTAirLvg_Title" 
 		text="VAV Output Temp "
 		styleName="overlayTitle" 
 		x="260" 
@@ -214,8 +212,8 @@
 		textAlign="right"/>
 		
 	<overlay:ValueDisplayLabel 	
-		id="lblVAVHCTAirLvg"
-		sysVarName="VAVHCTAirLvg"
+		id="lblVAVTAirLvg"
+		sysVarName="VAVTAirLvg"
 		text=""
 		styleName="overlayValue"
 		x="258" 
@@ -224,7 +222,7 @@
 		textAlign="right"/>
 			 			 
 			 			 
-	<mx:Label id="lblVAVDAMPos_Title"
+	<mx:Label id="lblVAVDampPos_Title"
 		text="Damper Pos.: "
 		styleName="overlayTitle"
 		toolTip="VAV Damper Position (percent open)"
@@ -234,8 +232,8 @@
 		textAlign="right"/>
 		
 	<overlay:ValueDisplayLabel 	
-		id="lblVAVDAMPos"
-		sysVarName="VAVDAMPos"
+		id="lblVAVDampPos"
+		sysVarName="VAVDampPos"
 		usePercent="true"
 		text=""
 		styleName="overlayValue"
@@ -245,7 +243,7 @@
 		width="100" 
 		textAlign="left"/>
 		
-	<mx:Label id="lblVAVHCpos_Title"
+	<mx:Label id="lblVAVRhcPos_Title"
 		text="Valve Pos.: "
 		styleName="overlayTitle"
 		toolTip="VAV Reheat Coil Valve Position (percent open)"
@@ -255,8 +253,8 @@
 		textAlign="right"/>
 		
 	<overlay:ValueDisplayLabel 	
-		id="lblVAVHCpos"
-		sysVarName="VAVHCpos"
+		id="lblVAVRhcPos"
+		sysVarName="VAVRhcPos"
 		usePercent="true"
 		text=""
 		styleName="overlayValue"
@@ -271,17 +269,18 @@
 			 
 	<!-- Dampers -->
 	<overlay:ValueDisplayLabel 	
-		id="lblMXEAPosDamperReal"
-		sysVarName="MXEAPosDamperReal"
+		id="lblMXExDampPos"
+		sysVarName="MXExDampPos"
 		usePercent="true"
 		toolTip="Exhaust Air Damper Position (percent open)"
 		styleName="overlayValue"
-		x="100" y="70"
+		x="100" 
+		y="70"
 		textAlign="right"/>
 			 	
 	<overlay:ValueDisplayLabel 	
-		id="lblMXRAPosDamperReal"
-		sysVarName="MXRAPosDamperReal"
+		id="lblMXRtnDampPos"
+		sysVarName="MXRtnDampPos"
 		usePercent="true"
 		toolTip="Return Air Damper Position (percent open)"
 		styleName="overlayValue"
@@ -290,12 +289,13 @@
 		textAlign="right"/>
 		
 	<overlay:ValueDisplayLabel 	
-		id="lblMXOAPosDamperReal"
-		sysVarName="MXOAPosDamperReal"
+		id="lblMXIntDampPos"
+		sysVarName="MXIntDampPos"
 		usePercent="true"
 		toolTip="Outdoor Air Damper Position (percent open)"
 		styleName="overlayValue"
-		x="205" y="45"
+		x="205" 
+		y="45"
 		textAlign="right"/>
 		
 	

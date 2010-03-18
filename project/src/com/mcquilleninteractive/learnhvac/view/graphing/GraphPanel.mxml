@@ -11,444 +11,444 @@
 		
 	
 	<mx:Script>
-			<![CDATA[
-				import com.mcquilleninteractive.learnhvac.model.SystemVariable;
-				import com.mcquilleninteractive.learnhvac.model.IGraphDataModel;
-				import com.mcquilleninteractive.learnhvac.model.EPlusData;
-				import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
-				import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel
-				import mx.charts.ChartItem;
-				import mx.managers.DragManager
-				import mx.events.DragEvent
-				import mx.core.DragSource
-				import mx.core.UIComponent
-				import com.mcquilleninteractive.learnhvac.util.Logger
-				import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-				import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-				import mx.charts.chartClasses.ChartBase
-				import mx.collections.ArrayCollection
-				import mx.controls.Tree	
-				
-				import com.mcquilleninteractive.learnhvac.event.AddVarToGraphEvent
-				import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
-				import com.mcquilleninteractive.learnhvac.event.GraphEvent
-				import mx.controls.Alert
-				import com.mcquilleninteractive.learnhvac.view.graphing.DataTree
-				
-				public static var TIME_SERIES_GRAPH:String = "TS"
-				public static var XY_PLOT_GRAPH:String = "XY"
-				
-				public var graphType:String = GraphPanel.TIME_SERIES_GRAPH //XY or TS
-				private var graphVars:Array // array of variables to graph on this chart
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.data.*;
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel
+			import mx.charts.ChartItem;
+			import mx.managers.DragManager
+			import mx.events.DragEvent
+			import mx.core.DragSource
+			import mx.core.UIComponent
+			import com.mcquilleninteractive.learnhvac.util.Logger
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
+			import mx.charts.chartClasses.ChartBase
+			import mx.collections.ArrayCollection
+			import mx.controls.Tree	
+			
+			import com.mcquilleninteractive.learnhvac.event.AddVarToGraphEvent
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+			import com.mcquilleninteractive.learnhvac.event.GraphEvent
+			import mx.controls.Alert
+			import com.mcquilleninteractive.learnhvac.view.graphing.DataTree
+			
+			public static var TIME_SERIES_GRAPH:String = "TS"
+			public static var XY_PLOT_GRAPH:String = "XY"
+			
+			public var graphType:String = GraphPanel.TIME_SERIES_GRAPH //XY or TS
+			private var graphVars:Array // array of variables to graph on this chart
+							
+			//Charts can only show variables from the same run, not mixed, so we keep a reference
+			//to the dragSource as the first object is dragged over. Then we compare future drags against it's type
+			//to make sure that it's the same as the first 
+			private var originalDragInitiator:Tree 
+			private var dataType:String // a local copy of the data type provided by the originalDragInitiator
+			
+			private var titlePrefix:String //prepends the title of the chart with "RT Run1: ", "LT Run1: " , etc.
+			public var position:Number //1 for upper chart, 2 for lower chart
+			
+			
+			
+			[Bindable]
+			[Autowire]
+			public var scenarioModel:ScenarioModel
+					
+			/* DATA MODEL */
+			public var graphDataModel:IGraphDataModel
+			
+			
+			[Bindable]
+			private var _horizontalTitle:String = "";
+			
+			[Bindable]
+			private var _verticalTitle:String = "";
+			
+			[Bindable]
+			private var _verticalTitle2:String = "";
+			
+			[Bindable]
+		    public var var1Color:Number;
+
+		    [Bindable]
+			public var var2Color:Number;
+			
+			//set when user drags item from DataTree.	
+			public var dataSourceType:String = ModelicaData.MODELICA_DATA_TYPE 		
+
+			public function onCreationComplete():void
+			{
+				graphVars= new Array()
+			}
+
+			[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
+			public function onUnitsChanged(event:SetUnitsCompleteEvent):void
+			{
+				refreshData(null)
+			}
+
+			public function setGraphType (graphType:String) :void
+			{
+				Logger.debug("setGraphType() graphType: " + graphType, this)
 								
-				//Charts can only show variables from the same run, not mixed, so we keep a reference
-				//to the dragSource as the first object is dragged over. Then we compare future drags against it's type
-				//to make sure that it's the same as the first 
-				private var originalDragInitiator:Tree 
-				private var dataType:String // a local copy of the data type provided by the originalDragInitiator
+				this.graphType = graphType
 				
-				private var titlePrefix:String //prepends the title of the chart with "RT Run1: ", "LT Run1: " , etc.
-				public var position:Number //1 for upper chart, 2 for lower chart
-				
-				
-				
-				[Bindable]
-				[Autowire]
-				public var scenarioModel:ScenarioModel
-						
-				/* DATA MODEL */
-				public var graphDataModel:IGraphDataModel
-				
-				
-				[Bindable]
-				private var _horizontalTitle:String = "";
-				
-				[Bindable]
-				private var _verticalTitle:String = "";
-				
-				[Bindable]
-				private var _verticalTitle2:String = "";
-				
-				[Bindable]
-			    public var var1Color:Number;
-
-			    [Bindable]
-    			public var var2Color:Number;
-				
-				public var dataSourceType:String = ScenarioModel.SPARK_DATA_TYPE //set when user drags item from DataTree.			
-
-				public function onCreationComplete():void
-				{
-					graphVars= new Array()
-				}
-
-				[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
-				public function onUnitsChanged(event:SetUnitsCompleteEvent):void
-				{
-					refreshData(null)
-				}
-
-				public function setGraphType (graphType:String) :void
-				{
-					Logger.debug("setGraphType() graphType: " + graphType, this)
+				lineChart.visible = (graphType==GraphPanel.TIME_SERIES_GRAPH )
+				plotChart.visible = (graphType==GraphPanel.XY_PLOT_GRAPH )
 									
-					this.graphType = graphType
-					
-					lineChart.visible = (graphType==GraphPanel.TIME_SERIES_GRAPH )
-					plotChart.visible = (graphType==GraphPanel.XY_PLOT_GRAPH )
-										
-    				setGraphTitle()	
-					setAxisTitles()
-					    				
-    				if (graphType==GraphPanel.XY_PLOT_GRAPH)
-					{
-						lineChart.visible = false
-						plotChart.visible = true
-						//only plot if XY chart has two variables
-						if (graphVars.length>1)
-						{
-							getDataAndPlot()
-						}
-						else
-						{
-							//do nothing
-						}
-					}
-					else if (graphType ==GraphPanel.TIME_SERIES_GRAPH ) 
-					{					
-						getDataAndPlot()
-						//make sure graph is set back to normal minimum
-						//lineHorizontalAxis.minimum = 0
-						lineChart.visible = true
-						plotChart.visible = false
-					}
-				}
-				
-		
-				public function clear():void
+				setGraphTitle()	
+				setAxisTitles()
+				    				
+				if (graphType==GraphPanel.XY_PLOT_GRAPH)
 				{
-					graphVars = []
-					this.title = "Graph"
-					this.originalDragInitiator = null
-					
-					//clear TS
-					lineHorizontalAxis.title = ""
-	    			v1.title = ""
-    				v2.title = ""
-    				lineChart.dataProvider = new ArrayCollection()
-    				
-					//clear XY
-    				plotChart.dataProvider = new ArrayCollection()
-    				plotHorizontalAxis.title = ""
-    				plotVerticalAxis.title = ""
-    				
-    				//show current graph
-    				if (graphType==GraphPanel.TIME_SERIES_GRAPH )
+					lineChart.visible = false
+					plotChart.visible = true
+					//only plot if XY chart has two variables
+					if (graphVars.length>1)
 					{
-						lineSeries2.visible = false
-						var2Renderer.visible = false
-						plotChart.visible = false
+						getDataAndPlot()
 					}
 					else
 					{
-						lineChart.visible = false
-						plotChart.visible = true
+						//do nothing
 					}
-					  				
 				}
-				
-				
-				public function onDragEnter(event:DragEvent):void
-				{
-					
-					mx.managers.DragManager.showFeedback(mx.managers.DragManager.COPY)
-										
-					//We only want dataPoints to be dropped on graph, so filter out everything else here
-					var dropTarget:Panel = event.currentTarget as Panel
-				    if( event.dragInitiator is Tree ) {
-						var ds:DragSource = event.dragSource
-												
-        				if( !ds.hasFormat("treeItems") ) return; // no useful data
-         				var items:Array = ds.dataForFormat("treeItems") as Array
-						
-         				for(var i:Number=0; i < items.length; i++) {
-             				var item:XML = XML(items[i])
-             				if( item.localName() != "dataPoint" ) return; // only want dataPoints
-         				}   
-         				
-         				//If this is the first drag, keep ref to dragSource
-	     				if (originalDragInitiator==null)
-	     				{
-	     					originalDragInitiator = event.dragInitiator as Tree
-	     				}
-         				
-     					if (event.dragInitiator != originalDragInitiator)
-     					{
-     						//if not, return without accepting drop
-     						return
-     					}
-     					        				
-     				}	 
-     				else
-     				{
-     					return
-     				}				
-     				    				
-     				// if everything is cool after all those checks, accept the drop
-    				mx.managers.DragManager.acceptDragDrop(dropTarget);
-
+				else if (graphType ==GraphPanel.TIME_SERIES_GRAPH ) 
+				{					
+					getDataAndPlot()
+					//make sure graph is set back to normal minimum
+					//lineHorizontalAxis.minimum = 0
+					lineChart.visible = true
+					plotChart.visible = false
 				}
+			}
+			
+	
+			public function clear():void
+			{
+				graphVars = []
+				this.title = "Graph"
+				this.originalDragInitiator = null
 				
-				public function onDragOver(event:DragEvent):void
+				//clear TS
+				lineHorizontalAxis.title = ""
+    			v1.title = ""
+				v2.title = ""
+				lineChart.dataProvider = new ArrayCollection()
+				
+				//clear XY
+				plotChart.dataProvider = new ArrayCollection()
+				plotHorizontalAxis.title = ""
+				plotVerticalAxis.title = ""
+				
+				//show current graph
+				if (graphType==GraphPanel.TIME_SERIES_GRAPH )
 				{
-					//TO DO: visual key
+					lineSeries2.visible = false
+					var2Renderer.visible = false
+					plotChart.visible = false
 				}
-				
-				public function onDragDrop(dragEvent:DragEvent):void
+				else
 				{
-					var dataTree:DataTree = DataTree(dragEvent.dragInitiator)
-					graphDataModel = dataTree.graphDataModel
+					lineChart.visible = false
+					plotChart.visible = true
+				}
+				  				
+			}
+			
+			
+			public function onDragEnter(event:DragEvent):void
+			{
+				
+				mx.managers.DragManager.showFeedback(mx.managers.DragManager.COPY)
+									
+				//We only want dataPoints to be dropped on graph, so filter out everything else here
+				var dropTarget:Panel = event.currentTarget as Panel
+			    if( event.dragInitiator is Tree ) {
+					var ds:DragSource = event.dragSource
+											
+    				if( !ds.hasFormat("treeItems") ) return; // no useful data
+     				var items:Array = ds.dataForFormat("treeItems") as Array
 					
-					Logger.debug("#GraphPanel: onDragDrop: dataTree.type; " + dataTree.type)
-					
-					switch (dataTree.type)
-					{
-						case LongTermSimulationDataModel.RUN_1:
-							titlePrefix = "LT Run1: "
-							break
-						case LongTermSimulationDataModel.RUN_2:
-							titlePrefix = "LT Run2: "
-							break
-						case ShortTermSimulationDataModel.RUN_1:
-							titlePrefix = "RT Run1: "
-							break
-						case ShortTermSimulationDataModel.RUN_2:
-							titlePrefix = "RT Run2: "
-							break
-						default:
-							Logger.error("#GraphPanel: onDragDrop() unrecognized dataTree.type: " + dataTree.type)
-					}	
-						
-					var dataType:String = dataTree.type					
-					
-					//update time axis to reflect datasource
-					dataSourceType = dataTree.graphDataModel.getDataType()
-					switch(dataSourceType)
-					{
-						case ScenarioModel.EPLUS_DATA_TYPE:
-							lineHorizontalAxis.dataUnits = "days"
-							lineHorizontalAxis.labelUnits = "days"
-							break
-						
-						case ScenarioModel.SPARK_DATA_TYPE:
-							lineHorizontalAxis.dataUnits = "seconds"
-							lineHorizontalAxis.labelUnits = "seconds"
-							break
-							
-						default:
-							Logger.error("#GraphPanel: unrecognized GraphDataModel type: "+ graphType)
-					}
-					
-					var ds:DragSource = dragEvent.dragSource
-					var items:Array = ds.dataForFormat("treeItems") as Array
-         			var item:XML = XML(items[0]);
+     				for(var i:Number=0; i < items.length; i++) {
+         				var item:XML = XML(items[i])
+         				if( item.localName() != "dataPoint" ) return; // only want dataPoints
+     				}   
      				
-             		if (item.@id==undefined)
-             		{
-             			Logger.error("#GraphPanel: onDragDrop(): dropped item from menu did not have id attribute")
-             			mx.controls.Alert.show("Internal Error. Cannot graph this variable. See log for details.")
-             			return
-             		}
-             		addVarToGraph(item.@id)          			
-				}
-				
-				public function onDragExit(event:DragEvent):void 
-				{
-					
-    			}
-    			
-    			
-    			private function isVarGraphed(itemID:String):Boolean
-    			{
-    				// Check if variable is already being graphed
-    				var exists:Boolean = false
-    				for (var i:Number=0; i<graphVars.length;i++)
-    				{
-    					if (graphVars[i]==itemID){
-    						exists=true
-    					}
-    				}
-    				return exists
-    			}
-    			
-    			private function addVarToGraph(itemID:String):void
-    			{
-    				Logger.debug("#GraphPanel: addVarToGraph() itemID: " + itemID)
-    				if (isVarGraphed(itemID)){
-    					mx.controls.Alert.show("That variable is already being graphed")
-    					return
-    				}
-    				
-    				
-    				//check if variable exists in model
-    				if (!graphDataModel.varExists(itemID))
-    				{
-    					mx.controls.Alert.show("That variable does not exist in the source file")
-    					return
-    				}
-    					
-    				//replace second variable when 3rd or more is dragged on
-    				if (graphVars.length>1)
-    				{
-    					Logger.debug("#GraphPanel: replacing " + graphVars[1] + " with " + itemID)
-    					graphVars[1] = itemID
-    				}
-    				else
-    				{
-    					Logger.debug("#GraphPanel: adding first variable ")
-    					graphVars.push(itemID)
-    				}
-    				
-    				Logger.debug("#GraphPanel: now setting axis titles, title and getting data...")
-    				setAxisTitles()
-    				setGraphTitle()
-    				getDataAndPlot()
-    				
-    			}
-    			
-    			public function setGraphTitle():void
-    			{
-    				Logger.debug("setGraphTitle() ", this)
-    				var var1Name:String = ""
-    				var var2Name:String = ""
-    				
-    				if (dataType==LongTermSimulationDataModel.RUN_1 || dataType==LongTermSimulationDataModel.RUN_2)
-    				{
-    					var sysVar1:SystemVariable = scenarioModel.getSysVar(graphVars[0])
-    					if (sysVar1!=null)
-	    					var1Name = sysVar1.display_name
-	   					if (graphVars[1]!=null)
-	   						var sysVar2:SystemVariable = scenarioModel.getSysVar(graphVars[1])	
-    					if (sysVar2!=null)
-    						var2Name = sysVar2.display_name
-    				}
-    				else
-    				{
-    					var1Name = graphVars[0]
-    					if (graphVars.length>1)
-	    					var2Name = graphVars[1]
-    				}
-    				    				
-    				if (graphType==GraphPanel.TIME_SERIES_GRAPH )
-    				{
-    					//change title
-    					var t:String = var1Name
-         				if (graphVars.length>1){
-         					t = t + " and " + var2Name
-         				}
-         				this.title = t + " vs. Time"
-    				}
-    				else if (graphType==GraphPanel.XY_PLOT_GRAPH )
-    				{
-    					if (graphVars.length>1)
-    					{
-    						this.title =  var1Name + " vs. " + var2Name
-    					}
-    					else
-    					{
-    						this.title = var1Name + " vs. " //and wait for next drop
-    					}
-    				}
-    				
-    				this.title = titlePrefix + this.title
-    				
-    			}
-    			
-    			public function setAxisTitles():void
-    			{
-       				Logger.debug("setAxisTItles()")
-    				if (graphType==GraphPanel.TIME_SERIES_GRAPH )
-    				{
-    					if (dataSourceType==ScenarioModel.EPLUS_DATA_TYPE)
-    					{
-    						_horizontalTitle = "Time (days)"
-    					}
-    					else if(dataSourceType==ScenarioModel.SPARK_DATA_TYPE)
-    					{
-    						_horizontalTitle = "Time (secs)"
-    					}
-    					
-       					Logger.debug("settting _verticalTitle")
-    					_verticalTitle = getVarTitle(graphVars[0])
-       					Logger.debug("_verticalTitle: " + _verticalTitle)
-    					if (graphVars.length>1)
-    					{	
-    						var2Renderer.visible = true
-    						_verticalTitle2 = getVarTitle(graphVars[1])
-       						Logger.debug("_verticalTitle2: " + _verticalTitle2)
-    					}
-    				}
-    				else if (graphType==GraphPanel.XY_PLOT_GRAPH )
-    				{
-    					_horizontalTitle = graphVars[0]
-       					Logger.debug("_horizontalTitle: " + _horizontalTitle)
-    					if (graphVars.length>1)
-    					{
-    						_verticalTitle = graphVars[1]
-       						Logger.debug("_verticalTitle: " + _verticalTitle)
-    					}
-    				}
-    			}
-    			
-				public function getVarTitle(varID:String):String
-				{
-    				var units:String = graphDataModel.getUnits(varID)
-					if (units != "")
-    				{
-    					units = "(" + units + ")"
-    				}
-    				var name:String = graphDataModel.getVarName(varID)
-					return name + " " + units
-				}            	
+     				//If this is the first drag, keep ref to dragSource
+     				if (originalDragInitiator==null)
+     				{
+     					originalDragInitiator = event.dragInitiator as Tree
+     				}
+     				
+ 					if (event.dragInitiator != originalDragInitiator)
+ 					{
+ 						//if not, return without accepting drop
+ 						return
+ 					}
+ 					        				
+ 				}	 
+ 				else
+ 				{
+ 					return
+ 				}				
+ 				    				
+ 				// if everything is cool after all those checks, accept the drop
+				mx.managers.DragManager.acceptDragDrop(dropTarget);
 
-				[Mediate(event="GraphEvent.REFRESH_GRAPH")]
-				public function refreshData(event:GraphEvent):void
-				{
-					if (graphVars.length>0)
-					{
-    					setAxisTitles()
-    					setGraphTitle()
-						getDataAndPlot()
-					}
-				} 		
-						
+			}
+			
+			public function onDragOver(event:DragEvent):void
+			{
+				//TO DO: visual key
+			}
+			
+			public function onDragDrop(dragEvent:DragEvent):void
+			{
+				var dataTree:DataTree = DataTree(dragEvent.dragInitiator)
+				graphDataModel = dataTree.graphDataModel
 				
-				public function getDataAndPlot():void
+				Logger.debug("#GraphPanel: onDragDrop: dataTree.type; " + dataTree.type)
+				
+				switch (dataTree.type)
 				{
-					Logger.debug("#GraphPanel: getDataAndPlot()")	
+					case LongTermSimulationDataModel.RUN_1:
+						titlePrefix = "LT Run1: "
+						break
+					case LongTermSimulationDataModel.RUN_2:
+						titlePrefix = "LT Run2: "
+						break
+					case ShortTermSimulationDataModel.RUN_1:
+						titlePrefix = "RT Run1: "
+						break
+					case ShortTermSimulationDataModel.RUN_2:
+						titlePrefix = "RT Run2: "
+						break
+					default:
+						Logger.error("#GraphPanel: onDragDrop() unrecognized dataTree.type: " + dataTree.type)
+				}	
 					
-					try
-					{
-						if (graphType==GraphPanel.TIME_SERIES_GRAPH )
-	    				{
-							lineSeries2.visible = true //make sure second line series visible
-							lineChart.dataProvider = new ArrayCollection(graphDataModel.getVarData(graphVars, true))	
-	    				}
-	    				else if (graphType==GraphPanel.XY_PLOT_GRAPH )
-	    				{
-	    					if (graphVars.length>1)
-	    					{
-	    						plotChart.dataProvider = new ArrayCollection(graphDataModel.getVarData(graphVars, false))
-	    						
-	    					}
-	    				}
-	   				}
-	   				catch(err:Error)
-	   				{
-	   					Logger.error("Error trying to getVarData() err: " + err, this)
-	   				}
-	   					
+				var dataType:String = dataTree.type					
+				
+				//update time axis to reflect datasource
+				dataSourceType = dataTree.graphDataModel.getDataType()
+				switch(dataSourceType)
+				{
+					case EnergyPlusData.ENERGY_PLUS_DATA_TYPE:
+						lineHorizontalAxis.dataUnits = "days"
+						lineHorizontalAxis.labelUnits = "days"
+						break
+					
+					case ModelicaData.MODELICA_DATA_TYPE:
+						lineHorizontalAxis.dataUnits = "seconds"
+						lineHorizontalAxis.labelUnits = "seconds"
+						break
+						
+					default:
+						Logger.error("#GraphPanel: unrecognized GraphDataModel type: "+ graphType)
 				}
+				
+				var ds:DragSource = dragEvent.dragSource
+				var items:Array = ds.dataForFormat("treeItems") as Array
+     			var item:XML = XML(items[0]);
+ 				
+         		if (item.@id==undefined)
+         		{
+         			Logger.error("#GraphPanel: onDragDrop(): dropped item from menu did not have id attribute")
+         			mx.controls.Alert.show("Internal Error. Cannot graph this variable. See log for details.")
+         			return
+         		}
+         		addVarToGraph(item.@id)          			
+			}
+			
+			public function onDragExit(event:DragEvent):void 
+			{
+				
+			}
+			
+			
+			private function isVarGraphed(itemID:String):Boolean
+			{
+				// Check if variable is already being graphed
+				var exists:Boolean = false
+				for (var i:Number=0; i<graphVars.length;i++)
+				{
+					if (graphVars[i]==itemID){
+						exists=true
+					}
+				}
+				return exists
+			}
+			
+			private function addVarToGraph(itemID:String):void
+			{
+				Logger.debug("#GraphPanel: addVarToGraph() itemID: " + itemID)
+				if (isVarGraphed(itemID)){
+					mx.controls.Alert.show("That variable is already being graphed")
+					return
+				}
+				
+				
+				//check if variable exists in model
+				if (!graphDataModel.varExists(itemID))
+				{
+					mx.controls.Alert.show("That variable does not exist in the source file")
+					return
+				}
+					
+				//replace second variable when 3rd or more is dragged on
+				if (graphVars.length>1)
+				{
+					Logger.debug("#GraphPanel: replacing " + graphVars[1] + " with " + itemID)
+					graphVars[1] = itemID
+				}
+				else
+				{
+					Logger.debug("#GraphPanel: adding first variable ")
+					graphVars.push(itemID)
+				}
+				
+				Logger.debug("#GraphPanel: now setting axis titles, title and getting data...")
+				setAxisTitles()
+				setGraphTitle()
+				getDataAndPlot()
+				
+			}
+			
+			public function setGraphTitle():void
+			{
+				Logger.debug("setGraphTitle() ", this)
+				var var1Name:String = ""
+				var var2Name:String = ""
+				
+				if (dataType==LongTermSimulationDataModel.RUN_1 || dataType==LongTermSimulationDataModel.RUN_2)
+				{
+					var sysVar1:SystemVariable = scenarioModel.getSysVar(graphVars[0])
+					if (sysVar1!=null)
+    					var1Name = sysVar1.displayName
+   					if (graphVars[1]!=null)
+   						var sysVar2:SystemVariable = scenarioModel.getSysVar(graphVars[1])	
+					if (sysVar2!=null)
+						var2Name = sysVar2.displayName
+				}
+				else
+				{
+					var1Name = graphVars[0]
+					if (graphVars.length>1)
+    					var2Name = graphVars[1]
+				}
+				    				
+				if (graphType==GraphPanel.TIME_SERIES_GRAPH )
+				{
+					//change title
+					var t:String = var1Name
+     				if (graphVars.length>1){
+     					t = t + " and " + var2Name
+     				}
+     				this.title = t + " vs. Time"
+				}
+				else if (graphType==GraphPanel.XY_PLOT_GRAPH )
+				{
+					if (graphVars.length>1)
+					{
+						this.title =  var1Name + " vs. " + var2Name
+					}
+					else
+					{
+						this.title = var1Name + " vs. " //and wait for next drop
+					}
+				}
+				
+				this.title = titlePrefix + this.title
+				
+			}
+			
+			public function setAxisTitles():void
+			{
+   				Logger.debug("setAxisTItles()")
+				if (graphType==GraphPanel.TIME_SERIES_GRAPH )
+				{
+					if (dataSourceType==EnergyPlusData.ENERGY_PLUS_DATA_TYPE)
+					{
+						_horizontalTitle = "Time (days)"
+					}
+					else if(dataSourceType==ModelicaData.MODELICA_DATA_TYPE)
+					{
+						_horizontalTitle = "Time (secs)"
+					}
+					
+   					Logger.debug("settting _verticalTitle")
+					_verticalTitle = getVarTitle(graphVars[0])
+   					Logger.debug("_verticalTitle: " + _verticalTitle)
+					if (graphVars.length>1)
+					{	
+						var2Renderer.visible = true
+						_verticalTitle2 = getVarTitle(graphVars[1])
+   						Logger.debug("_verticalTitle2: " + _verticalTitle2)
+					}
+				}
+				else if (graphType==GraphPanel.XY_PLOT_GRAPH )
+				{
+					_horizontalTitle = graphVars[0]
+   					Logger.debug("_horizontalTitle: " + _horizontalTitle)
+					if (graphVars.length>1)
+					{
+						_verticalTitle = graphVars[1]
+   						Logger.debug("_verticalTitle: " + _verticalTitle)
+					}
+				}
+			}
+			
+			public function getVarTitle(varID:String):String
+			{
+				var units:String = graphDataModel.getUnits(varID)
+				if (units != "")
+				{
+					units = "(" + units + ")"
+				}
+				var name:String = graphDataModel.getVarName(varID)
+				return name + " " + units
+			}            	
+
+			[Mediate(event="GraphEvent.REFRESH_GRAPH")]
+			public function refreshData(event:GraphEvent):void
+			{
+				if (graphVars.length>0)
+				{
+					setAxisTitles()
+					setGraphTitle()
+					getDataAndPlot()
+				}
+			} 		
+					
+			
+			public function getDataAndPlot():void
+			{
+				Logger.debug("#GraphPanel: getDataAndPlot()")	
+				
+				try
+				{
+					if (graphType==GraphPanel.TIME_SERIES_GRAPH )
+    				{
+						lineSeries2.visible = true //make sure second line series visible
+						lineChart.dataProvider = new ArrayCollection(graphDataModel.getVarData(graphVars, true))	
+    				}
+    				else if (graphType==GraphPanel.XY_PLOT_GRAPH )
+    				{
+    					if (graphVars.length>1)
+    					{
+    						plotChart.dataProvider = new ArrayCollection(graphDataModel.getVarData(graphVars, false))
+    						
+    					}
+    				}
+   				}
+   				catch(err:Error)
+   				{
+   					Logger.error("Error trying to getVarData() err: " + err, this)
+   				}
+   					
+			}
 			
 								
 			]]>
@@ -495,10 +495,12 @@
        		
       	    		
 			<mx:horizontalAxis>
-				<mx:DateTimeAxis id="lineHorizontalAxis" dataUnits="seconds" labelUnits="seconds" displayLocalTime="true"  /> 
-   	 			<!--<mx:DateTimeAxis dataUnits="hours" parseFunction="chartParseFunction"/>-->
-   	 		 	<!--<mx:LinearAxis id="lineHorizontalAxis" title="Time (secs)" baseAtZero="false" />-->	
-       		</mx:horizontalAxis>
+				<mx:DateTimeAxis 
+					id="lineHorizontalAxis" 
+					dataUnits="seconds" 
+					labelUnits="seconds" 
+					displayLocalTime="true"  /> 
+   	 		</mx:horizontalAxis>
             
       		<mx:verticalAxisRenderers>
       			<mx:AxisRenderer  id="var1Renderer" axis="{v1}" placement="left" verticalAxisTitleAlignment="vertical">
@@ -510,7 +512,11 @@
        		</mx:verticalAxisRenderers>
             
        		 <mx:series>
-       		     <mx:LineSeries id="lineSeries1"  xField="time" yField="value1" displayName="" selectable="true">
+       		     <mx:LineSeries id="lineSeries1" 
+       		     	 xField="time" 
+       		     	 yField="value1" 
+       		     	 displayName="" 
+       		     	 selectable="true">
        	     		<mx:lineStroke> 
        	         	<mx:Stroke 
        	            		color="{var1Color}" 

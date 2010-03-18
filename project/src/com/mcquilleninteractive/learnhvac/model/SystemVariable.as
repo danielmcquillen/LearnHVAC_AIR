@@ -11,60 +11,75 @@ package com.mcquilleninteractive.learnhvac.model
 	[Bindable]
 	public class SystemVariable
 	{
-		
-		[Autowire]
-		public var scenarioModel:ScenarioModel
-		
-		public static var INPUT:String = "INPUT"
+				
 		public static var OUTPUT:String = "OUTPUT"
+		public static var INPUT:String = "INPUT"
+		public static var INPUT_PARAMETER:String = "INPUT_PARAMETER"
+		public static var INPUT_VARIABLE:String = "INPUT_VARIABLE"
 		
 		public static var FAULT_SLIDER:String = "SLIDER"
 		public static var FAULT_CHECKBOX:String = "CHECKBOX"
 		
-		public var importedFromEnergyPlus:Boolean = false 		//This property is currently set locally after loading scenario and not through scenario description
+		public static var VIEW_TYPE_PUBLIC:String = "PUBLIC"
+		public static var VIEW_TYPE_PRIVATE:String = "PRIVATE";
+				
+		[Autowire]
+		public var scenarioModel:ScenarioModel
 		
-		public var name:String
-		public var display_name:String
-		public var description:String
-		public var typeID:String //INPUT or OUTPUT
-		public var applicationID:String // PUBLIC or PRIVATE
+		//order for input into or output from Modelica
+		public var index:Number 
+		
+		//This property is currently set locally 
+		//after loading scenario and not through scenario description
+		public var importedFromEnergyPlus:Boolean = false 		
+		
+		public var name:String 
+		public var displayName:String
+		public var description:String = ""
+		
+		//if INPUT, INPUT_PARAMETER or INPUT_VARIABLE
+		public var ioType:String
+		
+		// PUBLIC or PRIVATE
+		public var viewType:String 
+		
 		private var _faultIsActive:Boolean = false
 				
-		public var min_value:Number
-		public var _low_value:Number
-		public var _high_value:Number 
-		public var max_value:Number
-		public var atol:String
+		public var minValue:Number = 0
+		public var _lowValue:Number = 0
+		public var _highValue:Number = 0
+		public var maxValue:Number = 0
+		public var atol:String = ""
 		public var disabled:Boolean = false
-		private var _output_graph_no:Number
+		private var _outputGraphNo:Number
 		public var isImportedFromLongTermSimToShortTermSim:Boolean = false
 		public var isImportedFromShortTermSimToLongTermSim:Boolean = false
 		
 		//CONVERSIONS
-		private var _unit_si:String
-		private var _si_to_ip:String
-		private var _unit_ip:String
+		private var _unitSI:String
+		private var _SItoIP:String
+		private var _unitIP:String
 		private var convertSItoIP:Function
 		private var convertIPtoSI:Function
 					
 		//for fault variables
 		public var subsection:String // used for grouping faults in fault panels
-		public var is_fault:Boolean
-		public var is_percentage:Boolean = false // whether slider shows percentage for fault value or real fault value
-		private var _zone_position:String // for colored bar in slider
-		private var _left_label:String // for slider (see class for details)
-		private var _right_label:String // for slier (see class for details)
-		private var _fault_widget_type:String // for slider (see class for details)
-		private var _target_fault:String // name of fault that fault item targets 
+		public var isFault:Boolean = false
+		public var isPercentage:Boolean = false // whether slider shows percentage for fault value or real fault value
+		private var _zonePosition:String // for colored bar in slider
+		private var _leftLabel:String // for slider (see class for details)
+		private var _rightLabel:String // for slier (see class for details)
+		private var _faultWidgetType:String // for slider (see class for details)
+		private var _targetFault:String // name of fault that fault item targets 
 		
 		//Holds initial SI value of variable provided by scenario
-		private var _initial_value:Number
+		private var _initialValue:Number = 0
 		
 		//Holds the current SI value of the variable
 		private var _baseSIValue:Number = 0		
 		
 		public var _units:String = ApplicationModel.UNITS_IP
-		public var lastValue:Number //used as part of interface highlighting...Remembers the last value of this variable sent to SPARK		
+		public var lastValue:Number //used as part of interface highlighting...Remembers the last value of this variable sent to Modelica		
 		
 		//history for graphing
 		//currently saving history as an array of values
@@ -84,7 +99,7 @@ package com.mcquilleninteractive.learnhvac.model
 		//this getter is used for labels
 		public function get visible():Boolean
 		{
-			if (applicationID=="PUBLIC")
+			if (viewType=="PUBLIC")
 			{
 				return true
 			}	
@@ -96,38 +111,38 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function resetToInitialValue():void
 		{
-			_baseSIValue = _initial_value
+			_baseSIValue = _initialValue
 		}
 		
-		/**  Adds conversions functions based on units SI and IP strings. Function assumes that _unit_si and _unit_ip attributes have already been set. */
+		/**  Adds conversions functions based on units SI and IP strings. Function assumes that _unitSI and _unitIP attributes have already been set. */
 		public function setConversionFunctions():void
 		{	
-			if (this._unit_si=="" || this._unit_ip=="")
+			if (this._unitSI=="" || this._unitIP=="" || this._unitSI==this._unitIP)
 			{
 				return
 			}				
-			convertSItoIP = Conversions.getConversionFunction(this._unit_si, this._unit_ip)
-			convertIPtoSI = Conversions.getConversionFunction(this._unit_ip, this._unit_si)		
+			convertSItoIP = Conversions.getConversionFunction(this._unitSI, this._unitIP)
+			convertIPtoSI = Conversions.getConversionFunction(this._unitIP, this._unitSI)		
 			
 		}
 		
 	
 		/** Sets initial value for variable. Expects SI value.*/
-		public function set initial_value(value:Number):void
+		public function set initialValue(value:Number):void
 		{
 			if (isNaN(value)) 
 			{
 				Logger.warn("System variable " + this.name + " initial_value() was NaN")
 				value=0
 			}
-			_initial_value = value
-			_baseSIValue = _initial_value
+			_initialValue = value
+			_baseSIValue = _initialValue
 		}
 		
 		/** Gets initial value for variable. Always returns SI value */
-		public function get initial_value():Number
+		public function get initialValue():Number
 		{
-			return _initial_value
+			return _initialValue
 		}
 			
 		/** Sets baseSIValue for variable. Expects SI value */	
@@ -145,7 +160,7 @@ package com.mcquilleninteractive.learnhvac.model
 		public function get baseSIValue():Number
 		{
 			
-			if (!this.faultIsActive && this.is_fault)
+			if (!this.faultIsActive && this.isFault)
 			{
 				return -999
 			}
@@ -196,9 +211,9 @@ package com.mcquilleninteractive.learnhvac.model
 			switch (_units)
 			{
 				case ApplicationModel.UNITS_IP:
-					return unit_ip
+					return unitIP
 				case ApplicationModel.UNITS_SI:
-					return unit_si
+					return unitSI
 				case ApplicationModel.UNITS_NONE:
 					return ""
 				default:
@@ -208,83 +223,83 @@ package com.mcquilleninteractive.learnhvac.model
 		}
 		
 		/* Format the units string when "getting' ... e.g add degree sign to F or C*/				
-		public function get unit_si():String
+		public function get unitSI():String
 		{
-			switch (this._unit_si)
+			switch (this._unitSI)
 			{
 				case "C":
 					return "\u00B0C"
 				case "W/oC":
 					return "W/\u00B0C"
 				default:
-					return _unit_si
+					return _unitSI
 			}
 		}
 		
-		public function set unit_si(p_units:String):void
+		public function set unitSI(value:String):void
 		{
-			_unit_si = p_units
+			_unitSI = value
 		}
 		
 		
 		/* Format the units string when "getting' ... e.g add degree sign to F or C*/
-		public function get unit_ip():String
+		public function get unitIP():String
 		{			
-			switch (this._unit_ip)
+			switch (this._unitIP)
 			{
 				case "F":
 					return "\u00B0F"
 				case "Btu/hr.oF":
 					return "Btu/hr.\u00B0F"
 				default:
-					return _unit_ip
+					return _unitIP
 			}
 		}
 		
-		public function set unit_ip(p_units:String):void
+		public function set unitIP(value:String):void
 		{
-			_unit_ip = p_units
+			_unitIP = value
 		}
 		
 		
 			
-		public function set low_value(value:Number):void
+		public function set lowValue(value:Number):void
 		{			
-			_low_value = value
+			_lowValue = value
 		}
 		
-		public function get low_value():Number
+		public function get lowValue():Number
 		{
 			if(_units == ApplicationModel.UNITS_IP && convertSItoIP!=null)
 			{
-				return convertSItoIP(_low_value)
+				return convertSItoIP(_lowValue)
 			} 
 			else
 			{
-				return _low_value
+				return _lowValue
 			} 
 		}
 		
-		public function set high_value(value:Number):void{
-			_high_value = value
+		public function set highValue(value:Number):void
+		{
+			_highValue = value
 		}
 		
-		public function get high_value():Number
+		public function get highValue():Number
 		{
 			if(_units == ApplicationModel.UNITS_IP && convertSItoIP!=null)
 			{
-				return convertSItoIP(_high_value)
+				return convertSItoIP(_highValue)
 			} 
 			else
 			{
-				return _high_value
+				return _highValue
 			} 
 		}
 		
 		public function isValid():Boolean
 		{
-			//Logger.debug("#SysVar: isValid() checking :" + name + " : lowValue: "+ low_value + " currValue: " + currValue + " highValue: " + high_value)
-			if (currValue<low_value || currValue >high_value)
+			if (currValue<lowValue || currValue >highValue)
 			{
 				return false
 			}
@@ -295,100 +310,99 @@ package com.mcquilleninteractive.learnhvac.model
 		}
 		
 		
-		// GET/SET: si_to_ip
-		public function get si_to_ip():String
+		public function get SItoIP():String
 		{
-			return _si_to_ip
+			return _SItoIP
 		}
-		public function set si_to_ip(p_si_to_ip:String):void
+		public function set SItoIP(value:String):void
 		{
-			_si_to_ip = p_si_to_ip
+			_SItoIP = value
 		}
 	
-		// GET/SET: output_graph_no
-		public function get output_graph_no():Number
+		public function get outputGraphNo():Number
 		{
-			return _output_graph_no
+			return _outputGraphNo
 		}
 		
-		public function set output_graph_no(graph_no:Number):void
+		public function set outputGraphNo(value:Number):void
 		{
-			var castVal:Number = Number(graph_no)
-			if (isNaN(castVal)){
-				//set to undefined
-				_output_graph_no = undefined
-			} else {
-				_output_graph_no = castVal				
+			if (isNaN(value))
+			{				
+				_outputGraphNo = undefined
+			}
+			else 
+			{
+				_outputGraphNo = value				
 			}
 		}
 		
 		// GET/SET: zone_position
-		public function set zone_position(p_zone_position:String):void
+		public function set zone_position(value:String):void
 		{
 			
-			if (p_zone_position == "LEFT" || p_zone_position == "CENTER" || p_zone_position == "NO_GRADIENT"){
-				_zone_position= p_zone_position
-			} else if (p_zone_position=="") {
-				_zone_position = undefined
+			if (value == "LEFT" || value == "CENTER" || value == "NO_GRADIENT"){
+				_zonePosition= value
+			} else if (value=="") {
+				_zonePosition = undefined
 			} else {
-				Logger.debug("#SystemVariable: sysVar:" + name +" invalid zone_position: " + p_zone_position)
+				Logger.debug("#SystemVariable: sysVar:" + name +" invalid zone_position: " + value)
 			}
 			
 		}
 		
 		public function get zone_position():String
 		{
-			return _zone_position
+			return _zonePosition
 		}
 				
 		// GET/SET: left_label
-		public function set left_label(p_left_label:String):void
+		public function set leftLabel(value:String):void
 		{
-			_left_label= p_left_label
+			_leftLabel= value
 		}
-		public function get left_label():String{
-			return _left_label
+		public function get leftLabel():String{
+			return _leftLabel
 		}
 		
 		// GET/SET: right_label
-		public function set right_label(p_right_label:String):void
+		public function set rightLabel(value:String):void
 		{
-			_right_label= p_right_label
+			_rightLabel= value
 		}
-		public function get right_label():String
+		public function get rightLabel():String
 		{
-			return _right_label
+			return _rightLabel
 		}
 		
 		// GET/SET: fault_widget_type
-		public function set fault_widget_type(p_fault_widget_type:String):void
+		public function set faultWidgetType(value:String):void
 		{
 			
-			p_fault_widget_type = p_fault_widget_type.toUpperCase()
+			value = value.toUpperCase()
 			
-			if (p_fault_widget_type == "SLIDER" || p_fault_widget_type == "CHECKBOX")
+			if (value == "SLIDER" || value == "CHECKBOX")
 			{
-				_fault_widget_type= p_fault_widget_type
+				_faultWidgetType= value
 			} 
 			else 
 			{
-				Logger.error("#SystemVariable: sysVar " + name + " unrecongized faultWidgetType : " + p_fault_widget_type)
+				Logger.error("#SystemVariable: sysVar " + name + " unrecongized faultWidgetType : " + value)
 			}
 			
 		}
 		
-		public function get fault_widget_type():String
+		public function get faultWidgetType():String
 		{
-			return _fault_widget_type
+			return _faultWidgetType
 		}
 		
 
 		
 		// Function: min_max_labels
 		// Convenience function to get labels for slider in fault panel
-		public function get left_right_labels():Array
+		public function get leftRightLabels():Array
 		{
-			var r:Array = [left_label, right_label]
+			var r:Array = [leftLabel, rightLabel]
 			return r	
 		}
 		
@@ -410,35 +424,35 @@ package com.mcquilleninteractive.learnhvac.model
 			_historyIP = []
 		}
 		
-		private function roundToThirdFig(val:Number):Number{
-			if (val==0) return 0;
-			val = val*1000
-			val = Math.round(val)
-			val = val/1000
-			return val
+		private function roundToThirdFig(value:Number):Number{
+			if (value==0) return 0;
+			value = value*1000
+			value = Math.round(value)
+			value = value/1000
+			return value
 		}
 	
 		public function get hasConversion():Boolean
 		{
-			return (si_to_ip!=null && si_to_ip != "")
+			return (SItoIP!=null && SItoIP != "")
 		}
 	
 		// This is a utility function that outside classes can call
 		// to convert a number based on this variable's conversion factors
-		public function convert(p_value:Number, p_toUnits:String):Number
+		public function convert(value:Number, toUnits:String):Number
 		{
-			Logger.debug("convert() value: " + p_value + " units: " + p_toUnits, this)
-			if(p_toUnits==ApplicationModel.UNITS_SI && convertIPtoSI!=null)
+			Logger.debug("convert() value: " + value + " units: " + toUnits, this)
+			if(toUnits==ApplicationModel.UNITS_SI && convertIPtoSI!=null)
 			{
-				return convertIPtoSI(p_value)
+				return convertIPtoSI(value)
 			} 
-			else if (p_toUnits==ApplicationModel.UNITS_IP && convertSItoIP!=null)
+			else if (toUnits==ApplicationModel.UNITS_IP && convertSItoIP!=null)
 			{
-				return convertIPtoSI(p_value)		
+				return convertIPtoSI(value)		
 			}
 			else
 			{
-				return p_value
+				return value
 			}
 		}
 		

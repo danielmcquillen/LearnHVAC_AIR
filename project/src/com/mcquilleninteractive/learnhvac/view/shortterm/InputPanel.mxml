@@ -68,32 +68,34 @@
 			inputLists = []
 			inputLists[ScenarioModel.SN_CC] = lstInputItemsCC
 			inputLists[ScenarioModel.SN_HC] = lstInputItemsHC
-			inputLists[ScenarioModel.SN_FAN] = lstInputItemsFan
+			inputLists[ScenarioModel.SN_FAN] = lstInputItemsFAN
 			inputLists[ScenarioModel.SN_VAV] = lstInputItemsVAV
 			inputLists[ScenarioModel.SN_MIXINGBOX] = lstInputItemsMX
-			inputLists[ScenarioModel.SN_FILTER] = lstInputItemsFlt
+			inputLists[ScenarioModel.SN_FILTER] = lstInputItemsFLT
 			inputLists[ScenarioModel.SN_SYSTEM] = lstInputItemsSYS
-			inputLists[ScenarioModel.SN_SPARK] = lstInputItemsSPK
 			inputLists[ScenarioModel.SN_DIFFUSER] = lstInputItemsDIF
 			inputLists[ScenarioModel.SN_BOILER] = lstInputItemsBOI
 			inputLists[ScenarioModel.SN_CHILLER] = lstInputItemsCHL
 			inputLists[ScenarioModel.SN_COOLINGTOWER] = lstInputItemsCTW
 			inputLists[ScenarioModel.SN_PLANT] = lstInputItemsPLT
+			inputLists[ScenarioModel.SN_RM] = lstInputItemsRM
+			inputLists[ScenarioModel.SN_DCT] = lstInputItemsDCT
 			
 			faultLists = []			
 			faultLists[ScenarioModel.SN_CC] = lstFaultItemsCC
 			faultLists[ScenarioModel.SN_HC] = lstFaultItemsHC
-			faultLists[ScenarioModel.SN_FAN] = lstFaultItemsFan
+			faultLists[ScenarioModel.SN_FAN] = lstFaultItemsFAN
 			faultLists[ScenarioModel.SN_VAV] = lstFaultItemsVAV
 			faultLists[ScenarioModel.SN_MIXINGBOX] = lstFaultItemsMX
-			faultLists[ScenarioModel.SN_FILTER] = lstFaultItemsFlt
+			faultLists[ScenarioModel.SN_FILTER] = lstFaultItemsFLT
 			faultLists[ScenarioModel.SN_SYSTEM] = lstFaultItemsSYS
-			faultLists[ScenarioModel.SN_SPARK] = lstFaultItemsSPK
 			faultLists[ScenarioModel.SN_DIFFUSER] = lstFaultItemsDIF
 			faultLists[ScenarioModel.SN_BOILER] = lstFaultItemsBOI
 			faultLists[ScenarioModel.SN_CHILLER] = lstFaultItemsCHL
 			faultLists[ScenarioModel.SN_COOLINGTOWER] = lstFaultItemsCTW
 			faultLists[ScenarioModel.SN_PLANT] = lstFaultItemsPLT
+			faultLists[ScenarioModel.SN_RM] = lstFaultItemsRM
+			faultLists[ScenarioModel.SN_DCT] = lstFaultItemsDCT
 			
 			
 		}
@@ -134,27 +136,27 @@
 		
 		
 		
-		public function filterInputPanel(item:Object):Boolean {
-			return 	item.typeID=="INPUT" && 
-					item.applicationID=="PUBLIC" && 
-					item.is_fault == false
+		public function filterInputPanel(item:Object):Boolean 
+		{
+			return 	item.ioType=="INPUT" && 
+					item.viewType=="PUBLIC" && 
+					item.isFault == false
 		}
 		
-		public function filterFaultPanel(item:Object):Boolean {
-			return 	item.typeID=="INPUT" && 
-					item.applicationID=="PUBLIC" && 
-					item.is_fault == true
+		public function filterFaultPanel(item:Object):Boolean 
+		{
+			return 	item.ioType=="INPUT" && 
+					item.viewType=="PUBLIC" && 
+					item.isFault == true
 		}
 		
 		public function buildInputPanels():void
 		{			
-       	  	Logger.debug("#InputPanel: buildInputPanels() called.")
        	  	inputPanelsArr = new ArrayCollection()
        	  	faultPanelsArr = new ArrayCollection()
 			
 			for each (var sysNode:SystemNodeModel in scenarioModel.sysNodesAC)
-			{
-			
+			{							
 				//assign each systemNodeModel's sysVarsArr to a respective list control
 				var sysNodeID:String = sysNode.id
 				var inputList:List = this["lstInputItems"+sysNodeID]
@@ -186,8 +188,7 @@
 		}
 		
 		protected function comboNodeSelect(event:Event):void
-		{
-			
+		{	
 			var selectedIndex:Number = event.target.selectedIndex;
 			if (selectedIndex == currSysNodeIndex) return;
 			currSysNodeIndex = selectedIndex
@@ -317,30 +318,12 @@
 			}
 			if (inputsErrorMsg!="") return false //show this first set of problems if they exist
 			
-			//Inow check inter-variable conditions...these were defined by B.Coffey
-			//Check wet-bulb vs. dry-bulb
-			var tAirOut:SystemVariable = scenarioModel.getSysVar("TAirOut")
-			var twAirOut:SystemVariable = scenarioModel.getSysVar("TwAirOut")
-			if (twAirOut.baseSIValue >= tAirOut.baseSIValue)
-			{
-				inputsErrorMsg = inputsErrorMsg + "\n - Outside air wet-bulb temp cannot be greater than outside air dry-bulb temp."
-			}
-		
-			if (inputsErrorMsg!="") return false //show this first set of problems if they exist
+			// INPUT CHECKS
+			// Do any input checks here and prevent submit if user has strange combinations
 			
-			//only check the following on updates, not on simulation starts
-			if (actionType=="forUpdate")
-			{
-				//check CC status vs. outside air temp
-				var mxTOut:SystemVariable = scenarioModel.getSysVar("MXTOut")
-				if ( tAirOut.baseSIValue > (mxTOut.baseSIValue + 10) ||  tAirOut.baseSIValue < (mxTOut.baseSIValue-10))
-				{
-					inputsErrorMsg = inputsErrorMsg + "\n - Please use smaller changes in outside temperature (e.g. if you wish to view a 40C change, please do so in 10C steps and provide the simulation with a few seconds to catch up so that it does not crash - it sometimes does not behave so well under such physically impossible conditions)."
-				}
-				
-				if (inputsErrorMsg!="") return false //show this first set of problems if they exist
-			}
-				
+			// TODO
+			
+							
 			return true
 			
 		}
@@ -445,7 +428,7 @@
 						/>		
 						
 				<!-- Fan Inputs-->
-				<mx:List 	id="lstInputItemsFan"
+				<mx:List 	id="lstInputItemsFAN"
 						y="{_listPadding}"
 						name="Fan"
 						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
@@ -458,7 +441,7 @@
 						/>	
 							
 				<!-- Flt Inputs-->
-				<mx:List 	id="lstInputItemsFlt"
+				<mx:List 	id="lstInputItemsFLT"
 						y="{_listPadding}"
 						name="Filter"
 						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
@@ -578,18 +561,33 @@
    					    styleName="inputList"
 						/>	
 						
-				<!-- SPK Inputs-->
-				<mx:List 	id="lstInputItemsSPK"
+				<!-- DCT Inputs-->
+				<mx:List 	id="lstInputItemsDCT"
 						y="{_listPadding}"
-						name="Spark"
+						name="Duct"
 						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
 						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
 						selectable="false"
-						width="100%"  
+						width="100%" 
 						height="418"
    					    visible="false"
    					    styleName="inputList"
-						/>
+						/>	
+				
+				<!-- RM Inputs-->
+				<mx:List 	id="lstInputItemsRM"
+						y="{_listPadding}"
+						name="Room"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.InputItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="inputList"
+						/>	
+						
+				
 				
 				
 						
@@ -624,7 +622,7 @@
 						/>			
 						
 				<!-- Fan Faults-->
-				<mx:List 	id="lstFaultItemsFan"
+				<mx:List 	id="lstFaultItemsFAN"
 						y="{_listPadding}"
 						name="Fan"
 						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
@@ -637,7 +635,7 @@
 						/>
 						
 				<!-- Flt Faults-->
-				<mx:List 	id="lstFaultItemsFlt"
+				<mx:List 	id="lstFaultItemsFLT"
 						y="{_listPadding}"
 						name="Filter"
 						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
@@ -754,19 +752,33 @@
    					    visible="false"
    					    styleName="faultList"
 						/>	
-												
-				<!-- SPK Faults-->
-				<mx:List id="lstFaultItemsSPK"
+						
+				<!-- RM Faults-->
+				<mx:List id="lstFaultItemsRM"
 						y="{_listPadding}"
-						name="Spark"
+						name="Room"
 						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
 						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
 						selectable="false"
-						width="100%"  
+						width="100%" 
 						height="418"
    					    visible="false"
    					    styleName="faultList"
-						/>
+						/>	
+						
+				<!-- DCT Faults-->
+				<mx:List id="lstFaultItemsDCT"
+						y="{_listPadding}"
+						name="Duct"
+						itemRenderer="com.mcquilleninteractive.learnhvac.view.shortterm.input_controls.FaultItem"
+						alternatingItemColors="[#F1F1F1,#F9F9F9]" 
+						selectable="false"
+						width="100%" 
+						height="418"
+   					    visible="false"
+   					    styleName="faultList"
+						/>	
+									
 					
 			
 		</mx:Canvas>

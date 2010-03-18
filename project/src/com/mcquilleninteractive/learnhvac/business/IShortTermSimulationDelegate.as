@@ -6,7 +6,6 @@ package com.mcquilleninteractive.learnhvac.business
 	{							
 		function start():void			
 		function stop():void		
-		function update(inputSysVarsArr:Array):void			
-		function onOutputReceived():void
+		function get simTime():int
 	}
 }

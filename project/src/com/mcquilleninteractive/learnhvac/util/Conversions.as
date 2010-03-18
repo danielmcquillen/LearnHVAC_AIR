@@ -57,11 +57,11 @@ package com.mcquilleninteractive.learnhvac.util
 					return Conversions.fahrToKelvin
 					break
 				
-				case "kg/s_to_GPM":
-					return Conversions.kgPerSecToGallonsPerMin
+				case "m3/s_to_GPM":
+					return Conversions.metersCubedPerSecToGallonsPerMin
 					break
-				case "GPM_to_kg/s":
-					return Conversions.gallonsPerMinToKgPerSec
+				case "GPM_to_m3/s":
+					return Conversions.gallonsPerMinToMetersCubedPerSec
 					break
 				
 				case "W/oC_to_Btu/hr.oF":
@@ -203,15 +203,15 @@ package com.mcquilleninteractive.learnhvac.util
 		}	
 		
 		
-		public static function kgPerSecToGallonsPerMin(v:Number):Number
+		public static function metersCubedPerSecToGallonsPerMin(v:Number):Number
 		{
-			v = v * 15.88
+			v = v * 2118.88  	 
 			return v
 		}
 		
-		public static function gallonsPerMinToKgPerSec(v:Number):Number
+		public static function gallonsPerMinToMetersCubedPerSec(v:Number):Number
 		{
-			v = v / 15.88
+			v = v / 2118.88  	 
 			return v
 		}
 		
