@@ -90,8 +90,7 @@ package com.mcquilleninteractive.learnhvac.model
 		public var shortTermVarsToImportArr:Array = [	"SYSTRmSPHeat",
 														"SYSTRmSPCool",
 											  			"SYSTSupS",
-											  			"VAVMinPos",
-											  			"PAtm"];
+											  			"VAVMinPos"]; //PAtm
 		// OTHER CLASS PROPERTIES
 			
 		// values for short-term simulation
@@ -329,7 +328,7 @@ package com.mcquilleninteractive.learnhvac.model
 			var value:Number = Number(sysVarValue);
 			if (isNaN(value))
 			{
-				Logger.warn(": setSysVarValue() couldn't cast parameter " + sysVarValue + " to number")
+				Logger.warn("setSysVarValue() couldn't cast parameter " + sysVarValue + " to number")
 				return	
 			}
 			
@@ -583,7 +582,7 @@ package com.mcquilleninteractive.learnhvac.model
 			Logger.debug("**********************************",this)
 			for each (var sysNode:SystemNodeModel in sysNodesAC)
 			{
-				Logger.debug("  NODE: " + sysNode.name,this)
+				Logger.debug("  NODE: " + sysNode.name + " ID: " + sysNode.id,this)
 				for each (var sysVar:SystemVariable in sysNode.sysVarsArr)
 				{
 					Logger.debug("      " + sysVar.name + " : " + sysVar.currValue,this)

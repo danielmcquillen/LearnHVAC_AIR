@@ -75,7 +75,6 @@
 			
 	<overlay:ValueDisplayLabel id="lblCCPos" 
 		sysVarName="CCPos"
-		usePercent="true"
 		x="110" y="380"
 		width="120" 
 		text="0" 

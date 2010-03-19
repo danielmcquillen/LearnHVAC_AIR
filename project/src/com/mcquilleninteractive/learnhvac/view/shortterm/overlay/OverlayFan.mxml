@@ -36,18 +36,12 @@
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{						
-																				
-				//set visibility of labels	
-				lblFANPwr.visible=lblFANPwr_Title.visible=scenarioModel.getSysVar("FANPwr").visible
-				lblFANSpd.visible=lblFANSpd_Title.visible=scenarioModel.getSysVar("FANSpd").visible	
-				lblCCTAirLvg.visible=lblCCTAirLvg_Title.visible=scenarioModel.getSysVar("CCTAirLvg").visible
-				lblFANAirFlw.visible=lblFANAirFlw_Title.visible=scenarioModel.getSysVar("FANAirFlw").visible
-				lblFANTAirLvg.visible=lblFANTAirLvg_Title.visible=scenarioModel.getSysVar("FANTAirLvg").visible
-				lblDCTStPre.visible=lblDCTStPre_Title.visible=lblDCTStPre2_Title.visible=scenarioModel.getSysVar("DCTStPre").visible	
-			
-   				//lblFannReal.visible=lblFannReal_Title.visible=scenarioModel.getSysVar("FannReal").visible
-				//lblFanmAirLvg.visible=lblFanmAirLvg_Title.visible=scenarioModel.getSysVar("FanmAirLvg").visible
 				
+				//set visibility of labels					
+				var varArr:Array = ["FANPwr","FANSpd","FANTAirEnt","FANAirFlw","FANTAirLvg","DCTStPre"]
+									
+				setLabels(varArr) 																				
+					
 			}
 			
 						
@@ -65,7 +59,8 @@
 		textAlign="right"/>
 	<overlay:ValueDisplayLabel id="lblFANPwr"
 		sysVarName="FANPwr"
-		text="0" styleName="overlayValue"
+		text="0" 
+		styleName="overlayValue"
 		x="70" y="110"  
 		width="120" 
 		textAlign="right"/>
@@ -81,12 +76,12 @@
 		textAlign="right"/>
 				 
 				 
-	<mx:Label id="lblCCTAirLvg_Title" 
+	<mx:Label id="lblFANTAirEnt_Title" 
 		text="Air Temp: " 
 		styleName="overlayTitle"
 		x="7" y="218" />
-	<overlay:ValueDisplayLabel id="lblCCTAirLvg"
-		sysVarName="CCTAirLvg"
+	<overlay:ValueDisplayLabel id="lblFANTAirEnt"
+		sysVarName="FANTAirEnt"
 		styleName="overlayValue"
 		text="0" 
 		x="7" y="234" />

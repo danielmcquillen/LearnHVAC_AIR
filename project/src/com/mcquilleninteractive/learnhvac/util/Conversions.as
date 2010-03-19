@@ -71,6 +71,14 @@ package com.mcquilleninteractive.learnhvac.util
 					return Conversions.btuPerHrFToWattsPerC
 					break
 				
+				case "kg/s_to_GPM":
+					return Conversions.kgPerSecToGalPerMin
+					break
+				case "GPM_to_kg/s":
+					return Conversions.galPerMinToKgPerSec
+					break
+				
+				
 				case "kg/s_to_CFM":
 					return Conversions.kgPerSecToFt3PerMin
 					break
@@ -168,13 +176,13 @@ package com.mcquilleninteractive.learnhvac.util
 		
 		public static function kgPerSecToGalPerMin(v:Number):Number
 		{
-			v = v * 15.847861
+			v = v * 15.88
 			return v
 		}	
 		
 		public static function galPerMinToKgPerSec(v:Number):Number
 		{
-			v = v / 15.847861
+			v = v / 15.88
 			return v
 		}	
 		

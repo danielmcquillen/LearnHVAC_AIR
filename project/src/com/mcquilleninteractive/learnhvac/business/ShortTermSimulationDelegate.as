@@ -298,12 +298,17 @@ package com.mcquilleninteractive.learnhvac.business
 				return
 			}
 			
+			var out:String = ""
 			for (var i:uint = 0; i<_outputsSysVarsArrLength; i++)
 			{
 				var sysVar:SystemVariable = SystemVariable(_outputSysVarsArr[i])
-				sysVar.baseSIValue = outArr[i+5]			
-							
+				sysVar.baseSIValue = outArr[i+6]			
+				out += " \n var: " + sysVar.name + " value: " + outArr[i+6]				
 			}
+			
+			Logger.debug("Values set by Modelica: \n----------------------------\n " + out, this)
+			
+			
 						
 		}
 		

@@ -82,7 +82,6 @@
 		width="100" />	
 	<overlay:ValueDisplayLabel id="lblMXExDampPos" 		
 		sysVarName="MXExDampPos"
-		usePercent="true"
 		text="0" 
 		styleName="overlayValue"
 		x="30" y="185"  
@@ -99,7 +98,6 @@
 		width="100" />	
 	<overlay:ValueDisplayLabel id="lblMXRtnDampPos"
 		sysVarName="MXRtnDampPos"
-		usePercent="true"
 		text="0" 
 		styleName="overlayValue"
 		x="260" y="185"  
@@ -115,7 +113,6 @@
 		width="100" />	
 	<overlay:ValueDisplayLabel id="lblMXIntDampPos"
 		sysVarName="MXIntDampPos"
-		usePercent="true"
 		text="0" styleName="overlayValue"
 		x="595" y="125"  
 		textAlign="left" 

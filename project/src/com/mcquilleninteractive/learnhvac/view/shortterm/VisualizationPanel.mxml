@@ -78,7 +78,7 @@
 			overlaysArr["overlayVAV"] = overlayVAV
 			overlaysArr["overlayDIF"] = overlayDIF
 			overlaysArr["overlayFlt"] = overlayFlt
-			overlaysArr["overlayFan"] = overlayFan
+			overlaysArr["overlayFAN"] = overlayFAN
 			overlaysArr["overlayMX"] = overlayMX
 			overlaysArr["overlaySYS"] = overlaySYS
 			overlaysArr["overlayRF"] = overlayRF
@@ -194,7 +194,6 @@
 		
 		public function playIntroAnim():void
 		{
-			Logger.debug("#VizPanel: playIntroAnim()")
 			dispatchEvent(new Event("introAnimStarted"))
 			animPanel.playIntroAnim()
 		}
@@ -212,16 +211,10 @@
 			cwArr.push(BindingUtils.bindSetter(setDampersEA, scenarioModel.getSysVar("MXExDampPos"), "currValue" ))
 			cwArr.push(BindingUtils.bindSetter(setDampersRA, scenarioModel.getSysVar("MXRtnDampPos"), "currValue" ))
 			//damper			
-			cwArr.push(BindingUtils.bindSetter(setVAVDamper, scenarioModel.getSysVar("VAVPos"), "currValue" ))
-			//FPS bar 
-			cwArr.push(BindingUtils.bindSetter(onFPSBar, applicationModel, "showFramesPerSecondBar"))
+			cwArr.push(BindingUtils.bindSetter(setVAVDamper, scenarioModel.getSysVar("VAVRhcPos"), "currValue" ))
 			
 		}
-		
-		public function onFPSBar(state:Boolean):void
-		{
-			animPanel.fpsVisible = state
-		}
+			
 		
 		public function setDampersIA(value:Number):void
 		{
@@ -295,8 +288,8 @@
 			}
 			
 			//Set other node-specific stuff
-			switch (currNode){
-				
+			switch (currNode)
+			{				
 				case ScenarioModel.SN_HC:
 					pipeLiquidsHC.active = true
 					break
@@ -313,11 +306,16 @@
 					{
 						case ShortTermSimulationModel.STATE_OFF:
 						case ShortTermSimulationModel.STATE_PAUSED:
-							fan.currentState = "Fan_OFF"
+							Logger.debug("Setting fan to FAN_OFF",this)
+							Logger.debug("fan.currentState: "+ fan.currentState,this)
+							fan.currentState = "FAN_OFF"
+							Logger.debug("fan.currentState: "+ fan.currentState,this)
 							break
 						case ShortTermSimulationModel.STATE_RUNNING:
-							fan.currentState = "Fan_ON"
+							fan.currentState = "FAN_ON"
 							break
+						default:
+							Logger.error("Unrecognized shortTermSimulatioModel state: " +shortTermSimulationModel.currentState,this)
 					}
 					break
 				
@@ -551,10 +549,10 @@
 	
 	<overlay:OverlayRF id="overlayRF" visible="false" />
 	<overlay:OverlayMX id="overlayMX" visible="false"/>
-	<overlay:OverlayFlt id="overlayFlt" visible="false"/>
+	<overlay:OverlayFLT id="overlayFlt" visible="false"/>
 	<overlay:OverlayHC id="overlayHC" visible="false" />
 	<overlay:OverlayCC id="overlayCC" visible="false"/>
-	<overlay:OverlayFan id="overlayFan" visible="false"/>
+	<overlay:OverlayFAN id="overlayFAN" visible="false"/>
 	<overlay:OverlayVAV id="overlayVAV" visible="false"/>	
 	<overlay:OverlayDIF id="overlayDIF" visible="false"/>	
 	<overlay:OverlaySYS id="overlaySYS" visible="false"/>	

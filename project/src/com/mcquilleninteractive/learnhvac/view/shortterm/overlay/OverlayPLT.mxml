@@ -259,7 +259,6 @@
 		sysVarName="CCPos"
 		styleName="overlayValue"
 		textAlign="left" 
-		usePercent="true"
 		width="100"/>
 		
 		
@@ -275,7 +274,6 @@
 		sysVarName="HCPos"
 		styleName="overlayValue"
 		textAlign="left" 
-		usePercent="true"
 		width="100"/>
 		
 		
@@ -292,7 +290,6 @@
 		sysVarName="MXIntDampPos"
 		styleName="overlayValue"
 		textAlign="left" 
-		usePercent="true"
 		width="150"/>
 		
 		

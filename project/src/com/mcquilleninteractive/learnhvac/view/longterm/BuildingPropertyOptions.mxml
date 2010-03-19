@@ -44,7 +44,7 @@
 			[Bindable]
 			private var _inputsEnabled:Boolean = true;
 					
-			private var _currElevationView:String
+			private var _currElevationView:String = LongTermSimulationModel.SOUTH
 			
 			public var _errorMsg:String
 			public var _errorMsgArr:Array = []
@@ -115,7 +115,7 @@
 						windowRatio = longTermSimulationModel.windowRatioWest
 						break
 					default:
-						Logger.error("#LongTermSimulation: on_elevationViewChange() unrecognized _elevationView: " + _currElevationView)
+						Logger.error("on_elevationViewChange() unrecognized _elevationView: " + _currElevationView, this)
 						return .5
 				}	
 				return windowRatio

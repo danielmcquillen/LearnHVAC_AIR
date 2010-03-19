@@ -48,9 +48,7 @@
 								
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
-			{						
-				Logger.debug("scenarioLoaded()", this)						
-				
+			{										
 				//set visibility of labels					
 				var varArr:Array = ["BOITLiqSup","BOILiqFlw","BOITLiqEnt"]
 									

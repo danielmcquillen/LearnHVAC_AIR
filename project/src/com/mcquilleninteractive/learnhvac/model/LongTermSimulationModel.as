@@ -408,7 +408,7 @@ package com.mcquilleninteractive.learnhvac.model
 		{
 			if (windowRatioNorth==0&&windowRatioEast==0&&windowRatioSouth==0&&windowRatioWest==0)
 			{
-				Logger.debug("#LongTermSimulationVO: Note: return 0 for window-to-wall ratio for building, since no facades have window-to-wall rations > 0.")
+				Logger.debug("Note: return 0 for window-to-wall ratio for building, since no facades have window-to-wall rations > 0.", this)
 				return 0
 			}
 			return ((windowRatioNorth * wallAreaNorth) + (windowRatioEast * wallAreaEast) + (windowRatioSouth * wallAreaSouth) + (windowRatioWest * wallAreaWest)) / ( wallAreaNorth + wallAreaEast + wallAreaSouth + wallAreaWest )  

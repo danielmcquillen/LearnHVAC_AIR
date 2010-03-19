@@ -151,7 +151,6 @@
 	<overlay:ValueDisplayLabel 	
 		id="lblHCPos" 
 		sysVarName="HCPos"
-		usePercent="true"
 		text="0 %" 
 		styleName="overlayValue" 
 		toolTip="Heating Coil valve (percent open)"
@@ -170,7 +169,6 @@
 	<overlay:ValueDisplayLabel 	
 		id="lblCCPos" 
 		sysVarName="CCPos"
-		usePercent="true"
 		text="0 %" 
 		styleName="overlayValue" 
 		toolTip="Cooling Coil valve (percent open)"
@@ -234,7 +232,6 @@
 	<overlay:ValueDisplayLabel 	
 		id="lblVAVDampPos"
 		sysVarName="VAVDampPos"
-		usePercent="true"
 		text=""
 		styleName="overlayValue"
 		toolTip="VAV Damper Position (percent open)"
@@ -255,7 +252,6 @@
 	<overlay:ValueDisplayLabel 	
 		id="lblVAVRhcPos"
 		sysVarName="VAVRhcPos"
-		usePercent="true"
 		text=""
 		styleName="overlayValue"
 		toolTip="VAV Reheat Coil Valve Position (percent open)"
@@ -264,14 +260,10 @@
 		width="100" 
 		textAlign="left"/>
 		
-		
-		
-			 
 	<!-- Dampers -->
 	<overlay:ValueDisplayLabel 	
 		id="lblMXExDampPos"
 		sysVarName="MXExDampPos"
-		usePercent="true"
 		toolTip="Exhaust Air Damper Position (percent open)"
 		styleName="overlayValue"
 		x="100" 
@@ -281,7 +273,6 @@
 	<overlay:ValueDisplayLabel 	
 		id="lblMXRtnDampPos"
 		sysVarName="MXRtnDampPos"
-		usePercent="true"
 		toolTip="Return Air Damper Position (percent open)"
 		styleName="overlayValue"
 		x="190"
@@ -291,7 +282,6 @@
 	<overlay:ValueDisplayLabel 	
 		id="lblMXIntDampPos"
 		sysVarName="MXIntDampPos"
-		usePercent="true"
 		toolTip="Outdoor Air Damper Position (percent open)"
 		styleName="overlayValue"
 		x="205" 

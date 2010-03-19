@@ -73,8 +73,8 @@
 									"\n  vars:all         - list all variables and their current values  (SI and IP)" +
 									"\n  vars:input       - list all input variables and their current values  (SI and IP)" + 
 									"\n  vars:output      - list all output variables and their current values  (SI and IP)" +
-									"\n  vars:[varname]   - list specific variable and current values  (SI and IP) e.g. vars:SYSTAirDB"+
-									"\n\n  vars:LTtoST:[run1/run2]   - list specific SPARK variables and current values  (SI and IP) e.g. vars:TAirOut"
+									"\n  vars:[varname]   - list specific variable and current values  (SI and IP) e.g. vars:SYSTAirDB"
+									//"\n\n  vars:LTtoST:[run1/run2]   - list specific SPARK variables and current values  (SI and IP) e.g. vars:TAirOut"
 									//"\n\n  testMode:[false/true]   - turn test mode on/off. In test mode, simulations use stored data (and E+ are not run)."
 							break
 						

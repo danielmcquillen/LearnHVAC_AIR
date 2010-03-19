@@ -99,7 +99,6 @@
 		text="" 
 		styleName="overlayValue" 
 		sysVarName="VAVDampPos"
-	    usePercent="true"
 		color="0xFFFFFF" 
 		x="255" y="148" />
 			
@@ -216,7 +215,6 @@
 	<overlay:ValueDisplayLabel 	
 		id="lblVAVRhcPos"
 		sysVarName="VAVRhcPos"
-		usePercent="true"
 		text=""
 		styleName="overlayValue"
 		toolTip="VAV Reheat Coil Valve Position (percent open)"

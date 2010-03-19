@@ -77,7 +77,6 @@
 			
 	<overlay:ValueDisplayLabel id="lblHCPos" 
 				sysVarName="HCPos"
-				usePercent="true"
 				x="40" y="350"
 				width="120" 
 				text="0" 
