@@ -1,15 +1,10 @@
 package com.mcquilleninteractive.learnhvac.model
 {
-	import com.mcquilleninteractive.learnhvac.view.popups.CCLiquidsSchematicPanel;
-	import com.mcquilleninteractive.learnhvac.view.popups.HCLiquidsSchematicPanel;
-	import com.mcquilleninteractive.learnhvac.view.popups.MovieViewer;
-	import com.mcquilleninteractive.learnhvac.view.shortterm.OutputPanel;
-	import com.mcquilleninteractive.learnhvac.view.popups.WatchPanel;
+	import com.mcquilleninteractive.learnhvac.util.Logger;
 	import com.mcquilleninteractive.learnhvac.view.popups.*;
-	import com.mcquilleninteractive.learnhvac.util.Logger
+	import com.mcquilleninteractive.learnhvac.view.shortterm.OutputPanel;
 	
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	
 	import mx.core.Application;
@@ -252,10 +247,17 @@ package com.mcquilleninteractive.learnhvac.model
 			
 			for (var i:uint=0;i<len;i++)
 			{	
-				if (this[_popUpsArr[i]])			
-					PopUpManager.removePopUp(this[_popUpsArr[i]])
-					this[_popUpsArr[i]] = null
-			}
+				if (this[_popUpsArr[i]])	
+					try
+					{		
+						PopUpManager.removePopUp(this[_popUpsArr[i]])
+						this[_popUpsArr[i]] = null
+					}
+					catch(error:Error)
+					{
+						Logger.error("Couldn't remove popup: " + this[_popUpsArr[i]], this)
+					}
+			}	
 			
 			_outputPopUp = null
 			_watchPopUp = null

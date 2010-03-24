@@ -31,7 +31,7 @@
 									
 			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
 			import com.mcquilleninteractive.learnhvac.event.LongTermImportEvent;
-			;	
+		
 			import mx.controls.Alert
 			import mx.collections.ArrayCollection
 			
@@ -44,26 +44,26 @@
 			
 			[Embed('assets/img/lightning_icon.png')]
 			[Bindable]
-			private var LightingIcon:Class;
+			protected var LightingIcon:Class;
 				
 			[Embed('assets/img/control_bar_divider.png')]
 			[Bindable]
-			private var ControlBarDivider:Class;
+			protected var ControlBarDivider:Class;
 				
 			[Embed('assets/img/stop_icon.png')]
 			[Bindable]
-			private var StopIcon:Class;
+			protected var StopIcon:Class;
 				
 			
 			[Embed(source='assets/img/bg_tools.png')]
 			[Bindable]
-			private var ToolsIcon:Class;
+			protected var ToolsIcon:Class;
 			
 		
 			
 			[Embed(source='assets/img/watch_panel.png')]
 			[Bindable]
-			private var WatchPanelIcon:Class			
+			protected var WatchPanelIcon:Class			
 			
 			
 			[Embed(source='assets/img/movie.png')]
@@ -73,28 +73,27 @@
 			
 			[Embed(source='assets/img/output_panel.png')]
 			[Bindable]
-			private var OutputPanelIcon:Class
+			protected var OutputPanelIcon:Class
 			
 			[Embed(source='assets/img/chart_bar.png')]
 			[Bindable]
-			private var SystemEnergyIcon:Class	
+			protected var SystemEnergyIcon:Class	
 			
 			
 			[Embed(source='assets/img/zone_energy.png')]
 			[Bindable]
-			private var ZoneEnergyIcon:Class	
+			protected var ZoneEnergyIcon:Class	
 			
 	
 			[Embed(source='assets/img/black_arrow.png')]
 			[Bindable]
-			private var BlackArrow:Class
+			protected var BlackArrow:Class
 							
 			
-			private var systemEnergyGraphPopup:SystemEnergyGraph 
-			private var zoneEnergyGraphPopup:ZoneEnergyGraph
-		
-			protected var _startStopButtonState:String = "start" // or "stop" ... keep track of state of start/stop button
-		
+			protected var systemEnergyGraphPopup:SystemEnergyGraph 
+			protected var zoneEnergyGraphPopup:ZoneEnergyGraph
+			protected var _startStopButtonState:String = "start"
+			
 			protected function onCC():void
 			{
 			}
@@ -102,36 +101,35 @@
 				
 			protected function startStopSimulation():void
 			{
-				if (startStopButtonState=="start")
+				if (_startStopButtonState=="start")
 				{	
 					//clear out the red display 
-					dispatchEvent(new Event(START_SIM))
-					startStopButtonState = "stop"					
+					dispatchEvent(new Event(START_SIM))			
 				}
 				else
 				{
 					stopSimulation()
-					startStopButtonState ="start"
+					setStartStopButtonState("start")
 				}
 			}
 			
 			
-			protected function set startStopButtonState(state:String):void
+			public function setStartStopButtonState(state:String):void
 			{
 				if (state=="start")
 				{
-					btnStartStop.label="Start ST Simulation"
+					btnStartStop.label="Start Simulation"
 					btnStartStop.setStyle("icon", LightingIcon);
 				}
 				else
 				{
-					btnStartStop.label="Stop ST Simulation" 
+					btnStartStop.label="Stop Simulation" 
 					btnStartStop.setStyle("icon", StopIcon);					
 				}
 				_startStopButtonState = state
 			}
 			
-			protected function get startStopButtonState():String
+			protected function getButtonState():String
 			{
 				return 	_startStopButtonState				
 			}
@@ -145,12 +143,12 @@
 	
 			public function simStarted():void
 			{
-				startStopButtonState = "stop"
+				setStartStopButtonState("stop")
 			}
 			
 			public function simStopped():void
 			{					
-				startStopButtonState = "start"
+				setStartStopButtonState("start")
 			}
 			
 			public function simError():void
@@ -193,18 +191,17 @@
 	<mx:Spacer width="10"/>
 	
 	
-	<mx:Button 	label="Start ST Simulation" 
+	<mx:Button 	label="Start Simulation" 
 				styleName="btnBottomBar"
 				id="btnStartStop" 
 				toolTip="Start short-term simulation"
     			y="13"
+    			icon="{LightingIcon}"
 				width="160" 
 				height="30"
 				click="startStopSimulation()" />
 	
 	<mx:Spacer width="20"/>
-
-	
 								
 	<mx:Button id="btnOutputPanel" 
    			width="35"
@@ -269,23 +266,22 @@
 			 />
 	
 					
-	<mx:Spacer 	width="100%" />		
+	<mx:Spacer width="100%" />		
 				
-	<mx:HBox width="400" 
-	    cornerRadius="5"
+	<mx:VBox width="400" 
 		height="30"
 		id="hbScenarioName"
 		paddingTop="5"
-		horizontalScrollPolicy="off" 
+	    horizontalAlign="right"
+		horizontalScrollPolicy="off"
+		paddingLeft="10"	 
 		verticalScrollPolicy="off" >
 		
-			<mx:Label text="Current scenario:" width="110" color="#FFFFFF"/>
-			<mx:Label id="lblScenarioName" 
-				text="{scenarioModel.name}"
-				width="220" color="#FFFFFF" />
-			
-	</mx:HBox>
-		
+		<mx:HBox>
+			<mx:Label text="Current scenario:" color="#FFFFFF"/>
+			<mx:Label id="lblScenarioName" text="{scenarioModel.name}" color="#FFFFFF" />
+		</mx:HBox>
+	</mx:VBox>
 					
 
 			

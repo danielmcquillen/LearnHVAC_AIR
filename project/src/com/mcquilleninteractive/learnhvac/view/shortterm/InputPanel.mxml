@@ -198,7 +198,8 @@
 		
 		
 		/** updates the input panel to show the inputs for specified sysNode
-		 *  this function is used by exterior controls that want to change the state of the input panel */
+		 *  this function is used by exterior controls that want to 
+		 *  change the state of the input panel */
 		public function updateInputPanelView(newSysNode:String):void
 		{
 			if (cbxSyncToNav.selected)
@@ -284,53 +285,49 @@
 		{
 			dispatchEvent( new ResetInputsEvent(ResetInputsEvent.RESET_SHORT_TERM_INPUTS_TO_INITIAL_VALUES, true))			
 		}
-		
-		/* Returns an error message if there are errors, otherwise returns empty string 
-		
-			param actionType: "forStartup" or "forUpdate"
-	
-		*/
-		
-		public function areInputsValid(actionType:String):Boolean
-		{
-		
+				
+		public function areInputsValid():Boolean
+		{	
+			Logger.debug("areInputsValid()",this)
 			inputsErrorMsg = "" 
 			
-			//Check individual panels to make sure each entered value is within limits
-			for (var i:Number = 0; i<inputLists.numChildren; i++)
+			var inputSysVarsArr:Array = scenarioModel.getInputSysVars()
+			
+			for each (var sysVar:SystemVariable in inputSysVarsArr)
 			{
-				var inputVariableList:List = List(inputLists.getChildAt(i))
-				
-				var sysVarsArr:ListCollectionView = ListCollectionView(inputVariableList.dataProvider)
-				for each (var sysVar:SystemVariable in sysVarsArr)
+				if (sysVar.isLocalValueValid()==false)
 				{
-					if (sysVar.isValid()==false)
+					Logger.debug("Local value for sysVar: " + sysVar.name + " is invalid", this)
+					if (inputsErrorMsg == "")
 					{
-						Logger.debug("#InputPanel: Found error with sysVar: " + sysVar.name)
-						if (inputsErrorMsg == "")
-						{
-							inputsErrorMsg = "Some of your input values are out-of-bounds. Please check the following components and make sure their values are within the minimum and maximum allowed: \n "
-						}
-						inputsErrorMsg = inputsErrorMsg + "\n  - " + inputVariableList.name
-						break
+						inputsErrorMsg = "Some of your input values are out-of-bounds. Please check the following components and make sure their values are within the minimum and maximum allowed: \n "
 					}
+					inputsErrorMsg = inputsErrorMsg + "\n  - " + sysVar.displayName
+					break
 				}
 			}
-			if (inputsErrorMsg!="") return false //show this first set of problems if they exist
+			
 			
 			// INPUT CHECKS
 			// Do any input checks here and prevent submit if user has strange combinations
 			
-			// TODO
+			// TODO : Make sure heating set point's max is cooling set point	
 			
-							
+			if (inputsErrorMsg!="") return false //show this first set of problems if they exist
+			
+			//ask all input vars to update
+			for each (var sysVar:SystemVariable in inputSysVarsArr)
+			{
+				sysVar.updateFromLocal()
+			}
+											
 			return true
 			
 		}
 		
 		public function onUpdateSimulation():void
 		{
-			if (areInputsValid("forStartup")==true)
+			if (areInputsValid()==true)
 			{
 				var event : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_UPDATE, true);
 				dispatchEvent(event);

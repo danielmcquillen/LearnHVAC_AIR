@@ -31,21 +31,16 @@ package com.mcquilleninteractive.learnhvac.model
 		public static const EAST:String = "east" 
 		
 		public var buildingPropertiesEnabled:Boolean = false
-		
-				
-		public function LongTermSimulationModel()
-		{			
-		}
-					
+										
 		/* *********** SIMULATION PROPERTIES *********** */
 						
-		protected var _runID:String = LongTermSimulationDataModel.RUN_1 //default to run 1
-		protected var _timeStepEP:int = 1
+		protected var _runID:String 
+		protected var _timeStepEP:int
 		
 		/* *********** ZONE AND FLOOR *********** */
 		
-		protected var _zoneOfInterest:uint = 1
-		protected var _floorOfInterest:uint = 2
+		protected var _zoneOfInterest
+		protected var _floorOfInterest
 		
 		/* *********** ENVIRONMENT *********** */
 				
@@ -78,8 +73,8 @@ package com.mcquilleninteractive.learnhvac.model
 												]);
 		
 		
-		protected var _regionSelectedIndex:uint = 0
-		protected var _citySelectedIndex:uint = 0
+		protected var _regionSelectedIndex
+		protected var _citySelectedIndex
 		
 		
 		/* *********** BUILDLING PROPERTIES *********** */
@@ -91,43 +86,43 @@ package com.mcquilleninteractive.learnhvac.model
 																		{label:"medium", data:"medium"},
 																		{label:"high", data:"high"} ])
 	
-		public var _storyHeight:Number = 3.6576 //12 feet
-		public var _buildingLength:Number = 24.38 
-		public var _buildingWidth:Number = 38.1
+		public var _storyHeight:Number 
+		public var _buildingLength:Number 
+		public var _buildingWidth:Number
 		
-		protected var _windowTypeSelectedIndex:uint = 0
-		protected var _shell:String = LongTermSimulationModel.SHELL_TYPE_NEW
-		protected var _stories:int = 3		
-		protected var _windowStyle:String = LongTermSimulationModel.WINDOW_STYLE_PUNCH
-		protected var _northAxis:Number = 0;		
-		protected var _massLevelSelectedIndex:uint = 0		
-		protected var _windowRatioNorth:Number = .4;
-		protected var _windowRatioSouth:Number = .4;
-		protected var _windowRatioEast:Number = .4;
-		protected var _windowRatioWest:Number = .4;
+		protected var _windowTypeSelectedIndex:uint
+		protected var _shell:String
+		protected var _stories:int 	
+		protected var _windowStyle:String
+		protected var _northAxis:Number 		
+		protected var _massLevelSelectedIndex:uint 	
+		protected var _windowRatioNorth:Number;
+		protected var _windowRatioSouth:Number 
+		protected var _windowRatioEast:Number 
+		protected var _windowRatioWest:Number
 						
-		public var _areaPerPerson:Number = 10.764		//1.0 in IP
-		public var _equipPeakLoad:Number = 10.764		//1.0 in IP
-		public var _lightingPeakLoad:Number = 23.69		//255 sq. ft
+		public var _areaPerPerson:Number 
+		public var _equipPeakLoad:Number
+		public var _lightingPeakLoad:Number = 23.69
 		
 			
 		/* *********** DATE PROPERTIES *********** */
 		
-		protected var _startDate:Date = new Date("",0,1)
-		protected var _stopDate:Date = new Date("",0, 31)
+		protected var _startDate:Date
+		protected var _stopDate:Date
 				
-		protected var _wddStartDate:Date = new Date("",0,21)
-		protected var _wddStopDate:Date = new Date("", 0,21)
-		protected var _wddTypeOfDD:String = "Winter Typical"
+		protected var _wddStartDate:Date 
+		protected var _wddStopDate:Date 
+		protected var _wddTypeOfDD:String 
 		
-		protected var _sddStartDate:Date = new Date("", 5,21)
-		protected var _sddStopDate:Date = new Date("", 5,21)
-		protected var _sddTypeOfDD:String = "Summer Typical"
+		protected var _sddStartDate:Date 
+		protected var _sddStopDate:Date 
+		protected var _sddTypeOfDD:String 
 				
-		protected var _weekdayBegin:int = 8
-		protected var _weekdayEnd:int = 17
-		protected var _holidayBegin:int = 10
-		protected var _holidayEnd:int = 15	
+		protected var _weekdayBegin:int 
+		protected var _weekdayEnd:int 
+		protected var _holidayBegin:int
+		protected var _holidayEnd:int 
 		
 		protected var _ddCooling:String
 		protected var _ddHeating:String
@@ -138,7 +133,67 @@ package com.mcquilleninteractive.learnhvac.model
 		 
        	protected var _zoneHeatingSetpointTemp:Number
 		protected var _zoneCoolingSetpointTemp:Number
+		
+		
+		public function LongTermSimulationModel()
+		{
+			init()			
+		}
+		
+		public function init():void
+		{
+			
+			buildingPropertiesEnabled = false
+									
+			_runID = LongTermSimulationDataModel.RUN_1 //default to run 1
+			_timeStepEP = 1
 				
+			_zoneOfInterest = 1
+			_floorOfInterest = 2
+		
+			_regionSelectedIndex = 0
+			_citySelectedIndex = 0
+		
+			_storyHeight = 3.6576 //12 feet
+			_buildingLength = 24.38 
+			_buildingWidth = 38.1
+			
+			_windowTypeSelectedIndex = 0
+			_shell = LongTermSimulationModel.SHELL_TYPE_NEW
+			_stories = 3		
+			_windowStyle = LongTermSimulationModel.WINDOW_STYLE_PUNCH
+			_northAxis = 0;		
+			_massLevelSelectedIndex = 0		
+			_windowRatioNorth = .4;
+			_windowRatioSouth = .4;
+			_windowRatioEast = .4;
+			_windowRatioWest = .4;
+							
+			_areaPerPerson = 10.764		//1.0 in IP
+			_equipPeakLoad = 10.764		//1.0 in IP
+			 _lightingPeakLoad = 23.69		//255 sq. ft
+						
+			_weekdayBegin = 8
+			_weekdayEnd = 17
+			_holidayBegin = 10
+			_holidayEnd = 15	
+			
+			_startDate = new Date("",0,1)
+			_stopDate = new Date("",0, 31)
+					
+			_wddStartDate = new Date("",0,21)
+			_wddStopDate = new Date("", 0,21)
+			_wddTypeOfDD = "Winter Typical"
+			
+			_sddStartDate = new Date("", 5,21)
+			_sddStopDate = new Date("", 5,21)
+			_sddTypeOfDD = "Summer Typical"
+					
+			_weekdayBegin = 8
+			_weekdayEnd = 17
+			_holidayBegin = 10
+			_holidayEnd = 15	
+		}		
 						
 		/* ****************************************** */
 		/* *********** GETTER AND SETTERS *********** */

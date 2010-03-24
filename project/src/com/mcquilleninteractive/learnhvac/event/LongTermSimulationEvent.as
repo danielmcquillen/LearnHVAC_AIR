@@ -1,9 +1,10 @@
 package com.mcquilleninteractive.learnhvac.event
 {
 	
+	import com.mcquilleninteractive.learnhvac.view.LongTermSimulation;
+	import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO;
+	
 	import flash.events.Event;
-	import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
-	import com.mcquilleninteractive.learnhvac.view.LongTermSimulation
 
 	public class LongTermSimulationEvent extends Event
 	{
@@ -16,8 +17,8 @@ package com.mcquilleninteractive.learnhvac.event
 		
 		public var view:LongTermSimulation
 		public var setupVO : LongTermSimulationVO
-		public var runID:String
-		public var errorMessage:String
+		public var runID:String = ""
+		public var errorMessage:String = ""
 		
 				
 		public function LongTermSimulationEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
@@ -25,10 +26,17 @@ package com.mcquilleninteractive.learnhvac.event
 			super(type, bubbles, cancelable);
 		}	
 		
+		/*
 		override public function clone():Event
         {
-            return new LongTermSimulationEvent(this.type, this.bubbles, this.cancelable );
+            var evt:LongTermSimulationEvent =  new LongTermSimulationEvent(this.type, this.bubbles, this.cancelable );
+        	evt.view = view
+        	evt.setupVO = setupVO
+        	evt.runID = runID
+        	evt.errorMessage = errorMessage
+        	return evt
         }
+        */
 		
      	
      	

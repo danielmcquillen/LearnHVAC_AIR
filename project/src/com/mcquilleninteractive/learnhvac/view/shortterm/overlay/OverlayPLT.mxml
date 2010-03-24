@@ -52,11 +52,9 @@
 				g.lineTo(466,128)
 								
 				//OA damper
-				g.lineStyle(1, 0x000000, 1)
 				g.moveTo(444,62)
 				g.lineTo(424,62)
 				
-				g.lineStyle(1, 0xFFFFFF, 1)
 				
 				//return air temp
 				g.moveTo(263,27)
@@ -107,7 +105,7 @@
 	
 	<mx:Label id="lblMXTAirRet_Title" 				 
 		x="110" y="20" 
-		text="Return air temp"  
+		text="Exhaust	 air temp"  
 		styleName="overlayTitle"	
 		width="150" 
 		textAlign="right"/>
@@ -199,32 +197,32 @@
 			-->
 			
 			
-	<mx:Text id="lblCHLTLiqEnt_Title" 				 
-		x="570" y="385" 
-		text="Chilled water return temp"  
-		styleName="overlayTitle"	
-		width="100" 
-		textAlign="left"/>
-		
-	<overlay:ValueDisplayLabel id="lblCHLTLiqEnt" text="0" 
-		x="570" y="415" 
-		sysVarName="CHLTLiqEnt"
-		styleName="overlayValue"
-		textAlign="left" 
-		width="100"/>
-		
-		
-		
 	<mx:Text id="lblCHLTLiqSup_Title" 				 
-		x="570" y="325" 
+		x="570" y="385" 
 		text="Chilled water supply temp"  
 		styleName="overlayTitle"	
 		width="100" 
 		textAlign="left"/>
 		
 	<overlay:ValueDisplayLabel id="lblCHLTLiqSup" text="0" 
-		x="570" y="355" 
+		x="570" y="415" 
 		sysVarName="CHLTLiqSup"
+		styleName="overlayValue"
+		textAlign="left" 
+		width="100"/>
+		
+		
+		
+	<mx:Text id="lblCHLTLiqEnt_Title" 				 
+		x="570" y="325" 
+		text="Chilled water return temp"  
+		styleName="overlayTitle"	
+		width="100" 
+		textAlign="left"/>
+		
+	<overlay:ValueDisplayLabel id="lblCHLTLiqEnt" text="0" 
+		x="570" y="355" 
+		sysVarName="CHLTLiqEnt"
 		styleName="overlayValue"
 		textAlign="left" 
 		width="100"/>
@@ -294,31 +292,31 @@
 		
 		
 		
-	<mx:Text id="lblBOITLiqSup_Title" 				 
+	<mx:Text id="lblBOITLiqEnt_Title" 				 
 		x="280" y="115" 
-		text="Hot water supply temp"  
+		text="Hot water return temp"  
 		styleName="overlayTitle"	
 		width="77" 
 		textAlign="right"/>
 		
-	<overlay:ValueDisplayLabel id="lblBOITLiqSup" text="0" 
+	<overlay:ValueDisplayLabel id="lblBOITLiqEnt" text="0" 
 		x="255" y="145" 
-		sysVarName="BOITLiqSup"
+		sysVarName="BOITLiqEnt"
 		styleName="overlayValue"
 		textAlign="right" 
 		width="100"/>
 		
 		
-	<mx:Text id="lblBOITLiqEnt_Title" 				 
+	<mx:Text id="lblBOITLiqSup_Title" 				 
 		x="303" y="225" 
-		text="Hot water return temp"  
+		text="Hot water Supply temp"  
 		styleName="overlayTitle"	
 		width="75" 
 		textAlign="right"/>
 		
-	<overlay:ValueDisplayLabel id="lblBOITLiqEnt" text="0" 
+	<overlay:ValueDisplayLabel id="lblBOITLiqSup" text="0" 
 		x="276" y="255" 
-		sysVarName="BOITLiqEnt"
+		sysVarName="BOITLiqSup"
 		styleName="overlayValue"
 		textAlign="right" 
 		width="100"/>

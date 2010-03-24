@@ -102,7 +102,7 @@ int settings(13,1)
 
 
 #    Names of initial variables
-char initialName(1675,39)
+char initialName(1725,39)
 system.p_ambient
 system.T_ambient
 system.g
@@ -356,6 +356,7 @@ Econ.damExh.eta_nominal
 Econ.damExh.h0
 Econ.damExh.conv
 Econ.damExh.conv2
+Econ.damExh.y
 Econ.damExh.use_deltaM
 Econ.damExh.deltaM
 Econ.damExh.use_v_nominal
@@ -652,6 +653,7 @@ RHC.linearizeFlowResistance
 RHC.deltaM
 RHC.Q_flow
 RHC.Q_flow_nominal
+RHC.u
 Tmix.port.m_flow
 Tmix.port.h_outflow
 Tsa.port.m_flow
@@ -664,6 +666,7 @@ dp_fil_d
 V_fan_d
 dp_fan_d
 gain.k
+gain.u
 Amb1.nPorts
 Amb1.medium.p
 Amb1.medium.h
@@ -1118,6 +1121,9 @@ cliBCVTB.flaDblWri[27]
 cliBCVTB.flaDblWri[28]
 cliBCVTB.flaDblWri[29]
 cliBCVTB.flaDblWri[30]
+cliBCVTB.flaDblWri[31]
+cliBCVTB.flaDblWri[32]
+cliBCVTB.flaDblWri[33]
 cliBCVTB.uStart[1]
 cliBCVTB.uStart[2]
 cliBCVTB.uStart[3]
@@ -1148,6 +1154,9 @@ cliBCVTB.uStart[27]
 cliBCVTB.uStart[28]
 cliBCVTB.uStart[29]
 cliBCVTB.uStart[30]
+cliBCVTB.uStart[31]
+cliBCVTB.uStart[32]
+cliBCVTB.uStart[33]
 cliBCVTB.activateInterface
 cliBCVTB.yRFixed[1]
 cliBCVTB.yRFixed[2]
@@ -1200,6 +1209,9 @@ cliBCVTB.uR[27]
 cliBCVTB.uR[28]
 cliBCVTB.uR[29]
 cliBCVTB.uR[30]
+cliBCVTB.uR[31]
+cliBCVTB.uR[32]
+cliBCVTB.uR[33]
 cliBCVTB.yR[1]
 cliBCVTB.yR[2]
 cliBCVTB.yR[3]
@@ -1255,6 +1267,9 @@ cliBCVTB._uStart[27]
 cliBCVTB._uStart[28]
 cliBCVTB._uStart[29]
 cliBCVTB._uStart[30]
+cliBCVTB._uStart[31]
+cliBCVTB._uStart[32]
+cliBCVTB._uStart[33]
 cliBCVTB.flaWri
 cliBCVTB.uRInt[1]
 cliBCVTB.der(uRInt[1])
@@ -1316,6 +1331,12 @@ cliBCVTB.uRInt[29]
 cliBCVTB.der(uRInt[29])
 cliBCVTB.uRInt[30]
 cliBCVTB.der(uRInt[30])
+cliBCVTB.uRInt[31]
+cliBCVTB.der(uRInt[31])
+cliBCVTB.uRInt[32]
+cliBCVTB.der(uRInt[32])
+cliBCVTB.uRInt[33]
+cliBCVTB.der(uRInt[33])
 cliBCVTB.uRIntPre[1]
 cliBCVTB.uRIntPre[2]
 cliBCVTB.uRIntPre[3]
@@ -1346,6 +1367,9 @@ cliBCVTB.uRIntPre[27]
 cliBCVTB.uRIntPre[28]
 cliBCVTB.uRIntPre[29]
 cliBCVTB.uRIntPre[30]
+cliBCVTB.uRIntPre[31]
+cliBCVTB.uRIntPre[32]
+cliBCVTB.uRIntPre[33]
 cliBCVTB.uRWri[1]
 cliBCVTB.uRWri[2]
 cliBCVTB.uRWri[3]
@@ -1376,6 +1400,9 @@ cliBCVTB.uRWri[27]
 cliBCVTB.uRWri[28]
 cliBCVTB.uRWri[29]
 cliBCVTB.uRWri[30]
+cliBCVTB.uRWri[31]
+cliBCVTB.uRWri[32]
+cliBCVTB.uRWri[33]
 OutVar.n1
 OutVar.n2
 OutVar.n3
@@ -1425,6 +1452,7 @@ CVC.limiter.uMax
 CVC.limiter.uMin
 CVC.limiter.limitsAtInit
 CVC.limiter.u
+CVC.limiter.y
 CVC.with_I
 CVC.with_D
 CVC.Dzero.k
@@ -1539,6 +1567,7 @@ FanC.Dzero.k
 FanC.product.u1
 FanC.division.u1
 FanC.division1.y
+FanSpd.y
 Pamb.k
 add1.u2
 add1.k1
@@ -1587,6 +1616,8 @@ Zero.k
 HCSP.k1
 HCSP.k2
 HCDT.k
+max1.u2
+max1.y
 RHVC.controlError
 RHVC.controllerType
 RHVC.Ti
@@ -1650,6 +1681,9 @@ InVar.n27
 InVar.n28
 InVar.n29
 InVar.n30
+InVar.n31
+InVar.n32
+InVar.n33
 fildp.port_a.m_flow
 fildp.port_a.h_outflow
 fildp.port_b.m_flow
@@ -1694,6 +1728,22 @@ MATSP1.k1
 MATSP1.k2
 const.k
 const1.k
+division.y
+Percent.k
+division1.y
+hundred.k
+product6.u1
+ThcLiqEn.port.m_flow
+ThcLiqEn.port.h_outflow
+add11.u2
+add11.k1
+add11.k2
+ThcLiqEn1.port.m_flow
+ThcLiqEn1.port.h_outflow
+add12.u2
+add12.k1
+add12.k2
+SysNull.k
 CVC.I.k
 CVC.I.initType
 CVC.I.y_start
@@ -1779,7 +1829,7 @@ RHVC.gainTrack.k
 RHVC.gainTrack.u
 RHVC.gainTrack.y
 
-double initialValue(1675,6)
+double initialValue(1725,6)
  -1  1.013250000000000E+005       0                  1.000000000000000E+100
   1   280   # system.p_ambient
  -1  2.931500000000000E+002       0                  1.000000000000000E+100
@@ -2286,6 +2336,8 @@ double initialValue(1675,6)
   6  1280   # Econ.damExh.conv
   0       1                       0                       0                
   6  1280   # Econ.damExh.conv2
+  0       0                       0                       1                
+  6   256   # Econ.damExh.y
  -1       1                       0                       0                
   1   281   # Econ.damExh.use_deltaM
  -1  3.000000000000000E-001       0                       0                
@@ -2878,6 +2930,8 @@ double initialValue(1675,6)
   6   256   # RHC.Q_flow
   0       0                       0                       0                
   6   256   # RHC.Q_flow_nominal
+  0       0                       0                       0                
+  6   256   # RHC.u
   0       0                       0                  100000                
   6   388   # Tmix.port.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
@@ -2902,6 +2956,8 @@ double initialValue(1675,6)
   1   280   # dp_fan_d
   0       1                       0                       0                
   6   256   # gain.k
+  0       0                       0                       0                
+  6   256   # gain.u
   0       1                       0                       0                
   6   258   # Amb1.nPorts
   0  100000                       0                  1.000000000000000E+100
@@ -3746,7 +3802,7 @@ double initialValue(1675,6)
   6  1345   # cliBCVTB.sampleTrigger
   0       0                       0                       0                
   6  1353   # cliBCVTB.firstTrigger
-  0      30                       0                  1.000000000000000E+100
+  0      33                       0                  1.000000000000000E+100
   6   258   # cliBCVTB.nDblWri
   0      21                       0                  1.000000000000000E+100
   6   258   # cliBCVTB.nDblRea
@@ -3810,23 +3866,29 @@ double initialValue(1675,6)
   1   282   # cliBCVTB.flaDblWri[29]
  -1       0                       0                       0                
   1   282   # cliBCVTB.flaDblWri[30]
- -1  2.931500000000000E+002       0                       0                
+ -1       0                       0                       0                
+  1   282   # cliBCVTB.flaDblWri[31]
+ -1       0                       0                       0                
+  1   282   # cliBCVTB.flaDblWri[32]
+ -1       0                       0                       0                
+  1   282   # cliBCVTB.flaDblWri[33]
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[1]
  -1       0                       0                       0                
   1   280   # cliBCVTB.uStart[2]
  -1     100                       0                       0                
   1   280   # cliBCVTB.uStart[3]
- -1  2.931500000000000E+002       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[4]
- -1  2.931500000000000E+002       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[5]
- -1  3.551500000000000E+002       0                       0                
+ -1      82                       0                       0                
   1   280   # cliBCVTB.uStart[6]
- -1  2.931500000000000E+002       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[7]
- -1  2.931500000000000E+002       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[8]
- -1  2.803500000000000E+002       0                       0                
+ -1       7                       0                       0                
   1   280   # cliBCVTB.uStart[9]
  -1       0                       0                       0                
   1   280   # cliBCVTB.uStart[10]
@@ -3842,7 +3904,7 @@ double initialValue(1675,6)
   1   280   # cliBCVTB.uStart[15]
  -1       0                       0                       0                
   1   280   # cliBCVTB.uStart[16]
- -1  2.931500000000000E+002       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[17]
  -1       0                       0                       0                
   1   280   # cliBCVTB.uStart[18]
@@ -3856,9 +3918,9 @@ double initialValue(1675,6)
   1   280   # cliBCVTB.uStart[22]
  -1       0                       0                       0                
   1   280   # cliBCVTB.uStart[23]
- -1  8.000000000000000E-001       0                       0                
+ -1      80                       0                       0                
   1   280   # cliBCVTB.uStart[24]
- -1  2.000000000000000E-001       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[25]
  -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[26]
@@ -3870,6 +3932,12 @@ double initialValue(1675,6)
   1   280   # cliBCVTB.uStart[29]
  -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[30]
+ -1      20                       0                       0                
+  1   280   # cliBCVTB.uStart[31]
+ -1      20                       0                       0                
+  1   280   # cliBCVTB.uStart[32]
+ -1      20                       0                       0                
+  1   280   # cliBCVTB.uStart[33]
   0       1                       0                       0                
   6   257   # cliBCVTB.activateInterface
   0       0                       0                       0                
@@ -3914,66 +3982,72 @@ double initialValue(1675,6)
   6   256   # cliBCVTB.yRFixed[20]
   0       0                       0                       0                
   6   256   # cliBCVTB.yRFixed[21]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[1]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[2]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[3]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[4]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[5]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[6]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[7]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[8]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[9]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[10]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[11]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[12]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[13]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[14]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[15]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[16]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[17]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[18]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[19]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[20]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[21]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[22]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[23]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[24]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[25]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[26]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[27]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[28]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[29]
-  0       0                       0                       1                
+  0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[30]
+  0       0                 -100000                  100000                
+  6   256   # cliBCVTB.uR[31]
+  0       0                 -100000                  100000                
+  6   256   # cliBCVTB.uR[32]
+  0       0                 -100000                  100000                
+  6   256   # cliBCVTB.uR[33]
   0       0                       0                       0                
   6   320   # cliBCVTB.yR[1]
   0       0                       0                       0                
@@ -4084,6 +4158,12 @@ double initialValue(1675,6)
   6  1280   # cliBCVTB._uStart[29]
   0       0                       0                       0                
   6  1280   # cliBCVTB._uStart[30]
+  0       0                       0                       0                
+  6  1280   # cliBCVTB._uStart[31]
+  0       0                       0                       0                
+  6  1280   # cliBCVTB._uStart[32]
+  0       0                       0                       0                
+  6  1280   # cliBCVTB._uStart[33]
   0       0                       0                       0                
   6  1282   # cliBCVTB.flaWri
  -1       0                       0                       0                
@@ -4206,6 +4286,18 @@ double initialValue(1675,6)
   2  1296   # cliBCVTB.uRInt[30]
   0       0                       0                       0                
   3  1280   # cliBCVTB.der(uRInt[30])
+ -1       0                       0                       0                
+  2  1296   # cliBCVTB.uRInt[31]
+  0       0                       0                       0                
+  3  1280   # cliBCVTB.der(uRInt[31])
+ -1       0                       0                       0                
+  2  1296   # cliBCVTB.uRInt[32]
+  0       0                       0                       0                
+  3  1280   # cliBCVTB.der(uRInt[32])
+ -1       0                       0                       0                
+  2  1296   # cliBCVTB.uRInt[33]
+  0       0                       0                       0                
+  3  1280   # cliBCVTB.der(uRInt[33])
   0       0                       0                       0                
   6  1344   # cliBCVTB.uRIntPre[1]
   0       0                       0                       0                
@@ -4267,6 +4359,12 @@ double initialValue(1675,6)
   0       0                       0                       0                
   6  1344   # cliBCVTB.uRIntPre[30]
   0       0                       0                       0                
+  6  1344   # cliBCVTB.uRIntPre[31]
+  0       0                       0                       0                
+  6  1344   # cliBCVTB.uRIntPre[32]
+  0       0                       0                       0                
+  6  1344   # cliBCVTB.uRIntPre[33]
+  0       0                       0                       0                
   6   320   # cliBCVTB.uRWri[1]
   0       0                       0                       0                
   6   320   # cliBCVTB.uRWri[2]
@@ -4326,6 +4424,12 @@ double initialValue(1675,6)
   6   320   # cliBCVTB.uRWri[29]
   0       0                       0                       0                
   6   320   # cliBCVTB.uRWri[30]
+  0       0                       0                       0                
+  6   320   # cliBCVTB.uRWri[31]
+  0       0                       0                       0                
+  6   320   # cliBCVTB.uRWri[32]
+  0       0                       0                       0                
+  6   320   # cliBCVTB.uRWri[33]
   0       1                       0                       0                
   6   258   # OutVar.n1
   0       1                       0                       0                
@@ -4424,6 +4528,8 @@ double initialValue(1675,6)
   6   257   # CVC.limiter.limitsAtInit
   0       0                       0                       0                
   6   256   # CVC.limiter.u
+  0       0                       0                       0                
+  6   256   # CVC.limiter.y
   0       1                       0                       0                
   6   769   # CVC.with_I
   0       0                       0                       0                
@@ -4652,6 +4758,8 @@ double initialValue(1675,6)
   6   256   # FanC.division.u1
   0       0                       0                       0                
   6   256   # FanC.division1.y
+  0       0                       0                       1                
+  6   256   # FanSpd.y
  -1  1.013250000000000E+005       0                       0                
   1   280   # Pamb.k
   0       0                       0                       0                
@@ -4748,6 +4856,10 @@ double initialValue(1675,6)
   1   280   # HCSP.k2
  -1       1                       0                       0                
   1   280   # HCDT.k
+  0       0                       0                       0                
+  6   320   # max1.u2
+  0       0                       0                       1                
+  6   256   # max1.y
   0       0                       0                       0                
   6   256   # RHVC.controlError
   0       2                       1                       4                
@@ -4874,6 +4986,12 @@ double initialValue(1675,6)
   6   258   # InVar.n29
   0       1                       0                       0                
   6   258   # InVar.n30
+  0       1                       0                       0                
+  6   258   # InVar.n31
+  0       1                       0                       0                
+  6   258   # InVar.n32
+  0       1                       0                       0                
+  6   258   # InVar.n33
   0       0                       0                  100000                
   6   388   # fildp.port_a.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
@@ -4962,6 +5080,38 @@ double initialValue(1675,6)
   1   280   # const.k
  -1  2.731500000000000E+002       0                       0                
   1   280   # const1.k
+  0       0                       0                       0                
+  6   320   # division.y
+ -1     100                       0                       0                
+  1   280   # Percent.k
+  0       0                       0                       0                
+  6   320   # division1.y
+ -1     100                       0                       0                
+  1   280   # hundred.k
+  0       0                       0                       0                
+  6   256   # product6.u1
+  0       0                       0                  100000                
+  6   388   # ThcLiqEn.port.m_flow
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   260   # ThcLiqEn.port.h_outflow
+  0       0                       0                  1.000000000000000E+100
+  6   256   # add11.u2
+ -1       1                       0                       0                
+  1   280   # add11.k1
+ -1       1                       0                       0                
+  1   280   # add11.k2
+  0       0                       0                  100000                
+  6   388   # ThcLiqEn1.port.m_flow
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   260   # ThcLiqEn1.port.h_outflow
+  0       0                       0                  1.000000000000000E+100
+  6   256   # add12.u2
+ -1       1                       0                       0                
+  1   280   # add12.k1
+ -1       1                       0                       0                
+  1   280   # add12.k2
+ -1     999                       0                       0                
+  1   280   # SysNull.k
   0       0                       0                       0                
   6   256   # CVC.I.k
   0       3                       1                       4                
@@ -5180,7 +5330,7 @@ double initialValue(1675,6)
 #   nominal value (and maybe minimum and maximum values given in 
 #   column 3 and 4). If these values are zero, scale(i)=1 is used).
 #
-char initialDescription(1675,123)
+char initialDescription(1725,123)
 Default ambient pressure [Pa|bar]
 Default ambient temperature [K|degC]
 Constant gravity acceleration [m/s2]
@@ -5434,6 +5584,7 @@ Dynamic viscosity, used to compute transition to turbulent flow regime [Pa.s]
 Initial value for solver for specific enthalpy [J/kg]
 Factor, needed to satisfy unit check [m.s2/kg]
 Factor, needed to satisfy unit check
+Damper position (0: closed, 1: open)
 Set to true to use deltaM for turbulent transition, else ReC is used
 Fraction of nominal mass flow rate where transition to turbulent occurs [1]
 Set to true to use face velocity to compute area
@@ -5730,6 +5881,7 @@ Pressure [Pa|Pa]
 Fraction of nominal flow rate where flow transitions to laminar [1]
 Heat transfered into the medium [W]
 Heat flow rate at u=1, positive for heating [W]
+Control input [1]
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
 Mass flow rate from the connection point into the component [kg/s]
@@ -5742,6 +5894,7 @@ filter design pressure drop [Pa|bar]
 supply air fan design volume flow rate [m3/s]
 design supply air fan head [Pa|bar]
 Gain value multiplied with input signal [kg/s]
+Input signal connector [1]
 Number of ports
 Absolute pressure of medium [Pa|bar]
 Specific enthalpy of medium [J/kg]
@@ -6196,6 +6349,12 @@ Flag for double values (0: use current value, 1: use average over interval, 2: u
 Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
 Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
 Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
+Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
+Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
+Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
@@ -6248,6 +6407,9 @@ Fixed output, used if activateInterface=false
 Fixed output, used if activateInterface=false
 Fixed output, used if activateInterface=false
 Fixed output, used if activateInterface=false
+Real inputs to be sent to the BCVTB
+Real inputs to be sent to the BCVTB
+Real inputs to be sent to the BCVTB
 Real inputs to be sent to the BCVTB
 Real inputs to be sent to the BCVTB
 Real inputs to be sent to the BCVTB
@@ -6333,6 +6495,9 @@ Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
 
 Value of integral
 der(Value of integral)
@@ -6394,6 +6559,12 @@ Value of integral
 der(Value of integral)
 Value of integral
 der(Value of integral)
+Value of integral
+der(Value of integral)
+Value of integral
+der(Value of integral)
+Value of integral
+der(Value of integral)
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
@@ -6424,6 +6595,12 @@ Value of integral at previous sampling instance
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
+Value of integral at previous sampling instance
+Value of integral at previous sampling instance
+Value of integral at previous sampling instance
+Value to be sent to the interface
+Value to be sent to the interface
+Value to be sent to the interface
 Value to be sent to the interface
 Value to be sent to the interface
 Value to be sent to the interface
@@ -6503,6 +6680,7 @@ Upper limits of input signals [1]
 Lower limits of input signals [1]
 = false, if limits are ignored during initializiation (i.e., y=u)
 Connector of Real input signal [1]
+Connector of Real output signal [1]
 
 
 Constant output value
@@ -6616,6 +6794,7 @@ Connector of Real output signal
 Constant output value
 Connector of Real input signal 1
 Connector of Real input signal 1
+Connector of Real output signal
 Connector of Real output signal
 Constant output value
 Connector of Real input signal 2
@@ -6665,6 +6844,8 @@ Constant output value [1]
 Gain of upper input
 Gain of lower input
 Constant output value
+Connector of Real input signal 2
+Connector of Real output signal
 Control error (set point - measurement)
 Type of controller
 Time constant of Integrator block [s]
@@ -6728,6 +6909,9 @@ dimension of input signal connector 27
 dimension of input signal connector 28
 dimension of input signal connector 29
 dimension of input signal connector 30
+dimension of input signal connector 31
+dimension of input signal connector 32
+dimension of input signal connector 33
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
 Mass flow rate from the connection point into the component [kg/s]
@@ -6771,6 +6955,22 @@ Gain of lower input
 Gain of upper input
 Gain of lower input
 Constant output value
+Constant output value
+Connector of Real output signal
+Constant output value
+Connector of Real output signal
+Constant output value
+Connector of Real input signal 1
+Mass flow rate from the connection point into the component [kg/s]
+Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Connector of Real input signal 2 [K]
+Gain of upper input
+Gain of lower input
+Mass flow rate from the connection point into the component [kg/s]
+Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Connector of Real input signal 2 [K]
+Gain of upper input
+Gain of lower input
 Constant output value
 Integrator gain [s-1]
 Type of initialization (1: no init, 2: steady state, 3,4: initial output)

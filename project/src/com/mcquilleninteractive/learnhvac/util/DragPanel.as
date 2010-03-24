@@ -15,8 +15,6 @@ package com.mcquilleninteractive.learnhvac.util
 	[Event(name="panelMinimized",type="flash.events.Event")]
 	[Event(name="panelRestored",type="flash.events.Event")]
 	
-	
-
     public class DragPanel extends TitleWindow
     {
     	
@@ -25,7 +23,6 @@ package com.mcquilleninteractive.learnhvac.util
         {
             super();
        		isPopUp = true;
-        	//addEventListener(Event.CLOSE,closeHandler);
             addEventListener(FlexEvent.CREATION_COMPLETE, creationCompleteHandler);
             this.showCloseButton = true
             
@@ -50,14 +47,13 @@ package com.mcquilleninteractive.learnhvac.util
         private var xOff:Number;
         private var yOff:Number;
             
-        private function tbMouseDownHandler(event:MouseEvent):void {
-            
-                xOff = event.currentTarget.mouseX;
-                yOff = event.currentTarget.mouseY;
-                parent.addEventListener(MouseEvent.MOUSE_MOVE, tbMouseMoveHandler);
-                parent.setChildIndex(this,parent.numChildren-1); 
-                
-            }
+        private function tbMouseDownHandler(event:MouseEvent):void 
+        {            
+            xOff = event.currentTarget.mouseX;
+            yOff = event.currentTarget.mouseY;
+            parent.addEventListener(MouseEvent.MOUSE_MOVE, tbMouseMoveHandler);
+            parent.setChildIndex(this,parent.numChildren-1); 
+         }
             
        private function tbMouseMoveHandler(event:MouseEvent):void {
             

@@ -8,7 +8,7 @@
 			horizontalScrollPolicy="off"
 			verticalCenter="0" 
 			horizontalCenter="0"
-			creationComplete="onCC()"
+			addedToStage="onATS()"
 			xmlns:view="com.mcquilleninteractive.learnhvac.view.*"
 		>
 
@@ -19,25 +19,31 @@
 			import com.mcquilleninteractive.learnhvac.event.LoginEvent
 			import com.mcquilleninteractive.learnhvac.event.LogoutEvent
 			import com.mcquilleninteractive.learnhvac.event.ApplicationEvent
+			import com.mcquilleninteractive.learnhvac.util.AboutInfo
 			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import mx.controls.Alert
 			import com.mcquilleninteractive.learnhvac.util.Logger;
-	
+			import org.swizframework.Swiz
 			[Bindable]
 			[Autowire(bean="applicationModel")]
 			public var applicationModel:ApplicationModel
 				
+			[Bindable]
+			private var _versionNumber:String
 			
 			private var loggingInAsGuest:Boolean = false
 			
-			private function onCC() : void
+			protected function onATS() : void
 			{
 				if (ApplicationModel.testMode)
 				{
-					username.text="daniel"
-					password.text = "pid123"
-					doLogin()
+					var event : LoginEvent = new LoginEvent( LoginEvent.LOGIN, true );
+					event.username = "daniel"
+					event.password = "pid123" 
+					Swiz.dispatchEvent( event );
 				}
+				
+				_versionNumber = AboutInfo.applicationVersion
 			}
 			
 			[Mediate(event="LogoutEvent.LOGOUT")]
@@ -107,6 +113,8 @@
     <mx:StringValidator id="vUsername" source="{ username }" property="text" required="true"/>
     <mx:StringValidator id="vPassword" source="{ password }" property="text" required="true"/>
     
+ 
+    
 	<mx:Canvas id="splashCanvas" 
 			width="100%" height="100%" 
 			horizontalScrollPolicy="off"
@@ -143,5 +151,9 @@
 	   
 	</mx:Panel>
 	
+	<mx:HBox top="10" right="10">
+    	<mx:Label text="Version: " color="#FFFFFF" alpha=".7"/>
+    	<mx:Label text="{_versionNumber}" color="#FFFFFF" alpha=".7"/>
+    </mx:HBox>
  	
 </mx:Canvas>

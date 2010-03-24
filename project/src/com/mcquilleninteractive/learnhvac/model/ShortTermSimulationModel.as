@@ -31,24 +31,36 @@ package com.mcquilleninteractive.learnhvac.model
 		public var currDateTime:Date	
 		
 		//seconds elapsed since start time		
-		public var timeInSec:int = 0		
+		public var timeInSec:int		
 							
 		//holds each increment in array for graphing time axis							
-		public var stepArr:Array = []					
+		public var stepArr:Array 				
 		//timescale is changed by user...multiplies 1 second increment
-		public var timeScale:Number = 1					
+		public var timeScale:Number 			
 		//string representation of time (visual components bind to this)
-		public var currTimeDisplay:String = "00:00:00"		
+		public var currTimeDisplay:String 	
 		//array of epoch seconds representating DATE and time of each step for graphing 	
 		public var epochTimeArr:Array			
 		//where the simulation will start from when first started or reset
 		//(this will be set by model based on Scenario)
-		public var realtimeStartDatetime:Date = new Date("01/1/2010 12:00:00 PM")
+		public var realtimeStartDatetime:Date
 					
 		protected var _currentState:String = STATE_OFF
 				
 		public function ShortTermSimulationModel()
 		{
+			init()
+		}
+		
+		public function init():void
+		{
+			_currentState = STATE_OFF
+			timeInSec = 0
+			stepArr = []
+			epochTimeArr = []
+			timeScale = 1
+			currTimeDisplay = "00:00:00"
+			realtimeStartDatetime = new Date("01/1/2010 12:00:00 PM")
 		}
 		
 		public function get currentState():String

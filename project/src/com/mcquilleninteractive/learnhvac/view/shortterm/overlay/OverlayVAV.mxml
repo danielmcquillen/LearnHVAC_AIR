@@ -185,7 +185,7 @@
 		
 			
 	<mx:Label id="lblTEMP_Title" 
-		text="Reheat Coil: " 
+		text="Reheat Coil" 
 		styleName="overlayTitle"
 		color="0xFFFFFF"
 		x="70" 

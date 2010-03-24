@@ -1,10 +1,8 @@
 package com.mcquilleninteractive.learnhvac.model
 {
-	import com.mcquilleninteractive.learnhvac.util.Logger
-	import com.mcquilleninteractive.learnhvac.model.DefaultScenariosModel
-	
-	import mx.collections.ArrayCollection
 	import flash.events.EventDispatcher;
+	
+	import mx.collections.ArrayCollection;
 	
 	[Bindable]
 	public class ScenarioLibraryModel extends EventDispatcher

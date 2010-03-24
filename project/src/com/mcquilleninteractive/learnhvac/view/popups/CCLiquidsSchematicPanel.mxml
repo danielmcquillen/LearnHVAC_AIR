@@ -62,7 +62,7 @@
 				{
 					currTempUnits = " \u00B0C"
 				}
-				currFlowUnits = " " + scenarioModel.getSysVar("HCmLiqLvgValve").units
+				currFlowUnits = " " + scenarioModel.getSysVar("CHLLiqFlw").units
 			}
 			
 			

@@ -79,7 +79,10 @@ package com.mcquilleninteractive.learnhvac.model
 		private var _baseSIValue:Number = 0		
 		
 		public var _units:String = ApplicationModel.UNITS_IP
-		public var lastValue:Number //used as part of interface highlighting...Remembers the last value of this variable sent to Modelica		
+		
+		//holds the value the user entered in the input panel before clicking "update"
+		//if it's valid, it will become the currValue, if not, the update will be prevented
+		public var localValue:Number 
 		
 		//history for graphing
 		//currently saving history as an array of values
@@ -297,6 +300,18 @@ package com.mcquilleninteractive.learnhvac.model
 			} 
 		}
 		
+		public function isLocalValueValid():Boolean
+		{
+			if (localValue<lowValue || localValue >highValue)
+			{
+				return false
+			}
+			else
+			{
+				return true
+			}
+		}
+		
 		public function isValid():Boolean
 		{
 			if (currValue<lowValue || currValue >highValue)
@@ -506,6 +521,12 @@ package com.mcquilleninteractive.learnhvac.model
 			
 		}
 		
+		
+		/* Updates the system variable to the value entered by the user*/
+		public function updateFromLocal():void
+		{
+			this.currValue = this.localValue
+		}
 		
 		public function destroy():void
 		{

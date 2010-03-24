@@ -2,21 +2,21 @@ package com.mcquilleninteractive.learnhvac.controller
 {
 	import com.mcquilleninteractive.learnhvac.business.LongTermSimulationDelegate;
 	import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent;
-	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+	import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
+	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	import com.mcquilleninteractive.learnhvac.view.LongTermSimulation;
 	import com.mcquilleninteractive.learnhvac.view.popups.RunningLongTermSimulationPopup;
-	import org.swizframework.controller.AbstractController	import mx.core.Application
-	import mx.managers.PopUpManager
-	import mx.controls.Alert
-	import flash.display.DisplayObject
 	
-
-	import com.mcquilleninteractive.learnhvac.view.popups.SimulationModal;
+	import flash.display.DisplayObject;
+	
+	import mx.controls.Alert;
+	import mx.core.Application;
+	import mx.managers.PopUpManager;
+	
 	import org.swizframework.Swiz;
-	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
-	import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
+	import org.swizframework.controller.AbstractController;
 	import org.swizframework.factory.IInitializingBean;
 	
 	public class LongTermSimulationController extends AbstractController implements IInitializingBean
@@ -68,8 +68,9 @@ package com.mcquilleninteractive.learnhvac.controller
 			catch(err:Error)
 			{
 				Logger.error("error when calling runLongTermSimulation on delegate: e: " +err, this)  
-				Alert.show("Simulation Error: " + err.message, "Simulation Error")
-				simulationFailed(null)
+				var evt:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED)
+				evt.errorMessage = err.message
+				simulationFailed(evt)
 			}						
 		}
 						
@@ -106,9 +107,15 @@ package com.mcquilleninteractive.learnhvac.controller
 		   
 		public function simulationFailed(event:LongTermSimulationEvent):void
 		{
-			Logger.debug("simulationFailed()", this)						
+			Logger.debug("simulationFailed() event:" + event, this)						
+			Logger.debug("simulationFailed() event.errorMessage:" + event.errorMessage, this)						
+			
+			//do local/preliminary stuff first
 			PopUpManager.removePopUp(_popUp)	
-			Swiz.dispatchEvent(event)	
+			
+			//then dispatch event to all listeners
+			var evt:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+			Swiz.dispatchEvent(evt)	
 			Alert.show("Long-term simulation failed. " + event.errorMessage, "Simulation Failed")
 		}
 		

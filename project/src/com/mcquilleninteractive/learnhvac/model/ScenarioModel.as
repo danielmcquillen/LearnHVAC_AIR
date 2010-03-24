@@ -153,7 +153,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function ScenarioModel():void
 		{															
-			initialize()
+			init()
 		}
 				
 		/////////////////////////////////////
@@ -294,7 +294,7 @@ package com.mcquilleninteractive.learnhvac.model
 		/* Function: initialize
 		*  Initializes model, wiping out any current settings 
 		*/
-		public function initialize():void
+		public function init():void
 		{
 			clearScenario()
 			lookupArr = []
@@ -305,11 +305,15 @@ package com.mcquilleninteractive.learnhvac.model
 		{
 			//wipe out all info from ScenarioModel
 			//TODO: need to call destroy() functions on node and sysvar objects
-			sysNodesAC = new ArrayCollection()
-			sysNodesForNavAC = new ArrayCollection()
+			sysNodesAC.removeAll()
+			sysNodesForNavAC.removeAll()
 			if (shortTermSimulationModel)
 			{
-				this.shortTermSimulationModel.resetTimer()
+				shortTermSimulationModel.init()
+			}
+			if (longTermSimulationModel)
+			{
+				longTermSimulationModel.init()
 			}
 		}
 		

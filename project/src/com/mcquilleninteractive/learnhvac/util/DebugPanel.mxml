@@ -3,6 +3,7 @@
 				xmlns:util="com.mcquilleninteractive.learnhvac.util.*"
 				title="DEBUG" 
 				creationComplete="onCreationComplete()"
+			    showCloseButton="true"			    
 			    close="onPanelClose(event)"
 				>
 		
@@ -43,12 +44,15 @@
 					textAreaTarget.includeLevel = true
 					textAreaTarget.level = LogEventLevel.DEBUG
 					Log.addTarget(textAreaTarget)
+					txtDebug.text += "Learn HVAC Debugger Window\n-------------------------\n\nVersion: " + AboutInfo.applicationVersion +"\n\n"
 				}
 			
 				public function onPanelClose(evt:Event):void
-				{
+				{				
 					Log.removeTarget(textAreaTarget)
 				}
+				
+			
 			
 				public function scrollDown():void
 				{

@@ -14,6 +14,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.containers.Panel;
 			import org.swizframework.Swiz;
 			import flash.net.navigateToURL; 	//use these two if I'm using Flex way of opening browser
     		import flash.net.URLRequest;
@@ -196,12 +197,20 @@
           
          	public function onDebug():void
 			{
+				Logger.debug("show debug panel",this)
 			 	var pnlDebug:DebugPanel = new DebugPanel()
 				PopUpManager.addPopUp(pnlDebug, this)
 				pnlDebug.width=800
 				pnlDebug.height=600
-				PopUpManager.centerPopUp(pnlDebug)
-					
+				PopUpManager.centerPopUp(pnlDebug)	
+				pnlDebug.addEventListener(Event.CLOSE, onDebugClose)				
+			}
+			
+			public function onDebugClose(event:Event):void
+			{
+				var pnlDebug:DebugPanel = DebugPanel(event.target)
+				pnlDebug.removeEventListener(Event.CLOSE, onDebugClose)
+				PopUpManager.removePopUp(pnlDebug)	
 			}
           	
 	          	

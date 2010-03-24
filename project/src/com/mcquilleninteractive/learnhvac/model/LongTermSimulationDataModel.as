@@ -32,7 +32,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function LongTermSimulationDataModel()
 		{
-			initialize()
+			init()
 		}
 		
 		public function onUnitsChange(units:String):void
@@ -43,7 +43,7 @@ package com.mcquilleninteractive.learnhvac.model
 			}
 		}
 		
-		public function initialize():void
+		public function init():void
 		{
 			
 			//currently we're just storing two runs for EPlus, a base run and a delta run

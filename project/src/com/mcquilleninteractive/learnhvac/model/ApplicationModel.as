@@ -12,9 +12,13 @@ package com.mcquilleninteractive.learnhvac.model
 	{
 		public static const baseStoragePath:String = "Local Settings/Application Data/LearnHVAC/"
 		
-		//This flag will cause certain functions to use dummy or already created data
-		//(e.g. existing E+ output is loaded rather than running simulation)	
-		public static var testMode:Boolean = false
+		// ATTRIBUTES FOR CONTROLLING TEST/MOCK MODE
+		//This flag will cause certain functions to auto-submit (login)
+		public static var testMode:Boolean = true
+		//(e.g. existing E+ output is loaded rather than running simulation)		
+		public static var mockEPlusData:Boolean = false
+		
+		// REGULAR CLASS ATTRIBUTES
 		
 		// available values for the main viewstack
 		// defined as contants to help uncover errors at compile time instead of run time
@@ -23,7 +27,8 @@ package com.mcquilleninteractive.learnhvac.model
 		public static const PANEL_SHORT_TERM_SIMULATION : Number =	2
 		public static const PANEL_ANALYSIS : Number = 3
 		
-		public var viewing:uint = PANEL_SELECT_SCENARIO		
+		
+		public var viewing:uint = PANEL_SELECT_SCENARIO	
 		public var isFirstStartup:Boolean = false				
 		public var loggedIn: Boolean = false
 		

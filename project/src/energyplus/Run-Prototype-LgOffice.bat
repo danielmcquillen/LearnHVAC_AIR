@@ -208,6 +208,9 @@ IF EXIST readvars.audit   DEL readvars.audit
 IF EXIST "%epout%.epmidf" DEL "%epout%.epmidf"
 IF EXIST "%epout%.epmdet" DEL "%epout%.epmdet"
 
+: DMcQ Learn HVAC will always save in.imf to Input directory, so copy from there
+IF EXIST Input/in.imf copy Input/in.imf in.imf
+
 if "%epinext%" == "" set epinext=idf
 if exist "%epin%.%epinext%" copy "%epin%.%epinext%" in.%epinext%
 if exist in.imf EPMacro
@@ -260,7 +263,7 @@ IF EXIST eplusmtr.inp postprocess\ReadVarsESO.exe eplusmtr.inp %rvset%
 IF NOT EXIST eplusmtr.inp echo eplusout.mtr >test.mvi
 IF NOT EXIST eplusmtr.inp echo eplusmtr.csv >>test.mvi
 IF NOT EXIST eplusmtr.inp postprocess\ReadVarsESO.exe test.mvi %rvset%
-postprocess\HVAC-Diagram.exe
+
 
 if %pausing%==Y pause
 

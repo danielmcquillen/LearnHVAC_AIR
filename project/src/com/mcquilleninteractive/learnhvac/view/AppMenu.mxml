@@ -8,6 +8,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent;
 			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 			import air.net.URLMonitor;
@@ -24,6 +25,7 @@
 			[Autowire]
 			public var applicationModel:ApplicationModel
 						
+			
 			private function onInit():void
 			{
             } 			
@@ -59,10 +61,16 @@
 						
 					/* File */ 
 					
-					case "new_scenario":	
+					/*
+					case "new_scenario":
+						var newEvt:NewScenarioEvent = new NewScenarioEvent(NewScenarioEvent.NEW_SCENARIO, true)
+						dispatchEvent(newEvt)	
 						break
-						
+					*/
+					
 					case "close_scenario":
+						var closeEvt:CloseScenarioEvent = new CloseScenarioEvent(CloseScenarioEvent.CLOSE_SCENARIO, true)
+						dispatchEvent(closeEvt)
 						break
 					
 									
@@ -126,9 +134,10 @@
 			</util:MenuItem>
 		
 			<util:MenuItem label="File" id="file">
-				<util:MenuItem label="New scenario..." id="new_project" data="new_scenario"/>
- 				<util:MenuItem label="Close scenario" id="close_project" data="close_scenario" enabled="{applicationModel.scenarioLoaded}"/>
-						
+				<util:MenuItem label="Close scenario" 
+					id="close_project" 
+					data="close_scenario" 
+					enabled="{applicationModel.scenarioLoaded}"/>
 			</util:MenuItem>
 		
 			

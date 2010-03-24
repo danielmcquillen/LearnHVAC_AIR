@@ -4,15 +4,18 @@ package com.mcquilleninteractive.learnhvac.controller
 	
 	import com.mcquilleninteractive.learnhvac.business.LocalScenarioDelegate;
 	import com.mcquilleninteractive.learnhvac.business.RemoteScenarioDelegate;
+	import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent;
 	import com.mcquilleninteractive.learnhvac.event.GetScenarioListEvent;
 	import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent;
 	import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.model.DefaultScenariosModel;
 	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
+	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
+	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 	import com.mcquilleninteractive.learnhvac.model.UserModel;
@@ -47,6 +50,12 @@ package com.mcquilleninteractive.learnhvac.controller
 		
 		[Autowire]
 		public var longTermSimulationModel:LongTermSimulationModel
+		
+		[Autowire]
+		public var shortTermSimulationDataModel:ShortTermSimulationDataModel
+		
+		[Autowire]
+		public var longTermSimulationDataModel:LongTermSimulationDataModel
 		
 		[Autowire]
 		public var localScenarioDelegate:LocalScenarioDelegate
@@ -453,7 +462,7 @@ package com.mcquilleninteractive.learnhvac.controller
 						else 
 						{
 							sysVar[attrName] = attr.toXMLString() 
-							if (attrName=="index")
+							if (attrName=="default")
 							{
 								Logger.debug("setting sysVar " + sysVar.name + "index: " + sysVar.index + " attr: " + attr.toXMLString(),this)
 							}
@@ -462,7 +471,7 @@ package com.mcquilleninteractive.learnhvac.controller
 					
 					sysVar.units = ApplicationModel.currUnits;
 					sysVar.setConversionFunctions()
-					sysVar.lastValue = sysVar.currValue
+					sysVar.localValue = sysVar.currValue
 
 					//-999 on a fault means it's not to be made active on start of the scenario.
 					//So, if it's not -999, then make fault active
@@ -507,11 +516,28 @@ package com.mcquilleninteractive.learnhvac.controller
 			return 0
 		}
 		
+		
+		[Mediate(event="CloseScenarioEvent.CLOSE_SCENARIO")]
+		public function onCloseScenario(event:CloseScenarioEvent):void
+		{
+			scenarioModel.init()
+		    shortTermSimulationModel.init()
+		    longTermSimulationModel.init()
+		    shortTermSimulationDataModel.init()
+		    longTermSimulationDataModel.init()
+			applicationModel.scenarioLoaded = false
+			applicationModel.viewing = ApplicationModel.PANEL_SELECT_SCENARIO
+		}
+		
+		
+		
 		// FOR TESTING 
 		public function loadDataForTest():void
 		{
 			populateScenarioModel(defaultScenariosModel.defaultScenarioXML)			
 		}
+
+		
 
 
 	}

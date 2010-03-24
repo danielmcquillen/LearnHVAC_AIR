@@ -20,7 +20,6 @@ package com.mcquilleninteractive.learnhvac.business
 	import flash.filesystem.*;
 	import flash.system.Capabilities;
 	
-	import org.swizframework.Swiz;
 
 	
 	public class LongTermSimulationDelegate extends EventDispatcher
@@ -42,7 +41,7 @@ package com.mcquilleninteractive.learnhvac.business
 		protected var _ePlusExe:File
 		protected var _includeFilesDir:File
 		protected var _paramBaseFile:File		
-		protected var _paramFile:File		
+		protected var _inputIMFFile:File		
 		protected var _eplusOutVarsFile:File
 		protected var _eplusOutputMeterFile:File	
 		
@@ -59,10 +58,9 @@ package com.mcquilleninteractive.learnhvac.business
 			_ePlusExe = baseDir.resolvePath("LearnHVACEPlusLauncher.exe")
 			_includeFilesDir =  baseDir.resolvePath("LgOff/IncFiles")
 			_paramBaseFile = baseDir.resolvePath("LgOff/IncFiles/Param_LgOff_base.inc")
-			_paramFile = baseDir.resolvePath("LgOff/IncFiles/Param_LgOff.inc")
+			_inputIMFFile = baseDir.resolvePath("LgOff/Input/in.imf")
 			_eplusOutVarsFile = baseDir.resolvePath('LgOff/Output/LgOff.csv')
-			_eplusOutputMeterFile = baseDir.resolvePath('LgOff/Output/LgOffMeter.csv')
-			
+			_eplusOutputMeterFile = baseDir.resolvePath('LgOff/Output/LgOffMeter.csv')			
 			_stream = new FileStream()
 			
 		}
@@ -80,7 +78,7 @@ package com.mcquilleninteractive.learnhvac.business
 			_runID = longTermSimulationModel.runID
 			
 			//if this is test mode, just jump straight to reading output
-			if (ApplicationModel.testMode)
+			if (ApplicationModel.mockEPlusData)
 			{
 				loadOutputFiles()
 				return
@@ -183,7 +181,7 @@ package com.mcquilleninteractive.learnhvac.business
 			// save new version
 			try
 			{				
-				_stream.open(_paramFile, FileMode.WRITE)
+				_stream.open(_inputIMFFile, FileMode.WRITE)
 				_stream.writeUTFBytes(outputParamLgOff)
 				_stream.close()
 				Logger.debug(" output file written", this)
@@ -191,8 +189,8 @@ package com.mcquilleninteractive.learnhvac.business
 			}
 			catch(e:Error)
 			{
-				Logger.error(" couldn't save " + _paramFile.nativePath + "file. Error: " + e.message, this)
-				msg = "Couldn't save " + _paramFile.name + ". Error: " + e.message
+				Logger.error(" couldn't save " + _inputIMFFile.nativePath + "file. Error: " + e.message, this)
+				msg = "Couldn't save " + _inputIMFFile.name + ". Error: " + e.message
 				throw new Error(msg)
 			}			
 			 
@@ -303,7 +301,7 @@ package com.mcquilleninteractive.learnhvac.business
 			
 			lhInc += "\n\n! SPK Variables for temp of room & supply air"
 			
-			var tRoomSPHeat:SystemVariable = scenarioModel.getSysVar("SysTRmSPHeat")
+			var tRoomSPHeat:SystemVariable = scenarioModel.getSysVar("SYSTRmSPHeat")
 			var tRoomSPCool:SystemVariable = scenarioModel.getSysVar("SYSTRmSPCool")
 			
 			//lhInc += "\n##def1 SPK_TRoomSP       " + tRoomSP_val
@@ -342,11 +340,11 @@ package com.mcquilleninteractive.learnhvac.business
 			//lhInc += "\n##def1 SPK_PAtm     "+ pAtm.baseSIValue
 			lhInc += "\n##def1 SPK_PAtm     101325.0"
 						
-			var mxTOut:SystemVariable = scenarioModel.getSysVar("SYSTempDB") 
+			var mxTOut:SystemVariable = scenarioModel.getSysVar("SYSTAirDB") 
 			lhInc += "\n##def1 SPK_MXTOut     "+ mxTOut.baseSIValue
 			
 			
-			var mxTwOut:SystemVariable = scenarioModel.getSysVar("MXTwOut") 
+			var mxTwOut:SystemVariable = scenarioModel.getSysVar("SYSTAirDB") 
 			lhInc += "\n##def1 SPK_MXTwOut     "+ mxTwOut.baseSIValue
 			
 			return lhInc
@@ -363,7 +361,7 @@ package com.mcquilleninteractive.learnhvac.business
 			
 			var evt:EnergyPlusEvent = new EnergyPlusEvent(EnergyPlusEvent.ENERGY_PLUS_OUTPUT,true)
 			evt.output = text
-			Swiz.dispatchEvent(evt)
+			dispatchEvent(evt)
 			
 		}
 
@@ -387,7 +385,7 @@ package com.mcquilleninteractive.learnhvac.business
 				var message:String = "Output files weren't generated. Please see log and energplus error files for details."
 				Logger.error( message, this)
 				evt.errorMessage = message
-				Swiz.dispatchEvent(evt)
+				dispatchEvent(evt)
 			}			
 		}
 				
@@ -415,9 +413,9 @@ package com.mcquilleninteractive.learnhvac.business
 			{
 				Logger.error("couldn't read the LgOff.csv output file. Error: " + error), this				
 				var msg:String = "Error while trying to read the EnergyPlus LgOff.csv file."
-				event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
-				event.errorMessage = msg
-				Swiz.dispatchEvent(event)
+				var errorEvent:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				errorEvent.errorMessage = msg
+				dispatchEvent(errorEvent)
 				return
 			}
 		
@@ -431,9 +429,9 @@ package com.mcquilleninteractive.learnhvac.business
 			{
 				Logger.error("LTSD: couldn't read the LgOffMeter.csv output file. Error: " + error, this)
 				msg = "Error while trying to read the EnergyPlus LgOffMeter.csv file."
-				event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
-				event.errorMessage = msg
-				Swiz.dispatchEvent(event)
+				errorEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				errorEvent.errorMessage = msg
+				dispatchEvent(errorEvent)
 				return				
 			}
 						
@@ -442,18 +440,18 @@ package com.mcquilleninteractive.learnhvac.business
 			{
 				Logger.error("basicMeterData file is empty!", this)
 				msg = "There was an error during the E+ run: no data available in LgOffMeter.csv."				
-				event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
-				event.errorMessage = msg
-				Swiz.dispatchEvent(event)
+				errorEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				errorEvent.errorMessage = msg
+				dispatchEvent(errorEvent)
 				return
 			}
 			if (basicOutputData == null)
 			{
 				Logger.error("basicOutputData file is empty!", this)
 				msg = "There was an error during the E+ run: no data available in LgOff.csv."				
-				event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
-				event.errorMessage = msg
-				Swiz.dispatchEvent(event)
+				errorEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				errorEvent.errorMessage = msg
+				dispatchEvent(errorEvent)
 				return
 			}
 			
@@ -468,9 +466,10 @@ package com.mcquilleninteractive.learnhvac.business
 			{
 				Logger.error("had trouble parsing E+ output. Err: " + err, this)
 				msg = "Error when parsing EnergyPlus output. Error: " + err
-				event = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
-				event.errorMessage = msg
-				dispatchEvent(event)
+				errorEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				errorEvent.errorMessage = msg
+				dispatchEvent(errorEvent)
+				return
 			}			
 		
 			Logger.debug("Finished simulation. runID was: " + _runID,this)

@@ -122,7 +122,7 @@ package com.mcquilleninteractive.learnhvac.business
 			if (_modelicaSocket.connected)
 			{			
 				var inputToModelica:String = formatInputToModelica(_inputSysVarsArr, _simTime)
-				Logger.debug("input :  " + inputToModelica,this)
+				//Logger.debug("input :  " + inputToModelica,this)
 				_modelicaSocket.writeUTFBytes(inputToModelica)
 				_modelicaSocket.flush()	
 				
@@ -172,9 +172,12 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		public function closeSocket():void
 		{
-			_serverSocket.removeEventListener(Event.CONNECT, socketConnectHandler);
-			_serverSocket.close()
-			_serverSocket = null
+			if (_serverSocket)
+			{
+				_serverSocket.removeEventListener(Event.CONNECT, socketConnectHandler);
+				_serverSocket.close()
+				_serverSocket = null
+			}
 		}
 		
 		
@@ -272,7 +275,7 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		protected function parseOutputFromModelica(outputFromModelica:String):void
 		{
-			Logger.debug("Output string from modelica:" + outputFromModelica, this)
+			//Logger.debug("Output string from modelica:" + outputFromModelica, this)
 			
 			if (_outputSysVarsArr.length==0)
 			{
@@ -298,15 +301,15 @@ package com.mcquilleninteractive.learnhvac.business
 				return
 			}
 			
-			var out:String = ""
+			//var out:String = ""
 			for (var i:uint = 0; i<_outputsSysVarsArrLength; i++)
 			{
 				var sysVar:SystemVariable = SystemVariable(_outputSysVarsArr[i])
 				sysVar.baseSIValue = outArr[i+6]			
-				out += " \n var: " + sysVar.name + " value: " + outArr[i+6]				
+				//out +=  "\n " + (i+1).toString() + " var: " + sysVar.name + " value: " + outArr[i+6]				
 			}
 			
-			Logger.debug("Values set by Modelica: \n----------------------------\n " + out, this)
+			//Logger.debug("Values set by Modelica: \n----------------------------\n " + out, this)
 			
 			
 						
@@ -317,11 +320,14 @@ package com.mcquilleninteractive.learnhvac.business
 			var inputs:String = ""
 			var len:uint = inputSysVarsArr.length
 			
+			//var tr:String = ""
 			for(var i:uint=0;i<len;i++)
 			{
 				inputs += " " + inputSysVarsArr[i].baseSIValue	
+				//tr += "\n" + inputSysVarsArr[i].name + " : " + inputSysVarsArr[i].baseSIValue	
 			}		
 			
+			//Logger.debug("Inputs going into Modelica:\n---------------------\n:" + tr, this)
 			
 			var out:String = ""
 			out += MODELICA_VERSION

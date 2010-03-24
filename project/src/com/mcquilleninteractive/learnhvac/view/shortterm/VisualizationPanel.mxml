@@ -12,6 +12,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent;
 			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 		import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
 		import com.mcquilleninteractive.learnhvac.event.ZoneChangeEvent;		
@@ -114,6 +115,12 @@
 							
 		}	
 		
+		[Mediate(event="CloseScenarioEvent.CLOSE_SCENARIO")]
+        public function onCloseScenario(event:CloseScenarioEvent):void
+        {      	
+			clearVizPanel()
+        }
+        
 		[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 		public function onScenarioLoaded(evt:ScenarioLoadedEvent):void
 		{
@@ -155,13 +162,11 @@
 		
 		public function onIntroAnimStarted():void
 		{
-			Logger.debug("onIntroAnimStarted()", this)
 			dispatchEvent(new Event("introAnimStarted()"))
 		}
 		
 		public function onIntroAnimFinished():void
 		{
-			Logger.debug("onIntroAnimFinished()", this)
 			dispatchEvent(new Event("introAnimFinished"))
 			
 			//make sure mixing box is in correct state
@@ -171,7 +176,6 @@
 		
 		public function clearVizPanel():void
 		{
-			Logger.debug("#VizPanel: clearingVizPanel()")
 			currNode = ScenarioModel.SN_ROOF
 			if (pipeLiquidsHC!=null) pipeLiquidsHC.visible = false
 			if (pipeLiquidsCC!=null) pipeLiquidsCC.visible = false
@@ -179,14 +183,7 @@
 			if (btnSetPointControl3D!=null) btnSetPointControl3D.visible=false
 			if (mixingBox!=null) mixingBox.currentState = "hidden"
 			if (fan!=null) fan.visible = false
-	
-			//clear overlays
-			for (var overlay:String in overlaysArr)
-			{
-				if (overlaysArr[overlay]!=null)	UIComponent(overlaysArr[overlay]).visible = false 
-			}
-			
-			//clear PE
+			hideOverlays()
 			pe.stopPE()
 		}
 		
@@ -432,10 +429,7 @@
 			pe.stopPE()
 			
 			//hide overlays			
-			for (var overlay:String in overlaysArr)
-			{
-				UIComponent(overlaysArr[overlay]).visible = false 
-			}
+			hideOverlays()
 			
 			//hide node-specific stuff
 			switch (currNode){
@@ -496,6 +490,14 @@
 			}
 			
 		}	
+		
+		protected function hideOverlays():void
+		{
+			for (var overlay:String in overlaysArr)
+			{
+				UIComponent(overlaysArr[overlay]).visible = false 
+			}
+		}
 		
 		private function onShowSetPointControl():void
 		{

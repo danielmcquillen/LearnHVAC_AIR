@@ -38,7 +38,6 @@ private var fileTarget:FileTarget
 private var settings:LearnHVACSettings
 private var core:FlexUnitCore;
 
-private var _autoLoginForTest:Boolean = true
 
 
 /*************** lifecycle event handlers *****************/
@@ -93,14 +92,6 @@ protected function runTests():void
 private function onAppComplete():void
 {
     loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError);
-    
-    if (_autoLoginForTest)
-    {
-    	var evt:LoginEvent = new LoginEvent(LoginEvent.LOGIN,true)
-    	evt.username = "daniel"
-    	evt.password = "pid123"
-    	Swiz.dispatchEvent(evt)
-    }	
 }
 
 
