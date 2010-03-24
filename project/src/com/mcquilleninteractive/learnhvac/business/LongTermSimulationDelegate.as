@@ -262,7 +262,6 @@ package com.mcquilleninteractive.learnhvac.business
 			//lhInc += "\n##def1 LH_DD_other         " + setupVO.ddOther
 			
 			lhInc += "\n##def1 LH_timeStepEP       " + longTermSimulationModel.timeStepEP
-			lhInc += "\n##def1 LH_Orientation " + longTermSimulationModel.northAxis + "\n"
 			
 			lhInc += "\n\n! Variables for building setup"
 			lhInc += "\n##def1 LH_Orientation      " + longTermSimulationModel.northAxis
@@ -295,7 +294,7 @@ package com.mcquilleninteractive.learnhvac.business
 			/* ****************** */
 			
 			/* Note...at some point we need to change up the variable names 
-			   encoded in the E+ input template. I'm leaving as SPK_ for now
+			   encoded in the E+ input template. I'm leaving as MOD_ for now
 			   but should be MDL_
 			*/
 			
@@ -304,48 +303,48 @@ package com.mcquilleninteractive.learnhvac.business
 			var tRoomSPHeat:SystemVariable = scenarioModel.getSysVar("SYSTRmSPHeat")
 			var tRoomSPCool:SystemVariable = scenarioModel.getSysVar("SYSTRmSPCool")
 			
-			//lhInc += "\n##def1 SPK_TRoomSP       " + tRoomSP_val
-			lhInc += "\n##def1 SPK_HRoomSP       " + tRoomSPHeat.baseSIValue
-			lhInc += "\n##def1 SPK_CRoomSP       " + tRoomSPCool.baseSIValue
+			//lhInc += "\n##def1 MOD_TRoomSP       " + tRoomSP_val
+			lhInc += "\n##def1 MOD_HRoomSP       " + tRoomSPHeat.baseSIValue
+			lhInc += "\n##def1 MOD_CRoomSP       " + tRoomSPCool.baseSIValue
 			
 			var tSupS:SystemVariable = scenarioModel.getSysVar("SYSTSupS")			
-			lhInc += "\n##def1 SPK_TSupS         " + tSupS.baseSIValue
-			lhInc += "\n##def1 SPK_DCSupS        15 ! For now set this = 15 C"
-			lhInc += "\n##def1 SPK_DHSupS        35 ! For now set this = 35 C"
+			lhInc += "\n##def1 MOD_TSupS         " + tSupS.baseSIValue
+			lhInc += "\n##def1 MOD_DCSupS        15 ! For now set this = 15 C"
+			lhInc += "\n##def1 MOD_DHSupS        35 ! For now set this = 35 C"
 
 			var rmQSens:SystemVariable = scenarioModel.getSysVar("SYSRmQSens") 
 			var rmQSens_val:Number = rmQSens.baseSIValue
 			lhInc += "\n\n! SPK Variable for total room internal load" 
-			lhInc += "\n##def1 SPK_RmQSENS         " + rmQSens.baseSIValue
+			lhInc += "\n##def1 MOD_RmQSENS         " + rmQSens.baseSIValue
 
 	
 			var vavPosMin:SystemVariable = scenarioModel.getSysVar("VAVMinPos") 
 			lhInc += "\n\n! SPK Variable for equip max/min settings"
-			lhInc += "\n##def1 SPK_VAVminpos       " + vavPosMin.baseSIValue
+			lhInc += "\n##def1 MOD_VAVminpos       " + vavPosMin.baseSIValue
 			
 			var fanpower:SystemVariable = scenarioModel.getSysVar("FANPwr") 
-			lhInc += "\n##def1 SPK_FanpowerTot     "+ fanpower.baseSIValue
+			lhInc += "\n##def1 MOD_FanpowerTot     "+ fanpower.baseSIValue
 			
 			var hcUA:SystemVariable = scenarioModel.getSysVar("HCQd") 
-			lhInc += "\n##def1 SPK_HCUA     "+ hcUA.baseSIValue
+			lhInc += "\n##def1 MOD_HCUA     "+ hcUA.baseSIValue
 			
 			var vavHCUA:SystemVariable = scenarioModel.getSysVar("VAVRhcQd") 
-			lhInc += "\n##def1 SPK_VAVHCUA     "+ vavHCUA.baseSIValue
+			lhInc += "\n##def1 MOD_VAVHCUA     "+ vavHCUA.baseSIValue
 			
 			var ccUA:SystemVariable = scenarioModel.getSysVar("CCQd") 
-			lhInc += "\n##def1 SPK_CCUA     "+ ccUA.baseSIValue
+			lhInc += "\n##def1 MOD_CCUA     "+ ccUA.baseSIValue
 						
 			//We don't have PAtm right now (3/11/2010) so just use default value			
 			//var pAtm:SystemVariable = scenarioModel.getSysVar("PAtm") 
-			//lhInc += "\n##def1 SPK_PAtm     "+ pAtm.baseSIValue
-			lhInc += "\n##def1 SPK_PAtm     101325.0"
+			//lhInc += "\n##def1 MOD_PAtm     "+ pAtm.baseSIValue
+			lhInc += "\n##def1 MOD_PAtm     101325.0"
 						
 			var mxTOut:SystemVariable = scenarioModel.getSysVar("SYSTAirDB") 
-			lhInc += "\n##def1 SPK_MXTOut     "+ mxTOut.baseSIValue
+			lhInc += "\n##def1 MOD_MXTOut     "+ mxTOut.baseSIValue
 			
 			
 			var mxTwOut:SystemVariable = scenarioModel.getSysVar("SYSTAirDB") 
-			lhInc += "\n##def1 SPK_MXTwOut     "+ mxTwOut.baseSIValue
+			lhInc += "\n##def1 MOD_MXTwOut     "+ mxTwOut.baseSIValue
 			
 			return lhInc
 		}
@@ -464,7 +463,7 @@ package com.mcquilleninteractive.learnhvac.business
 			}
 			catch (err:EPlusParseError)
 			{
-				Logger.error("had trouble parsing E+ output. Err: " + err, this)
+				Logger.error("had trouble parsing EnergyPlus output. Err: " + err, this)
 				msg = "Error when parsing EnergyPlus output. Error: " + err
 				errorEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
 				errorEvent.errorMessage = msg

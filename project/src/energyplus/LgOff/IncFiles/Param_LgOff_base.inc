@@ -218,7 +218,7 @@ RunPeriod,
 ! But its value can be set here, since all "*.inc" files are concatenated
 ! and are effectively the same file.
 
-  ##set1 Min_Air_Flow    SPK_VAVminpos[] 	
+  ##set1 Min_Air_Flow    MOD_VAVminpos[] 	
 
 ! ##set1 Min_Air_Flow    0.3	NOTE: This is the OLD line for Min Air Flow	
 ! Note: this is at least JJD's interpretation that this is what is intended by this variable.
@@ -234,9 +234,9 @@ RunPeriod,
 ! -------------------------------------------
 ! Set the various setpoints to values defined from Learn HVAC
 !
-  ##set1 Cool_SetPoint    SPK_CRoomSP[]	 
+  ##set1 Cool_SetPoint    MOD_CRoomSP[]	 
   ##set1 Cool_SetUp    	  32.2			! 32.2 C = Roughly 90 F
-  ##set1 Heat_SetPoint    SPK_HRoomSP[]		! From LearnHVAC in SI units
+  ##set1 Heat_SetPoint    MOD_HRoomSP[]		! From LearnHVAC in SI units
   ##set1 Heat_SetBack     12.78			! 12.78 C = Roughly 55 F  
 
 ! ##set1 Cool_SetPoint_F    75   NOTE: this is OLD line for Cool_SetPoint_F
@@ -252,11 +252,11 @@ RunPeriod,
 ! -------------------------------------------
 ! now all set directly in SI units from LearnHVAC
 
-  ##set1 zhdsat      SPK_DHSupS[]
+  ##set1 zhdsat      MOD_DHSupS[]
 ! ##set1 zhdsat      40.56				! 40.56 C = abvout 105 F
-  ##set1 zcdsat      SPK_DCSupS[]
-  ##set1 chdsat      SPK_DCSupS[]
-  ##set1 ccdsat      SPK_DCSupS[]
+  ##set1 zcdsat      MOD_DCSupS[]
+  ##set1 chdsat      MOD_DCSupS[]
+  ##set1 ccdsat      MOD_DCSupS[]
 
 ! -------------------------------------------
 

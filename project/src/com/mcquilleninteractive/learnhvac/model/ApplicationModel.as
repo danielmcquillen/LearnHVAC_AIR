@@ -14,7 +14,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		// ATTRIBUTES FOR CONTROLLING TEST/MOCK MODE
 		//This flag will cause certain functions to auto-submit (login)
-		public static var testMode:Boolean = true
+		public static var testMode:Boolean = false
 		//(e.g. existing E+ output is loaded rather than running simulation)		
 		public static var mockEPlusData:Boolean = false
 		
