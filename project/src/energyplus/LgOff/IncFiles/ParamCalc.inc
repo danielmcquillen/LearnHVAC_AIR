@@ -61,9 +61,9 @@
 !  ##set1 zcdsat           =  #[#[zcdsat_F[] - 32] / 1.8]
 !  ##set1 chdsat           =  #[#[chdsat_F[] - 32] / 1.8]
 !  ##set1 ccdsat           =  #[#[ccdsat_F[] - 32] / 1.8]
-!  ##set1 SPK_TRoomSP      =  #[#[SPK_TRoomSP_F[] - 32] / 1.8]
-!  ##set1 SPK_CRoomSP      =  #[#[SPK_CRoomSP_F[] - 32] / 1.8]
-!  ##set1 SPK_HRoomSP      =  #[#[SPK_HRoomSP_F[] - 32] / 1.8]
+!  ##set1 MOD_TRoomSP      =  #[#[MOD_TRoomSP_F[] - 32] / 1.8]
+!  ##set1 MOD_CRoomSP      =  #[#[MOD_CRoomSP_F[] - 32] / 1.8]
+!  ##set1 MOD_HRoomSP      =  #[#[MOD_HRoomSP_F[] - 32] / 1.8]
 ! ------------------------------------------------------
 
   ##set1 fan_dp           =  #[fan_dp_inh2o[]  * 249]
