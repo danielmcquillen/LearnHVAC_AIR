@@ -41,7 +41,7 @@ package com.mcquilleninteractive.learnhvac.business
 		protected var _ePlusExe:File
 		protected var _includeFilesDir:File
 		protected var _paramBaseFile:File		
-		protected var _inputIMFFile:File		
+		protected var _paramFile:File		
 		protected var _eplusOutVarsFile:File
 		protected var _eplusOutputMeterFile:File	
 		
@@ -58,7 +58,7 @@ package com.mcquilleninteractive.learnhvac.business
 			_ePlusExe = baseDir.resolvePath("LearnHVACEPlusLauncher.exe")
 			_includeFilesDir =  baseDir.resolvePath("LgOff/IncFiles")
 			_paramBaseFile = baseDir.resolvePath("LgOff/IncFiles/Param_LgOff_base.inc")
-			_inputIMFFile = baseDir.resolvePath("LgOff/Input/in.imf")
+			_paramFile = baseDir.resolvePath("LgOff/IncFiles/Param_LgOff.inc")
 			_eplusOutVarsFile = baseDir.resolvePath('LgOff/Output/LgOff.csv')
 			_eplusOutputMeterFile = baseDir.resolvePath('LgOff/Output/LgOffMeter.csv')			
 			_stream = new FileStream()
@@ -100,12 +100,14 @@ package com.mcquilleninteractive.learnhvac.business
 				weatherFile.copyTo(inEPWFile, true)
 			}
 					
-			//check include files
-			
-			var includeFiles:Array = ["BldgGeom.inc","Construction.inc","material.inc",
-										"Param_LgOff.inc","ParamCalc.inc","Schedule.inc",
-										"SpCond.inc","System.inc"]
-										
+			//check include files			
+			var includeFiles:Array = ["BldgGeom.inc","ParamCalc.inc",
+										"BldgGeom.inc","Construction.inc",
+										"general.inc","location.inc","material.inc",
+										"report.inc","Schedule.inc","SpCond.inc",
+										"System.inc"
+										]
+													
 			Logger.debug("checking for necessary .inc files...", this)			
 			for each (var fileName:String in includeFiles)
 			{
@@ -121,39 +123,7 @@ package com.mcquilleninteractive.learnhvac.business
 			Logger.debug(" runID set to : " + _runID, this)			
 			Logger.debug(" checking if output files exist...if so, delete them...")
 									
-			//Clear out existing output, if present	
-			/*This isn't working after first run...E+ is somehow holding onto files				
-			if (_eplusOutVarsFile.exists)
-			{
-				//Logger.debug("#BSD: deleting existing BasicOutput.csv from energyplus")
-				try
-				{
-					_eplusOutVarsFile.deleteFile()
-				}
-				catch(e:Error)
-				{
-					Logger.warn(" couldn't delete " + _eplusOutVarsFile.nativePath, this)
-					msg = "Couldn't delete " + _eplusOutVarsFile.name +" in the EnergyPlus IncFiles folder before running simulation. Please close this file if open."
-					throw new Error(msg)
-				}				
-			}
-			
-			if (_eplusOutputMeterFile.exists)
-			{
-				try
-				{
-					_eplusOutputMeterFile.deleteFile()
-				}
-				catch(e:Error)
-				{
-					Logger.warn(" couldn't delete " + _eplusOutputMeterFile.nativePath, this)
-					msg = "Couldn't delete " + _eplusOutputMeterFile.name +" in the EnergyPlus IncFiles folder before running simulation. Please close this file if open."	
-					throw new Error(msg)
-				}
-				
-			}
-			*/
-			
+					
 						
 			////////////////////////////////////////					
 			// BUILD SAVE THE LEARN HVAC .inc file
@@ -181,7 +151,7 @@ package com.mcquilleninteractive.learnhvac.business
 			// save new version
 			try
 			{				
-				_stream.open(_inputIMFFile, FileMode.WRITE)
+				_stream.open(_paramFile, FileMode.WRITE)
 				_stream.writeUTFBytes(outputParamLgOff)
 				_stream.close()
 				Logger.debug(" output file written", this)
@@ -189,8 +159,8 @@ package com.mcquilleninteractive.learnhvac.business
 			}
 			catch(e:Error)
 			{
-				Logger.error(" couldn't save " + _inputIMFFile.nativePath + "file. Error: " + e.message, this)
-				msg = "Couldn't save " + _inputIMFFile.name + ". Error: " + e.message
+				Logger.error(" couldn't save " + _paramFile.nativePath + "file. Error: " + e.message, this)
+				msg = "Couldn't save " + _paramFile.name + ". Error: " + e.message
 				throw new Error(msg)
 			}			
 			 
@@ -320,7 +290,7 @@ package com.mcquilleninteractive.learnhvac.business
 	
 			var vavPosMin:SystemVariable = scenarioModel.getSysVar("VAVMinPos") 
 			lhInc += "\n\n! SPK Variable for equip max/min settings"
-			lhInc += "\n##def1 MOD_VAVminpos       " + vavPosMin.baseSIValue
+			lhInc += "\n##def1 MOD_VAVminpos       " + (vavPosMin.baseSIValue / 100).toString() // since we keep as percentage and E+ expects 0 > value >1
 			
 			var fanpower:SystemVariable = scenarioModel.getSysVar("FANPwr") 
 			lhInc += "\n##def1 MOD_FanpowerTot     "+ fanpower.baseSIValue

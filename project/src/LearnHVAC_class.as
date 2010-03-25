@@ -62,6 +62,12 @@ public function onInit():void
 	//if this is first run, copy installed files to working directories
 	//check if this is first install
 	var firstInstallDataBA:ByteArray = EncryptedLocalStore.getItem("firstInstallDate")
+	
+	//TEMP
+	//FOR NOW, ALWAYS DO FIRST SETUP
+	firstInstallDataBA = null
+	
+	
 	if (firstInstallDataBA==null)
 	{
 		_applicationModel.isFirstStartup = true
@@ -231,17 +237,20 @@ protected function doFirstStartup():void
 		copyEplusFile.createDirectory()
 		eplusFile.copyTo(copyEplusFile, true)		
 		
+		//Don't need the following since we're embedding scenarios directly in code for now
 		//copy the included scenarios to the storage directory	
+		/*
 		var scenariosFile:File = File.applicationDirectory.resolvePath("scenarios")
+		
+		Logger.debug("scenariosFile: " + scenariosFile.nativePath + " exists: " +scenariosFile.exists.toString(), this) 	
 		var copyScenariosFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "scenarios")
 		if (copyScenariosFile.exists==false)
 		{
 			copyScenariosFile.createDirectory()
 		}
-		Logger.debug("Moving scenarios to: " + copyScenariosFile.nativePath, this) 
-		copyScenariosFile.createDirectory()
+		Logger.debug("Moving scenarios to: " + copyScenariosFile.nativePath, this) 		
 		scenariosFile.copyTo(copyScenariosFile, true)
-		
+		*/
 		
 }
 

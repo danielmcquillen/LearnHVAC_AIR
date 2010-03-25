@@ -131,18 +131,18 @@ SET procCSV=N
 :   8.  Clean up directory.
 :
 : Set the variables if a command line is used
-IF "%9"=="" GOTO skipSetParams
-SET epin=%~1
-SET epout=%~2
-SET epinext=%3
-SET epwthr=%~4
-SET eptype=%5
-SET pausing=%6
-SET maxcol=%7
-SET convESO=%8
-SET procCSV=%9
+:IF "%9"=="" GOTO skipSetParams
+:SET epin=%~1
+:SET epout=%~2
+:SET epinext=%3
+:SET epwthr=%~4
+:SET eptype=%5
+:SET pausing=%6
+:SET maxcol=%7
+:SET convESO=%8
+:SET procCSV=%9
 :skipSetParams
-:
+
 :  1. Clean up working directory
 IF EXIST eplusout.inp   DEL eplusout.inp
 IF EXIST eplusout.end   DEL eplusout.end
@@ -189,13 +189,15 @@ IF EXIST eplusout.delighteldmp  DEL eplusout.delighteldmp
 IF EXIST eplusout.delightdfdmp  DEL eplusout.delightdfdmp
 IF EXIST eplusout.sparklog  DEL eplusout.sparklog
 IF EXIST eplusscreen.csv  DEL eplusscreen.csv
-IF EXIST in.imf         DEL in.imf
+
+:DMcQ In.imf has code to combine all the .inc files
+:IF EXIST in.imf         DEL in.imf
+
 IF EXIST in.idf         DEL in.idf
 IF EXIST in.stat        DEL in.stat
 IF EXIST out.idf        DEL out.idf
 IF EXIST eplusout.inp   DEL eplusout.inp
-REM DMcQ commenting this line out since we've just written in.EPW from LearnHVAC
-REM IF EXIST in.epw         DEL in.epw
+IF EXIST in.epw         DEL in.epw
 IF EXIST eplusout.audit DEL eplusout.audit
 IF EXIST eplusmtr.inp   DEL eplusmtr.inp
 IF EXIST test.mvi       DEL test.mvi
@@ -208,9 +210,6 @@ IF EXIST readvars.audit   DEL readvars.audit
 IF EXIST "%epout%.epmidf" DEL "%epout%.epmidf"
 IF EXIST "%epout%.epmdet" DEL "%epout%.epmdet"
 
-: DMcQ Learn HVAC will always save in.imf to Input directory, so copy from there
-IF EXIST Input/in.imf copy Input/in.imf in.imf
-
 if "%epinext%" == "" set epinext=idf
 if exist "%epin%.%epinext%" copy "%epin%.%epinext%" in.%epinext%
 if exist in.imf EPMacro
@@ -218,9 +217,11 @@ if exist out.idf copy out.idf "%epout%.epmidf"
 if exist audit.out copy audit.out "%epout%.epmdet"
 if exist audit.out erase audit.out
 if exist out.idf MOVE out.idf in.idf
-if exist in.idf ExpandObjects
-if exist expanded.idf COPY expanded.idf "%epout%.expidf"
-if exist expanded.idf MOVE expanded.idf in.idf
+
+:DMcQ - removing this b/c there's no such program ExpandObjects
+:if exist in.idf ExpandObjects
+:if exist expanded.idf COPY expanded.idf "%epout%.expidf"
+:if exist expanded.idf MOVE expanded.idf in.idf
 if not exist in.idf copy "%epin%.idf" In.idf
 :if %pausing%==Y pause
 
