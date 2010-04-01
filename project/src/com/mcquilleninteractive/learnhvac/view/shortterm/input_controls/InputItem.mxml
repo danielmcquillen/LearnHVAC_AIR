@@ -6,12 +6,13 @@
 			paddingTop="5"
 			paddingLeft="6" 
 			horizontalScrollPolicy="off"
-			verticalScrollPolicy="off">
-	
-
+			verticalScrollPolicy="off"
+			creationComplete="onCC()"
+			>
 	
 	<mx:Script>
 		<![CDATA[
+			import org.swizframework.Swiz;
 			import mx.events.ValidationResultEvent
 			import mx.validators.NumberValidator
 			import com.mcquilleninteractive.learnhvac.event.LongTermImportEvent
@@ -21,7 +22,8 @@
 			import mx.managers.DragManager
       	  	import mx.core.DragSource
        		import mx.controls.Image	
-			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+			import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent
+			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
        		
        		[Embed(source='assets/DawaAssets.swf', symbol='mcInfoIconUp')]
 			[Bindable]
@@ -53,15 +55,31 @@
 			[Bindable]
 			protected var _sysVarEnabled:Boolean = true;
 			 				
-			
-			[Mediate(event="SetUnitsEvent.SET_UNITS")]
-			private function onUnitsChange(event:SetUnitsEvent):void
+			protected function onCC():void
 			{
-				//give the updates a sec to finish before resetting validator and bg
-				this.callLater(refresh)
+				Swiz.addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged, false, 0, true)
+				Swiz.addEventListener(LongTermImportEvent.RUN_CHANGED, onLTRunToImportChanged, false, 0, true)
+				Swiz.addEventListener(CloseScenarioEvent.CLOSE_SCENARIO, onCloseScenario, false, 0, true)
+			
 			}
 			
-			[Mediate(event="LongTermImportEvent.RUN_CHANGED")]
+			protected function onCloseScenario():void
+			{
+				removeListeners()
+			}
+			
+			protected function removeListeners():void
+			{
+				Swiz.addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged, false, 0, true)
+				Swiz.addEventListener(LongTermImportEvent.RUN_CHANGED, onLTRunToImportChanged, false, 0, true)
+				Swiz.addEventListener(CloseScenarioEvent.CLOSE_SCENARIO, onCloseScenario, false, 0, true)
+			}
+			
+			protected function onUnitsChanged(event:SetUnitsCompleteEvent):void
+			{
+				refresh()
+			}
+						
 			public function onLTRunToImportChanged(event:LongTermImportEvent):void
 			{
 				if (event.runToImport==ScenarioModel.LT_IMPORT_NONE)
@@ -107,18 +125,14 @@
       		
       		public function refresh():void
       		{
-      			//called when we want to make sure that validator and background are correct
-      			//(e.g. after SI to IP change, or converse
-      			// NOTE: User will lose yellow background when this switch is performed.
-      			
-      			numV.validate()
-      			
+      			Logger.debug("refreshing...",this)      			
 	      		if (data!=null) 
 	      		{
-      				data.localValue = data.currValue
+	      			data.localValue = data.currValue
       				_isDirty = false
-      				setBackground()
+      				setBackground()      				
       			}
+      			callLater(numV.validate)
       		}
       		
       		private function setBackground():void
@@ -210,8 +224,10 @@
 	<!-- trying to get two-way binding -->
 	
 	<mx:NumberValidator id="numV" 
-        source="{txtInputItem}" property="text" 
-        minValue="{data.lowValue}" maxValue="{data.highValue}"
+        source="{txtInputItem}" 
+        property="text" 
+        minValue="{data.lowValue}" 
+        maxValue="{data.highValue}"
         lowerThanMinError="The minimum allowed value is {data.lowValue}"
         exceedsMaxError="The maximum allowed value is {data.highValue}"
         />

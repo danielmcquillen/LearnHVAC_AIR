@@ -2,18 +2,19 @@
 import com.adobe.onair.logging.FileTarget;
 import com.adobe.onair.logging.TextAreaTarget;
 import com.mcquilleninteractive.learnhvac.event.LoggedInEvent;
-import com.mcquilleninteractive.learnhvac.event.LoginEvent;
 import com.mcquilleninteractive.learnhvac.event.SettingsEvent;
 import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
 import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 import com.mcquilleninteractive.learnhvac.settings.LearnHVACSettings;
+import com.mcquilleninteractive.learnhvac.util.AboutInfo;
 import com.mcquilleninteractive.learnhvac.util.HTMLToolTip;
 import com.mcquilleninteractive.learnhvac.util.Logger;
 
 import flash.data.EncryptedLocalStore;
 import flash.events.Event;
 import flash.filesystem.*;
+import flash.utils.ByteArray;
 
 import mx.logging.Log;
 import mx.logging.LogEventLevel;
@@ -61,17 +62,16 @@ public function onInit():void
 
 	//if this is first run, copy installed files to working directories
 	//check if this is first install
-	var firstInstallDataBA:ByteArray = EncryptedLocalStore.getItem("firstInstallDate")
-	
-	//TEMP
-	//FOR NOW, ALWAYS DO FIRST SETUP
-	firstInstallDataBA = null
-	
-	
-	if (firstInstallDataBA==null)
+	var ba:ByteArray = EncryptedLocalStore.getItem("lastInstalledVersion")
+				
+	if (ba==null || ba.readUTFBytes(ba.bytesAvailable)!=AboutInfo.applicationVersion)
 	{
-		_applicationModel.isFirstStartup = true
-		doFirstStartup()
+		Logger.debug("New version installed ... now copying helper files...",this)
+		copyHelperFiles()		
+		//record the latest version number
+		ba = new ByteArray()
+		ba.writeUTFBytes(AboutInfo.applicationVersion)
+		EncryptedLocalStore.setItem("lastInstalledVersion", ba)		
 	}
 
 	//set proxy port from settings
@@ -205,16 +205,10 @@ private function createFileTarget():FileTarget
 /*************** Core Functions *****************/
 
 
-protected function doFirstStartup():void
+protected function copyHelperFiles():void
 { 
-		Logger.debug("Doing first startup tasks",this)		
-		//record the date first installed
-		var d:Date = new Date()
-		var dateBA:ByteArray = new ByteArray()
-		dateBA.writeUTFBytes(d.toString())
-		EncryptedLocalStore.setItem("firstInstallDate", dateBA)
-		
-		
+		Logger.debug("copyHelperFiles()",this)		
+						
 		//copy the modelica File to the storage directory		
 		var modelicaFile:File = File.applicationDirectory.resolvePath("modelica")
 		var copyModelicaFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "modelica")
@@ -224,8 +218,14 @@ protected function doFirstStartup():void
 		}
 		Logger.debug("Moving modelica to : " +  copyModelicaFile.nativePath, this) 
 		copyModelicaFile.createDirectory()
-		modelicaFile.copyTo(copyModelicaFile, true)
-				
+		try
+		{
+			modelicaFile.copyTo(copyModelicaFile, true)
+		}
+		catch(error:Error)
+		{
+			
+		}	
 		//copy the energyplus to the storage directory	
 		var eplusFile:File = File.applicationDirectory.resolvePath("energyplus")
 		var copyEplusFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "energyplus")

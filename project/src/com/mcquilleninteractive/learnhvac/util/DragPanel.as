@@ -38,10 +38,7 @@ package com.mcquilleninteractive.learnhvac.util
             addEventListener(MouseEvent.MOUSE_DOWN, resizeHandler);
             //myTitleBar.addEventListener(MouseEvent.MOUSE_DOWN, tbMouseDownHandler);
             //myTitleBar.addEventListener(MouseEvent.MOUSE_UP, tbMouseUpHandler);
-            titleBar.styleName="glassLabels"
-            
-            
-            
+            titleBar.styleName="glassLabelsDark"           
         }
         
         private var xOff:Number;

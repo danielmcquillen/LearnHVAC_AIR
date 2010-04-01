@@ -17,6 +17,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 			import com.mcquilleninteractive.learnhvac.model.DialogManager;
 							
           	import mx.managers.PopUpManager;
@@ -42,9 +43,14 @@
 			[Autowire]
 			public var scenarioModel:ScenarioModel
 			
-			[Embed('assets/img/lightning_icon.png')]
+			
+			[Embed('assets/img/control_start.png')]
 			[Bindable]
-			protected var LightingIcon:Class;
+			protected var StartIcon:Class;
+			
+			[Embed('assets/img/control_rewind.png')]
+			[Bindable]
+			protected var RewindIcon:Class;
 				
 			[Embed('assets/img/control_bar_divider.png')]
 			[Bindable]
@@ -119,7 +125,7 @@
 				if (state=="start")
 				{
 					btnStartStop.label="Start Simulation"
-					btnStartStop.setStyle("icon", LightingIcon);
+					btnStartStop.setStyle("icon", StartIcon);
 				}
 				else
 				{
@@ -156,6 +162,11 @@
 				simStopped()
 			}
 			
+			protected function rewindSimulation():void
+			{
+				var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_RETURN_TO_START, true)
+				dispatchEvent(evt)
+			}
 				
 			public function onViewOutput():void
 			{
@@ -191,13 +202,23 @@
 	<mx:Spacer width="10"/>
 	
 	
+	<mx:Button 	styleName="btnBottomBar"
+				id="btnRewind" 
+				toolTip="Return to start time"
+    			y="13"
+    			icon="{RewindIcon}"
+				width="30" 
+				height="30"
+				click="rewindSimulation()" />
+	
+	
 	<mx:Button 	label="Start Simulation" 
 				styleName="btnBottomBar"
 				id="btnStartStop" 
 				toolTip="Start short-term simulation"
     			y="13"
-    			icon="{LightingIcon}"
-				width="160" 
+    			icon="{StartIcon}"
+				width="145" 
 				height="30"
 				click="startStopSimulation()" />
 	

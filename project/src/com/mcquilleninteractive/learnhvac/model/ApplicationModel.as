@@ -12,9 +12,17 @@ package com.mcquilleninteractive.learnhvac.model
 	{
 		public static const baseStoragePath:String = "Local Settings/Application Data/LearnHVAC/"
 		
+		
+		
+		
 		// ATTRIBUTES FOR CONTROLLING TEST/MOCK MODE
 		//This flag will cause certain functions to auto-submit (login)
-		public static var testMode:Boolean = false
+		public static var testMode:Boolean = true
+		
+		
+		
+		
+		
 		//(e.g. existing E+ output is loaded rather than running simulation)		
 		public static var mockEPlusData:Boolean = false
 		

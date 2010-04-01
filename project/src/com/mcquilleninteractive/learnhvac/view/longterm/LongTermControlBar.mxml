@@ -46,9 +46,9 @@
 	<mx:Spacer width="10"/>
 	
 	<mx:Button id="btnRunEPlus" 
-		label="Start LT Simulation" 
+		label="Start Simulation" 
 		toolTip="Start long-term simulation"
-	    icon="@Embed('assets/img/lightning_icon.png')"
+	    icon="@Embed('assets/img/control_start.png')"
 		width="160"
 		height="30" 
 		styleName="btnBottomBar"

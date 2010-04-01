@@ -85,7 +85,7 @@
 				}
 				
 				[Mediate("ShortTermSimulationEvent.SIM_STOPPED")]
-				[Mediate("ShortTermSimulationEvent.SIM_CRASHED")]
+				[Mediate("ShortTermSimulationEvent.SIM_ERROR")]
 				public function stopTimer(event:ShortTermSimulationEvent):void
 				{
 					updateTimer.stop()

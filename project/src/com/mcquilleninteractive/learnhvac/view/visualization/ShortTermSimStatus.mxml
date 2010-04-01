@@ -35,7 +35,7 @@
 				txtStatus.text = "SIMULATION OFF"
 			}
 		
-			[Mediate(event="ShortTermSimulationEvent.SIM_CRASHED")]
+			[Mediate(event="ShortTermSimulationEvent.SIM_ERROR")]
 			public function onSimCrashed(event:ShortTermSimulationEvent):void
 			{				
 				indicator.gotoAndStop("crashed")	

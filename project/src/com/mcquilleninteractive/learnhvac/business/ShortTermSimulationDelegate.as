@@ -58,6 +58,9 @@ package com.mcquilleninteractive.learnhvac.business
 		protected var _simTime:int = 0
 		protected var _startupInfo:NativeProcessStartupInfo
 		
+		//this flag let's us ignore the first set of outputs that come
+		//in from Modelica when it's first started up
+		protected var _firstStartupOutputReceived:Boolean = false
 		//local refs to arrays in ScenarioModel	
 		protected var _inputSysVarsArr:Array= []	
 		protected var _outputSysVarsArr:Array= []
@@ -135,14 +138,25 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		public function receiveOutput(output:String):void
 		{
-			//Do all the things we need to do to parse the Modelica output
-			_simTime ++		
-			_timer.start()		
-			this.parseOutputFromModelica(output)
+			Logger.debug("receiveOutput() _firstStartupOutputReceived: " + _firstStartupOutputReceived.toString(),this)
+			_timer.start()									
 			
+			if (_firstStartupOutputReceived==false)
+			{
+				//ignore if this is the output generated on first starting up
+				_firstStartupOutputReceived = true
+			}
+			else
+			{
+				//Otherwise, do all the things we need to do to parse the Modelica output
+				this.parseOutputFromModelica(output)
+				
+			}		
+				
 			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED, true)
-			
 			dispatchEvent(evt)
+			_simTime ++		
+			
 		}
 
 		/* ****************** */
@@ -236,6 +250,7 @@ package com.mcquilleninteractive.learnhvac.business
 			try
 			{
 				_modelicaProcess.start(_startupInfo)
+				_firstStartupOutputReceived = false
 			}
 			catch (err:Error)
 			{				
@@ -250,8 +265,19 @@ package com.mcquilleninteractive.learnhvac.business
 			_timer.stop()
 			//todo : launch a crashed event if exit code indicates error
 			
-			var evt:ShortTermSimulationEvent= new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_STOPPED, true)
-			dispatchEvent(evt)
+			if (event.exitCode >0)
+			{
+				var evt:ShortTermSimulationEvent= new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_ERROR, true)
+				evt.errorMessage = "Error code : " + event.exitCode
+				dispatchEvent(evt)
+			}
+			else
+			{
+				var evt:ShortTermSimulationEvent= new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_STOPPED, true)
+				dispatchEvent(evt)
+			}
+			
+			
 		}
 		
 		public function onModelicaStandardOutput(event:ProgressEvent):void
@@ -301,15 +327,22 @@ package com.mcquilleninteractive.learnhvac.business
 				return
 			}
 			
-			//var out:String = ""
+			var out:String = ""
 			for (var i:uint = 0; i<_outputsSysVarsArrLength; i++)
-			{
+			{	
 				var sysVar:SystemVariable = SystemVariable(_outputSysVarsArr[i])
-				sysVar.baseSIValue = outArr[i+6]			
-				//out +=  "\n " + (i+1).toString() + " var: " + sysVar.name + " value: " + outArr[i+6]				
+					
+				if (sysVar.name=="SYSNull")
+				{
+					//ignore index 23...it's systemnull for now
+					Logger.debug ("(ignoring SYSNull at index " + (i+1).toString(), this)
+					continue
+				}					
+				sysVar.baseSIValue = outArr[i+6]							
+				out +=  "\n " + (i+1).toString() + " var: " + sysVar.name + " value: " + outArr[i+6]				
 			}
 			
-			//Logger.debug("Values set by Modelica: \n----------------------------\n " + out, this)
+			Logger.debug("Values set by Modelica: \n----------------------------\n " + out, this)
 			
 			
 						
@@ -320,14 +353,13 @@ package com.mcquilleninteractive.learnhvac.business
 			var inputs:String = ""
 			var len:uint = inputSysVarsArr.length
 			
-			//var tr:String = ""
+			var tr:String = "(time: " + _simTime + ")"
 			for(var i:uint=0;i<len;i++)
 			{
 				inputs += " " + inputSysVarsArr[i].baseSIValue	
-				//tr += "\n" + inputSysVarsArr[i].name + " : " + inputSysVarsArr[i].baseSIValue	
+				tr += "\n" + inputSysVarsArr[i].name + " : " + inputSysVarsArr[i].baseSIValue	
 			}		
 			
-			//Logger.debug("Inputs going into Modelica:\n---------------------\n:" + tr, this)
 			
 			var out:String = ""
 			out += MODELICA_VERSION
@@ -338,6 +370,10 @@ package com.mcquilleninteractive.learnhvac.business
 			out += " " + _simTime
 			out += inputs
 			out += "\n"
+			
+			Logger.debug("Input string: " + out, this)
+			Logger.debug("Inputs details :\n---------------------\n" + tr, this)
+			
 			return out
 		}
 		

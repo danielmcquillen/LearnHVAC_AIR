@@ -95,15 +95,7 @@ package com.mcquilleninteractive.learnhvac.controller
 		}
 		
 		
-			
-		[Mediate(event="ShortTermSimulationEvent.SIM_CRASHED")]
-		public function simulationCrashed(event:ShortTermSimulationEvent):void
-		{
-			shortTermSimulationModel.currentState = ShortTermSimulationModel.STATE_OFF
-			Logger.debug("simulationError()",this)
-		}
-		
-		
+					
 			
 		[Mediate(event="ResetInputsEvent.RESET_SHORT_TERM_INPUTS_TO_INITIAL_VALUES")]
 		public function onResetInputsToInitialValues(event:ResetInputsEvent):void
@@ -116,6 +108,12 @@ package com.mcquilleninteractive.learnhvac.controller
 					sysVar.resetToInitialValue()
 				}	
 			}
+		}
+			
+		[Mediate(event="ShortTermSimulationEvent.SIM_RETURN_TO_START")]
+		public function onReturnToStart(event:ShortTermSimulationEvent):void
+		{	
+			shortTermSimulationModel.resetTimer()
 		}
 
 		
@@ -131,24 +129,30 @@ package com.mcquilleninteractive.learnhvac.controller
 		public function simulationStarted(event:ShortTermSimulationEvent):void
 		{
 			shortTermSimulationModel.currentState = ShortTermSimulationModel.STATE_RUNNING
+			
+			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_STARTED, true)
 			Logger.debug("simulationStarted()",this)
-			Swiz.dispatchEvent(event)
+			Swiz.dispatchEvent(evt)
 		}
 		
 		public function simulationError(event:ShortTermSimulationEvent):void
 		{
-			shortTermSimulationModel.currentState = ShortTermSimulationModel.STATE_OFF
 			Logger.debug("simulationError()",this)
-			Alert.show("Modelica experienced an error: " + event.errorMessage , "Modelica Error")
-			Swiz.dispatchEvent(event)
+			shortTermSimulationModel.currentState = ShortTermSimulationModel.STATE_OFF
+			
+			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_ERROR, true)
+			Alert.show("Modelica experienced an error. " + event.errorMessage , "Modelica Error")
+			Swiz.dispatchEvent(evt)
 		}
 		
 		public function simulationStopped(event:ShortTermSimulationEvent):void
 		{
 			shortTermSimulationModel.currentState = ShortTermSimulationModel.STATE_OFF
 			Logger.debug("simulationError()",this)
+			
+			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_STOPPED, true)
 			shortTermSimulationDataModel.currRunComplete()
-			Swiz.dispatchEvent(event)
+			Swiz.dispatchEvent(evt)
 		}
 		
 		public function onOutputReceived(event:Event):void

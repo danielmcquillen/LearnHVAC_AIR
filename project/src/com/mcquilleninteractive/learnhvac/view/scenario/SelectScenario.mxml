@@ -86,13 +86,7 @@
 					visible = "{!userModel.loggedInAsGuest}"
 					icon="{ServerIcon}"					
 					/>
-				<mx:Button label="Get scenarios from disk"
-					 width="209" 
-					 height="32" 
-					 id="btnGetLocalScenarioList" 
-					icon="{DiskIcon}"						
-					 click="getLocalScenarioList()"/>
-					 
+			
 				<mx:Button label="Get default scenarios"
 					 width="209" 
 					 height="32" 

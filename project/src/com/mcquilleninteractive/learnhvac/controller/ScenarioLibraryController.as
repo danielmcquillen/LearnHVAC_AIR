@@ -443,6 +443,8 @@ package com.mcquilleninteractive.learnhvac.controller
 				//parse this system node's sysVars
 				for each (var sysVarXML:XML in systemNodeXML.*)
 				{
+					if (sysVarXML.@name=="SYSNull") continue
+					
 					var sysVar:SystemVariable = new SystemVariable();
 					
 					//store system variable in main array

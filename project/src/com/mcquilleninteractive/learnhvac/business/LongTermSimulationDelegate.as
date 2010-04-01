@@ -20,7 +20,7 @@ package com.mcquilleninteractive.learnhvac.business
 	import flash.filesystem.*;
 	import flash.system.Capabilities;
 	
-
+	import org.swizframework.Swiz
 	
 	public class LongTermSimulationDelegate extends EventDispatcher
 	{
@@ -38,6 +38,7 @@ package com.mcquilleninteractive.learnhvac.business
 		public var longTermSimulationDataModel:LongTermSimulationDataModel
 			
 		protected var _energyPlusPath:String = ApplicationModel.baseStoragePath + "energyplus/"
+		protected var _baseDir:File
 		protected var _ePlusExe:File
 		protected var _includeFilesDir:File
 		protected var _paramBaseFile:File		
@@ -53,14 +54,14 @@ package com.mcquilleninteractive.learnhvac.business
 			
 		public function LongTermSimulationDelegate()
 		{						
-			var baseDir:File = File.userDirectory.resolvePath(_energyPlusPath)
+			_baseDir	 = File.userDirectory.resolvePath(_energyPlusPath)
 			
-			_ePlusExe = baseDir.resolvePath("LearnHVACEPlusLauncher.exe")
-			_includeFilesDir =  baseDir.resolvePath("LgOff/IncFiles")
-			_paramBaseFile = baseDir.resolvePath("LgOff/IncFiles/Param_LgOff_base.inc")
-			_paramFile = baseDir.resolvePath("LgOff/IncFiles/Param_LgOff.inc")
-			_eplusOutVarsFile = baseDir.resolvePath('LgOff/Output/LgOff.csv')
-			_eplusOutputMeterFile = baseDir.resolvePath('LgOff/Output/LgOffMeter.csv')			
+			_ePlusExe = _baseDir.resolvePath("LearnHVACEPlusLauncher.exe")
+			_includeFilesDir =  _baseDir.resolvePath("LgOff/IncFiles")
+			_paramBaseFile = _baseDir.resolvePath("LgOff/IncFiles/Param_LgOff_base.inc")
+			_paramFile = _baseDir.resolvePath("LgOff/IncFiles/Param_LgOff.inc")
+			_eplusOutVarsFile = _baseDir.resolvePath('LgOff/Output/LgOff.csv')
+			_eplusOutputMeterFile = _baseDir.resolvePath('LgOff/Output/LgOffMeter.csv')			
 			_stream = new FileStream()
 			
 		}
@@ -86,6 +87,12 @@ package com.mcquilleninteractive.learnhvac.business
 	
 	
 			//Check weather file exists...and if so copy to In.epw
+			
+			if (longTermSimulationModel.weatherFile==null)
+			{
+				Logger.error("Missing weather file from longTermSimulationModel",this)
+			}
+			
 			var weatherFile:File = File.userDirectory.resolvePath(_energyPlusPath+ "Weather/" + longTermSimulationModel.weatherFile)
 			var inEPWFile:File = File.userDirectory.resolvePath(_energyPlusPath + "In.epw")
 			
@@ -171,6 +178,7 @@ package com.mcquilleninteractive.learnhvac.business
 						
 			try
 			{
+				
 				//run energyPlus via proxy
 				var launchEPlusHelper:File = File.userDirectory.resolvePath(_energyPlusPath + "LearnHVACEPlusLauncher.exe")
 				
@@ -179,10 +187,13 @@ package com.mcquilleninteractive.learnhvac.business
 					msg = "can't run EnergyPlus on mac just yet. :-("
 					throw new Error(msg)
 				}
+			
+				Logger.debug("Starting energyPlus from: " + launchEPlusHelper.nativePath,this)
+			
 				_process = new NativeProcess()								
 				var startupInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo()
 				startupInfo.executable = launchEPlusHelper
-				startupInfo.workingDirectory = File.userDirectory.resolvePath(_energyPlusPath)
+				startupInfo.workingDirectory = _baseDir
 				_process.addEventListener(NativeProcessExitEvent.EXIT, onProcessFinished)
 				_process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onStandardOutput)
 				_process.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onStandardError)
@@ -327,10 +338,10 @@ package com.mcquilleninteractive.learnhvac.business
 		public function onStandardOutput(event:ProgressEvent):void
 		{
 			var text:String = _process.standardOutput.readUTFBytes(_process.standardOutput.bytesAvailable)
-			
+			Logger.debug("onStandardOutput text: " + text, this)	
 			var evt:EnergyPlusEvent = new EnergyPlusEvent(EnergyPlusEvent.ENERGY_PLUS_OUTPUT,true)
 			evt.output = text
-			dispatchEvent(evt)
+			Swiz.dispatchEvent(evt)
 			
 		}
 

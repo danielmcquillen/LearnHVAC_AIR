@@ -102,7 +102,10 @@ package com.mcquilleninteractive.learnhvac.controller
 		public function simulationFileLoaded(event:LongTermSimulationEvent):void
 		{
 			Logger.debug("simulationFileLoaded()", this)
-			Swiz.dispatchEvent(event.clone())	
+			
+			//dispatch event to all listeners
+			var evt:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.FILE_LOADED, true)
+			Swiz.dispatchEvent(evt)	
 		}   
 		   
 		public function simulationFailed(event:LongTermSimulationEvent):void
@@ -123,8 +126,11 @@ package com.mcquilleninteractive.learnhvac.controller
 		{
 			Logger.debug("simulationComplete()", this)						
 			PopUpManager.removePopUp(_popUp)
-			scenarioModel.importLongTermVars()		
-			Swiz.dispatchEvent(event)			
+			scenarioModel.importLongTermVars()
+			
+			//dispatch event to all listeners
+			var evt:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_COMPLETE, true)
+			Swiz.dispatchEvent(evt)				
 			Alert.show("Long-term simulation finished. Use the Analysis section to view results.","Simulation Finished")
 		}		
 		

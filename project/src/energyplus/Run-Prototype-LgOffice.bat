@@ -189,15 +189,15 @@ IF EXIST eplusout.delighteldmp  DEL eplusout.delighteldmp
 IF EXIST eplusout.delightdfdmp  DEL eplusout.delightdfdmp
 IF EXIST eplusout.sparklog  DEL eplusout.sparklog
 IF EXIST eplusscreen.csv  DEL eplusscreen.csv
-
-:DMcQ In.imf has code to combine all the .inc files
-:IF EXIST in.imf         DEL in.imf
-
+IF EXIST in.imf         DEL in.imf
 IF EXIST in.idf         DEL in.idf
 IF EXIST in.stat        DEL in.stat
 IF EXIST out.idf        DEL out.idf
 IF EXIST eplusout.inp   DEL eplusout.inp
-IF EXIST in.epw         DEL in.epw
+
+: DMcQ Commenting this out since we write in.epw before starting this bat file
+: IF EXIST in.epw         DEL in.epw
+
 IF EXIST eplusout.audit DEL eplusout.audit
 IF EXIST eplusmtr.inp   DEL eplusmtr.inp
 IF EXIST test.mvi       DEL test.mvi

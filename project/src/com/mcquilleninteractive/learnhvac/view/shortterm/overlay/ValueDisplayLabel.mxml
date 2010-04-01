@@ -6,6 +6,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import org.swizframework.Swiz;
 			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 
 
@@ -46,10 +47,9 @@
 			
 			public function onCC():void
 			{
-			
+				Swiz.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded)
 			}
 			
-			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{		
 				_sysVar = scenarioModel.getSysVar(_sysVarName)
@@ -65,6 +65,11 @@
 				
 				//call update function just to get labels showing initial loaded values
 				onShortTermOutputUpdated(null)
+			}
+			
+			public function refresh():void
+			{
+				_sysVar = scenarioModel.getSysVar(_sysVarName)
 			}
 			
 			[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]

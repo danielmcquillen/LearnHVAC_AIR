@@ -1,6 +1,5 @@
 package com.mcquilleninteractive.learnhvac.util
-{
-	import mx.graphics.SolidColor;
+{                                   
 	
 	[Bindable]
 	public class ColorSetting

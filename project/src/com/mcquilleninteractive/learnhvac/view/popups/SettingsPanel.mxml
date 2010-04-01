@@ -36,13 +36,13 @@
 			
 			public function onCreationComplete():void
 			{
-				
+				//rdoUnits.selectedValue = ApplicationModel.currUnits
 			}
 			
 			private function init():void
 			{
 				rdoAnimation.selectedValue = _applicationModel.animationSpeed
-				rdoUnits.selectedValue = ApplicationModel.currUnits
+				//rdoUnits.selectedValue = ApplicationModel.currUnits
 			}
 			
 			private function onCancel():void
@@ -59,12 +59,12 @@
 					_applicationModel.logToFile = cboLogToFile.selected												
 																	
 					//only launch setUnitsEvent if different from current value
-					if (ApplicationModel.currUnits != rdoUnits.selectedValue)
+					/*if (ApplicationModel.currUnits != rdoUnits.selectedValue)
 					{
 						var evt:SetUnitsEvent = new SetUnitsEvent(SetUnitsEvent.SET_UNITS)
 						evt.units = rdoUnits.selectedValue.toString()
 						dispatchEvent(evt)
-					}
+					}*/
 					
 				}
 				
@@ -89,6 +89,7 @@
 	   	 
 	<mx:Form id="settingsForm" defaultButton="{btnOK}" width="100%">
 	
+			<!--
 	    	<mx:FormItem label="Units:">
 	    		<mx:RadioButtonGroup id="rdoUnits"/>
         		<mx:RadioButton groupName="rdoUnits" id="unitsSI" value="{ApplicationModel.UNITS_SI}" 
@@ -96,7 +97,7 @@
         		<mx:RadioButton groupName="rdoUnits" id="unitsIP" value="{ApplicationModel.UNITS_IP}" 
           			 label="IP units" width="150" />
 	    	</mx:FormItem>
-	
+			-->
 	    	<mx:FormItem label="Air Particle Animation:" >
 	    		<mx:RadioButtonGroup id="rdoAnimation"/>
         		<mx:RadioButton groupName="rdoAnimation" id="animFull" value="{ApplicationModel.ANIMATION_SPEED_FULL}" 

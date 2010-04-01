@@ -136,7 +136,7 @@ package com.mcquilleninteractive.learnhvac.model
 		// convenience counter
 		public var numVariables:Number = 0
 
-		public var lookupArr:Array						//This makes finding system variables quicker after the first search through the nodes
+		public var lookupArr:Array = [] 			//This makes finding system variables quicker after the first search through the nodes
 		
 		//Tells scenario model which long term simulation to import variables from into short-term sim (selected by user)
 		//Values are LT_IMPORT_NONE, LongTermSimulationDataModel.RUN_1, or LongTermSimulationDataModel.RUN_2
@@ -152,9 +152,10 @@ package com.mcquilleninteractive.learnhvac.model
 		/////////////////////////////////////
 		
 		public function ScenarioModel():void
-		{															
-			init()
+		{			
 		}
+		
+		
 				
 		/////////////////////////////////////
 		// STATIC FUNCTIONS
@@ -186,6 +187,44 @@ package com.mcquilleninteractive.learnhvac.model
 		/////////////////////////////////////
 		// INSTANCE FUNCTIONS
 		/////////////////////////////////////
+		
+		public function init():void
+		{
+			clearScenario()
+		}
+		
+		public function resetAll():void
+		{
+			Logger.debug(": resetting.")
+			clearScenario()	
+		}
+		
+		public function clearScenario():void
+		{
+			//wipe out all info from ScenarioModel
+			//TODO: need to call destroy() functions on node and sysvar objects
+			
+			sysVarsArr = []
+			lookupArr = []
+			_inputSysVarsArr = []
+			_outputSysVarsArr = []
+			
+			sysNodesAC.removeAll()
+			sysNodesForNavAC.removeAll()	
+			sysVarsImportedFromLongTermAC.removeAll()
+			sysVarsImportedFromShortTermAC.removeAll()
+			
+			if (shortTermSimulationModel)
+			{
+				shortTermSimulationModel.init()
+			}
+			if (longTermSimulationModel)
+			{
+				longTermSimulationModel.init()
+			}
+		}
+		
+		
 		
 		public function setSort():void
 		{
@@ -291,38 +330,7 @@ package com.mcquilleninteractive.learnhvac.model
 			return _outputSysVarsArr
 		}
 			
-		/* Function: initialize
-		*  Initializes model, wiping out any current settings 
-		*/
-		public function init():void
-		{
-			clearScenario()
-			lookupArr = []
-			_inputSysVarsArr = []
-		}
-		
-		public function clearScenario():void
-		{
-			//wipe out all info from ScenarioModel
-			//TODO: need to call destroy() functions on node and sysvar objects
-			sysNodesAC.removeAll()
-			sysNodesForNavAC.removeAll()
-			if (shortTermSimulationModel)
-			{
-				shortTermSimulationModel.init()
-			}
-			if (longTermSimulationModel)
-			{
-				longTermSimulationModel.init()
-			}
-		}
-		
-		public function resetAll():void
-		{
-			Logger.debug(": resetting.")
-			clearScenario()
-				
-		}
+	
 		
 		/* Function setValue
 		*  Locates a system variable and sets current value to new value

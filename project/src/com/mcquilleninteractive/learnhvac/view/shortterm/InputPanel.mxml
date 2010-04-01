@@ -305,18 +305,25 @@
 					inputsErrorMsg = inputsErrorMsg + "\n  - " + sysVar.displayName
 					break
 				}
-			}
-			
+			}		
 			
 			// INPUT CHECKS
 			// Do any input checks here and prevent submit if user has strange combinations
 			
 			// TODO : Make sure heating set point's max is cooling set point	
 			
+			
+			// CHECK OPTIONS
+			if (this.optionsPanel.isValid==false)
+			{
+				inputsErrorMsg = optionsPanel.errorMsg
+				return false
+			}
+						
 			if (inputsErrorMsg!="") return false //show this first set of problems if they exist
 			
 			//ask all input vars to update
-			for each (var sysVar:SystemVariable in inputSysVarsArr)
+			for each (sysVar in inputSysVarsArr)
 			{
 				sysVar.updateFromLocal()
 			}
@@ -328,7 +335,8 @@
 		public function onUpdateSimulation():void
 		{
 			if (areInputsValid()==true)
-			{
+			{	
+				optionsPanel.commit()							
 				var event : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_UPDATE, true);
 				dispatchEvent(event);
 			}

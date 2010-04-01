@@ -51,7 +51,7 @@
 			private var currentYear:Number = new Date().fullYear;
 			private var _currSelectedIndex:Number  //used to roll back selection if run doesn't exist
 			private var _selectedRun:String
-						
+			private var _errorMsg:String = "";
 						
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function onScenarioLoaded(event:ScenarioLoadedEvent):void
@@ -88,6 +88,20 @@
 				cboRun.selectedIndex = 0
 				
 			}
+			
+			public function get isValid():Boolean
+			{
+				_errorMsg = ""
+				if (numV.validate()) 
+				{
+					return true					
+				}
+				_errorMsg = "Time step is greater than maximum allowed step of " + ShortTermSimulationModel.MAX_TIME_STEP
+				
+				//Any other checks should go here
+				return false
+								
+			}
 								
 			public function dateLabel(item:Object,column:DataGridColumn):String
 			{
@@ -110,6 +124,22 @@
 				shortTermSimulationDataModel.currRunID = cboRun.selectedItem.data
 			}
 						
+			public function get errorMsg():String
+			{
+				return _errorMsg
+			}
+			
+			public function get timeStep():Number
+			{
+				return this.txtTimeStep.text as Number
+			}
+			
+			public function commit():void
+			{
+				//commits changed values to model
+				var ts:Number = txtTimeStep.text as Number
+				shortTermSimulationModel.timeStep = ts
+			}
 			
 			public function setDateTime():void
 			{				
@@ -228,11 +258,19 @@
 		</mx:Script>
 		
 		
-		
+			
+		<mx:NumberValidator id="numV" 
+	        source="{txtTimeStep}" 
+	        property="text" 
+	        minValue="0" 
+	        maxValue="{ShortTermSimulationModel.MAX_TIME_STEP}"
+	        lowerThanMinError="The minimum allowed value for time step is 0"
+	        exceedsMaxError="The maximum allowed value for time step is {ShortTermSimulationModel.MAX_TIME_STEP}"
+	        />
 		
 		
 		<mx:HBox>
-			<mx:Label text="Store results as"  width="100"  paddingTop="3"/>
+			<mx:Label text="Store results as:"  width="100"  paddingTop="3"/>
 			<mx:ComboBox id="cboRun" 
 				selectedIndex="0"  
 				toolTip="Store your simulation results as 'Run1' or 'Run2'"
@@ -254,7 +292,7 @@
 				
 									
 		<mx:HBox width="100%" >				
-			<mx:Label text="Import from run:"  width="110"   paddingTop="5"/>
+			<mx:Label text="Import from run:"  width="100"   paddingTop="5"/>
 			<mx:ComboBox id="cboLongTermRun" 
 				selectedIndex="0"  
 				toolTip="Import data from long-term simulation stored in 'Run1' or 'Run2'"
@@ -288,10 +326,8 @@
 							<mx:Object label="5" data="5"/>
 						</mx:ArrayCollection>
 					</mx:dataProvider>
-				</mx:ComboBox>		
-			</mx:HBox>
-			
-			<mx:HBox>		
+				</mx:ComboBox>	
+				<mx:Spacer width="5"/>
 				<mx:Label text="Floor: " width="100"  />
 				<mx:ComboBox id="cboFloor" 
 					selectedIndex="0"  
@@ -304,14 +340,14 @@
 							<mx:Object label="Top" data="3"/>
 						</mx:ArrayCollection>
 					</mx:dataProvider>
-				</mx:ComboBox>	
+				</mx:ComboBox>		
 			</mx:HBox>
-		
+			
 					
-		<mx:Label text="Start date/time"   fontWeight="bold" paddingTop="5"/>
+		<mx:Label text="Time:"   fontWeight="bold" paddingTop="5"/>
 										
 		<mx:HBox >
-			<mx:Label text="Time: "  width="100" />
+			<mx:Label text="Sim. start time: "  width="100" />
 			<yahoo:TimeStepper id="timeStepper" 
 		    	showSeconds="false" 
 		    	change="updateSimulationStartDateAndTime()"
@@ -326,7 +362,15 @@
 		        styleName="simDatePicker"
 		    	/>
 	    </mx:HBox>
-		
+												
+		<mx:HBox >
+			<mx:Label text="Time step: "  width="100" />
+			<mx:TextInput id="txtTimeStep" 
+				restrict="0-9" 
+				width="50"
+				text="{shortTermSimulationModel.timeStep}" />
+			<mx:Label text="seconds"  width="100" />			
+	    </mx:HBox>
 		
 		
 		

@@ -130,10 +130,10 @@
 	    	<mx:Form id="loginForm" defaultButton="{ btnLogin }" width="100%" height="100%">
 		    	
 		    	<mx:FormItem label="Username:" >
-		    		<mx:TextInput id="username"  change="onUsernameChange()" text="daniel" width="200"/>
+		    		<mx:TextInput id="username"  change="onUsernameChange()" text="" width="200"/>
 		    	</mx:FormItem>
 		    	<mx:FormItem label="Password:" >
-		    		<mx:TextInput id="password" displayAsPassword="true" text="cruz" width="200"/>
+		    		<mx:TextInput id="password" displayAsPassword="true" text="" width="200"/>
 		    	</mx:FormItem>
 		    	
 		    	<mx:Spacer height="10"/>

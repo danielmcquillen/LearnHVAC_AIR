@@ -23,6 +23,7 @@ package com.mcquilleninteractive.learnhvac.model
 	[Bindable]	
 	public class ShortTermSimulationModel extends EventDispatcher
 	{
+		public static const MAX_TIME_STEP:Number = 1000
 		public static const STATE_OFF:String = "off"
 		public static const STATE_RUNNING:String = "running"
 		public static const STATE_PAUSED:String = "paused"
@@ -35,8 +36,8 @@ package com.mcquilleninteractive.learnhvac.model
 							
 		//holds each increment in array for graphing time axis							
 		public var stepArr:Array 				
-		//timescale is changed by user...multiplies 1 second increment
-		public var timeScale:Number 			
+		//timeStep is changed by user...x second increment
+		public var timeStep:Number 			
 		//string representation of time (visual components bind to this)
 		public var currTimeDisplay:String 	
 		//array of epoch seconds representating DATE and time of each step for graphing 	
@@ -58,7 +59,7 @@ package com.mcquilleninteractive.learnhvac.model
 			timeInSec = 0
 			stepArr = []
 			epochTimeArr = []
-			timeScale = 1
+			timeStep = 1
 			currTimeDisplay = "00:00:00"
 			realtimeStartDatetime = new Date("01/1/2010 12:00:00 PM")
 		}
@@ -98,7 +99,7 @@ package com.mcquilleninteractive.learnhvac.model
 			stepArr.push(timeInSec)
 			if (timeInSec!=0)
 			{
-				currDateTime.seconds = currDateTime.seconds + timeScale
+				currDateTime.seconds = currDateTime.seconds + timeStep
 			}
 			
 			epochTimeArr.push(Date.parse(currDateTime.toString()))

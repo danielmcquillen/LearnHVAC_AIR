@@ -3,11 +3,12 @@
 
 package com.mcquilleninteractive.particleengine
 {
-	;
+	
 	import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
+	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 	import com.mcquilleninteractive.learnhvac.util.ColorSetting;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
@@ -134,8 +135,7 @@ package com.mcquilleninteractive.particleengine
 		private var currSysVarValuesArr:Array 
 		private var particleManager:ParticleManager
 		
-		[Bindable]
-		private var scenarioModel:ScenarioModel
+		private var _scenarioModel:ScenarioModel
 		
 		public function ParticleEngine():void
 		{
@@ -144,11 +144,12 @@ package com.mcquilleninteractive.particleengine
 			//setup particle manager
 			particleManager = ParticleManager.getInstance()
 			particleManager.init(this)
-			
+						
 			//setup timers
 			timer = new Timer(50)
 			timer.addEventListener("timer", onTimer)
 		
+			_scenarioModel = Swiz.getBean("scenarioModel") as ScenarioModel
 		}
 		
 				
@@ -172,7 +173,15 @@ package com.mcquilleninteractive.particleengine
 			//       going to MX node, so update manually here
 			if (systemNode==ScenarioModel.SN_MIXINGBOX)
 			{
-				setMXTAirRet(scenarioModel.getSysVar("MXTAirRet").currValue)
+				var mxTAirRet:SystemVariable = _scenarioModel.getSysVar("MXTAirRet")
+				if (mxTAirRet)
+				{					
+					setMXTAirRet(mxTAirRet.currValue)
+				}
+				else
+				{
+					Logger.error("Couldn't find MXTAirTRet system variable",this)
+				}
 			}
 			
 		}
@@ -205,25 +214,25 @@ package com.mcquilleninteractive.particleengine
 			//manually call set functions to make sure initial colors are correct
 			try
 			{
-				setHCTAirEnt(scenarioModel.getSysVar("HCTAirEnt").currValue)
-				setHCTAirLvg(scenarioModel.getSysVar("HCTAirLvg").currValue)
-				setCCTAirEnt(scenarioModel.getSysVar("CCTAirEnt").currValue)
-				setCCTAirLvg(scenarioModel.getSysVar("CCTAirLvg").currValue)
-				setFANTAirEnt(scenarioModel.getSysVar("FANTAirEnt").currValue)
-				setFANTAirLvg(scenarioModel.getSysVar("FANTAirLvg").currValue)
-				setMXRtnDampPos(scenarioModel.getSysVar("MXRtnDampPos").currValue)
-				setMXTAirRet(scenarioModel.getSysVar("MXTAirRet").currValue)
-				setSYSTAirDB(scenarioModel.getSysVar("SYSTAirDB").currValue)
-				setMXTAirMix(scenarioModel.getSysVar("MXTAirMix").currValue)
-				setVAVTAirEnt(scenarioModel.getSysVar("VAVTAirEnt").currValue)
-				setVAVTAirLvg(scenarioModel.getSysVar("VAVTAirLvg").currValue)
-				setVAVTAirLvg(scenarioModel.getSysVar("VAVTAirLvg").currValue)
-				setRMTemp(scenarioModel.getSysVar("RMTemp").currValue)
-				setSYSTAirDB(scenarioModel.getSysVar("SYSTAirDB").currValue)
+				setHCTAirEnt(_scenarioModel.getSysVar("HCTAirEnt").currValue)
+				setHCTAirLvg(_scenarioModel.getSysVar("HCTAirLvg").currValue)
+				setCCTAirEnt(_scenarioModel.getSysVar("CCTAirEnt").currValue)
+				setCCTAirLvg(_scenarioModel.getSysVar("CCTAirLvg").currValue)
+				setFANTAirEnt(_scenarioModel.getSysVar("FANTAirEnt").currValue)
+				setFANTAirLvg(_scenarioModel.getSysVar("FANTAirLvg").currValue)
+				setMXRtnDampPos(_scenarioModel.getSysVar("MXRtnDampPos").currValue)
+				setMXTAirRet(_scenarioModel.getSysVar("MXTAirRet").currValue)
+				setSYSTAirDB(_scenarioModel.getSysVar("SYSTAirDB").currValue)
+				setMXTAirMix(_scenarioModel.getSysVar("MXTAirMix").currValue)
+				setVAVTAirEnt(_scenarioModel.getSysVar("VAVTAirEnt").currValue)
+				setVAVTAirLvg(_scenarioModel.getSysVar("VAVTAirLvg").currValue)
+				setVAVTAirLvg(_scenarioModel.getSysVar("VAVTAirLvg").currValue)
+				setRMTemp(_scenarioModel.getSysVar("RMTemp").currValue)
+				setSYSTAirDB(_scenarioModel.getSysVar("SYSTAirDB").currValue)
 			}
 			catch(e:Error)
 			{
-				Logger.debug("#PE: error trying to get initial currValues from scenarioModel: "  + e.message)
+				Logger.debug("#PE: error trying to get initial currValues from _scenarioModel: "  + e.message)
 			}
 		}
 		
@@ -326,7 +335,7 @@ package com.mcquilleninteractive.particleengine
 			
 			Swiz.addEventListener(ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED, onUpdateOuputValues)
 			
-			Logger.debug("#PE: initPE() scenarioModel: " + scenarioModel)
+			Logger.debug("#PE: initPE() _scenarioModel: " + _scenarioModel)
 	
 			running = false
 			sysVarsArr = []
@@ -355,24 +364,23 @@ package com.mcquilleninteractive.particleengine
 		
 		public function onUpdateOuputValues(event:ShortTermSimulationEvent):void
 		{
-			scenarioModel = Swiz.getBean("scenarioModel") as ScenarioModel
 			
 			try
 			{
-				setHCTAirEnt(scenarioModel.getSysVar("HCTAirEnt").currValue)		
-				setHCTAirLvg(scenarioModel.getSysVar("HCTAirLvg").currValue)
-				setCCTAirEnt(scenarioModel.getSysVar("CCTAirEnt").currValue)
-				setCCTAirLvg(scenarioModel.getSysVar("CCTAirLvg").currValue)
-				setFANTAirEnt(scenarioModel.getSysVar("FANTAirEnt").currValue)
-				setFANTAirLvg(scenarioModel.getSysVar("FANTAirLvg").currValue)
-				setMXRtnDampPos(scenarioModel.getSysVar("MXRtnDampPos").currValue)
-				setMXTAirRet(scenarioModel.getSysVar("MXTAirRet").currValue)
-				setSYSTAirDB(scenarioModel.getSysVar("SYSTAirDB").currValue)
-				setMXTAirMix(scenarioModel.getSysVar("MXTAirMix").currValue)
-				setVAVTAirEnt(scenarioModel.getSysVar("VAVTAirEnt").currValue)
-				setVAVTAirLvg(scenarioModel.getSysVar("VAVTAirLvg").currValue)
-				setRMTemp(scenarioModel.getSysVar("RMTemp").currValue)
-				setSYSTAirDB(scenarioModel.getSysVar("SYSTAirDB").currValue)
+				setHCTAirEnt(_scenarioModel.getSysVar("HCTAirEnt").currValue)		
+				setHCTAirLvg(_scenarioModel.getSysVar("HCTAirLvg").currValue)
+				setCCTAirEnt(_scenarioModel.getSysVar("CCTAirEnt").currValue)
+				setCCTAirLvg(_scenarioModel.getSysVar("CCTAirLvg").currValue)
+				setFANTAirEnt(_scenarioModel.getSysVar("FANTAirEnt").currValue)
+				setFANTAirLvg(_scenarioModel.getSysVar("FANTAirLvg").currValue)
+				setMXRtnDampPos(_scenarioModel.getSysVar("MXRtnDampPos").currValue)
+				setMXTAirRet(_scenarioModel.getSysVar("MXTAirRet").currValue)
+				setSYSTAirDB(_scenarioModel.getSysVar("SYSTAirDB").currValue)
+				setMXTAirMix(_scenarioModel.getSysVar("MXTAirMix").currValue)
+				setVAVTAirEnt(_scenarioModel.getSysVar("VAVTAirEnt").currValue)
+				setVAVTAirLvg(_scenarioModel.getSysVar("VAVTAirLvg").currValue)
+				setRMTemp(_scenarioModel.getSysVar("RMTemp").currValue)
+				setSYSTAirDB(_scenarioModel.getSysVar("SYSTAirDB").currValue)
 			}
 			catch(error:Error)
 			{

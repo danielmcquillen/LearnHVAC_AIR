@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <util:DragPanel xmlns:mx="http://www.adobe.com/2006/mxml" 
 				xmlns:util="com.mcquilleninteractive.learnhvac.util.*"
-				width="410" height="305" title="HEATING COIL VALVE INFO"
+				width="410" height="305" 
+				title="HEATING COIL VALVE INFO"
      			horizontalScrollPolicy="off"  
      			verticalScrollPolicy="off" 
+     		    color="#000000"
+     		    titleStyleName="darkGlass"
 			    close="onPanelClose(event)"
 			    creationComplete="onCC()"
 		>
 		
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
 			import org.swizframework.Swiz;
 			
@@ -44,7 +49,7 @@
            		{
            			scenarioModel = Swiz.getBean("scenarioModel") as ScenarioModel
                 }
-                setBindings(null)
+                setValues(null)
            }
             
 			
@@ -64,28 +69,29 @@
 			}
 			
 			
-			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
-			public function setBindings(e:ScenarioLoadedEvent):void
-			{
-																			
-				//HC Liquid temps:
-				BindingUtils.bindSetter(function(currVal:Number):void{tPipe1.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("BOITLiqSup"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{tPipe2.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("BOITLiqSup"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{tPipe3.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("BOITLiqSup"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{tPipe4.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("HCTLiqLvg"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{tPipe5.text=String(currVal)+currTempUnits}, scenarioModel.getSysVar("HCTLiqLvg"), "currValue" )
-				
-				//HC Liquid mass flow:
-				
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe1.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("BOILiqFlw"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe2.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("BOILiqFlw"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe3.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("BOILiqFlw"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe4.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("BOILiqFlw"), "currValue" )
-				BindingUtils.bindSetter(function(currVal:Number):void{mPipe5.text=String(currVal)+currFlowUnits}, scenarioModel.getSysVar("BOILiqFlw"), "currValue" )
-				
-				//valve pos
-				BindingUtils.bindSetter(function(currVal:Number):void{pos.text=String(uint(currVal*100))+" %"}, scenarioModel.getSysVar("HCPos"), "currValue" )
-								  				    	 		
+			[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]
+			public function setValues(e:ShortTermSimulationEvent):void
+			{					
+				try
+				{
+					var boiTLiqSup:SystemVariable = scenarioModel.getSysVar("HCTLiqEnt")
+					tPipe1.text = fmtRound.format(boiTLiqSup.currValue).toString()
+					
+					var hcTLiqLvg:SystemVariable = scenarioModel.getSysVar("HCTLiqLvg")
+					tPipe2.text = fmtRound.format(hcTLiqLvg.currValue).toString()
+					
+					var boiLiqFlw:SystemVariable = scenarioModel.getSysVar("BOILiqFlw")
+					mPipe2.text = mPipe1.text = fmtRound.format(boiLiqFlw.currValue).toString()
+														
+					var hcPos:SystemVariable = scenarioModel.getSysVar("HCPos")					
+					pos.text= String(uint(hcPos.currValue))+"%"
+					
+				}	  		
+				catch(err:Error)
+				{
+					Logger.error("Error getting variables for HC Liquids Schematic: " + err, this)
+				}		    	 		
+			
 			}
 			
 			public function onPanelClose(evt:Event):void
@@ -95,6 +101,8 @@
 			
 		]]>
 	</mx:Script>	
+		
+	<mx:NumberFormatter id="fmtRound" precision="2" rounding="nearest" />	
 		
 	<mx:Canvas>
 		<mx:Image id="liquidsDiagram" source="{LiquidsDiagram}"/> 
@@ -110,21 +118,12 @@
 			textAlign="center" width="60"
 			/> 
 			
-			
-    	<mx:Label id="tPipe1" x="68" y="177" text="0" styleName="schematicLabel"/>   
-    	<mx:Label id="mPipe1" x="68" y="201" text="0" styleName="schematicLabel"/> 
     	
-    	<mx:Label id="tPipe2" x="259" y="177" text="0" styleName="schematicLabel"/>
-    	<mx:Label id="mPipe2" x="259" y="201" text="0" styleName="schematicLabel"/>
+    	<mx:Label id="tPipe1" x="259" y="177" text="0" styleName="schematicLabel"/>
+    	<mx:Label id="mPipe1" x="259" y="201" text="0" styleName="schematicLabel"/>
     	
-    	<mx:Label id="tPipe3" x="259" y="110" text="0" styleName="schematicLabel"/>
-    	<mx:Label id="mPipe3" x="259" y="128" text="0" styleName="schematicLabel"/>
-    	
-    	<mx:Label id="tPipe4" x="259" y="47" text="0" styleName="schematicLabel"/>   
-    	<mx:Label id="mPipe4" x="259" y="74" text="0" styleName="schematicLabel"/>   
-    	
-    	<mx:Label id="tPipe5" x="68" y="47" text="0" styleName="schematicLabel"/>  
-    	<mx:Label id="mPipe5" x="68" y="74" text="0" styleName="schematicLabel"/> 
+    	<mx:Label id="tPipe2" x="259" y="47" text="0" styleName="schematicLabel"/>   
+    	<mx:Label id="mPipe2" x="259" y="74" text="0" styleName="schematicLabel"/>   
     	
     </mx:Canvas>
     	

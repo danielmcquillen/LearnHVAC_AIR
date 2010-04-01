@@ -18,7 +18,8 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent;
+		
+		import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent;
 		import com.mcquilleninteractive.learnhvac.view.popups.ShortTermSimulationPopup
 		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
 		import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
@@ -99,13 +100,9 @@
         	controlBar.simStopped()
         }
 		   
-		[Mediate(event="ShortTermSimulationEvent.SIM_CRASHED")]
+		[Mediate(event="ShortTermSimulationEvent.SIM_ERROR")]
         public function onShortTermSimulationCrash(event:ShortTermSimulationEvent):void
         {
-        	Logger.debug("onShortTermSimulationCrash()", this)
-        	// Tell user about SPARK crash in modal dialog IF THE CRASH WASN'T DUE TO TIMEOUT
-        	var alertMsg:String = "Simulation crashed. Error " + event.code + " : " + event.errorMessage
-        	mx.controls.Alert.show(alertMsg,"Simulation Crash")
         	if (_shortTermSimPopup!=null)
         	{
         		PopUpManager.removePopUp(_shortTermSimPopup)

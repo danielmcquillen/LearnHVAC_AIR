@@ -1,7 +1,5 @@
 /* CSS file */
 
-
-
 /* ELEMENTS (Flex classes) */
 TitleWindow 
 {
@@ -10,6 +8,13 @@ TitleWindow
     closeButtonDownSkin: Embed("assets/img/close_over.png");
     closeButtonOverSkin: Embed("assets/img/close_over.png");
     closeButtonUpSkin: Embed("assets/img/close_off.png");
+}
+
+DragPanel
+{
+	borderAlpha:.8;	
+	color:#000000;
+
 }
 
 DateField 
@@ -263,6 +268,16 @@ Alert
 
 .glassLabels {
     color: #FFFFFF;
+    fontSize: 12;
+    fontWeight: bold;
+    paddingLeft: 0;
+    paddingTop: 0;
+    fontFamily: Myriad;
+}
+
+.glassLabelsDark
+{
+    color: #000000;
     fontSize: 12;
     fontWeight: bold;
     paddingLeft: 0;

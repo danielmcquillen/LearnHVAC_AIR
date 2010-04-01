@@ -205,7 +205,9 @@ package com.mcquilleninteractive.learnhvac.model
 			if (_units != u)
 			{
 				_units = u;
-			}	
+			}
+			
+				
 		}
 		
 		/* Returns the string representing the type of units for this variable (e.g. "Btu/h") */

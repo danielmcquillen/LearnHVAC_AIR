@@ -236,6 +236,7 @@
 		public function onShortTermSimStarted(event:ShortTermSimulationEvent):void
 		{
 			pe.startPE()
+			Logger.debug("currNode: "  + currNode + " ScenarioModel.SN_FAN: " + ScenarioModel.SN_FAN, this) 
 			//start fan if it's visible in this node
 			if (	currNode == ScenarioModel.SN_FAN || 
 					currNode == ScenarioModel.SN_ROOF ||

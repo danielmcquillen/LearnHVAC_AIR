@@ -42,7 +42,7 @@
 		}
 		
 		[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
-		[Mediate(event="ShortTermSimulationEvent.SIM_CRASHED")]
+		[Mediate(event="ShortTermSimulationEvent.SIM_ERROR")]
 		public function onShortTermSimCrashed(event:ShortTermSimulationEvent):void
 		{
 			Logger.debug("onShortTermSimCrashed()", this)

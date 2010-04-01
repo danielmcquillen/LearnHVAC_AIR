@@ -52,7 +52,7 @@
 			}
 			
 						
-			[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
+			[Mediate(event="ShortTermSimulationEvent.SIM_START")]
 			public function onShortTermSimulationStarted(event:ShortTermSimulationEvent):void
 			{	
 				bgError.visible = false
@@ -68,7 +68,7 @@
 				simStatus.text = "OFF"
 			}
 			
-			[Mediate(event="ShortTermSimulationEvent.SIM_CRASHED")]
+			[Mediate(event="ShortTermSimulationEvent.SIM_ERROR")]
 			public function onShortTermSimulationCrash(event:ShortTermSimulationEvent):void
 			{
 				bgOff.visible = false
