@@ -5,6 +5,8 @@ package com.mcquilleninteractive.learnhvac.event
 
 	public class ApplicationEvent extends Event
 	{
+		public static const INIT_APP:String = "initApp"
+		public static const START_APP:String = "startApp"
 		public static const SELECT_NEW_SCENARIO: String = "selectNewScenario"
 		
 		public function ApplicationEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)

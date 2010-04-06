@@ -44,7 +44,6 @@
 												
 			public function cboAhuNavChangeEvt(event:Event):void
 	        {
-				Logger.debug("cboAhuNavChangeEvt", this)
 	        	var newNode:String = scenarioModel.sysNodesForNavAC[event.currentTarget.selectedIndex].id
 	        	var evt:SimNavEvent = new SimNavEvent(SimNavEvent.NAVIGATION, true)
 	        	evt.node = newNode

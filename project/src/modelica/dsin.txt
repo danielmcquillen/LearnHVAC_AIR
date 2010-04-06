@@ -102,7 +102,7 @@ int settings(13,1)
 
 
 #    Names of initial variables
-char initialName(1644,39)
+char initialName(1934,69)
 system.p_ambient
 system.T_ambient
 system.g
@@ -121,7 +121,9 @@ VRoo
 UA
 Q_sen_d
 VAV.allowFlowReversal
+VAV.port_a.Xi_outflow[1]
 VAV.port_b.h_outflow
+VAV.port_b.Xi_outflow[1]
 VAV.port_a_exposesState
 VAV.port_b_exposesState
 VAV.showDesignFlowDirection
@@ -136,7 +138,10 @@ VAV.V_flow
 VAV.port_a_T
 VAV.port_b_T
 VAV.state_a.T
+VAV.state_a.X[1]
+VAV.state_a.X[2]
 VAV.state_b.T
+VAV.state_b.X[2]
 VAV.from_dp
 VAV.m_flow_nominal
 VAV.dp_nominal
@@ -145,6 +150,8 @@ VAV.k
 VAV.m_flow_turbulent
 VAV.sta0.p
 VAV.sta0.T
+VAV.sta0.X[1]
+VAV.sta0.X[2]
 VAV.eta_nominal
 VAV.h0
 VAV.conv
@@ -181,7 +188,6 @@ P_vd
 cp_a
 cp_w
 SupF.allowFlowReversal
-SupF.port_a.p
 SupF.port_a_exposesState
 SupF.port_b_exposesState
 SupF.showDesignFlowDirection
@@ -204,22 +210,51 @@ SupF.use_T_start
 SupF.T_start
 SupF.h_start
 SupF.X_start[1]
+SupF.X_start[2]
 SupF.medium.p
+SupF.medium.Xi[1]
 SupF.medium.h
 SupF.medium.d
 SupF.medium.T
-SupF.medium.X[1]
+SupF.medium.X[2]
 SupF.medium.u
 SupF.medium.R
 SupF.medium.MM
-SupF.medium.constantDensity
 SupF.medium.preferredMediumStates
 SupF.medium.standardOrderComponents
 SupF.medium.T_degC
 SupF.medium.p_bar
+SupF.medium.x_water
+SupF.medium.phi
+SupF.medium.MMX[1]
+SupF.medium.MMX[2]
+_GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.H2O.MM
+_GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.H2O.R
+_GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.H2O.cp
+_GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.H2O.cv
+_GlobalScope.SupF.steam.MM
+_GlobalScope.SupF.steam.R
+_GlobalScope.SupF.steam.cp
+_GlobalScope.SupF.steam.cv
+_GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.Air.MM
+_GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.Air.R
+_GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.Air.cp
+_GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.Air.cv
+_GlobalScope.SupF.dryair.MM
+_GlobalScope.SupF.dryair.R
+_GlobalScope.SupF.dryair.cp
+_GlobalScope.SupF.dryair.cv
+SupF.medium.X_air
+SupF.medium.X_sat
+SupF.medium.x_sat
+SupF.medium.p_steam_sat
+SupF.medium.pStp
+SupF.medium.dStp
 SupF.U
 SupF.m
+SupF.mXi[1]
 SupF.mb_flow
+SupF.mbXi_flow[1]
 SupF.Qb_flow
 SupF.initialize_p
 SupF.use_HeatTransfer
@@ -269,7 +304,9 @@ Boi.X_in_internal[1]
 Econ.allowFlowReversal
 Econ.damOA.allowFlowReversal
 Econ.damOA.port_a.h_outflow
+Econ.damOA.port_a.Xi_outflow[1]
 Econ.damOA.port_b.h_outflow
+Econ.damOA.port_b.Xi_outflow[1]
 Econ.damOA.port_a_exposesState
 Econ.damOA.port_b_exposesState
 Econ.damOA.showDesignFlowDirection
@@ -284,7 +321,11 @@ Econ.damOA.port_a_T
 Econ.damOA.port_b_T
 Econ.damOA.state_a.p
 Econ.damOA.state_a.T
+Econ.damOA.state_a.X[1]
+Econ.damOA.state_a.X[2]
 Econ.damOA.state_b.T
+Econ.damOA.state_b.X[1]
+Econ.damOA.state_b.X[2]
 Econ.damOA.from_dp
 Econ.damOA.m_flow_nominal
 Econ.damOA.dp_nominal
@@ -293,6 +334,8 @@ Econ.damOA.k
 Econ.damOA.m_flow_turbulent
 Econ.damOA.sta0.p
 Econ.damOA.sta0.T
+Econ.damOA.sta0.X[1]
+Econ.damOA.sta0.X[2]
 Econ.damOA.eta_nominal
 Econ.damOA.h0
 Econ.damOA.conv
@@ -329,7 +372,9 @@ Econ.AOutMin
 Econ.AOut
 Econ.damExh.allowFlowReversal
 Econ.damExh.port_a.h_outflow
+Econ.damExh.port_a.Xi_outflow[1]
 Econ.damExh.port_b.h_outflow
+Econ.damExh.port_b.Xi_outflow[1]
 Econ.damExh.port_a_exposesState
 Econ.damExh.port_b_exposesState
 Econ.damExh.showDesignFlowDirection
@@ -343,7 +388,11 @@ Econ.damExh.V_flow
 Econ.damExh.port_a_T
 Econ.damExh.port_b_T
 Econ.damExh.state_a.T
+Econ.damExh.state_a.X[1]
+Econ.damExh.state_a.X[2]
 Econ.damExh.state_b.T
+Econ.damExh.state_b.X[1]
+Econ.damExh.state_b.X[2]
 Econ.damExh.from_dp
 Econ.damExh.m_flow_nominal
 Econ.damExh.dp_nominal
@@ -352,6 +401,8 @@ Econ.damExh.k
 Econ.damExh.m_flow_turbulent
 Econ.damExh.sta0.p
 Econ.damExh.sta0.T
+Econ.damExh.sta0.X[1]
+Econ.damExh.sta0.X[2]
 Econ.damExh.eta_nominal
 Econ.damExh.h0
 Econ.damExh.conv
@@ -387,7 +438,9 @@ Econ.damExh.kDam_nominal
 Econ.damExh.kTheta_nominal
 Econ.AExh
 Econ.damRec.allowFlowReversal
+Econ.damRec.port_a.Xi_outflow[1]
 Econ.damRec.port_b.h_outflow
+Econ.damRec.port_b.Xi_outflow[1]
 Econ.damRec.port_a_exposesState
 Econ.damRec.port_b_exposesState
 Econ.damRec.showDesignFlowDirection
@@ -403,7 +456,10 @@ Econ.damRec.port_a_T
 Econ.damRec.port_b_T
 Econ.damRec.state_a.p
 Econ.damRec.state_a.T
+Econ.damRec.state_a.X[2]
 Econ.damRec.state_b.T
+Econ.damRec.state_b.X[1]
+Econ.damRec.state_b.X[2]
 Econ.damRec.from_dp
 Econ.damRec.m_flow_nominal
 Econ.damRec.dp_nominal
@@ -412,6 +468,8 @@ Econ.damRec.k
 Econ.damRec.m_flow_turbulent
 Econ.damRec.sta0.p
 Econ.damRec.sta0.T
+Econ.damRec.sta0.X[1]
+Econ.damRec.sta0.X[2]
 Econ.damRec.eta_nominal
 Econ.damRec.h0
 Econ.damRec.conv
@@ -456,6 +514,8 @@ Econ.m0Exh_flow
 Econ.dpExh_nominal
 Econ.preDroOut.allowFlowReversal
 Econ.preDroOut.port_a.p
+Econ.preDroOut.port_a.Xi_outflow[1]
+Econ.preDroOut.port_b.Xi_outflow[1]
 Econ.preDroOut.port_a_exposesState
 Econ.preDroOut.port_b_exposesState
 Econ.preDroOut.showDesignFlowDirection
@@ -470,7 +530,10 @@ Econ.preDroOut.port_a_T
 Econ.preDroOut.port_b_T
 Econ.preDroOut.state_a.p
 Econ.preDroOut.state_a.T
+Econ.preDroOut.state_a.X[1]
+Econ.preDroOut.state_a.X[2]
 Econ.preDroOut.state_b.T
+Econ.preDroOut.state_b.X[2]
 Econ.preDroOut.from_dp
 Econ.preDroOut.m_flow_nominal
 Econ.preDroOut.dp_nominal
@@ -479,6 +542,8 @@ Econ.preDroOut.k
 Econ.preDroOut.m_flow_turbulent
 Econ.preDroOut.sta0.p
 Econ.preDroOut.sta0.T
+Econ.preDroOut.sta0.X[1]
+Econ.preDroOut.sta0.X[2]
 Econ.preDroOut.eta_nominal
 Econ.preDroOut.h0
 Econ.preDroOut.conv
@@ -488,7 +553,9 @@ Econ.preDroOut.dh
 Econ.preDroOut.ReC
 Econ.preDroOut.deltaM
 Econ.preDroExh.allowFlowReversal
+Econ.preDroExh.port_a.Xi_outflow[1]
 Econ.preDroExh.port_b.p
+Econ.preDroExh.port_b.Xi_outflow[1]
 Econ.preDroExh.port_a_exposesState
 Econ.preDroExh.port_b_exposesState
 Econ.preDroExh.showDesignFlowDirection
@@ -503,8 +570,11 @@ Econ.preDroExh.port_a_T
 Econ.preDroExh.port_b_T
 Econ.preDroExh.state_a.p
 Econ.preDroExh.state_a.T
+Econ.preDroExh.state_a.X[2]
 Econ.preDroExh.state_b.p
 Econ.preDroExh.state_b.T
+Econ.preDroExh.state_b.X[1]
+Econ.preDroExh.state_b.X[2]
 Econ.preDroExh.from_dp
 Econ.preDroExh.m_flow_nominal
 Econ.preDroExh.dp_nominal
@@ -513,6 +583,8 @@ Econ.preDroExh.k
 Econ.preDroExh.m_flow_turbulent
 Econ.preDroExh.sta0.p
 Econ.preDroExh.sta0.T
+Econ.preDroExh.sta0.X[1]
+Econ.preDroExh.sta0.X[2]
 Econ.preDroExh.eta_nominal
 Econ.preDroExh.h0
 Econ.preDroExh.conv
@@ -523,6 +595,8 @@ Econ.preDroExh.ReC
 Econ.preDroExh.deltaM
 Econ.preDroRec.allowFlowReversal
 Econ.preDroRec.port_a.h_outflow
+Econ.preDroRec.port_a.Xi_outflow[1]
+Econ.preDroRec.port_b.Xi_outflow[1]
 Econ.preDroRec.port_a_exposesState
 Econ.preDroRec.port_b_exposesState
 Econ.preDroRec.showDesignFlowDirection
@@ -536,7 +610,11 @@ Econ.preDroRec.V_flow
 Econ.preDroRec.port_a_T
 Econ.preDroRec.port_b_T
 Econ.preDroRec.state_a.T
+Econ.preDroRec.state_a.X[1]
+Econ.preDroRec.state_a.X[2]
 Econ.preDroRec.state_b.T
+Econ.preDroRec.state_b.X[1]
+Econ.preDroRec.state_b.X[2]
 Econ.preDroRec.from_dp
 Econ.preDroRec.m_flow_nominal
 Econ.preDroRec.dp_nominal
@@ -545,6 +623,8 @@ Econ.preDroRec.k
 Econ.preDroRec.m_flow_turbulent
 Econ.preDroRec.sta0.p
 Econ.preDroRec.sta0.T
+Econ.preDroRec.sta0.X[1]
+Econ.preDroRec.sta0.X[2]
 Econ.preDroRec.eta_nominal
 Econ.preDroRec.h0
 Econ.preDroRec.conv
@@ -558,32 +638,63 @@ Econ.port_Out.p
 Econ.port_Exh.m_flow
 Econ.port_Exh.p
 Econ.port_Ret.m_flow
+Econ.port_Ret.Xi_outflow[1]
+Econ.port_Sup.m_flow
 Econ.port_Sup.h_outflow
+Econ.port_Sup.Xi_outflow[1]
 Econ.uni.k
 Econ.add.k1
 Econ.add.k2
 Econ.port_Ret1.m_flow
 Econ.port_Ret1.h_outflow
+Econ.port_Ret1.Xi_outflow[1]
 Econ.port_b1.m_flow
 Econ.port_b1.h_outflow
+Econ.port_b1.Xi_outflow[1]
 Amb.nPorts
 Amb.medium.p
+Amb.medium.Xi[1]
 Amb.medium.h
 Amb.medium.d
+Amb.medium.T
 Amb.medium.X[1]
+Amb.medium.X[2]
 Amb.medium.u
 Amb.medium.R
 Amb.medium.MM
 Amb.medium.state.p
-Amb.medium.constantDensity
+Amb.medium.state.X[1]
+Amb.medium.state.X[2]
 Amb.medium.preferredMediumStates
 Amb.medium.standardOrderComponents
 Amb.medium.T_degC
 Amb.medium.p_bar
+Amb.medium.x_water
+Amb.medium.phi
+Amb.medium.MMX[1]
+Amb.medium.MMX[2]
+_GlobalScope.Amb.steam.MM
+_GlobalScope.Amb.steam.R
+_GlobalScope.Amb.steam.cp
+_GlobalScope.Amb.steam.cv
+_GlobalScope.Amb.dryair.MM
+_GlobalScope.Amb.dryair.R
+_GlobalScope.Amb.dryair.cp
+_GlobalScope.Amb.dryair.cv
+Amb.medium.X_steam
+Amb.medium.X_air
+Amb.medium.X_sat
+Amb.medium.x_sat
+Amb.medium.p_steam_sat
+Amb.medium.pStp
+Amb.medium.dStp
 Amb.ports[1].m_flow
 Amb.ports[1].p
+Amb.ports[1].Xi_outflow[1]
 Amb.ports[2].p
+Amb.ports[2].Xi_outflow[1]
 Amb.ports[3].p
+Amb.ports[3].Xi_outflow[1]
 Amb.flowDirection
 Amb.use_p_in
 Amb.use_T_in
@@ -592,11 +703,15 @@ Amb.use_C_in
 Amb.p
 Amb.T
 Amb.X[1]
+Amb.X[2]
 Amb.p_in_internal
 Amb.X_in_internal[1]
+Amb.X_in_internal[2]
 filter.allowFlowReversal
 filter.port_a.h_outflow
+filter.port_a.Xi_outflow[1]
 filter.port_b.h_outflow
+filter.port_b.Xi_outflow[1]
 filter.port_a_exposesState
 filter.port_b_exposesState
 filter.showDesignFlowDirection
@@ -609,9 +724,12 @@ filter.dp
 filter.V_flow
 filter.port_a_T
 filter.port_b_T
-filter.state_a.p
 filter.state_a.T
+filter.state_a.X[1]
+filter.state_a.X[2]
 filter.state_b.T
+filter.state_b.X[1]
+filter.state_b.X[2]
 filter.from_dp
 filter.m_flow_nominal
 filter.dp_nominal
@@ -620,6 +738,8 @@ filter.k
 filter.m_flow_turbulent
 filter.sta0.p
 filter.sta0.T
+filter.sta0.X[1]
+filter.sta0.X[2]
 filter.eta_nominal
 filter.h0
 filter.conv
@@ -631,8 +751,10 @@ filter.deltaM
 RHC.allowFlowReversal
 RHC.port_a.p
 RHC.port_a.h_outflow
+RHC.port_a.Xi_outflow[1]
 RHC.port_b.p
 RHC.port_b.h_outflow
+RHC.port_b.Xi_outflow[1]
 RHC.port_a_exposesState
 RHC.port_b_exposesState
 RHC.showDesignFlowDirection
@@ -643,23 +765,32 @@ RHC.p_b_start
 RHC.show_V_flow
 RHC.dp
 RHC.sta_a.T
+RHC.sta_a.X[2]
 RHC.sta_b.T
+RHC.sta_b.X[2]
 RHC.state_a_inflow.T
+RHC.state_a_inflow.X[2]
 RHC.state_b_inflow.T
+RHC.state_b_inflow.X[1]
+RHC.state_b_inflow.X[2]
 RHC.computeFlowResistance
 RHC.from_dp
 RHC.dp_nominal
 RHC.linearizeFlowResistance
 RHC.deltaM
 RHC.Q_flow
+RHC.mXi_flow[1]
 RHC.Q_flow_nominal
 RHC.u
 Tmix.port.m_flow
 Tmix.port.h_outflow
+Tmix.port.Xi_outflow[1]
 Tsa.port.m_flow
 Tsa.port.h_outflow
+Tsa.port.Xi_outflow[1]
 pressure.port.m_flow
 pressure.port.h_outflow
+pressure.port.Xi_outflow[1]
 Q_rhc_d
 dp_rhc_d
 dp_fil_d
@@ -770,23 +901,51 @@ room.vol.use_T_start
 room.vol.T_start
 room.vol.h_start
 room.vol.X_start[1]
+room.vol.X_start[2]
 room.vol.medium.p
+room.vol.medium.der(p)
+room.vol.medium.Xi[1]
+room.vol.medium.der(Xi[1])
 room.vol.medium.h
+room.vol.medium.der(h)
 room.vol.medium.d
+room.vol.medium.der(d)
 room.vol.medium.T
-room.vol.medium.X[1]
+room.vol.medium.der(T)
+room.vol.medium.X[2]
 room.vol.medium.u
+room.vol.medium.der(u)
 room.vol.medium.R
+room.vol.medium.der(R)
 room.vol.medium.MM
-room.vol.medium.constantDensity
 room.vol.medium.preferredMediumStates
 room.vol.medium.standardOrderComponents
 room.vol.medium.T_degC
 room.vol.medium.p_bar
+room.vol.medium.x_water
+room.vol.medium.phi
+room.vol.medium.MMX[1]
+room.vol.medium.MMX[2]
+_GlobalScope.room.vol.steam.MM
+_GlobalScope.room.vol.steam.R
+_GlobalScope.room.vol.steam.cp
+_GlobalScope.room.vol.steam.cv
+_GlobalScope.room.vol.dryair.MM
+_GlobalScope.room.vol.dryair.R
+_GlobalScope.room.vol.dryair.cp
+_GlobalScope.room.vol.dryair.cv
+room.vol.medium.X_air
+room.vol.medium.X_sat
+room.vol.medium.x_sat
+room.vol.medium.p_steam_sat
+room.vol.medium.pStp
+room.vol.medium.dStp
 room.vol.U
 room.vol.der(U)
 room.vol.m
 room.vol.der(m)
+room.vol.mXi[1]
+room.vol.der(mXi[1])
 room.vol.Hb_flow
 room.vol.Qb_flow
 room.vol.Wb_flow
@@ -796,6 +955,8 @@ room.vol.use_portsData
 room.vol.m_flow_small
 room.vol.ports_H_flow[1]
 room.vol.ports_H_flow[2]
+room.vol.ports_mXi_flow[1, 1]
+room.vol.ports_mXi_flow[2, 1]
 room.vol.use_HeatTransfer
 room.vol.heatTransfer.n
 room.vol.heatTransfer.surfaceAreas[1]
@@ -826,12 +987,14 @@ room.vol.portsData_zeta_out[2]
 room.vol.V
 room.vol.sta0.p
 room.vol.sta0.T
+room.vol.sta0.X[1]
+room.vol.sta0.X[2]
 room.vol.rho_nominal
 room.theCon.dT
 room.theCon.port_a.Q_flow
 room.theCon.G
 room.temSen.port.Q_flow
-room.TAmb
+room.ports[2].Xi_outflow[1]
 room.Qsen.Q_flow
 room.Qsen.T_ref
 room.Qsen.alpha
@@ -856,7 +1019,9 @@ T_la_hc_d
 T_ew_hc_d
 T_ew_hc_d_C
 Duct.allowFlowReversal
+Duct.port_a.Xi_outflow[1]
 Duct.port_b.h_outflow
+Duct.port_b.Xi_outflow[1]
 Duct.port_a_exposesState
 Duct.port_b_exposesState
 Duct.showDesignFlowDirection
@@ -870,7 +1035,10 @@ Duct.V_flow
 Duct.port_a_T
 Duct.port_b_T
 Duct.state_a.T
+Duct.state_a.X[1]
+Duct.state_a.X[2]
 Duct.state_b.T
+Duct.state_b.X[2]
 Duct.from_dp
 Duct.m_flow_nominal
 Duct.dp_nominal
@@ -879,6 +1047,8 @@ Duct.k
 Duct.m_flow_turbulent
 Duct.sta0.p
 Duct.sta0.T
+Duct.sta0.X[1]
+Duct.sta0.X[2]
 Duct.eta_nominal
 Duct.h0
 Duct.conv
@@ -890,10 +1060,10 @@ Duct.deltaM
 dp_dt_d
 HC.allowFlowReversal1
 HC.allowFlowReversal2
-HC.port_a1.p
 HC.port_a1.h_outflow
-HC.port_b1.p
+HC.port_a1.Xi_outflow[1]
 HC.port_b1.h_outflow
+HC.port_b1.Xi_outflow[1]
 HC.port_a2.p
 HC.port_a2.h_outflow
 HC.port_b2.p
@@ -913,13 +1083,22 @@ HC.p_b2_start
 HC.show_V_flow
 HC.dp1
 HC.dp2
+HC.sta_a1.p
 HC.sta_a1.T
+HC.sta_a1.X[1]
+HC.sta_a1.X[2]
 HC.sta_b1.T
+HC.sta_b1.X[1]
+HC.sta_b1.X[2]
 HC.sta_a2.T
 HC.sta_b2.p
 HC.sta_b2.T
 HC.state_a1_inflow.T
+HC.state_a1_inflow.X[1]
+HC.state_a1_inflow.X[2]
 HC.state_b1_inflow.T
+HC.state_b1_inflow.X[1]
+HC.state_b1_inflow.X[2]
 HC.state_a2_inflow.T
 HC.state_b2_inflow.p
 HC.state_b2_inflow.T
@@ -934,6 +1113,7 @@ HC.dp2_nominal
 HC.linearizeFlowResistance2
 HC.deltaM2
 HC.Q1_flow
+HC.mXi1_flow[1]
 HC.eps
 HC.T_in1
 HC.T_in2
@@ -946,7 +1126,10 @@ HC.gai2
 CC.allowFlowReversal1
 CC.allowFlowReversal2
 CC.port_a1.h_outflow
+CC.port_a1.Xi_outflow[1]
+CC.port_b1.p
 CC.port_b1.h_outflow
+CC.port_b1.Xi_outflow[1]
 CC.port_a2.p
 CC.port_a2.h_outflow
 CC.port_b2.p
@@ -966,13 +1149,22 @@ CC.p_b2_start
 CC.show_V_flow
 CC.dp1
 CC.dp2
+CC.sta_a1.p
 CC.sta_a1.T
+CC.sta_a1.X[1]
+CC.sta_a1.X[2]
 CC.sta_b1.T
+CC.sta_b1.X[1]
+CC.sta_b1.X[2]
 CC.sta_a2.T
 CC.sta_b2.p
 CC.sta_b2.T
 CC.state_a1_inflow.T
+CC.state_a1_inflow.X[1]
+CC.state_a1_inflow.X[2]
 CC.state_b1_inflow.T
+CC.state_b1_inflow.X[1]
+CC.state_b1_inflow.X[2]
 CC.state_a2_inflow.T
 CC.state_b2_inflow.p
 CC.state_b2_inflow.T
@@ -987,6 +1179,7 @@ CC.dp2_nominal
 CC.linearizeFlowResistance2
 CC.deltaM2
 CC.Q1_flow
+CC.mXi1_flow[1]
 CC.eps
 CC.T_in1
 CC.T_in2
@@ -1004,6 +1197,7 @@ AirDyP
 AirDen
 Tsa_h.port.m_flow
 Tsa_h.port.h_outflow
+Tsa_h.port.Xi_outflow[1]
 cliBCVTB.samplePeriod
 cliBCVTB.startTime
 cliBCVTB.sampleTrigger
@@ -1042,7 +1236,6 @@ cliBCVTB.flaDblWri[29]
 cliBCVTB.flaDblWri[30]
 cliBCVTB.flaDblWri[31]
 cliBCVTB.flaDblWri[32]
-cliBCVTB.flaDblWri[33]
 cliBCVTB.uStart[1]
 cliBCVTB.uStart[2]
 cliBCVTB.uStart[3]
@@ -1075,7 +1268,6 @@ cliBCVTB.uStart[29]
 cliBCVTB.uStart[30]
 cliBCVTB.uStart[31]
 cliBCVTB.uStart[32]
-cliBCVTB.uStart[33]
 cliBCVTB.activateInterface
 cliBCVTB.yRFixed[1]
 cliBCVTB.yRFixed[2]
@@ -1130,7 +1322,6 @@ cliBCVTB.uR[29]
 cliBCVTB.uR[30]
 cliBCVTB.uR[31]
 cliBCVTB.uR[32]
-cliBCVTB.uR[33]
 cliBCVTB.yR[1]
 cliBCVTB.yR[2]
 cliBCVTB.yR[3]
@@ -1188,7 +1379,6 @@ cliBCVTB._uStart[29]
 cliBCVTB._uStart[30]
 cliBCVTB._uStart[31]
 cliBCVTB._uStart[32]
-cliBCVTB._uStart[33]
 cliBCVTB.flaWri
 cliBCVTB.uRInt[1]
 cliBCVTB.der(uRInt[1])
@@ -1254,8 +1444,6 @@ cliBCVTB.uRInt[31]
 cliBCVTB.der(uRInt[31])
 cliBCVTB.uRInt[32]
 cliBCVTB.der(uRInt[32])
-cliBCVTB.uRInt[33]
-cliBCVTB.der(uRInt[33])
 cliBCVTB.uRIntPre[1]
 cliBCVTB.uRIntPre[2]
 cliBCVTB.uRIntPre[3]
@@ -1288,7 +1476,6 @@ cliBCVTB.uRIntPre[29]
 cliBCVTB.uRIntPre[30]
 cliBCVTB.uRIntPre[31]
 cliBCVTB.uRIntPre[32]
-cliBCVTB.uRIntPre[33]
 cliBCVTB.uRWri[1]
 cliBCVTB.uRWri[2]
 cliBCVTB.uRWri[3]
@@ -1321,7 +1508,6 @@ cliBCVTB.uRWri[29]
 cliBCVTB.uRWri[30]
 cliBCVTB.uRWri[31]
 cliBCVTB.uRWri[32]
-cliBCVTB.uRWri[33]
 OutVar.n1
 OutVar.n2
 OutVar.n3
@@ -1602,11 +1788,12 @@ InVar.n29
 InVar.n30
 InVar.n31
 InVar.n32
-InVar.n33
 fildp.port_a.m_flow
 fildp.port_a.h_outflow
+fildp.port_a.Xi_outflow[1]
 fildp.port_b.m_flow
 fildp.port_b.h_outflow
+fildp.port_b.Xi_outflow[1]
 Thwr.port.m_flow
 Thwr.port.p
 Thwr.port.h_outflow
@@ -1615,8 +1802,10 @@ Tcwr.port.p
 Tcwr.port.h_outflow
 Tsadf.port.m_flow
 Tsadf.port.h_outflow
+Tsadf.port.Xi_outflow[1]
 Tsa_cc.port.m_flow
 Tsa_cc.port.h_outflow
+Tsa_cc.port.Xi_outflow[1]
 add2.u1
 add2.k1
 add2.k2
@@ -1662,7 +1851,108 @@ ThcLiqEn1.port.h_outflow
 add12.u2
 add12.k1
 add12.k2
-SysNull.k
+delayFirstOrder.energyDynamics
+delayFirstOrder.massDynamics
+delayFirstOrder.substanceDynamics
+delayFirstOrder.traceDynamics
+delayFirstOrder.p_start
+delayFirstOrder.use_T_start
+delayFirstOrder.T_start
+delayFirstOrder.h_start
+delayFirstOrder.X_start[1]
+delayFirstOrder.X_start[2]
+delayFirstOrder.medium.p
+delayFirstOrder.medium.der(p)
+delayFirstOrder.medium.Xi[1]
+delayFirstOrder.medium.der(Xi[1])
+delayFirstOrder.medium.h
+delayFirstOrder.medium.der(h)
+delayFirstOrder.medium.d
+delayFirstOrder.medium.der(d)
+delayFirstOrder.medium.T
+delayFirstOrder.medium.der(T)
+delayFirstOrder.medium.X[2]
+delayFirstOrder.medium.u
+delayFirstOrder.medium.der(u)
+delayFirstOrder.medium.R
+delayFirstOrder.medium.der(R)
+delayFirstOrder.medium.MM
+delayFirstOrder.medium.preferredMediumStates
+delayFirstOrder.medium.standardOrderComponents
+delayFirstOrder.medium.T_degC
+delayFirstOrder.medium.p_bar
+delayFirstOrder.medium.x_water
+delayFirstOrder.medium.phi
+delayFirstOrder.medium.MMX[1]
+delayFirstOrder.medium.MMX[2]
+_GlobalScope.delayFirstOrder.steam.MM
+_GlobalScope.delayFirstOrder.steam.R
+_GlobalScope.delayFirstOrder.steam.cp
+_GlobalScope.delayFirstOrder.steam.cv
+_GlobalScope.delayFirstOrder.dryair.MM
+_GlobalScope.delayFirstOrder.dryair.R
+_GlobalScope.delayFirstOrder.dryair.cp
+_GlobalScope.delayFirstOrder.dryair.cv
+delayFirstOrder.medium.X_air
+delayFirstOrder.medium.X_sat
+delayFirstOrder.medium.x_sat
+delayFirstOrder.medium.p_steam_sat
+delayFirstOrder.medium.pStp
+delayFirstOrder.medium.dStp
+delayFirstOrder.U
+delayFirstOrder.der(U)
+delayFirstOrder.m
+delayFirstOrder.der(m)
+delayFirstOrder.mXi[1]
+delayFirstOrder.der(mXi[1])
+delayFirstOrder.Qb_flow
+delayFirstOrder.Wb_flow
+delayFirstOrder.initialize_p
+delayFirstOrder.nPorts
+delayFirstOrder.use_portsData
+delayFirstOrder.m_flow_small
+delayFirstOrder.ports_H_flow[1]
+delayFirstOrder.ports_H_flow[2]
+delayFirstOrder.ports_mXi_flow[1, 1]
+delayFirstOrder.ports_mXi_flow[2, 1]
+delayFirstOrder.use_HeatTransfer
+delayFirstOrder.heatTransfer.n
+delayFirstOrder.heatTransfer.surfaceAreas[1]
+delayFirstOrder.heatTransfer.Q_flows[1]
+delayFirstOrder.heatTransfer.use_k
+delayFirstOrder.heatTransfer.k
+delayFirstOrder.heatTransfer.T_ambient
+delayFirstOrder.heatTransfer.heatPorts[1].Q_flow
+delayFirstOrder.portVelocities[1]
+delayFirstOrder.portVelocities[2]
+delayFirstOrder.ports_E_flow[1]
+delayFirstOrder.ports_E_flow[2]
+delayFirstOrder.s[1]
+delayFirstOrder.s[2]
+delayFirstOrder.ports_penetration[1]
+delayFirstOrder.ports_penetration[2]
+delayFirstOrder.portAreas[1]
+delayFirstOrder.portAreas[2]
+delayFirstOrder.fluidLevel
+delayFirstOrder.fluidLevel_max
+delayFirstOrder.vesselArea
+delayFirstOrder.portsData_diameter[1]
+delayFirstOrder.portsData_diameter[2]
+delayFirstOrder.portsData_height[1]
+delayFirstOrder.portsData_height[2]
+delayFirstOrder.portsData_zeta_in[1]
+delayFirstOrder.portsData_zeta_in[2]
+delayFirstOrder.portsData_zeta_out[1]
+delayFirstOrder.portsData_zeta_out[2]
+delayFirstOrder.V
+delayFirstOrder.sta0.p
+delayFirstOrder.sta0.T
+delayFirstOrder.sta0.X[1]
+delayFirstOrder.sta0.X[2]
+delayFirstOrder.rho_nominal
+delayFirstOrder.tau
+delayFirstOrder.m_flow_nominal
+delayFirstOrder.V0
 CVC.I.k
 CVC.I.initType
 CVC.I.y_start
@@ -1748,7 +2038,7 @@ RHVC.gainTrack.k
 RHVC.gainTrack.u
 RHVC.gainTrack.y
 
-double initialValue(1644,6)
+double initialValue(1934,6)
  -1  1.013250000000000E+005       0                  1.000000000000000E+100
   1   280   # system.p_ambient
  -1  2.931500000000000E+002       0                  1.000000000000000E+100
@@ -1785,8 +2075,12 @@ double initialValue(1644,6)
   1   280   # Q_sen_d
   0       0                       0                       0                
   6   257   # VAV.allowFlowReversal
+  0       0                       0                       1                
+  6   260   # VAV.port_a.Xi_outflow[1]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # VAV.port_b.h_outflow
+  0       0                       0                       1                
+  6   260   # VAV.port_b.Xi_outflow[1]
   0       0                       0                       0                
   6  1281   # VAV.port_a_exposesState
   0       0                       0                       0                
@@ -1815,8 +2109,14 @@ double initialValue(1644,6)
   6   256   # VAV.port_b_T
   0     300                       1                   10000                
   6  1280   # VAV.state_a.T
+  0       0                       0                       1                
+  6  1280   # VAV.state_a.X[1]
+  0       0                       0                       1                
+  6  1280   # VAV.state_a.X[2]
   0     300                       1                   10000                
   6  1280   # VAV.state_b.T
+  0       0                       0                       1                
+  6  1280   # VAV.state_b.X[2]
   0       1                       0                       0                
   6   257   # VAV.from_dp
   0  2.310000000000000E+000       0                  100000                
@@ -1833,9 +2133,13 @@ double initialValue(1644,6)
   6  1280   # VAV.sta0.p
   0  2.931500000000000E+002       1                   10000                
   6  1280   # VAV.sta0.T
-  0  1.820000000000000E-005       0                  1.000000000000000E+100
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # VAV.sta0.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # VAV.sta0.X[2]
+  0  1.850000000000000E-005       0                  1.000000000000000E+100
   6  1280   # VAV.eta_nominal
- -1 -5.027250000000000E+003       0                       0                
+ -1  2.515618900000000E+004       0                       0                
   1  1304   # VAV.h0
   0       1                       0                       0                
   6  1280   # VAV.conv
@@ -1905,8 +2209,6 @@ double initialValue(1644,6)
   1   280   # cp_w
   0       1                       0                       0                
   6   257   # SupF.allowFlowReversal
-  0       0                       0                  1.000000000000000E+008
-  6   260   # SupF.port_a.p
  -1       0                       0                       0                
   1  1305   # SupF.port_a_exposesState
   0       0                       0                       0                
@@ -1946,29 +2248,31 @@ double initialValue(1644,6)
   0       1                       0                       0                
   6   257   # SupF.use_T_start
   0     300                       1                   10000                
-  6   256   # SupF.T_start
+  6   288   # SupF.T_start
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   256   # SupF.h_start
- -1       1                       0                       1                
+ -1  2.000000000000000E-003       0                       1                
   1   280   # SupF.X_start[1]
+ -1  9.980000000000000E-001       0                       1                
+  1   280   # SupF.X_start[2]
   0       0                       0                  1.000000000000000E+008
   6   256   # SupF.medium.p
+  0       0                       0                       1                
+  6   256   # SupF.medium.Xi[1]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   256   # SupF.medium.h
   0       1                       0                  100000                
   6   256   # SupF.medium.d
   0     300                       1                   10000                
   6   256   # SupF.medium.T
-  0       1                       0                       1                
-  6   256   # SupF.medium.X[1]
+  0  9.900000000000000E-001       0                       1                
+  6   256   # SupF.medium.X[2]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   256   # SupF.medium.u
-  0  2.870512249529790E+002       0                  1.000000000000000E+006
+  0    1000                       0                  1.000000000000000E+006
   6   256   # SupF.medium.R
-  0  2.896511590000000E-002  1.000000000000000E-003  2.500000000000000E-001
+  0  3.200000000000000E-002  1.000000000000000E-003  2.500000000000000E-001
   6   256   # SupF.medium.MM
-  0       0                       0                       0                
-  6   257   # SupF.medium.constantDensity
   0       1                       0                       0                
   6   257   # SupF.medium.preferredMediumStates
   0       1                       0                       0                
@@ -1977,12 +2281,68 @@ double initialValue(1644,6)
   6   256   # SupF.medium.T_degC
   0       0                       0                       0                
   6   256   # SupF.medium.p_bar
+  0       0                       0                       1                
+  6   256   # SupF.medium.x_water
+  0       0                       0                       0                
+  6   256   # SupF.medium.phi
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # SupF.medium.MMX[1]
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # SupF.medium.MMX[2]
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # _GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.H2O.MM
+  0  4.615233290850880E+002       0                       0                
+  6  1280   # _GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.H2O.R
+  0    1860                       0                       0                
+  6  1280   # _GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.H2O.cp
+  0  1.398476670914910E+003       0                       0                
+  6  1280   # _GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.H2O.cv
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # _GlobalScope.SupF.steam.MM
+  0  4.615233290850880E+002       0                       0                
+  6  1280   # _GlobalScope.SupF.steam.R
+  0    1860                       0                       0                
+  6  1280   # _GlobalScope.SupF.steam.cp
+  0  1.398476670914910E+003       0                       0                
+  6  1280   # _GlobalScope.SupF.steam.cv
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # _GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.Air.MM
+  0  2.870512249529790E+002       0                       0                
+  6  1280   # _GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.Air.R
+  0    1006                       0                       0                
+  6  1280   # _GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.Air.cp
+  0  7.189487750470209E+002       0                       0                
+  6  1280   # _GlobalScope.Buildings.Media.PerfectGases.Common.SingleGasData.Air.cv
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # _GlobalScope.SupF.dryair.MM
+  0  2.870512249529790E+002       0                       0                
+  6  1280   # _GlobalScope.SupF.dryair.R
+  0    1006                       0                       0                
+  6  1280   # _GlobalScope.SupF.dryair.cp
+  0  7.189487750470209E+002       0                       0                
+  6  1280   # _GlobalScope.SupF.dryair.cv
+  0       0                       0                       1                
+  6  1280   # SupF.medium.X_air
+  0       0                       0                       1                
+  6  1280   # SupF.medium.X_sat
+  0       0                       0                       1                
+  6  1280   # SupF.medium.x_sat
+  0  100000                       0                  1.000000000000000E+008
+  6  1280   # SupF.medium.p_steam_sat
+  0  1.013250000000000E+005       0                  1.000000000000000E+008
+  6  1280   # SupF.medium.pStp
+  0  1.200000000000000E+000       0                  100000                
+  6  1280   # SupF.medium.dStp
   0       0                       0                       0                
   6   256   # SupF.U
   0       0                       0                  1.000000000000000E+100
   6   256   # SupF.m
+  0       0                       0                  1.000000000000000E+100
+  6   256   # SupF.mXi[1]
   0       0                       0                       0                
   6   256   # SupF.mb_flow
+  0       0                       0                       0                
+  6   256   # SupF.mbXi_flow[1]
   0       0                       0                       0                
   6   256   # SupF.Qb_flow
  -1       1                       0                       0                
@@ -2081,8 +2441,12 @@ double initialValue(1644,6)
   6   257   # Econ.damOA.allowFlowReversal
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # Econ.damOA.port_a.h_outflow
+  0       0                       0                       1                
+  6   260   # Econ.damOA.port_a.Xi_outflow[1]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   324   # Econ.damOA.port_b.h_outflow
+  0  2.000000000000000E-003       0                       1                
+  6   260   # Econ.damOA.port_b.Xi_outflow[1]
   0       0                       0                       0                
   6  1281   # Econ.damOA.port_a_exposesState
   0       0                       0                       0                
@@ -2108,11 +2472,19 @@ double initialValue(1644,6)
   0     300                       1                   10000                
   6   256   # Econ.damOA.port_b_T
   0  100000                       0                  1.000000000000000E+008
-  6  1280   # Econ.damOA.state_a.p
+  6  1312   # Econ.damOA.state_a.p
   0     300                       1                   10000                
-  6  1344   # Econ.damOA.state_a.T
+  6  1280   # Econ.damOA.state_a.T
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.damOA.state_a.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.damOA.state_a.X[2]
   0     300                       1                   10000                
   6  1280   # Econ.damOA.state_b.T
+  0       0                       0                       1                
+  6  1280   # Econ.damOA.state_b.X[1]
+  0       0                       0                       1                
+  6  1280   # Econ.damOA.state_b.X[2]
   0       1                       0                       0                
   6   257   # Econ.damOA.from_dp
   0  2.310000000000000E+000       0                  100000                
@@ -2129,9 +2501,13 @@ double initialValue(1644,6)
   6  1280   # Econ.damOA.sta0.p
   0  2.931500000000000E+002       1                   10000                
   6  1280   # Econ.damOA.sta0.T
-  0  1.820000000000000E-005       0                  1.000000000000000E+100
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.damOA.sta0.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.damOA.sta0.X[2]
+  0  1.850000000000000E-005       0                  1.000000000000000E+100
   6  1280   # Econ.damOA.eta_nominal
- -1 -5.027250000000000E+003       0                       0                
+ -1  2.515618900000000E+004       0                       0                
   1  1304   # Econ.damOA.h0
   0       1                       0                       0                
   6  1280   # Econ.damOA.conv
@@ -2201,8 +2577,12 @@ double initialValue(1644,6)
   6   257   # Econ.damExh.allowFlowReversal
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   324   # Econ.damExh.port_a.h_outflow
+  0  2.000000000000000E-003       0                       1                
+  6   260   # Econ.damExh.port_a.Xi_outflow[1]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # Econ.damExh.port_b.h_outflow
+  0       0                       0                       1                
+  6   260   # Econ.damExh.port_b.Xi_outflow[1]
   0       0                       0                       0                
   6  1281   # Econ.damExh.port_a_exposesState
   0       0                       0                       0                
@@ -2229,8 +2609,16 @@ double initialValue(1644,6)
   6   256   # Econ.damExh.port_b_T
   0     300                       1                   10000                
   6  1280   # Econ.damExh.state_a.T
+  0       0                       0                       1                
+  6  1280   # Econ.damExh.state_a.X[1]
+  0       0                       0                       1                
+  6  1280   # Econ.damExh.state_a.X[2]
   0     300                       1                   10000                
-  6  1344   # Econ.damExh.state_b.T
+  6  1280   # Econ.damExh.state_b.T
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.damExh.state_b.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.damExh.state_b.X[2]
   0       1                       0                       0                
   6   257   # Econ.damExh.from_dp
   0  2.310000000000000E+000       0                  100000                
@@ -2247,9 +2635,13 @@ double initialValue(1644,6)
   6  1280   # Econ.damExh.sta0.p
   0  2.931500000000000E+002       1                   10000                
   6  1280   # Econ.damExh.sta0.T
-  0  1.820000000000000E-005       0                  1.000000000000000E+100
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.damExh.sta0.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.damExh.sta0.X[2]
+  0  1.850000000000000E-005       0                  1.000000000000000E+100
   6  1280   # Econ.damExh.eta_nominal
- -1 -5.027250000000000E+003       0                       0                
+ -1  2.515618900000000E+004       0                       0                
   1  1304   # Econ.damExh.h0
   0       1                       0                       0                
   6  1280   # Econ.damExh.conv
@@ -2317,8 +2709,12 @@ double initialValue(1644,6)
   1   280   # Econ.AExh
   0       1                       0                       0                
   6   257   # Econ.damRec.allowFlowReversal
+  0  2.000000000000000E-003       0                       1                
+  6   260   # Econ.damRec.port_a.Xi_outflow[1]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # Econ.damRec.port_b.h_outflow
+  0       0                       0                       1                
+  6   260   # Econ.damRec.port_b.Xi_outflow[1]
   0       0                       0                       0                
   6  1281   # Econ.damRec.port_a_exposesState
   0       0                       0                       0                
@@ -2346,11 +2742,17 @@ double initialValue(1644,6)
   0     300                       1                   10000                
   6   256   # Econ.damRec.port_b_T
   0  100000                       0                  1.000000000000000E+008
-  6  1280   # Econ.damRec.state_a.p
+  6  1312   # Econ.damRec.state_a.p
   0     300                       1                   10000                
   6  1280   # Econ.damRec.state_a.T
+  0       0                       0                       1                
+  6  1280   # Econ.damRec.state_a.X[2]
   0     300                       1                   10000                
-  6  1344   # Econ.damRec.state_b.T
+  6  1280   # Econ.damRec.state_b.T
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.damRec.state_b.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.damRec.state_b.X[2]
   0       1                       0                       0                
   6   257   # Econ.damRec.from_dp
   0  2.310000000000000E+000       0                  100000                
@@ -2367,9 +2769,13 @@ double initialValue(1644,6)
   6  1280   # Econ.damRec.sta0.p
   0  2.931500000000000E+002       1                   10000                
   6  1280   # Econ.damRec.sta0.T
-  0  1.820000000000000E-005       0                  1.000000000000000E+100
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.damRec.sta0.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.damRec.sta0.X[2]
+  0  1.850000000000000E-005       0                  1.000000000000000E+100
   6  1280   # Econ.damRec.eta_nominal
- -1 -5.027250000000000E+003       0                       0                
+ -1  2.515618900000000E+004       0                       0                
   1  1304   # Econ.damRec.h0
   0       1                       0                       0                
   6  1280   # Econ.damRec.conv
@@ -2455,6 +2861,10 @@ double initialValue(1644,6)
   6   257   # Econ.preDroOut.allowFlowReversal
   0  1.013250000000000E+005       0                  1.000000000000000E+008
   6   260   # Econ.preDroOut.port_a.p
+  0       0                       0                       1                
+  6   260   # Econ.preDroOut.port_a.Xi_outflow[1]
+  0  2.000000000000000E-003       0                       1                
+  6   260   # Econ.preDroOut.port_b.Xi_outflow[1]
   0       0                       0                       0                
   6  1281   # Econ.preDroOut.port_a_exposesState
   0       0                       0                       0                
@@ -2483,8 +2893,14 @@ double initialValue(1644,6)
   6  1280   # Econ.preDroOut.state_a.p
   0     300                       1                   10000                
   6  1344   # Econ.preDroOut.state_a.T
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.preDroOut.state_a.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.preDroOut.state_a.X[2]
   0     300                       1                   10000                
   6  1280   # Econ.preDroOut.state_b.T
+  0       0                       0                       1                
+  6  1280   # Econ.preDroOut.state_b.X[2]
   0       1                       0                       0                
   6   257   # Econ.preDroOut.from_dp
   0  2.310000000000000E+000       0                  100000                
@@ -2501,9 +2917,13 @@ double initialValue(1644,6)
   6  1280   # Econ.preDroOut.sta0.p
   0  2.931500000000000E+002       1                   10000                
   6  1280   # Econ.preDroOut.sta0.T
-  0  1.820000000000000E-005       0                  1.000000000000000E+100
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.preDroOut.sta0.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.preDroOut.sta0.X[2]
+  0  1.850000000000000E-005       0                  1.000000000000000E+100
   6  1280   # Econ.preDroOut.eta_nominal
- -1 -5.027250000000000E+003       0                       0                
+ -1  2.515618900000000E+004       0                       0                
   1  1304   # Econ.preDroOut.h0
   0       1                       0                       0                
   6  1280   # Econ.preDroOut.conv
@@ -2519,8 +2939,12 @@ double initialValue(1644,6)
   6   256   # Econ.preDroOut.deltaM
   0       1                       0                       0                
   6   257   # Econ.preDroExh.allowFlowReversal
+  0  2.000000000000000E-003       0                       1                
+  6   260   # Econ.preDroExh.port_a.Xi_outflow[1]
   0  1.013250000000000E+005       0                  1.000000000000000E+008
   6   260   # Econ.preDroExh.port_b.p
+  0       0                       0                       1                
+  6   260   # Econ.preDroExh.port_b.Xi_outflow[1]
   0       0                       0                       0                
   6  1281   # Econ.preDroExh.port_a_exposesState
   0       0                       0                       0                
@@ -2546,13 +2970,19 @@ double initialValue(1644,6)
   0     300                       1                   10000                
   6   256   # Econ.preDroExh.port_b_T
   0  100000                       0                  1.000000000000000E+008
-  6  1280   # Econ.preDroExh.state_a.p
+  6  1312   # Econ.preDroExh.state_a.p
   0     300                       1                   10000                
   6  1280   # Econ.preDroExh.state_a.T
+  0       0                       0                       1                
+  6  1280   # Econ.preDroExh.state_a.X[2]
   0  1.013250000000000E+005       0                  1.000000000000000E+008
   6  1280   # Econ.preDroExh.state_b.p
   0     300                       1                   10000                
   6  1344   # Econ.preDroExh.state_b.T
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.preDroExh.state_b.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.preDroExh.state_b.X[2]
   0       1                       0                       0                
   6   257   # Econ.preDroExh.from_dp
   0  2.310000000000000E+000       0                  100000                
@@ -2569,9 +2999,13 @@ double initialValue(1644,6)
   6  1280   # Econ.preDroExh.sta0.p
   0  2.931500000000000E+002       1                   10000                
   6  1280   # Econ.preDroExh.sta0.T
-  0  1.820000000000000E-005       0                  1.000000000000000E+100
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.preDroExh.sta0.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.preDroExh.sta0.X[2]
+  0  1.850000000000000E-005       0                  1.000000000000000E+100
   6  1280   # Econ.preDroExh.eta_nominal
- -1 -5.027250000000000E+003       0                       0                
+ -1  2.515618900000000E+004       0                       0                
   1  1304   # Econ.preDroExh.h0
   0       1                       0                       0                
   6  1280   # Econ.preDroExh.conv
@@ -2589,6 +3023,10 @@ double initialValue(1644,6)
   6   257   # Econ.preDroRec.allowFlowReversal
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   324   # Econ.preDroRec.port_a.h_outflow
+  0  2.000000000000000E-003       0                       1                
+  6   260   # Econ.preDroRec.port_a.Xi_outflow[1]
+  0       0                       0                       1                
+  6   260   # Econ.preDroRec.port_b.Xi_outflow[1]
   0       0                       0                       0                
   6  1281   # Econ.preDroRec.port_a_exposesState
   0       0                       0                       0                
@@ -2615,8 +3053,16 @@ double initialValue(1644,6)
   6   256   # Econ.preDroRec.port_b_T
   0     300                       1                   10000                
   6  1280   # Econ.preDroRec.state_a.T
+  0       0                       0                       1                
+  6  1280   # Econ.preDroRec.state_a.X[1]
+  0       0                       0                       1                
+  6  1280   # Econ.preDroRec.state_a.X[2]
   0     300                       1                   10000                
-  6  1344   # Econ.preDroRec.state_b.T
+  6  1280   # Econ.preDroRec.state_b.T
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.preDroRec.state_b.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.preDroRec.state_b.X[2]
   0       1                       0                       0                
   6   257   # Econ.preDroRec.from_dp
   0  2.310000000000000E+000       0                  100000                
@@ -2633,9 +3079,13 @@ double initialValue(1644,6)
   6  1280   # Econ.preDroRec.sta0.p
   0  2.931500000000000E+002       1                   10000                
   6  1280   # Econ.preDroRec.sta0.T
-  0  1.820000000000000E-005       0                  1.000000000000000E+100
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Econ.preDroRec.sta0.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Econ.preDroRec.sta0.X[2]
+  0  1.850000000000000E-005       0                  1.000000000000000E+100
   6  1280   # Econ.preDroRec.eta_nominal
- -1 -5.027250000000000E+003       0                       0                
+ -1  2.515618900000000E+004       0                       0                
   1  1304   # Econ.preDroRec.h0
   0       1                       0                       0                
   6  1280   # Econ.preDroRec.conv
@@ -2659,8 +3109,14 @@ double initialValue(1644,6)
   6   260   # Econ.port_Exh.p
   0       0                       0                  100000                
   6   388   # Econ.port_Ret.m_flow
+  0  2.000000000000000E-003       0                       1                
+  6   260   # Econ.port_Ret.Xi_outflow[1]
+  0       0                 -100000                       0                
+  6   388   # Econ.port_Sup.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # Econ.port_Sup.h_outflow
+  0       0                       0                       1                
+  6   260   # Econ.port_Sup.Xi_outflow[1]
  -1       1                       0                       0                
   1   280   # Econ.uni.k
  -1       1                       0                       0                
@@ -2671,30 +3127,42 @@ double initialValue(1644,6)
   6  1412   # Econ.port_Ret1.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6  1284   # Econ.port_Ret1.h_outflow
+  0       0                       0                       1                
+  6  1284   # Econ.port_Ret1.Xi_outflow[1]
   0       0                 -100000                  100000                
   6  1412   # Econ.port_b1.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6  1284   # Econ.port_b1.h_outflow
+  0       0                       0                       1                
+  6  1284   # Econ.port_b1.Xi_outflow[1]
   0       3                       0                       0                
   6   258   # Amb.nPorts
   0  1.013250000000000E+005       0                  1.000000000000000E+100
   6   256   # Amb.medium.p
+  0  2.000000000000000E-003       0                       0                
+  6   256   # Amb.medium.Xi[1]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   320   # Amb.medium.h
   0  1.200000000000000E+000       0                  100000                
   6   256   # Amb.medium.d
-  0       1                       0                       1                
+  0     300                       1                   10000                
+  6   320   # Amb.medium.T
+  0  2.000000000000000E-003       0                       1                
   6   256   # Amb.medium.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6   256   # Amb.medium.X[2]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   320   # Amb.medium.u
-  0  2.870512249529790E+002       0                  1.000000000000000E+006
+  0  2.874001691612430E+002       0                  1.000000000000000E+006
   6   256   # Amb.medium.R
-  0  2.896511590000000E-002  1.000000000000000E-003  2.500000000000000E-001
+  0  2.892994817736260E-002  1.000000000000000E-003  2.500000000000000E-001
   6   256   # Amb.medium.MM
   0  1.013250000000000E+005       0                  1.000000000000000E+008
   6   256   # Amb.medium.state.p
-  0       0                       0                       0                
-  6   257   # Amb.medium.constantDensity
+  0  2.000000000000000E-003       0                       1                
+  6   256   # Amb.medium.state.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6   256   # Amb.medium.state.X[2]
   0       0                       0                       0                
   6   257   # Amb.medium.preferredMediumStates
   0       1                       0                       0                
@@ -2703,14 +3171,58 @@ double initialValue(1644,6)
   6   320   # Amb.medium.T_degC
   0  1.013250000000000E+000       0                       0                
   6   256   # Amb.medium.p_bar
+  0  2.004008016032060E-003       0                       1                
+  6   256   # Amb.medium.x_water
+  0       0                       0                       0                
+  6   320   # Amb.medium.phi
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # Amb.medium.MMX[1]
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # Amb.medium.MMX[2]
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # _GlobalScope.Amb.steam.MM
+  0  4.615233290850880E+002       0                       0                
+  6  1280   # _GlobalScope.Amb.steam.R
+  0    1860                       0                       0                
+  6  1280   # _GlobalScope.Amb.steam.cp
+  0  1.398476670914910E+003       0                       0                
+  6  1280   # _GlobalScope.Amb.steam.cv
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # _GlobalScope.Amb.dryair.MM
+  0  2.870512249529790E+002       0                       0                
+  6  1280   # _GlobalScope.Amb.dryair.R
+  0    1006                       0                       0                
+  6  1280   # _GlobalScope.Amb.dryair.cp
+  0  7.189487750470209E+002       0                       0                
+  6  1280   # _GlobalScope.Amb.dryair.cv
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Amb.medium.X_steam
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Amb.medium.X_air
+  0       0                       0                       1                
+  6  1344   # Amb.medium.X_sat
+  0       0                       0                       1                
+  6  1344   # Amb.medium.x_sat
+  0  100000                       0                  1.000000000000000E+008
+  6  1344   # Amb.medium.p_steam_sat
+  0  1.013250000000000E+005       0                  1.000000000000000E+008
+  6  1280   # Amb.medium.pStp
+  0  1.200000000000000E+000       0                  100000                
+  6  1280   # Amb.medium.dStp
   0       0                 -1.000000000000000E+060  1.000000000000000E+060
   6   388   # Amb.ports[1].m_flow
   0  1.013250000000000E+005       0                  1.000000000000000E+008
   6   260   # Amb.ports[1].p
+  0  2.000000000000000E-003       0                       1                
+  6   260   # Amb.ports[1].Xi_outflow[1]
   0  1.013250000000000E+005       0                  1.000000000000000E+008
   6   260   # Amb.ports[2].p
+  0  2.000000000000000E-003       0                       1                
+  6   260   # Amb.ports[2].Xi_outflow[1]
   0  1.013250000000000E+005       0                  1.000000000000000E+008
   6   260   # Amb.ports[3].p
+  0  2.000000000000000E-003       0                       1                
+  6   260   # Amb.ports[3].Xi_outflow[1]
   0       3                       1                       3                
   6  1282   # Amb.flowDirection
   0       0                       0                       0                
@@ -2725,18 +3237,26 @@ double initialValue(1644,6)
   6   256   # Amb.p
   0  2.931500000000000E+002       1                   10000                
   6   256   # Amb.T
-  0       1                       0                       1                
+  0  2.000000000000000E-003       0                       1                
   6   256   # Amb.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6   256   # Amb.X[2]
   0  1.013250000000000E+005       0                       0                
   6  1280   # Amb.p_in_internal
-  0       1                       0                       0                
+  0  2.000000000000000E-003       0                       0                
   6  1280   # Amb.X_in_internal[1]
+  0  9.980000000000000E-001       0                       0                
+  6  1280   # Amb.X_in_internal[2]
   0       0                       0                       0                
   6   257   # filter.allowFlowReversal
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
-  6   260   # filter.port_a.h_outflow
+  6   292   # filter.port_a.h_outflow
+  0       0                       0                       1                
+  6   260   # filter.port_a.Xi_outflow[1]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # filter.port_b.h_outflow
+  0       0                       0                       1                
+  6   260   # filter.port_b.Xi_outflow[1]
   0       0                       0                       0                
   6  1281   # filter.port_a_exposesState
   0       0                       0                       0                
@@ -2761,12 +3281,18 @@ double initialValue(1644,6)
   6   256   # filter.port_a_T
   0     300                       1                   10000                
   6   256   # filter.port_b_T
-  0  100000                       0                  1.000000000000000E+008
-  6  1280   # filter.state_a.p
   0     300                       1                   10000                
   6  1280   # filter.state_a.T
+  0       0                       0                       1                
+  6  1280   # filter.state_a.X[1]
+  0       0                       0                       1                
+  6  1280   # filter.state_a.X[2]
   0     300                       1                   10000                
   6  1280   # filter.state_b.T
+  0       0                       0                       1                
+  6  1280   # filter.state_b.X[1]
+  0       0                       0                       1                
+  6  1280   # filter.state_b.X[2]
   0       1                       0                       0                
   6   257   # filter.from_dp
   0  2.310000000000000E+000       0                  100000                
@@ -2783,9 +3309,13 @@ double initialValue(1644,6)
   6  1280   # filter.sta0.p
   0  2.931500000000000E+002       1                   10000                
   6  1280   # filter.sta0.T
-  0  1.820000000000000E-005       0                  1.000000000000000E+100
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # filter.sta0.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # filter.sta0.X[2]
+  0  1.850000000000000E-005       0                  1.000000000000000E+100
   6  1280   # filter.eta_nominal
- -1 -5.027250000000000E+003       0                       0                
+ -1  2.515618900000000E+004       0                       0                
   1  1304   # filter.h0
   0       1                       0                       0                
   6  1280   # filter.conv
@@ -2805,10 +3335,14 @@ double initialValue(1644,6)
   6   260   # RHC.port_a.p
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # RHC.port_a.h_outflow
+  0       0                       0                       1                
+  6   260   # RHC.port_a.Xi_outflow[1]
   0       0                       0                  1.000000000000000E+008
   6   260   # RHC.port_b.p
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # RHC.port_b.h_outflow
+  0       0                       0                       1                
+  6   260   # RHC.port_b.Xi_outflow[1]
  -1       0                       0                       0                
   1  1305   # RHC.port_a_exposesState
  -1       0                       0                       0                
@@ -2829,12 +3363,22 @@ double initialValue(1644,6)
   6   256   # RHC.dp
   0     300                       1                   10000                
   6   256   # RHC.sta_a.T
+  0       0                       0                       1                
+  6   256   # RHC.sta_a.X[2]
   0     300                       1                   10000                
   6   256   # RHC.sta_b.T
+  0       0                       0                       1                
+  6   256   # RHC.sta_b.X[2]
   0     300                       1                   10000                
   6  1280   # RHC.state_a_inflow.T
+  0       0                       0                       1                
+  6  1280   # RHC.state_a_inflow.X[2]
   0     300                       1                   10000                
   6  1280   # RHC.state_b_inflow.T
+  0       0                       0                       1                
+  6  1280   # RHC.state_b_inflow.X[1]
+  0       0                       0                       1                
+  6  1280   # RHC.state_b_inflow.X[2]
   0       1                       0                       0                
   6   257   # RHC.computeFlowResistance
   0       1                       0                       0                
@@ -2847,6 +3391,8 @@ double initialValue(1644,6)
   1   280   # RHC.deltaM
   0       0                       0                       0                
   6   256   # RHC.Q_flow
+  0       0                 -100000                  100000                
+  6   256   # RHC.mXi_flow[1]
   0       0                       0                       0                
   6   256   # RHC.Q_flow_nominal
   0       0                       0                       0                
@@ -2855,14 +3401,20 @@ double initialValue(1644,6)
   6   388   # Tmix.port.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # Tmix.port.h_outflow
+  0       0                       0                       1                
+  6   260   # Tmix.port.Xi_outflow[1]
   0       0                       0                  100000                
   6   388   # Tsa.port.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # Tsa.port.h_outflow
+  0       0                       0                       1                
+  6   260   # Tsa.port.Xi_outflow[1]
   0       0                       0                  100000                
   6   388   # pressure.port.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # pressure.port.h_outflow
+  0       0                       0                       1                
+  6   260   # pressure.port.Xi_outflow[1]
  -1   20000                       0                       0                
   1   280   # Q_rhc_d
  -1      87                       0                       0                
@@ -3081,26 +3633,42 @@ double initialValue(1644,6)
   1   280   # room.vol.T_start
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   256   # room.vol.h_start
- -1       1                       0                       1                
+ -1  2.000000000000000E-003       0                       1                
   1   280   # room.vol.X_start[1]
-  0       0                       0                  1.000000000000000E+008
-  6   256   # room.vol.medium.p
+ -1  9.980000000000000E-001       0                       1                
+  1   280   # room.vol.X_start[2]
+ -1  100000                       0                  1.000000000000000E+008
+  2   272   # room.vol.medium.p
+  0       0                       0                       0                
+  3   256   # room.vol.medium.der(p)
+ -1       0                       0                       1                
+  2   272   # room.vol.medium.Xi[1]
+  0       0                       0                       0                
+  3   256   # room.vol.medium.der(Xi[1])
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   256   # room.vol.medium.h
+  0       0                       0                       0                
+  6   256   # room.vol.medium.der(h)
   0       1                       0                  100000                
   6   256   # room.vol.medium.d
-  0     300                       1                   10000                
-  6   256   # room.vol.medium.T
-  0       1                       0                       1                
-  6   256   # room.vol.medium.X[1]
+  0       0                       0                       0                
+  6   256   # room.vol.medium.der(d)
+ -1     300                       1                   10000                
+  2   272   # room.vol.medium.T
+  0       0                       0                       0                
+  3   256   # room.vol.medium.der(T)
+  0       0                       0                       1                
+  6   256   # room.vol.medium.X[2]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   256   # room.vol.medium.u
-  0  2.870512249529790E+002       0                  1.000000000000000E+006
-  6   256   # room.vol.medium.R
-  0  2.896511590000000E-002  1.000000000000000E-003  2.500000000000000E-001
-  6   256   # room.vol.medium.MM
   0       0                       0                       0                
-  6   257   # room.vol.medium.constantDensity
+  6   256   # room.vol.medium.der(u)
+  0    1000                       0                  1.000000000000000E+006
+  6   256   # room.vol.medium.R
+  0       0                       0                       0                
+  6   256   # room.vol.medium.der(R)
+  0  3.200000000000000E-002  1.000000000000000E-003  2.500000000000000E-001
+  6   256   # room.vol.medium.MM
   0       1                       0                       0                
   6   257   # room.vol.medium.preferredMediumStates
   0       1                       0                       0                
@@ -3109,14 +3677,54 @@ double initialValue(1644,6)
   6   256   # room.vol.medium.T_degC
   0       0                       0                       0                
   6   256   # room.vol.medium.p_bar
- -1       0                       0                       0                
-  2   272   # room.vol.U
+  0       0                       0                       1                
+  6   256   # room.vol.medium.x_water
   0       0                       0                       0                
-  3   256   # room.vol.der(U)
- -1       0                       0                  1.000000000000000E+100
-  2   272   # room.vol.m
+  6   256   # room.vol.medium.phi
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # room.vol.medium.MMX[1]
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # room.vol.medium.MMX[2]
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # _GlobalScope.room.vol.steam.MM
+  0  4.615233290850880E+002       0                       0                
+  6  1280   # _GlobalScope.room.vol.steam.R
+  0    1860                       0                       0                
+  6  1280   # _GlobalScope.room.vol.steam.cp
+  0  1.398476670914910E+003       0                       0                
+  6  1280   # _GlobalScope.room.vol.steam.cv
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # _GlobalScope.room.vol.dryair.MM
+  0  2.870512249529790E+002       0                       0                
+  6  1280   # _GlobalScope.room.vol.dryair.R
+  0    1006                       0                       0                
+  6  1280   # _GlobalScope.room.vol.dryair.cp
+  0  7.189487750470209E+002       0                       0                
+  6  1280   # _GlobalScope.room.vol.dryair.cv
+  0       0                       0                       1                
+  6  1280   # room.vol.medium.X_air
+  0       0                       0                       1                
+  6  1280   # room.vol.medium.X_sat
+  0       0                       0                       1                
+  6  1280   # room.vol.medium.x_sat
+  0  100000                       0                  1.000000000000000E+008
+  6  1280   # room.vol.medium.p_steam_sat
+  0  1.013250000000000E+005       0                  1.000000000000000E+008
+  6  1280   # room.vol.medium.pStp
+  0  1.200000000000000E+000       0                  100000                
+  6  1280   # room.vol.medium.dStp
   0       0                       0                       0                
-  3   256   # room.vol.der(m)
+  6   256   # room.vol.U
+  0       0                       0                       0                
+  6   256   # room.vol.der(U)
+  0       0                       0                  1.000000000000000E+100
+  6   256   # room.vol.m
+  0       0                       0                       0                
+  6   256   # room.vol.der(m)
+  0       0                       0                  1.000000000000000E+100
+  6   256   # room.vol.mXi[1]
+  0       0                       0                       0                
+  6   256   # room.vol.der(mXi[1])
   0       0                       0                       0                
   6   256   # room.vol.Hb_flow
   0       0                       0                       0                
@@ -3135,6 +3743,10 @@ double initialValue(1644,6)
   6   256   # room.vol.ports_H_flow[1]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   256   # room.vol.ports_H_flow[2]
+  0       0                 -100000                  100000                
+  6   256   # room.vol.ports_mXi_flow[1, 1]
+  0       0                 -100000                  100000                
+  6   256   # room.vol.ports_mXi_flow[2, 1]
   0       1                       0                       0                
   6   257   # room.vol.use_HeatTransfer
   0       1                       0                       0                
@@ -3195,6 +3807,10 @@ double initialValue(1644,6)
   6  1280   # room.vol.sta0.p
   0     300                       1                   10000                
   6  1280   # room.vol.sta0.T
+  0       0                       0                       1                
+  6  1280   # room.vol.sta0.X[1]
+  0       0                       0                       1                
+  6  1280   # room.vol.sta0.X[2]
   0       0                       0                  1.000000000000000E+100
   6  1280   # room.vol.rho_nominal
   0       0                       0                       0                
@@ -3205,8 +3821,8 @@ double initialValue(1644,6)
   6   256   # room.theCon.G
   0       0                       0                       0                
   6   388   # room.temSen.port.Q_flow
-  0  2.731500000000000E+002       1                   10000                
-  6   320   # room.TAmb
+  0       0                       0                       1                
+  6   260   # room.ports[2].Xi_outflow[1]
   0       0                       0                       0                
   6   256   # room.Qsen.Q_flow
  -1  2.931500000000000E+002       0                  1.000000000000000E+100
@@ -3255,8 +3871,12 @@ double initialValue(1644,6)
   6   256   # T_ew_hc_d_C
   0       0                       0                       0                
   6   257   # Duct.allowFlowReversal
+  0       0                       0                       1                
+  6   260   # Duct.port_a.Xi_outflow[1]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # Duct.port_b.h_outflow
+  0       0                       0                       1                
+  6   260   # Duct.port_b.Xi_outflow[1]
   0       0                       0                       0                
   6  1281   # Duct.port_a_exposesState
   0       0                       0                       0                
@@ -3283,8 +3903,14 @@ double initialValue(1644,6)
   6   256   # Duct.port_b_T
   0     300                       1                   10000                
   6  1280   # Duct.state_a.T
+  0       0                       0                       1                
+  6  1280   # Duct.state_a.X[1]
+  0       0                       0                       1                
+  6  1280   # Duct.state_a.X[2]
   0     300                       1                   10000                
   6  1280   # Duct.state_b.T
+  0       0                       0                       1                
+  6  1280   # Duct.state_b.X[2]
   0       1                       0                       0                
   6   257   # Duct.from_dp
   0  2.310000000000000E+000       0                  100000                
@@ -3301,9 +3927,13 @@ double initialValue(1644,6)
   6  1280   # Duct.sta0.p
   0  2.931500000000000E+002       1                   10000                
   6  1280   # Duct.sta0.T
-  0  1.820000000000000E-005       0                  1.000000000000000E+100
+  0  2.000000000000000E-003       0                       1                
+  6  1280   # Duct.sta0.X[1]
+  0  9.980000000000000E-001       0                       1                
+  6  1280   # Duct.sta0.X[2]
+  0  1.850000000000000E-005       0                  1.000000000000000E+100
   6  1280   # Duct.eta_nominal
- -1 -5.027250000000000E+003       0                       0                
+ -1  2.515618900000000E+004       0                       0                
   1  1304   # Duct.h0
   0       1                       0                       0                
   6  1280   # Duct.conv
@@ -3323,14 +3953,14 @@ double initialValue(1644,6)
   6   257   # HC.allowFlowReversal1
   0       1                       0                       0                
   6   257   # HC.allowFlowReversal2
-  0       0                       0                  1.000000000000000E+008
-  6   260   # HC.port_a1.p
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # HC.port_a1.h_outflow
-  0       0                       0                  1.000000000000000E+008
-  6   260   # HC.port_b1.p
+  0       0                       0                       1                
+  6   260   # HC.port_a1.Xi_outflow[1]
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # HC.port_b1.h_outflow
+  0       0                       0                       1                
+  6   260   # HC.port_b1.Xi_outflow[1]
   0       0                       0                  1.000000000000000E+008
   6   260   # HC.port_a2.p
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
@@ -3369,10 +3999,20 @@ double initialValue(1644,6)
   6   256   # HC.dp1
   0       0                       0                       0                
   6   256   # HC.dp2
+  0       0                       0                  1.000000000000000E+008
+  6   256   # HC.sta_a1.p
   0     300                       1                   10000                
   6   256   # HC.sta_a1.T
+  0       0                       0                       1                
+  6   256   # HC.sta_a1.X[1]
+  0       0                       0                       1                
+  6   256   # HC.sta_a1.X[2]
   0     300                       1                   10000                
   6   256   # HC.sta_b1.T
+  0       0                       0                       1                
+  6   256   # HC.sta_b1.X[1]
+  0       0                       0                       1                
+  6   256   # HC.sta_b1.X[2]
   0     300                       1                   10000                
   6   256   # HC.sta_a2.T
   0  100000                       0                  1.000000000000000E+008
@@ -3381,8 +4021,16 @@ double initialValue(1644,6)
   6   256   # HC.sta_b2.T
   0     300                       1                   10000                
   6  1280   # HC.state_a1_inflow.T
+  0       0                       0                       1                
+  6  1280   # HC.state_a1_inflow.X[1]
+  0       0                       0                       1                
+  6  1280   # HC.state_a1_inflow.X[2]
   0     300                       1                   10000                
-  6  1312   # HC.state_b1_inflow.T
+  6  1280   # HC.state_b1_inflow.T
+  0       0                       0                       1                
+  6  1280   # HC.state_b1_inflow.X[1]
+  0       0                       0                       1                
+  6  1280   # HC.state_b1_inflow.X[2]
   0  3.553500000000000E+002       1                   10000                
   6  1280   # HC.state_a2_inflow.T
   0  100000                       0                  1.000000000000000E+008
@@ -3411,6 +4059,8 @@ double initialValue(1644,6)
   1   280   # HC.deltaM2
   0       0                       0                       0                
   6   256   # HC.Q1_flow
+  0       0                 -100000                  100000                
+  6   256   # HC.mXi1_flow[1]
   0       0                       0                       1                
   6   256   # HC.eps
   0       0                       0                  1.000000000000000E+100
@@ -3435,8 +4085,14 @@ double initialValue(1644,6)
   6   257   # CC.allowFlowReversal2
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # CC.port_a1.h_outflow
+  0       0                       0                       1                
+  6   260   # CC.port_a1.Xi_outflow[1]
+  0       0                       0                  1.000000000000000E+008
+  6   260   # CC.port_b1.p
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   292   # CC.port_b1.h_outflow
+  0       0                       0                       1                
+  6   260   # CC.port_b1.Xi_outflow[1]
   0       0                       0                  1.000000000000000E+008
   6   260   # CC.port_a2.p
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
@@ -3475,10 +4131,20 @@ double initialValue(1644,6)
   6   256   # CC.dp1
   0       0                       0                       0                
   6   256   # CC.dp2
+  0       0                       0                  1.000000000000000E+008
+  6   256   # CC.sta_a1.p
   0     300                       1                   10000                
   6   256   # CC.sta_a1.T
+  0       0                       0                       1                
+  6   256   # CC.sta_a1.X[1]
+  0       0                       0                       1                
+  6   256   # CC.sta_a1.X[2]
   0     300                       1                   10000                
   6   256   # CC.sta_b1.T
+  0       0                       0                       1                
+  6   256   # CC.sta_b1.X[1]
+  0       0                       0                       1                
+  6   256   # CC.sta_b1.X[2]
   0     300                       1                   10000                
   6   256   # CC.sta_a2.T
   0  100000                       0                  1.000000000000000E+008
@@ -3486,9 +4152,17 @@ double initialValue(1644,6)
   0     300                       1                   10000                
   6   256   # CC.sta_b2.T
   0     300                       1                   10000                
-  6  1312   # CC.state_a1_inflow.T
+  6  1280   # CC.state_a1_inflow.T
+  0       0                       0                       1                
+  6  1280   # CC.state_a1_inflow.X[1]
+  0       0                       0                       1                
+  6  1280   # CC.state_a1_inflow.X[2]
   0     300                       1                   10000                
   6  1280   # CC.state_b1_inflow.T
+  0       0                       0                       1                
+  6  1280   # CC.state_b1_inflow.X[1]
+  0       0                       0                       1                
+  6  1280   # CC.state_b1_inflow.X[2]
   0     300                       1                   10000                
   6  1280   # CC.state_a2_inflow.T
   0  100000                       0                  1.000000000000000E+008
@@ -3517,6 +4191,8 @@ double initialValue(1644,6)
   1   280   # CC.deltaM2
   0       0                       0                       0                
   6   256   # CC.Q1_flow
+  0       0                 -100000                  100000                
+  6   256   # CC.mXi1_flow[1]
   0       0                       0                       1                
   6   256   # CC.eps
   0       0                       0                  1.000000000000000E+100
@@ -3551,7 +4227,9 @@ double initialValue(1644,6)
   6   388   # Tsa_h.port.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # Tsa_h.port.h_outflow
- -1       1                  1.000000000000000E-013  1.000000000000000E+100
+  0       0                       0                       1                
+  6   260   # Tsa_h.port.Xi_outflow[1]
+ -1      60                  1.000000000000000E-013  1.000000000000000E+100
   1   280   # cliBCVTB.samplePeriod
  -1       0                       0                       0                
   1   280   # cliBCVTB.startTime
@@ -3559,7 +4237,7 @@ double initialValue(1644,6)
   6  1345   # cliBCVTB.sampleTrigger
   0       0                       0                       0                
   6  1353   # cliBCVTB.firstTrigger
-  0      33                       0                  1.000000000000000E+100
+  0      32                       0                  1.000000000000000E+100
   6   258   # cliBCVTB.nDblWri
   0      21                       0                  1.000000000000000E+100
   6   258   # cliBCVTB.nDblRea
@@ -3627,25 +4305,23 @@ double initialValue(1644,6)
   1   282   # cliBCVTB.flaDblWri[31]
  -1       0                       0                       0                
   1   282   # cliBCVTB.flaDblWri[32]
- -1       0                       0                       0                
-  1   282   # cliBCVTB.flaDblWri[33]
- -1  2.931500000000000E+002       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[1]
  -1       0                       0                       0                
   1   280   # cliBCVTB.uStart[2]
  -1     100                       0                       0                
   1   280   # cliBCVTB.uStart[3]
- -1  2.931500000000000E+002       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[4]
- -1  2.931500000000000E+002       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[5]
- -1  3.551500000000000E+002       0                       0                
+ -1      82                       0                       0                
   1   280   # cliBCVTB.uStart[6]
- -1  2.931500000000000E+002       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[7]
- -1  2.931500000000000E+002       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[8]
- -1  2.803500000000000E+002       0                       0                
+ -1  7.200000000000000E+000       0                       0                
   1   280   # cliBCVTB.uStart[9]
  -1       0                       0                       0                
   1   280   # cliBCVTB.uStart[10]
@@ -3661,7 +4337,7 @@ double initialValue(1644,6)
   1   280   # cliBCVTB.uStart[15]
  -1       0                       0                       0                
   1   280   # cliBCVTB.uStart[16]
- -1  2.931500000000000E+002       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[17]
  -1       0                       0                       0                
   1   280   # cliBCVTB.uStart[18]
@@ -3673,7 +4349,7 @@ double initialValue(1644,6)
   1   280   # cliBCVTB.uStart[21]
  -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[22]
- -1       0                       0                       0                
+ -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[23]
  -1  8.000000000000000E-001       0                       0                
   1   280   # cliBCVTB.uStart[24]
@@ -3693,8 +4369,6 @@ double initialValue(1644,6)
   1   280   # cliBCVTB.uStart[31]
  -1      20                       0                       0                
   1   280   # cliBCVTB.uStart[32]
- -1      20                       0                       0                
-  1   280   # cliBCVTB.uStart[33]
   0       1                       0                       0                
   6   257   # cliBCVTB.activateInterface
   0       0                       0                       0                
@@ -3803,8 +4477,6 @@ double initialValue(1644,6)
   6   256   # cliBCVTB.uR[31]
   0       0                 -100000                  100000                
   6   256   # cliBCVTB.uR[32]
-  0       0                 -100000                  100000                
-  6   256   # cliBCVTB.uR[33]
   0       0                       0                       0                
   6   320   # cliBCVTB.yR[1]
   0       0                       0                       0                
@@ -3919,8 +4591,6 @@ double initialValue(1644,6)
   6  1280   # cliBCVTB._uStart[31]
   0       0                       0                       0                
   6  1280   # cliBCVTB._uStart[32]
-  0       0                       0                       0                
-  6  1280   # cliBCVTB._uStart[33]
   0       0                       0                       0                
   6  1282   # cliBCVTB.flaWri
  -1       0                       0                       0                
@@ -4051,10 +4721,6 @@ double initialValue(1644,6)
   2  1296   # cliBCVTB.uRInt[32]
   0       0                       0                       0                
   3  1280   # cliBCVTB.der(uRInt[32])
- -1       0                       0                       0                
-  2  1296   # cliBCVTB.uRInt[33]
-  0       0                       0                       0                
-  3  1280   # cliBCVTB.der(uRInt[33])
   0       0                       0                       0                
   6  1344   # cliBCVTB.uRIntPre[1]
   0       0                       0                       0                
@@ -4120,8 +4786,6 @@ double initialValue(1644,6)
   0       0                       0                       0                
   6  1344   # cliBCVTB.uRIntPre[32]
   0       0                       0                       0                
-  6  1344   # cliBCVTB.uRIntPre[33]
-  0       0                       0                       0                
   6   320   # cliBCVTB.uRWri[1]
   0       0                       0                       0                
   6   320   # cliBCVTB.uRWri[2]
@@ -4185,8 +4849,6 @@ double initialValue(1644,6)
   6   320   # cliBCVTB.uRWri[31]
   0       0                       0                       0                
   6   320   # cliBCVTB.uRWri[32]
-  0       0                       0                       0                
-  6   320   # cliBCVTB.uRWri[33]
   0       1                       0                       0                
   6   258   # OutVar.n1
   0       1                       0                       0                
@@ -4595,7 +5257,7 @@ double initialValue(1644,6)
   6   256   # HVC.division.u1
   0       0                       0                       0                
   6   256   # HVC.division1.y
- -1  2.831500000000000E+002       0                       0                
+ -1  2.531500000000000E+002       0                       0                
   1   280   # lessEqualThreshold.threshold
   0       0                       0                       0                
   6   321   # lessEqualThreshold.y
@@ -4747,16 +5409,18 @@ double initialValue(1644,6)
   6   258   # InVar.n31
   0       1                       0                       0                
   6   258   # InVar.n32
-  0       1                       0                       0                
-  6   258   # InVar.n33
   0       0                       0                  100000                
   6   388   # fildp.port_a.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # fildp.port_a.h_outflow
+  0       0                       0                       1                
+  6   260   # fildp.port_a.Xi_outflow[1]
   0       0                       0                  100000                
   6   388   # fildp.port_b.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # fildp.port_b.h_outflow
+  0       0                       0                       1                
+  6   260   # fildp.port_b.Xi_outflow[1]
   0       0                       0                  100000                
   6   388   # Thwr.port.m_flow
   0  100000                       0                  1.000000000000000E+008
@@ -4773,10 +5437,14 @@ double initialValue(1644,6)
   6   388   # Tsadf.port.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # Tsadf.port.h_outflow
+  0       0                       0                       1                
+  6   260   # Tsadf.port.Xi_outflow[1]
   0       0                       0                  100000                
   6   388   # Tsa_cc.port.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # Tsa_cc.port.h_outflow
+  0       0                       0                       1                
+  6   260   # Tsa_cc.port.Xi_outflow[1]
   0       0                       0                  1.000000000000000E+100
   6   256   # add2.u1
  -1       1                       0                       0                
@@ -4867,8 +5535,210 @@ double initialValue(1644,6)
   1   280   # add12.k1
  -1       1                       0                       0                
   1   280   # add12.k2
- -1     999                       0                       0                
-  1   280   # SysNull.k
+  0       1                       1                       4                
+  6   258   # delayFirstOrder.energyDynamics
+  0       1                       1                       4                
+  6   258   # delayFirstOrder.massDynamics
+  0       1                       1                       4                
+  6   258   # delayFirstOrder.substanceDynamics
+  0       1                       1                       4                
+  6   258   # delayFirstOrder.traceDynamics
+  0  100000                       0                  1.000000000000000E+008
+  6   256   # delayFirstOrder.p_start
+  0       1                       0                       0                
+  6   257   # delayFirstOrder.use_T_start
+  0     300                       1                   10000                
+  6   288   # delayFirstOrder.T_start
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   256   # delayFirstOrder.h_start
+ -1  2.000000000000000E-003       0                       1                
+  1   280   # delayFirstOrder.X_start[1]
+ -1  9.980000000000000E-001       0                       1                
+  1   280   # delayFirstOrder.X_start[2]
+ -1       0                       0                  1.000000000000000E+008
+  2   272   # delayFirstOrder.medium.p
+  0       0                       0                       0                
+  3   256   # delayFirstOrder.medium.der(p)
+ -1       0                       0                       1                
+  2   272   # delayFirstOrder.medium.Xi[1]
+  0       0                       0                       0                
+  3   256   # delayFirstOrder.medium.der(Xi[1])
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   256   # delayFirstOrder.medium.h
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.medium.der(h)
+  0       1                       0                  100000                
+  6   256   # delayFirstOrder.medium.d
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.medium.der(d)
+ -1     300                       1                   10000                
+  2   272   # delayFirstOrder.medium.T
+  0       0                       0                       0                
+  3   256   # delayFirstOrder.medium.der(T)
+  0       0                       0                       1                
+  6   256   # delayFirstOrder.medium.X[2]
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   256   # delayFirstOrder.medium.u
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.medium.der(u)
+  0    1000                       0                  1.000000000000000E+006
+  6   256   # delayFirstOrder.medium.R
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.medium.der(R)
+  0  3.200000000000000E-002  1.000000000000000E-003  2.500000000000000E-001
+  6   256   # delayFirstOrder.medium.MM
+  0       1                       0                       0                
+  6   257   # delayFirstOrder.medium.preferredMediumStates
+  0       1                       0                       0                
+  6   257   # delayFirstOrder.medium.standardOrderComponents
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.medium.T_degC
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.medium.p_bar
+  0       0                       0                       1                
+  6   256   # delayFirstOrder.medium.x_water
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.medium.phi
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # delayFirstOrder.medium.MMX[1]
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # delayFirstOrder.medium.MMX[2]
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # _GlobalScope.delayFirstOrder.steam.MM
+  0  4.615233290850880E+002       0                       0                
+  6  1280   # _GlobalScope.delayFirstOrder.steam.R
+  0    1860                       0                       0                
+  6  1280   # _GlobalScope.delayFirstOrder.steam.cp
+  0  1.398476670914910E+003       0                       0                
+  6  1280   # _GlobalScope.delayFirstOrder.steam.cv
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # _GlobalScope.delayFirstOrder.dryair.MM
+  0  2.870512249529790E+002       0                       0                
+  6  1280   # _GlobalScope.delayFirstOrder.dryair.R
+  0    1006                       0                       0                
+  6  1280   # _GlobalScope.delayFirstOrder.dryair.cp
+  0  7.189487750470209E+002       0                       0                
+  6  1280   # _GlobalScope.delayFirstOrder.dryair.cv
+  0       0                       0                       1                
+  6  1280   # delayFirstOrder.medium.X_air
+  0       0                       0                       1                
+  6  1280   # delayFirstOrder.medium.X_sat
+  0       0                       0                       1                
+  6  1280   # delayFirstOrder.medium.x_sat
+  0  100000                       0                  1.000000000000000E+008
+  6  1280   # delayFirstOrder.medium.p_steam_sat
+  0  1.013250000000000E+005       0                  1.000000000000000E+008
+  6  1280   # delayFirstOrder.medium.pStp
+  0  1.200000000000000E+000       0                  100000                
+  6  1280   # delayFirstOrder.medium.dStp
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.U
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.der(U)
+  0       0                       0                  1.000000000000000E+100
+  6   256   # delayFirstOrder.m
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.der(m)
+  0       0                       0                  1.000000000000000E+100
+  6   256   # delayFirstOrder.mXi[1]
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.der(mXi[1])
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.Qb_flow
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.Wb_flow
+ -1       1                       0                       0                
+  1  1305   # delayFirstOrder.initialize_p
+  0       2                       0                       0                
+  6   258   # delayFirstOrder.nPorts
+  0       0                       0                       0                
+  6   257   # delayFirstOrder.use_portsData
+  0       0                       0                  1.000000000000000E+100
+  6   256   # delayFirstOrder.m_flow_small
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   256   # delayFirstOrder.ports_H_flow[1]
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   256   # delayFirstOrder.ports_H_flow[2]
+  0       0                 -100000                  100000                
+  6   256   # delayFirstOrder.ports_mXi_flow[1, 1]
+  0       0                 -100000                  100000                
+  6   256   # delayFirstOrder.ports_mXi_flow[2, 1]
+  0       0                       0                       0                
+  6   257   # delayFirstOrder.use_HeatTransfer
+  0       1                       0                       0                
+  6   258   # delayFirstOrder.heatTransfer.n
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.heatTransfer.surfaceAreas[1]
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.heatTransfer.Q_flows[1]
+  0       0                       0                       0                
+  6   257   # delayFirstOrder.heatTransfer.use_k
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.heatTransfer.k
+  0       0                       0                  1.000000000000000E+100
+  6   256   # delayFirstOrder.heatTransfer.T_ambient
+  0       0                       0                       0                
+  6   388   # delayFirstOrder.heatTransfer.heatPorts[1].Q_flow
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.portVelocities[1]
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.portVelocities[2]
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.ports_E_flow[1]
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.ports_E_flow[2]
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.s[1]
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.s[2]
+  0       1                       0                       0                
+  6   256   # delayFirstOrder.ports_penetration[1]
+  0       1                       0                       0                
+  6   256   # delayFirstOrder.ports_penetration[2]
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.portAreas[1]
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.portAreas[2]
+  0       0                       0                  1.000000000000000E+100
+  6  1280   # delayFirstOrder.fluidLevel
+  0       1                       0                  1.000000000000000E+100
+  6  1280   # delayFirstOrder.fluidLevel_max
+  0       0                       0                       0                
+  6  1280   # delayFirstOrder.vesselArea
+  0       0                       0                       0                
+  6  1280   # delayFirstOrder.portsData_diameter[1]
+  0       0                       0                       0                
+  6  1280   # delayFirstOrder.portsData_diameter[2]
+  0       0                       0                       0                
+  6  1280   # delayFirstOrder.portsData_height[1]
+  0       0                       0                       0                
+  6  1280   # delayFirstOrder.portsData_height[2]
+  0       0                       0                       0                
+  6  1280   # delayFirstOrder.portsData_zeta_in[1]
+  0       0                       0                       0                
+  6  1280   # delayFirstOrder.portsData_zeta_in[2]
+  0       0                       0                       0                
+  6  1280   # delayFirstOrder.portsData_zeta_out[1]
+  0       0                       0                       0                
+  6  1280   # delayFirstOrder.portsData_zeta_out[2]
+  0       0                       0                       0                
+  6   256   # delayFirstOrder.V
+  0  100000                       0                  1.000000000000000E+008
+  6  1280   # delayFirstOrder.sta0.p
+  0     300                       1                   10000                
+  6  1280   # delayFirstOrder.sta0.T
+  0       0                       0                       1                
+  6  1280   # delayFirstOrder.sta0.X[1]
+  0       0                       0                       1                
+  6  1280   # delayFirstOrder.sta0.X[2]
+  0       0                       0                  1.000000000000000E+100
+  6  1280   # delayFirstOrder.rho_nominal
+ -1      60                       0                       0                
+  1   280   # delayFirstOrder.tau
+  0  2.310000000000000E+000       0                  1.000000000000000E+100
+  6   256   # delayFirstOrder.m_flow_nominal
+  0       0                       0                       0                
+  6  1280   # delayFirstOrder.V0
   0       0                       0                       0                
   6   256   # CVC.I.k
   0       3                       1                       4                
@@ -5087,7 +5957,7 @@ double initialValue(1644,6)
 #   nominal value (and maybe minimum and maximum values given in 
 #   column 3 and 4). If these values are zero, scale(i)=1 is used).
 #
-char initialDescription(1644,123)
+char initialDescription(1934,123)
 Default ambient pressure [Pa|bar]
 Default ambient temperature [K|degC]
 Constant gravity acceleration [m/s2]
@@ -5106,7 +5976,9 @@ Room volume [m3]
 UA value of room [W/K]
 Fixed heat flow rate at port [W]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
 = false to hide the arrow in the model icon
@@ -5121,7 +5993,10 @@ Volume flow rate at inflowing port (positive when flow from port_a to port_b) [m
 Temperature close to port_a, if show_T = true [K|degC]
 Temperature close to port_b, if show_T = true [K|degC]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 = true, use m_flow = f(dp) else dp = f(m_flow)
 Nominal mass flow rate [kg/s]
 Pressure [Pa|Pa]
@@ -5130,6 +6005,8 @@ Flow coefficient, k=m_flow/sqrt(dp), with unit=(kg.m)^(1/2)
 Turbulent flow if |m_flow| >= m_flow_turbulent, not a parameter because k can be a function of time [kg/s]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Dynamic viscosity, used to compute transition to turbulent flow regime [Pa.s]
 Initial value for solver for specific enthalpy [J/kg]
 Factor, needed to satisfy unit check [m.s2/kg]
@@ -5166,7 +6043,6 @@ Resistance coefficient for fixed resistance element [kg.m]
 [J/(kg.K)]
 [J/(kg.K)]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
-Thermodynamic pressure in the connection point [Pa|bar]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
 = false to hide the arrow in the model icon
@@ -5189,7 +6065,9 @@ Start value of pressure [Pa|bar]
 Start value of temperature [K|degC]
 Start value of specific enthalpy [J/kg]
 Start value of mass fractions m_i/m [kg/kg]
+Start value of mass fractions m_i/m [kg/kg]
 Absolute pressure of medium [Pa|bar]
+Structurally independent mass fractions [1]
 Specific enthalpy of medium [J/kg]
 Density of medium [kg/m3|g/cm3]
 Temperature of medium [K|degC]
@@ -5197,14 +6075,41 @@ Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Specific internal energy of medium [J/kg]
 Gas constant (of mixture if applicable) [J/(kg.K)]
 Molar mass (of mixture or single fluid) [kg/mol]
-= true if the mass density should be constant at dStp
 = true if StateSelect.prefer shall be used for the independent property variables of the medium
 if true, and reducedX = true, the last element of X will be computed from the other ones
 Temperature of medium in [degC] [degC;]
 Absolute pressure of medium in [bar] [bar]
+Mass of total water/mass of dry air [kg/kg]
+Relative humidity
+Molar masses of components [kg/mol]
+Molar masses of components [kg/mol]
+Molar mass [kg/mol]
+Gas constant [J/(kg.K)]
+Specific heat capacity at constant pressure [J/(kg.K)]
+Specific heat capacity at constant volume [J/(kg.K)]
+Molar mass [kg/mol]
+Gas constant [J/(kg.K)]
+Specific heat capacity at constant pressure [J/(kg.K)]
+Specific heat capacity at constant volume [J/(kg.K)]
+Molar mass [kg/mol]
+Gas constant [J/(kg.K)]
+Specific heat capacity at constant pressure [J/(kg.K)]
+Specific heat capacity at constant volume [J/(kg.K)]
+Molar mass [kg/mol]
+Gas constant [J/(kg.K)]
+Specific heat capacity at constant pressure [J/(kg.K)]
+Specific heat capacity at constant volume [J/(kg.K)]
+Mass fraction of air [kg/kg]
+Steam water mass fraction of saturation boundary in kg_water/kg_moistair [kg/kg]
+Steam water mass content of saturation boundary in kg_water/kg_dryair [kg/kg]
+Partial saturation pressure of steam [Pa|bar]
+Pressure for which dStp is defined [Pa|bar]
+Fluid density at pressure pStp [kg/m3|g/cm3]
 Internal energy of fluid [J]
 Mass of fluid [kg]
+Masses of independent components in the fluid [kg]
 Mass flows across boundaries [kg/s]
+Substance mass flows across boundaries [kg/s]
 Heat flow across boundaries or energy source/sink [W]
 = true to set up initial equations for pressure
 = true to use a HeatTransfer model, e.g. for a housing
@@ -5254,7 +6159,9 @@ Needed to connect to conditional connector [1]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
 = false to hide the arrow in the model icon
@@ -5269,7 +6176,11 @@ Temperature close to port_a, if show_T = true [K|degC]
 Temperature close to port_b, if show_T = true [K|degC]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 = true, use m_flow = f(dp) else dp = f(m_flow)
 Nominal mass flow rate [kg/s]
 Pressure [Pa|Pa]
@@ -5278,6 +6189,8 @@ Flow coefficient, k=m_flow/sqrt(dp), with unit=(kg.m)^(1/2)
 Turbulent flow if |m_flow| >= m_flow_turbulent, not a parameter because k can be a function of time [kg/s]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Dynamic viscosity, used to compute transition to turbulent flow regime [Pa.s]
 Initial value for solver for specific enthalpy [J/kg]
 Factor, needed to satisfy unit check [m.s2/kg]
@@ -5314,7 +6227,9 @@ Face area minimum outside air damper [m2]
 Face area outside air damper [m2]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
 = false to hide the arrow in the model icon
@@ -5328,7 +6243,11 @@ Volume flow rate at inflowing port (positive when flow from port_a to port_b) [m
 Temperature close to port_a, if show_T = true [K|degC]
 Temperature close to port_b, if show_T = true [K|degC]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 = true, use m_flow = f(dp) else dp = f(m_flow)
 Nominal mass flow rate [kg/s]
 Pressure [Pa|Pa]
@@ -5337,6 +6256,8 @@ Flow coefficient, k=m_flow/sqrt(dp), with unit=(kg.m)^(1/2)
 Turbulent flow if |m_flow| >= m_flow_turbulent, not a parameter because k can be a function of time [kg/s]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Dynamic viscosity, used to compute transition to turbulent flow regime [Pa.s]
 Initial value for solver for specific enthalpy [J/kg]
 Factor, needed to satisfy unit check [m.s2/kg]
@@ -5372,7 +6293,9 @@ Flow coefficient for damper, k=m_flow/sqrt(dp), with unit=(kg*m)^(1/2)
 Flow coefficient, kTheta = pressure drop divided by dynamic pressure
 Face area exhaust air damper [m2]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
 = false to hide the arrow in the model icon
@@ -5388,7 +6311,10 @@ Temperature close to port_a, if show_T = true [K|degC]
 Temperature close to port_b, if show_T = true [K|degC]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 = true, use m_flow = f(dp) else dp = f(m_flow)
 Nominal mass flow rate [kg/s]
 Pressure [Pa|Pa]
@@ -5397,6 +6323,8 @@ Flow coefficient, k=m_flow/sqrt(dp), with unit=(kg.m)^(1/2)
 Turbulent flow if |m_flow| >= m_flow_turbulent, not a parameter because k can be a function of time [kg/s]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Dynamic viscosity, used to compute transition to turbulent flow regime [Pa.s]
 Initial value for solver for specific enthalpy [J/kg]
 Factor, needed to satisfy unit check [m.s2/kg]
@@ -5441,6 +6369,8 @@ Mass flow rate exhaust air damper [kg/s]
 Pressure drop exhaust air leg (without damper) [Pa|Pa]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
 Thermodynamic pressure in the connection point [Pa|bar]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
 = false to hide the arrow in the model icon
@@ -5455,7 +6385,10 @@ Temperature close to port_a, if show_T = true [K|degC]
 Temperature close to port_b, if show_T = true [K|degC]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 = true, use m_flow = f(dp) else dp = f(m_flow)
 Nominal mass flow rate [kg/s]
 Pressure [Pa|Pa]
@@ -5464,6 +6397,8 @@ Flow coefficient, k=m_flow/sqrt(dp), with unit=(kg.m)^(1/2)
 Turbulent flow if |m_flow| >= m_flow_turbulent, not a parameter because k can be a function of time [kg/s]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Dynamic viscosity, used to compute transition to turbulent flow regime [Pa.s]
 Initial value for solver for specific enthalpy [J/kg]
 Factor, needed to satisfy unit check [m.s2/kg]
@@ -5473,7 +6408,9 @@ Hydraulic diameter [m]
 Reynolds number where transition to turbulent starts
 Fraction of nominal mass flow rate where transition to turbulent occurs [1]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Thermodynamic pressure in the connection point [Pa|bar]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
 = false to hide the arrow in the model icon
@@ -5488,8 +6425,11 @@ Temperature close to port_a, if show_T = true [K|degC]
 Temperature close to port_b, if show_T = true [K|degC]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 = true, use m_flow = f(dp) else dp = f(m_flow)
 Nominal mass flow rate [kg/s]
 Pressure [Pa|Pa]
@@ -5498,6 +6438,8 @@ Flow coefficient, k=m_flow/sqrt(dp), with unit=(kg.m)^(1/2)
 Turbulent flow if |m_flow| >= m_flow_turbulent, not a parameter because k can be a function of time [kg/s]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Dynamic viscosity, used to compute transition to turbulent flow regime [Pa.s]
 Initial value for solver for specific enthalpy [J/kg]
 Factor, needed to satisfy unit check [m.s2/kg]
@@ -5508,6 +6450,8 @@ Reynolds number where transition to turbulent starts
 Fraction of nominal mass flow rate where transition to turbulent occurs [1]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
 = false to hide the arrow in the model icon
@@ -5521,7 +6465,11 @@ Volume flow rate at inflowing port (positive when flow from port_a to port_b) [m
 Temperature close to port_a, if show_T = true [K|degC]
 Temperature close to port_b, if show_T = true [K|degC]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 = true, use m_flow = f(dp) else dp = f(m_flow)
 Nominal mass flow rate [kg/s]
 Pressure [Pa|Pa]
@@ -5530,6 +6478,8 @@ Flow coefficient, k=m_flow/sqrt(dp), with unit=(kg.m)^(1/2)
 Turbulent flow if |m_flow| >= m_flow_turbulent, not a parameter because k can be a function of time [kg/s]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Dynamic viscosity, used to compute transition to turbulent flow regime [Pa.s]
 Initial value for solver for specific enthalpy [J/kg]
 Factor, needed to satisfy unit check [m.s2/kg]
@@ -5543,32 +6493,63 @@ Thermodynamic pressure in the connection point [Pa|bar]
 Mass flow rate from the connection point into the component [kg/s]
 Thermodynamic pressure in the connection point [Pa|bar]
 Mass flow rate from the connection point into the component [kg/s]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Constant output value
 Gain of upper input
 Gain of lower input
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Number of ports
 Absolute pressure of medium [Pa|bar]
+Structurally independent mass fractions [1]
 Specific enthalpy of medium [J/kg]
 Density of medium [kg/m3|g/cm3]
+Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Specific internal energy of medium [J/kg]
 Gas constant (of mixture if applicable) [J/(kg.K)]
 Molar mass (of mixture or single fluid) [kg/mol]
 Absolute pressure of medium [Pa|bar]
-= true if the mass density should be constant at dStp
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 = true if StateSelect.prefer shall be used for the independent property variables of the medium
 if true, and reducedX = true, the last element of X will be computed from the other ones
 Temperature of medium in [degC] [degC;]
 Absolute pressure of medium in [bar] [bar]
+Mass of total water/mass of dry air [kg/kg]
+Relative humidity
+Molar masses of components [kg/mol]
+Molar masses of components [kg/mol]
+Molar mass [kg/mol]
+Gas constant [J/(kg.K)]
+Specific heat capacity at constant pressure [J/(kg.K)]
+Specific heat capacity at constant volume [J/(kg.K)]
+Molar mass [kg/mol]
+Gas constant [J/(kg.K)]
+Specific heat capacity at constant pressure [J/(kg.K)]
+Specific heat capacity at constant volume [J/(kg.K)]
+Mass fraction of steam water [kg/kg]
+Mass fraction of air [kg/kg]
+Steam water mass fraction of saturation boundary in kg_water/kg_moistair [kg/kg]
+Steam water mass content of saturation boundary in kg_water/kg_dryair [kg/kg]
+Partial saturation pressure of steam [Pa|bar]
+Pressure for which dStp is defined [Pa|bar]
+Fluid density at pressure pStp [kg/m3|g/cm3]
 Mass flow rate from the connection point into the component [kg/s]
 Thermodynamic pressure in the connection point [Pa|bar]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Thermodynamic pressure in the connection point [Pa|bar]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Thermodynamic pressure in the connection point [Pa|bar]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Allowed flow direction
 Get the pressure from the input connector
 Get the temperature from the input connector
@@ -5577,11 +6558,15 @@ Get the trace substances from the input connector
 Fixed value of pressure [Pa|bar]
 Fixed value of temperature [K|degC]
 Fixed value of composition [kg/kg]
+Fixed value of composition [kg/kg]
 Needed to connect to conditional connector [Pa]
+Needed to connect to conditional connector [1]
 Needed to connect to conditional connector [1]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
 = false to hide the arrow in the model icon
@@ -5594,9 +6579,12 @@ Pressure difference between port_a and port_b (= port_a.p - port_b.p) [Pa|Pa]
 Volume flow rate at inflowing port (positive when flow from port_a to port_b) [m3/s]
 Temperature close to port_a, if show_T = true [K|degC]
 Temperature close to port_b, if show_T = true [K|degC]
-Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 = true, use m_flow = f(dp) else dp = f(m_flow)
 Nominal mass flow rate [kg/s]
 Pressure [Pa|Pa]
@@ -5605,6 +6593,8 @@ Flow coefficient, k=m_flow/sqrt(dp), with unit=(kg.m)^(1/2)
 Turbulent flow if |m_flow| >= m_flow_turbulent, not a parameter because k can be a function of time [kg/s]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Dynamic viscosity, used to compute transition to turbulent flow regime [Pa.s]
 Initial value for solver for specific enthalpy [J/kg]
 Factor, needed to satisfy unit check [m.s2/kg]
@@ -5616,8 +6606,10 @@ Fraction of nominal mass flow rate where transition to turbulent occurs [1]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
 Thermodynamic pressure in the connection point [Pa|bar]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Thermodynamic pressure in the connection point [Pa|bar]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
 = false to hide the arrow in the model icon
@@ -5628,23 +6620,32 @@ Guess value for outlet pressure [Pa|bar]
 = true, if volume flow rate at inflowing port is computed
 Pressure difference between port_a and port_b [Pa|Pa]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 =true, compute flow resistance. Set to false to assume no friction
 = true, use m_flow = f(dp) else dp = f(m_flow)
 Pressure [Pa|Pa]
 = true, use linear relation between m_flow and dp for any flow rate
 Fraction of nominal flow rate where flow transitions to laminar [1]
 Heat transfered into the medium [W]
+Mass flow rates of independent substances added to the medium [kg/s]
 Heat flow rate at u=1, positive for heating [W]
 Control input [1]
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Heat flow rate at u=1, positive for heating [W]
 Pressure [Pa|bar]
 filter design pressure drop [Pa|bar]
@@ -5755,23 +6756,51 @@ Start value of pressure [Pa|bar]
 Start value of temperature [K|degC]
 Start value of specific enthalpy [J/kg]
 Start value of mass fractions m_i/m [kg/kg]
+Start value of mass fractions m_i/m [kg/kg]
 Absolute pressure of medium [Pa|bar]
+der(Absolute pressure of medium) [Pa/s]
+Structurally independent mass fractions [1]
+der(Structurally independent mass fractions) [1/s]
 Specific enthalpy of medium [J/kg]
+der(Specific enthalpy of medium) [J/kg/s]
 Density of medium [kg/m3|g/cm3]
+der(Density of medium) [kg/m3/s]
 Temperature of medium [K|degC]
+der(Temperature of medium) [K/s]
 Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Specific internal energy of medium [J/kg]
+der(Specific internal energy of medium) [J/kg/s]
 Gas constant (of mixture if applicable) [J/(kg.K)]
+der(Gas constant (of mixture if applicable)) [J/(kg.K)/s]
 Molar mass (of mixture or single fluid) [kg/mol]
-= true if the mass density should be constant at dStp
 = true if StateSelect.prefer shall be used for the independent property variables of the medium
 if true, and reducedX = true, the last element of X will be computed from the other ones
 Temperature of medium in [degC] [degC;]
 Absolute pressure of medium in [bar] [bar]
+Mass of total water/mass of dry air [kg/kg]
+Relative humidity
+Molar masses of components [kg/mol]
+Molar masses of components [kg/mol]
+Molar mass [kg/mol]
+Gas constant [J/(kg.K)]
+Specific heat capacity at constant pressure [J/(kg.K)]
+Specific heat capacity at constant volume [J/(kg.K)]
+Molar mass [kg/mol]
+Gas constant [J/(kg.K)]
+Specific heat capacity at constant pressure [J/(kg.K)]
+Specific heat capacity at constant volume [J/(kg.K)]
+Mass fraction of air [kg/kg]
+Steam water mass fraction of saturation boundary in kg_water/kg_moistair [kg/kg]
+Steam water mass content of saturation boundary in kg_water/kg_dryair [kg/kg]
+Partial saturation pressure of steam [Pa|bar]
+Pressure for which dStp is defined [Pa|bar]
+Fluid density at pressure pStp [kg/m3|g/cm3]
 Internal energy of fluid [J]
 der(Internal energy of fluid) [J/s]
 Mass of fluid [kg]
 der(Mass of fluid) [kg/s]
+Masses of independent components in the fluid [kg]
+der(Masses of independent components in the fluid) [kg/s]
 Enthalpy flow across boundaries or energy source/sink [W]
 Heat flow across boundaries or energy source/sink [W]
 Work flow across boundaries or source term [W]
@@ -5781,6 +6810,8 @@ Number of ports
 Regularization range at zero mass flow rate [kg/s]
 [W]
 [W]
+[kg/s]
+[kg/s]
 = true to use the HeatTransfer model
 Number of heat transfer segments
 Heat transfer areas [m2]
@@ -5811,12 +6842,14 @@ Area of the vessel used to relate to cross flow area of ports [m2]
 Volume [m3]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Density, used to compute fluid mass [kg/m3|g/cm3]
 port_a.T - port_b.T [K,]
 Heat flow rate (positive if flowing from outside into the component) [W]
 Constant thermal conductance of material [W/K]
 Heat flow rate (positive if flowing from outside into the component) [W]
-Outside air temperature [K]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Fixed heat flow rate at port [W]
 Reference temperature [K|degC]
 Temperature coefficient of heat flow rate [1/K]
@@ -5841,7 +6874,9 @@ heating coil leaving air temp at design condition [K|degC]
 heating coil enetering hot water temp at design condition in K [K|degC]
 heating coil enetering hot water temp at design condition in C [K|degC]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
 = false to hide the arrow in the model icon
@@ -5855,7 +6890,10 @@ Volume flow rate at inflowing port (positive when flow from port_a to port_b) [m
 Temperature close to port_a, if show_T = true [K|degC]
 Temperature close to port_b, if show_T = true [K|degC]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 = true, use m_flow = f(dp) else dp = f(m_flow)
 Nominal mass flow rate [kg/s]
 Pressure [Pa|Pa]
@@ -5864,6 +6902,8 @@ Flow coefficient, k=m_flow/sqrt(dp), with unit=(kg.m)^(1/2)
 Turbulent flow if |m_flow| >= m_flow_turbulent, not a parameter because k can be a function of time [kg/s]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Dynamic viscosity, used to compute transition to turbulent flow regime [Pa.s]
 Initial value for solver for specific enthalpy [J/kg]
 Factor, needed to satisfy unit check [m.s2/kg]
@@ -5875,10 +6915,10 @@ Fraction of nominal mass flow rate where transition to turbulent occurs [1]
 total duct work pressure drop at design condition [Pa|bar]
 = true to allow flow reversal in medium 1, false restricts to design direction (port_a -> port_b)
 = true to allow flow reversal in medium 2, false restricts to design direction (port_a -> port_b)
-Thermodynamic pressure in the connection point [Pa|bar]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
-Thermodynamic pressure in the connection point [Pa|bar]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Thermodynamic pressure in the connection point [Pa|bar]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
 Thermodynamic pressure in the connection point [Pa|bar]
@@ -5898,13 +6938,22 @@ Guess value for outlet pressure [Pa|bar]
 = true, if volume flow rate at inflowing port is computed
 Pressure difference between port_a1 and port_b1 [Pa|Pa]
 Pressure difference between port_a2 and port_b2 [Pa|Pa]
+Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
@@ -5919,6 +6968,7 @@ Pressure [Pa|Pa]
 = true, use linear relation between m_flow and dp for any flow rate
 Fraction of nominal flow rate where flow transitions to laminar [1]
 Heat transfered into the medium 1 [W]
+Mass flow rates of independent substances added to the medium 1 [kg/s]
 Heat exchanger effectiveness [1]
 Inlet temperature medium 1 [K|degC]
 Inlet temperature medium 2 [K|degC]
@@ -5931,7 +6981,10 @@ Auxiliary variable for smoothing at zero flow
 = true to allow flow reversal in medium 1, false restricts to design direction (port_a -> port_b)
 = true to allow flow reversal in medium 2, false restricts to design direction (port_a -> port_b)
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Thermodynamic pressure in the connection point [Pa|bar]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Thermodynamic pressure in the connection point [Pa|bar]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
 Thermodynamic pressure in the connection point [Pa|bar]
@@ -5951,13 +7004,22 @@ Guess value for outlet pressure [Pa|bar]
 = true, if volume flow rate at inflowing port is computed
 Pressure difference between port_a1 and port_b1 [Pa|Pa]
 Pressure difference between port_a2 and port_b2 [Pa|Pa]
+Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
 Absolute pressure of medium [Pa|bar]
 Temperature of medium [K|degC]
@@ -5972,6 +7034,7 @@ Pressure [Pa|Pa]
 = true, use linear relation between m_flow and dp for any flow rate
 Fraction of nominal flow rate where flow transitions to laminar [1]
 Heat transfered into the medium 1 [W]
+Mass flow rates of independent substances added to the medium 1 [kg/s]
 Heat exchanger effectiveness [1]
 Inlet temperature medium 1 [K|degC]
 Inlet temperature medium 2 [K|degC]
@@ -5989,6 +7052,7 @@ air dynamic pressure at fan outlet/vav inlet [Pa|bar]
 air density [kg/m3|g/cm3]
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Sample period of component [s]
 First sample time instant [s]
 True, if sample time instant
@@ -6027,8 +7091,6 @@ Flag for double values (0: use current value, 1: use average over interval, 2: u
 Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
 Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
 Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
-Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
-Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
@@ -6083,7 +7145,6 @@ Fixed output, used if activateInterface=false
 Fixed output, used if activateInterface=false
 Fixed output, used if activateInterface=false
 Fixed output, used if activateInterface=false
-Real inputs to be sent to the BCVTB
 Real inputs to be sent to the BCVTB
 Real inputs to be sent to the BCVTB
 Real inputs to be sent to the BCVTB
@@ -6173,7 +7234,6 @@ Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
-Initial input signal, used during first data transfer with BCVTB
 
 Value of integral
 der(Value of integral)
@@ -6239,8 +7299,6 @@ Value of integral
 der(Value of integral)
 Value of integral
 der(Value of integral)
-Value of integral
-der(Value of integral)
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
@@ -6273,8 +7331,6 @@ Value of integral at previous sampling instance
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
-Value of integral at previous sampling instance
-Value to be sent to the interface
 Value to be sent to the interface
 Value to be sent to the interface
 Value to be sent to the interface
@@ -6587,21 +7643,24 @@ dimension of input signal connector 29
 dimension of input signal connector 30
 dimension of input signal connector 31
 dimension of input signal connector 32
-dimension of input signal connector 33
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Mass flow rate from the connection point into the component [kg/s]
+Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Mass flow rate from the connection point into the component [kg/s]
+Thermodynamic pressure in the connection point [Pa|bar]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
 Mass flow rate from the connection point into the component [kg/s]
 Thermodynamic pressure in the connection point [Pa|bar]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
 Mass flow rate from the connection point into the component [kg/s]
-Thermodynamic pressure in the connection point [Pa|bar]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
-Mass flow rate from the connection point into the component [kg/s]
-Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Connector of Real input signal 1 [K]
 Gain of upper input
 Gain of lower input
@@ -6647,7 +7706,108 @@ Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/k
 Connector of Real input signal 2 [K]
 Gain of upper input
 Gain of lower input
-Constant output value
+Formulation of energy balance
+Formulation of mass balance
+Formulation of substance balance
+Formulation of trace substance balance
+Start value of pressure [Pa|bar]
+= true, use T_start, otherwise h_start
+Start value of temperature [K|degC]
+Start value of specific enthalpy [J/kg]
+Start value of mass fractions m_i/m [kg/kg]
+Start value of mass fractions m_i/m [kg/kg]
+Absolute pressure of medium [Pa|bar]
+der(Absolute pressure of medium) [Pa/s]
+Structurally independent mass fractions [1]
+der(Structurally independent mass fractions) [1/s]
+Specific enthalpy of medium [J/kg]
+der(Specific enthalpy of medium) [J/kg/s]
+Density of medium [kg/m3|g/cm3]
+der(Density of medium) [kg/m3/s]
+Temperature of medium [K|degC]
+der(Temperature of medium) [K/s]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Specific internal energy of medium [J/kg]
+der(Specific internal energy of medium) [J/kg/s]
+Gas constant (of mixture if applicable) [J/(kg.K)]
+der(Gas constant (of mixture if applicable)) [J/(kg.K)/s]
+Molar mass (of mixture or single fluid) [kg/mol]
+= true if StateSelect.prefer shall be used for the independent property variables of the medium
+if true, and reducedX = true, the last element of X will be computed from the other ones
+Temperature of medium in [degC] [degC;]
+Absolute pressure of medium in [bar] [bar]
+Mass of total water/mass of dry air [kg/kg]
+Relative humidity
+Molar masses of components [kg/mol]
+Molar masses of components [kg/mol]
+Molar mass [kg/mol]
+Gas constant [J/(kg.K)]
+Specific heat capacity at constant pressure [J/(kg.K)]
+Specific heat capacity at constant volume [J/(kg.K)]
+Molar mass [kg/mol]
+Gas constant [J/(kg.K)]
+Specific heat capacity at constant pressure [J/(kg.K)]
+Specific heat capacity at constant volume [J/(kg.K)]
+Mass fraction of air [kg/kg]
+Steam water mass fraction of saturation boundary in kg_water/kg_moistair [kg/kg]
+Steam water mass content of saturation boundary in kg_water/kg_dryair [kg/kg]
+Partial saturation pressure of steam [Pa|bar]
+Pressure for which dStp is defined [Pa|bar]
+Fluid density at pressure pStp [kg/m3|g/cm3]
+Internal energy of fluid [J]
+der(Internal energy of fluid) [J/s]
+Mass of fluid [kg]
+der(Mass of fluid) [kg/s]
+Masses of independent components in the fluid [kg]
+der(Masses of independent components in the fluid) [kg/s]
+Heat flow across boundaries or energy source/sink [W]
+Work flow across boundaries or source term [W]
+= true to set up initial equations for pressure
+Number of ports
+= false to neglect pressure loss and kinetic energy
+Regularization range at zero mass flow rate [kg/s]
+[W]
+[W]
+[kg/s]
+[kg/s]
+= true to use the HeatTransfer model
+Number of heat transfer segments
+Heat transfer areas [m2]
+Heat flow rates [W]
+= true to use k value for thermal isolation
+Heat transfer coefficient to ambient [W/(m2.K)]
+Ambient temperature [K|degC]
+Heat flow rate (positive if flowing from outside into the component) [W]
+velocities of fluid flow at device boundary [m/s]
+velocities of fluid flow at device boundary [m/s]
+flow of kinetic and potential energy at device boundary [W]
+flow of kinetic and potential energy at device boundary [W]
+curve parameters for port flows vs. port pressures; for further details see, Modelica Tutorial: Ideal switching devices [m]
+curve parameters for port flows vs. port pressures; for further details see, Modelica Tutorial: Ideal switching devices [m]
+penetration of port with fluid, depending on fluid level and port diameter
+penetration of port with fluid, depending on fluid level and port diameter
+[m2]
+[m2]
+level of fluid in the vessel for treating heights of ports [m]
+maximum level of fluid in the vessel [m]
+Area of the vessel used to relate to cross flow area of ports [m2]
+
+
+
+
+
+
+
+
+Volume [m3]
+Absolute pressure of medium [Pa|bar]
+Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Density, used to compute fluid mass [kg/m3|g/cm3]
+Time constant at nominal flow [s]
+Mass flow rate [kg/s]
+Volume of delay element [m3]
 Integrator gain [s-1]
 Type of initialization (1: no init, 2: steady state, 3,4: initial output)
 Initial or guess value of output (= state)

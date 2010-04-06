@@ -29,6 +29,7 @@ package com.mcquilleninteractive.learnhvac.model
 		public static const STATE_PAUSED:String = "paused"
 		
 		//set to realtimeStartDatetime from scenario and then incremented while modelica is running
+		public var startDateTime:Date	
 		public var currDateTime:Date	
 		
 		//seconds elapsed since start time		
@@ -76,9 +77,8 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function setRealTimeStartDate(d:Date):void
 		{
-			Logger.debug("setRealTimeStartDate d: " + d, this)
 			realtimeStartDatetime = d
-			currDateTime = d
+			currDateTime = new Date(realtimeStartDatetime)
 			currTimeDisplay = DateUtil.formatTime(currDateTime)
 			resetTimer()
 		}
@@ -90,7 +90,6 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function updateTimer(seconds:Number):void
 		{
-			Logger.debug("updateTimer()",this)
 			
 			//TODO: update time in seconds according to some kind of time step setting
 			//      For now, one step is one second
@@ -99,7 +98,7 @@ package com.mcquilleninteractive.learnhvac.model
 			stepArr.push(timeInSec)
 			if (timeInSec!=0)
 			{
-				currDateTime.seconds = currDateTime.seconds + timeStep
+				currDateTime.seconds = realtimeStartDatetime.seconds + seconds
 			}
 			
 			epochTimeArr.push(Date.parse(currDateTime.toString()))
@@ -109,7 +108,6 @@ package com.mcquilleninteractive.learnhvac.model
 			evt.currDateTime = currDateTime
 			Swiz.dispatchEvent(evt)
 											
-			Logger.debug("updateTimer() currTimeDisplay:" + currTimeDisplay, this)
 		}
 
 	

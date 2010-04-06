@@ -48,7 +48,9 @@
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function onScenarioLoaded(event:ScenarioLoadedEvent):void
 			{
-				//nothing to do yet
+				bgError.visible = false
+				bgOff.visible = true			
+				simStatus.text = "OK"
 			}
 			
 						

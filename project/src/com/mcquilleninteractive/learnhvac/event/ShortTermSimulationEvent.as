@@ -21,6 +21,7 @@ package com.mcquilleninteractive.learnhvac.event{
 		
 		public var code:int
 		public var errorMessage:String
+		public var timeStep:int
 		
 		public function ShortTermSimulationEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{

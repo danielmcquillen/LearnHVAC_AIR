@@ -131,15 +131,9 @@
 			
 			public function get timeStep():Number
 			{
-				return this.txtTimeStep.text as Number
+				return Number(txtTimeStep.text)
 			}
 			
-			public function commit():void
-			{
-				//commits changed values to model
-				var ts:Number = txtTimeStep.text as Number
-				shortTermSimulationModel.timeStep = ts
-			}
 			
 			public function setDateTime():void
 			{				
@@ -316,6 +310,7 @@
 				 <mx:ComboBox id="cboZone" 
 					selectedIndex="0"  
 					change="onZoneChange()"
+					width="60"
 					toolTip="Select the zone of interest.">
 					<mx:dataProvider>
 						<mx:ArrayCollection>
@@ -328,7 +323,7 @@
 					</mx:dataProvider>
 				</mx:ComboBox>	
 				<mx:Spacer width="5"/>
-				<mx:Label text="Floor: " width="100"  />
+				<mx:Label text="Floor: " width="50"  />
 				<mx:ComboBox id="cboFloor" 
 					selectedIndex="0"  
 					change="onFloorChange()"
@@ -355,7 +350,7 @@
 		        styleName="simTimeStepper"
 		        toolTip="Start time for the short-term simulation"
 		        />
-			<mx:Label text="Date:" />
+			<mx:Label text="Date:" width="50"/>
 		    <mx:DateField id="dateField" 
 		    	change="updateSimulationStartDateAndTime()"
 		        toolTip="Start date for the short-term simulation"	

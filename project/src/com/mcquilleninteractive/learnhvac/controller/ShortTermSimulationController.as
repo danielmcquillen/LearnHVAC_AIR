@@ -74,6 +74,17 @@ package com.mcquilleninteractive.learnhvac.controller
 			{ 
 				scenarioModel.importLongTermVars()
 			}			
+			
+			
+			
+			// ask all input system variables to update to the
+			// value user has entered in input panel
+			var inputSysVarsArr:Array = scenarioModel.getInputSysVars()
+			for each (var sysVar:SystemVariable in inputSysVarsArr)
+			{
+				sysVar.updateFromLocal()
+			}
+			
 			Logger.debug("delegate: " + delegate, this)
 			delegate.start()
 		}
@@ -88,10 +99,18 @@ package com.mcquilleninteractive.learnhvac.controller
 		[Mediate(event="ShortTermSimulationEvent.SIM_UPDATE")]	
 		public function update(event:ShortTermSimulationEvent):void
 		{
-			//TEMP TO DO : update running simulation with new variables
-			//pass in an array of input system variables to be sent to simulation
-			//var inputSysVarsArr:Array = scenarioModel.getInputSysVars()			
-			//delegate.update(inputSysVarsArr)
+			Logger.debug("update setting timeStep to : " + event.timeStep,this)
+			//update the timestep
+			delegate.timeStep = event.timeStep
+			
+			// ask all input system variables to update to the
+			// value user has entered in input panel
+			var inputSysVarsArr:Array = scenarioModel.getInputSysVars()
+			for each (var sysVar:SystemVariable in inputSysVarsArr)
+			{
+				sysVar.updateFromLocal()
+			}
+			
 		}
 		
 		
@@ -135,6 +154,18 @@ package com.mcquilleninteractive.learnhvac.controller
 			Swiz.dispatchEvent(evt)
 		}
 		
+		public function onOutputReceived(event:Event):void
+		{			
+			var simTime:int = delegate.simTime
+			shortTermSimulationModel.updateTimer(simTime)
+			
+			//record values in data model
+			shortTermSimulationDataModel.recordCurrentTimeStep(shortTermSimulationModel.timeInSec, scenarioModel.sysVarsArr)
+			
+			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED)
+			Swiz.dispatchEvent(evt)
+		}
+		
 		public function simulationError(event:ShortTermSimulationEvent):void
 		{
 			Logger.debug("simulationError()",this)
@@ -155,17 +186,6 @@ package com.mcquilleninteractive.learnhvac.controller
 			Swiz.dispatchEvent(evt)
 		}
 		
-		public function onOutputReceived(event:Event):void
-		{			
-			var simTime:int = delegate.simTime
-			shortTermSimulationModel.updateTimer(simTime)
-			
-			//record values in data model
-			shortTermSimulationDataModel.recordCurrentTimeStep(shortTermSimulationModel.timeInSec, scenarioModel.sysVarsArr)
-			
-			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED)
-			Swiz.dispatchEvent(evt)
-		}
 		
 		
 

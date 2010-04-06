@@ -82,9 +82,7 @@ package com.mcquilleninteractive.learnhvac.model.data
 		public function recordCurrentTimeStep(timeInSeconds:Number, sysVarsArr:Array):void
 		{
 			var d:Date = new Date(_startDateTimeMilli + (timeInSeconds * 1000))
-			Logger.debug("recordCurrentTimeStep() _startDateTime: " + _startDateTime,this)
-			Logger.debug("recordCurrentTimeStep() timeInSeconds: " + timeInSeconds,this)
-			Logger.debug("recordCurrentTimeStep() d: " + d,this)
+			
 			dataArr[DATE_TIME].push(d)
 			for each (var sysVar:SystemVariable in sysVarsArr)
 			{

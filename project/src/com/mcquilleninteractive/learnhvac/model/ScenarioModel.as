@@ -203,7 +203,7 @@ package com.mcquilleninteractive.learnhvac.model
 		{
 			//wipe out all info from ScenarioModel
 			//TODO: need to call destroy() functions on node and sysvar objects
-			
+			Logger.debug("Clearing scenario()",this)
 			sysVarsArr = []
 			lookupArr = []
 			_inputSysVarsArr = []
@@ -260,10 +260,9 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function getSysVar(sysVarName:String):SystemVariable
 		{
-			//Logger.debug(": getSysVar() looking for : " + sysVarName)
-					
+			
 			//first look in lookupArr to see if variable has quick reference
-			if (lookupArr[sysVarName]!= null)
+			if (lookupArr[sysVarName]!= null && lookupArr[sysVarName]!=undefined)
 			{
 				return lookupArr[sysVarName]				
 			}
@@ -274,14 +273,15 @@ package com.mcquilleninteractive.learnhvac.model
 					for each (var sysVar:SystemVariable in sysNode.sysVarsArr)
 					{
 						if (sysVar.name == sysVarName)
-						{
+						{		
+							if (sysVarName=="FANTAirEnt") Logger.debug("found in sysNode", this)
 							lookupArr[sysVarName] = sysVar
 							return sysVar
 						}
 					}
 				}	
 			}			
-			Logger.error("getSysVar() can't find variable : " + sysVarName, this)
+			if (sysVarName=="FANTAirEnt") Logger.error("getSysVar() can't find variable : " + sysVarName, this)
 			return null
 		}
 			
@@ -394,7 +394,6 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function setCurrNode(nodeID:String):void
 		{
-			Logger.debug("setCurrNode() nodeID: " + nodeID, this)
 			currNode = nodeID
 			
 			//don't update if ROOF, since this doesn't have representation in sysNodes
@@ -408,7 +407,6 @@ package com.mcquilleninteractive.learnhvac.model
 			{
 				if (sysNodesAC[i].id == nodeID)
 				{
-					Logger.debug("setCurrNode() currNodeIndex was set to : " + i, this) 
 					currNodeIndex = i
 					nodeFound = true	
 				}

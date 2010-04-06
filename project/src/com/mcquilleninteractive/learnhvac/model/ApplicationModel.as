@@ -10,19 +10,14 @@ package com.mcquilleninteractive.learnhvac.model
 	[Bindable]
 	public class ApplicationModel extends EventDispatcher
 	{
-		public static const baseStoragePath:String = "Local Settings/Application Data/LearnHVAC/"
-		
-		
-		
-		
+		public static const baseStoragePath:String = "LearnHVAC/"
+					
 		// ATTRIBUTES FOR CONTROLLING TEST/MOCK MODE
 		//This flag will cause certain functions to auto-submit (login)
-		public static var testMode:Boolean = true
+		public static var testMode:Boolean = false
+		public static var traceModelicaIO:Boolean = false
 		
-		
-		
-		
-		
+				
 		//(e.g. existing E+ output is loaded rather than running simulation)		
 		public static var mockEPlusData:Boolean = false
 		
@@ -55,7 +50,7 @@ package com.mcquilleninteractive.learnhvac.model
 		public var bldgSetupEnabled:Boolean = false
 		public var showFramesPerSecondBar:Boolean = false
 		public var debug:Boolean = false
-		public var logToFile:Boolean = false
+		public var logToFile:Boolean = true
 		
 		// Vars for managing communication with SPARK
 		public static var ANIMATION_SPEED_FULL:String = "full"

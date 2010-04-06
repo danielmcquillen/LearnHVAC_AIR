@@ -1,108 +1,31 @@
 
-import com.adobe.onair.logging.FileTarget;
-import com.adobe.onair.logging.TextAreaTarget;
-import com.mcquilleninteractive.learnhvac.event.LoggedInEvent;
-import com.mcquilleninteractive.learnhvac.event.SettingsEvent;
-import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
-import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
-import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
-import com.mcquilleninteractive.learnhvac.settings.LearnHVACSettings;
-import com.mcquilleninteractive.learnhvac.util.AboutInfo;
-import com.mcquilleninteractive.learnhvac.util.HTMLToolTip;
+import com.mcquilleninteractive.learnhvac.event.ApplicationEvent;
 import com.mcquilleninteractive.learnhvac.util.Logger;
 
-import flash.data.EncryptedLocalStore;
-import flash.events.Event;
 import flash.filesystem.*;
-import flash.utils.ByteArray;
-
 import mx.logging.Log;
-import mx.logging.LogEventLevel;
-import mx.logging.targets.TraceTarget;
-import mx.managers.ToolTipManager;
-
-import org.flexunit.runner.FlexUnitCore;
 import org.swizframework.Swiz;
-
-import testSuites.testSuite1.*;
-
-[Bindable]
-private var _applicationModel:ApplicationModel
-
-[Bindable]
-private var _scenarioModel:ScenarioModel
-private var _ascenarioLibraryModel:ScenarioLibraryModel
-
-private var traceTarget:TraceTarget
-private var textAreaTarget:TextAreaTarget
-private var fileTarget:FileTarget
-private var settings:LearnHVACSettings
-private var core:FlexUnitCore;
-
-
 
 /*************** lifecycle event handlers *****************/
 
 
 private function onPreInit():void
-{	
-	initSettings()	
-	initLog()	
-	Logger.debug("getting beans...", this)
-	_applicationModel = Swiz.getBean("applicationModel") as ApplicationModel
-	_ascenarioLibraryModel = Swiz.getBean("scenarioLibraryModel") as ScenarioLibraryModel
-	_scenarioModel = Swiz.getBean("scenarioModel") as ScenarioModel
+{		
+	Log.addTarget(traceTarget)
+	Logger.debug("onPreInit()",this)
+	Swiz.dispatchEvent(new ApplicationEvent(ApplicationEvent.INIT_APP, true))
 }
 
-public function onInit():void
-{
-	ToolTipManager.toolTipClass = HTMLToolTip;	
-
-	Logger.debug("#LH: logging is all setup!")
-
-	//if this is first run, copy installed files to working directories
-	//check if this is first install
-	var ba:ByteArray = EncryptedLocalStore.getItem("lastInstalledVersion")
-				
-	if (ba==null || ba.readUTFBytes(ba.bytesAvailable)!=AboutInfo.applicationVersion)
-	{
-		Logger.debug("New version installed ... now copying helper files...",this)
-		copyHelperFiles()		
-		//record the latest version number
-		ba = new ByteArray()
-		ba.writeUTFBytes(AboutInfo.applicationVersion)
-		EncryptedLocalStore.setItem("lastInstalledVersion", ba)		
-	}
-
-	//set proxy port from settings
-	_applicationModel.proxyPort = settings.proxyPort
-	
-}
-
-public function onCC():void
-{
-	//intercept close function
-	this.addEventListener(Event.CLOSING, onAppClose, false, 0, true)	
-	
-	//TESTING: UNCOMMENT TO RUN TESTS
-	runTests()		
-}	
-
-protected function runTests():void
-{
-	//core = new FlexUnitCore();
-	//core.addListener(new UIListener(uiListener));
-	//core.run( TestSuite1 );
-}
 
 private function onAppComplete():void
 {
-    loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError);
+	Swiz.dispatchEvent(new ApplicationEvent(ApplicationEvent.START_APP, true))	
 }
 
 
 /*************** event handlers *****************/
 
+/*
 private function onUncaughtError(e:UncaughtErrorEvent):void
 {
     if (e.error is Error)
@@ -116,145 +39,7 @@ private function onUncaughtError(e:UncaughtErrorEvent):void
         Logger.error("Uncaught Error: errorEvent.errorID: " + errorEvent.errorID, this);
     }
 }
-
-[Mediate(event="LoggedInEvent.LOGGGED_IN")]
-public function onLoggedIn(event:LoggedInEvent):void
-{	
-	Logger.debug("onLoggedIn called...trying to stop SplashScreen", this)
-	loginPanel.visible = false
-	loginPanel.splashScreen.stopAnim()
-	mainCanvas.visible = true
-}
-
-
-
-
-protected function onAppClose(event:Event):void
-{
-	Logger.debug("intercepting close ",this)	
-	//TODO: kill running modelica or E+ processes
-	
-	
-}
-
-
-
-/*************** Init Functions *****************/
-
-
-public function initSettings():void
-{
-	//TODO: load settings from file...
-	//for now just set properties and then launch an event as if these were read in
-	settings = new LearnHVACSettings()
-	
-	ApplicationModel.currUnits = "SI"
-	
-	var evt:SettingsEvent = new SettingsEvent(SettingsEvent.SETTINGS_LOADED, true)
-	Swiz.dispatchEvent(evt)
-	
-	
-}
-
-public function initLog():void
-{		
-	if(settings.logToTrace)
-	{
-		traceTarget = createTraceTarget()
-		traceTarget.level = LogEventLevel.DEBUG
-		Log.addTarget(traceTarget)
-	}
-	
-	if(settings.logToFile)
-	{
-		fileTarget = createFileTarget()
-		fileTarget.level = LogEventLevel.DEBUG
-		Log.addTarget(fileTarget)
-	}
-	
-	
-	
-}
-
-
-
-private function createTraceTarget():TraceTarget
-{
-	var t:TraceTarget = new TraceTarget();
-	t.includeDate = true;
-	t.includeTime = true;
-	t.includeLevel = true;
-	t.level = LogEventLevel.DEBUG;
-	return t;
-}
-
-
-private function createFileTarget():FileTarget
-{
-	
-	var f:FileTarget = new FileTarget();
-	f.includeDate = true;
-	f.includeTime = true;
-	f.includeLevel = true;
-	f.level = LogEventLevel.DEBUG;
-	return f;
-	
-}
-
-
-/*************** Core Functions *****************/
-
-
-protected function copyHelperFiles():void
-{ 
-		Logger.debug("copyHelperFiles()",this)		
-						
-		//copy the modelica File to the storage directory		
-		var modelicaFile:File = File.applicationDirectory.resolvePath("modelica")
-		var copyModelicaFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "modelica")
-		if (copyModelicaFile.exists==false)
-		{
-			copyModelicaFile.createDirectory()
-		}
-		Logger.debug("Moving modelica to : " +  copyModelicaFile.nativePath, this) 
-		copyModelicaFile.createDirectory()
-		try
-		{
-			modelicaFile.copyTo(copyModelicaFile, true)
-		}
-		catch(error:Error)
-		{
-			
-		}	
-		//copy the energyplus to the storage directory	
-		var eplusFile:File = File.applicationDirectory.resolvePath("energyplus")
-		var copyEplusFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "energyplus")
-		if (copyEplusFile.exists==false)
-		{
-			copyEplusFile.createDirectory()
-		}
-		Logger.debug("Moving EnergyPlus to: " + copyEplusFile.nativePath, this) 
-		copyEplusFile.createDirectory()
-		eplusFile.copyTo(copyEplusFile, true)		
-		
-		//Don't need the following since we're embedding scenarios directly in code for now
-		//copy the included scenarios to the storage directory	
-		/*
-		var scenariosFile:File = File.applicationDirectory.resolvePath("scenarios")
-		
-		Logger.debug("scenariosFile: " + scenariosFile.nativePath + " exists: " +scenariosFile.exists.toString(), this) 	
-		var copyScenariosFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "scenarios")
-		if (copyScenariosFile.exists==false)
-		{
-			copyScenariosFile.createDirectory()
-		}
-		Logger.debug("Moving scenarios to: " + copyScenariosFile.nativePath, this) 		
-		scenariosFile.copyTo(copyScenariosFile, true)
-		*/
-		
-}
-
-
+*/
 
 
 

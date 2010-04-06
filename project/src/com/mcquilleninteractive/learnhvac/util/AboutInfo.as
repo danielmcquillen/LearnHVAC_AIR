@@ -1,6 +1,8 @@
 package com.mcquilleninteractive.learnhvac.util
 {
 	import flash.desktop.NativeApplication;
+	import flash.system.System;	
+	import flash.system.Capabilities;
 	
 	public class AboutInfo
 	{
@@ -25,6 +27,11 @@ package com.mcquilleninteractive.learnhvac.util
 			return version
 		}
 		
+		
+		public static function get flashPlayerVersion():String
+		{
+			return Capabilities.version.toString()
+		}
 				
 		
 

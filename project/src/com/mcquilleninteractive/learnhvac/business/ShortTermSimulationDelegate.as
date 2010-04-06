@@ -1,6 +1,7 @@
 package com.mcquilleninteractive.learnhvac.business
 {
 	import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
@@ -53,31 +54,28 @@ package com.mcquilleninteractive.learnhvac.business
 		protected var _modelicaSocket:Socket
 		protected var _modelicaExe:File 
 		protected var _modelicaDir:File
-		protected var _modelicaProcess:NativeProcess = new NativeProcess()
+		protected var _modelicaProcess:NativeProcess 
 		protected var _timer:Timer
 		protected var _simTime:int = 0
+		protected var _timeStep:int = 1
 		protected var _startupInfo:NativeProcessStartupInfo
 		
 		//this flag let's us ignore the first set of outputs that come
 		//in from Modelica when it's first started up
 		protected var _firstStartupOutputReceived:Boolean = false
-		//local refs to arrays in ScenarioModel	
-		protected var _inputSysVarsArr:Array= []	
-		protected var _outputSysVarsArr:Array= []
+		
 		
 		//to avoid counting each time
 		protected var _outputsSysVarsArrLength:uint 
 		
 		public function ShortTermSimulationDelegate() 
 		{
-			//TEMP
-			_modelicaDir = File.applicationDirectory.resolvePath("modelica")
+			_modelicaDir = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "modelica")
 			_modelicaExe = _modelicaDir.resolvePath("dymosim.exe")
 			
 			_timer = new Timer(1000)
 			_timer.addEventListener(TimerEvent.TIMER, onTimer)
 			
-			setupModelicaProcess()	
 		}
 				
 		/** This function starts the Nativeprocess for modelica and then waits for a 
@@ -91,6 +89,12 @@ package com.mcquilleninteractive.learnhvac.business
 				
 		public function start():void
 		{
+			if (_modelicaProcess==null)
+			{
+				_modelicaProcess = new NativeProcess()
+				setupModelicaProcess()	
+			}
+			
 			Logger.debug("start()",this)
 			openSocket()
 			launchModelicaProcess()	
@@ -113,18 +117,27 @@ package com.mcquilleninteractive.learnhvac.business
 		{
 			return _simTime
 		}
+		
+		public function set timeStep(value:int):void
+		{
+			Logger.debug("trying to set timeStep to: " + value, this)
+			if (value<0 || isNaN(value)) value = 1
+			_timeStep = value
+		}
 									
 		/*Sends an array of system variables to the Modelica simulation*/
 		public function sendInput():void
 		{						
-			if (_inputSysVarsArr.length==0)
+			var inputSysVarsArr:Array = this.scenarioModel.getInputSysVars()
+			
+			if (inputSysVarsArr.length==0)
 			{
-				_inputSysVarsArr = scenarioModel.getInputSysVars() //these should already be sorted by index
+				inputSysVarsArr = scenarioModel.getInputSysVars() //these should already be sorted by index
 			}
 			
 			if (_modelicaSocket.connected)
 			{			
-				var inputToModelica:String = formatInputToModelica(_inputSysVarsArr, _simTime)
+				var inputToModelica:String = formatInputToModelica(inputSysVarsArr, _simTime)
 				//Logger.debug("input :  " + inputToModelica,this)
 				_modelicaSocket.writeUTFBytes(inputToModelica)
 				_modelicaSocket.flush()	
@@ -138,7 +151,6 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		public function receiveOutput(output:String):void
 		{
-			Logger.debug("receiveOutput() _firstStartupOutputReceived: " + _firstStartupOutputReceived.toString(),this)
 			_timer.start()									
 			
 			if (_firstStartupOutputReceived==false)
@@ -155,7 +167,7 @@ package com.mcquilleninteractive.learnhvac.business
 				
 			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED, true)
 			dispatchEvent(evt)
-			_simTime ++		
+			_simTime += _timeStep
 			
 		}
 
@@ -249,12 +261,13 @@ package com.mcquilleninteractive.learnhvac.business
 																
 			try
 			{
+				Logger.debug("\n***********************\nSTARTING MODELICA AT : " + _modelicaDir.nativePath + "\n***********************",this)
 				_modelicaProcess.start(_startupInfo)
 				_firstStartupOutputReceived = false
 			}
 			catch (err:Error)
 			{				
-				Logger.error("launchModelica() Error starting process: "+ err, this)
+				Logger.error("launchModelica() Error starting process: "+ err.errorID + " " + err.name + " " + err.message, this)
 				Alert.show("Cannot start Modelica. Please try again or contact support for help.")
 			}
 		}
@@ -273,7 +286,7 @@ package com.mcquilleninteractive.learnhvac.business
 			}
 			else
 			{
-				var evt:ShortTermSimulationEvent= new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_STOPPED, true)
+			 	evt= new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_STOPPED, true)
 				dispatchEvent(evt)
 			}
 			
@@ -303,12 +316,9 @@ package com.mcquilleninteractive.learnhvac.business
 		{
 			//Logger.debug("Output string from modelica:" + outputFromModelica, this)
 			
-			if (_outputSysVarsArr.length==0)
-			{
-				_outputSysVarsArr = scenarioModel.getOutputSysVars()
-				_outputsSysVarsArrLength = _outputSysVarsArr.length
-			}
-			
+			var outputSysVarsArr:Array = scenarioModel.getOutputSysVars()
+			var len:int = outputSysVarsArr.length
+					
 			var outArr:Array = outputFromModelica.split(" ")
 			
 			var status:Number = outArr[1]
@@ -328,21 +338,15 @@ package com.mcquilleninteractive.learnhvac.business
 			}
 			
 			var out:String = ""
-			for (var i:uint = 0; i<_outputsSysVarsArrLength; i++)
+			for (var i:uint = 0; i<len; i++)
 			{	
-				var sysVar:SystemVariable = SystemVariable(_outputSysVarsArr[i])
-					
-				if (sysVar.name=="SYSNull")
-				{
-					//ignore index 23...it's systemnull for now
-					Logger.debug ("(ignoring SYSNull at index " + (i+1).toString(), this)
-					continue
-				}					
-				sysVar.baseSIValue = outArr[i+6]							
-				out +=  "\n " + (i+1).toString() + " var: " + sysVar.name + " value: " + outArr[i+6]				
+				var sysVar:SystemVariable = SystemVariable(outputSysVarsArr[i])		
+				
+				sysVar.baseSIValue = outArr[i+6]								
+				if (ApplicationModel.traceModelicaIO) out +=  "\n " + (i+1).toString() + " var: " + sysVar.name + " value: " + outArr[i+6];				
 			}
 			
-			Logger.debug("Values set by Modelica: \n----------------------------\n " + out, this)
+			if (ApplicationModel.traceModelicaIO) Logger.debug("Values set by Modelica: \n----------------------------\n " + out, this);
 			
 			
 						
@@ -357,7 +361,7 @@ package com.mcquilleninteractive.learnhvac.business
 			for(var i:uint=0;i<len;i++)
 			{
 				inputs += " " + inputSysVarsArr[i].baseSIValue	
-				tr += "\n" + inputSysVarsArr[i].name + " : " + inputSysVarsArr[i].baseSIValue	
+				if (ApplicationModel.traceModelicaIO) tr += "\n" + inputSysVarsArr[i].name + " : " + inputSysVarsArr[i].baseSIValue;	
 			}		
 			
 			
@@ -371,8 +375,8 @@ package com.mcquilleninteractive.learnhvac.business
 			out += inputs
 			out += "\n"
 			
-			Logger.debug("Input string: " + out, this)
-			Logger.debug("Inputs details :\n---------------------\n" + tr, this)
+			if (ApplicationModel.traceModelicaIO)Logger.debug("Input string: " + out, this);
+			if (ApplicationModel.traceModelicaIO)Logger.debug("Inputs details :\n---------------------\n" + tr, this);
 			
 			return out
 		}

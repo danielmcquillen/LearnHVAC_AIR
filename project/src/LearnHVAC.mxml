@@ -12,8 +12,6 @@
 	xmlns:swizframework="org.swizframework.*"
 	xmlns:myComps="*"
     preinitialize="onPreInit()"
-	initialize="onInit()"
-	creationComplete="onCC()" 
 	applicationComplete="onAppComplete()"
 	pageTitle="Learn HVAC" 
 	width="100%" 
@@ -77,6 +75,7 @@ building has been developed by two national laboratories and is excluded from th
 
 */
 			import com.mcquilleninteractive.learnhvac.config.Beans
+			import mx.logging.LogEventLevel
 			
 			[Bindable]
 			[Embed(source='assets/img/bug.png')]
@@ -95,63 +94,16 @@ building has been developed by two national laboratories and is excluded from th
 		logEventLevel="{LogEventLevel.WARN}"
 		/>
 
+	<mx:TraceTarget id="traceTarget"
+		level="{LogEventLevel.DEBUG}"
+		/>
 
-	<mx:Style source="/assets/css/styles.css"/>
+	<mx:Style source="assets/css/styles.css"/>
 	<mx:Script source="LearnHVAC_class.as" />
 	
 	
+	<view:App width="100%" height="100%" />
 	
-	<!-- layout -->	
-	<mx:Canvas id="appCanvas" 
-		height="100%" 
-		width="100%" 
-		horizontalScrollPolicy="off" 
-		verticalScrollPolicy="off">
-	
-		<view:Login 
-			id="loginPanel"
-			height="100%" width="100%"
-			visible="{!_applicationModel.loggedIn}"
-			/>
-			
-		<mx:Canvas id="mainCanvas" 
-			height="100%" width="100%"
-			horizontalScrollPolicy="off"
-		 	verticalScrollPolicy="off"
-		 	visible="{_applicationModel.loggedIn}"
-		    
-			>
-			
-			
-			<mx:VBox width="100%" height="100%" verticalGap="0">
-				
-			<view:AppMenu id="appMenu" width="100%"/>
-			
-			<view:AppControlBar id="appBarCanvas" width="100%" />	
-			
-			<mx:ViewStack width="100%" height="100%"
-			  		paddingLeft="0" 
-					paddingRight="0" 
-					paddingBottom="0" 
-					paddingTop="0" 
-					resizeToContent="true" 
-					selectedIndex="{_applicationModel.viewing}"
-				    historyManagementEnabled="false"
-				    creationPolicy="all"
-					>
-				<scenario:SelectScenario id="pnlSelectScenario"/>
-				<view:LongTermSimulation id="pnlSetup"/>
-				<view:ShortTermSimulation id="pnlSim"/>
-				<analysis:AnalysisPanel id="pnlAnalysis" />
-			</mx:ViewStack>
-		
-			</mx:VBox>
-		
-		</mx:Canvas>	
-		
-	
-	</mx:Canvas>	
-		
 	<!--
 	<adobe:TestRunnerBase id="uiListener" width="100%" height="100%"  />
 	-->

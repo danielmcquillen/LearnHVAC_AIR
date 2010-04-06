@@ -155,7 +155,6 @@ package com.mcquilleninteractive.particleengine
 				
 		public function setScene(systemNode:String):void
 		{
-			Logger.debug("#PE: setScene() to systemNode: " + systemNode)
 			var restart:Boolean = false
 			if (running)
 			{
@@ -851,7 +850,6 @@ package com.mcquilleninteractive.particleengine
 				
 		public function initScene(sysNode:String):void
 		{
-			Logger.debug("#PE: initing scene: " + sysNode)
 			count = 0
 			particleAlive = 0 
 			iTimeS = 1

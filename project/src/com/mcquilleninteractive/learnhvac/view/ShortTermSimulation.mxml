@@ -259,8 +259,14 @@
 			
 			Logger.debug("startSimulation()",this)	
 			if (pnlInput.areInputsValid())
-			{			
+			{	
+				// do one update event before starting to make sure values that the
+				// user entered are updated first 
+				pnlInput.onUpdateSimulation()
+								
 				controlBar.setStartStopButtonState("stop")
+				
+				//now launch start even
 				var event : ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_START, true);
 				dispatchEvent(event);
 			}

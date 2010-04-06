@@ -7,5 +7,6 @@ package com.mcquilleninteractive.learnhvac.business
 		function start():void			
 		function stop():void		
 		function get simTime():int
+		function set timeStep(value:int):void
 	}
 }

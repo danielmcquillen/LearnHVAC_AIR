@@ -1,22 +1,25 @@
 package com.mcquilleninteractive.learnhvac.util
 {
 
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+	
 	import flash.events.IOErrorEvent;
+	import flash.filesystem.*;
 	import flash.net.XMLSocket;
-	import com.mcquilleninteractive.learnhvac.model.ApplicationModel
+	
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	import mx.logging.LogEventLevel;
 	
 	public class Logger	
 	{
-		
-		public static var reportErrorsToCMS:Boolean = true
-		
+				
 		public static var enabled : Boolean = true;
 		public static var myLogger : ILogger
 		private static var socket : XMLSocket;
-		public static var logToFile:Boolean
+		public static var logFile:File		
+		public static var logFileStream:FileStream
+		public static var logToFile:Boolean = false
 
 		public static function debug(o:Object, target:Object=null):void
 		{
@@ -62,7 +65,7 @@ package com.mcquilleninteractive.learnhvac.util
 			
 			if (myLogger == null)
 			{
-				myLogger = Log.getLogger("LearnHVAC") 
+				myLogger = Log.getLogger("COMFEN") 
 				
 				//Flex Builder update broke this...gives sandbox error 11/20/08
 				//setup remote logging
@@ -88,31 +91,30 @@ package com.mcquilleninteractive.learnhvac.util
             	case LogEventLevel.DEBUG:
                 	if (Log.isDebug()) {
                     	myLogger.debug(String(target) + " : " + o.toString()) 
-                    	monsterLevel = "DEBUG: " 
                     }
                     break;
 				case LogEventLevel.INFO:
 					if (Log.isInfo()) {
 						myLogger.info(String(target) + " : " +o.toString()); 
-						monsterLevel = "INFO: " 
+                    	o = "INFO: " + String(target) + o
 					}
 					break;
 				case LogEventLevel.WARN:
 					if (Log.isWarn()) {
                         myLogger.warn(String(target) + " : " + o.toString());
-                        monsterLevel = "WARN: " 
+                    	o = "WARN: " + String(target) + o
                     }
                     break;
                 case LogEventLevel.ERROR:
                     if (Log.isError()) {
                         myLogger.error(String(target) + " : " + o.toString());
-                        monsterLevel = "ERROR: " 
+                    	o = "ERROR: " + String(target) + o
                     }
                     break;
                 case LogEventLevel.FATAL:
                     if (Log.isFatal()) {
                         myLogger.fatal(String(target) + " : " + o.toString());
-                        monsterLevel = "FATAL: " 
+                    	o = "FATAL: " + String(target) + o
                     }
                     break;
 				case LogEventLevel.ALL:
@@ -120,8 +122,30 @@ package com.mcquilleninteractive.learnhvac.util
 					break;
             }
             
-            
-           //MonsterDebugger.trace(target, monsterLevel + " : " + o.toString())
+            //log to file 
+            try
+            {
+				if (logFile==null)
+				{
+					var logFileDir:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath)
+					if (logFileDir.exists==false)
+					{
+						logFileDir.createDirectory()
+					}
+					logFile = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "applicationLog.txt")
+					logFileStream = new FileStream()
+	   			}
+	   			if (logToFile )
+	   			{
+	   				logFileStream.open(logFile, FileMode.APPEND)
+	   				logFileStream.writeUTFBytes(File.lineEnding + o)
+	   				logFileStream.close()
+	   			}
+            }
+	   		catch(err:Error)
+	   		{
+	   			
+	   		}
            		            
 				
 		}

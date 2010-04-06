@@ -10,12 +10,12 @@ package com.mcquilleninteractive.learnhvac.controller
 	import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.model.DefaultScenariosModel;
-	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
 	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
+	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
-	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel;
+	import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 	import com.mcquilleninteractive.learnhvac.model.UserModel;
@@ -93,15 +93,19 @@ package com.mcquilleninteractive.learnhvac.controller
 				return
 			}
 						
+			Logger.debug( "localScenariosAC.length"+localScenariosAC.length,this );
 			if (localScenariosAC.length == 0)
 			{
 				Alert.show( "There are no valid scenarios in the scenarios folder." );
 				scenarioLibraryModel.currScenarioList = new ArrayCollection()
+				scenarioLibraryModel.currScenarioList.refresh()
 			}
 			else
 			{
+				scenarioLibraryModel.currScenarioList.removeAll()
 				scenarioLibraryModel.scenarioListLocation = ScenarioLibraryModel.SCENARIOS_LIST_LOCAL			
-				scenarioLibraryModel.currScenarioList = localScenarioDelegate.localScenarioListAC		
+				scenarioLibraryModel.currScenarioList = localScenariosAC
+				scenarioLibraryModel.currScenarioList.refresh()	
 				Swiz.dispatchEvent(new GetScenarioListEvent(GetScenarioListEvent.SCENARIO_LIST_LOADED))
 			}
 		}
@@ -166,7 +170,7 @@ package com.mcquilleninteractive.learnhvac.controller
 				{
 					Alert.show("There are no scenarios available.", "No Scenarios")
 				}								
-				scenarioLibraryModel.currScenarioList.removeAll()
+				scenarioLibraryModel.currScenarioList = new ArrayCollection()
 				
 				//Until we get remoting to automatically cast these objects to ScenarioListItemVO
 				for (var i:uint=0;i<re.result.length;i++)
@@ -206,6 +210,7 @@ package com.mcquilleninteractive.learnhvac.controller
 		public function onLoadRemoteScenarioEvent( event : LoadScenarioEvent ): void
 		{
 			Logger.debug("onLoadRemoteScenarioEvent()", this)			
+			
 			Swiz.dispatchEvent(new LoadScenarioEvent(LoadScenarioEvent.LOAD_STARTING, true))
 			var call:AsyncToken = remoteScenarioDelegate.getRemoteScenario(event.scenID, userModel.username);
 			executeServiceCall(call, onLoadRemoteScenarioResult, onLoadRemoteScenarioFault);		
@@ -276,8 +281,11 @@ package com.mcquilleninteractive.learnhvac.controller
 		[Mediate(event="GetScenarioListEvent.GET_DEFAULT_SCENARIO_LIST")]
 		public function getDefaultScenarioList():void
 		{
+			scenarioLibraryModel.currScenarioList.removeAll()
 			scenarioLibraryModel.currScenarioList = scenarioLibraryModel.defaultScenarioList.defaultScenariosAC	
 			scenarioLibraryModel.scenarioListLocation = ScenarioLibraryModel.SCENARIOS_LIST_DEFAULT
+			scenarioLibraryModel.currScenarioList.refresh()
+			Logger.debug("scenarioLibraryModel.currScenarioList.length: " + scenarioLibraryModel.currScenarioList.length,this)
 			Swiz.dispatchEvent(new GetScenarioListEvent(GetScenarioListEvent.SCENARIO_LIST_LOADED))
 		}
 
@@ -443,7 +451,7 @@ package com.mcquilleninteractive.learnhvac.controller
 				//parse this system node's sysVars
 				for each (var sysVarXML:XML in systemNodeXML.*)
 				{
-					if (sysVarXML.@name=="SYSNull") continue
+					//if (sysVarXML.@name=="SYSNull") continue
 					
 					var sysVar:SystemVariable = new SystemVariable();
 					

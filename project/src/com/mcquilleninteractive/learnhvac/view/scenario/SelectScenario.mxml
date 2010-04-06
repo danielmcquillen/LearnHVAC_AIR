@@ -101,6 +101,7 @@
 			<mx:Panel height="100%" width="670" title="{scenarioLibraryModel.scenarioListLocation}">
 				
 				<mx:List 	
+					id="lst"
 					selectable="false"
 					width="100%" 
 					height="100%" 

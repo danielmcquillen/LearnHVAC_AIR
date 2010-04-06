@@ -48,11 +48,20 @@
 			public function onCC():void
 			{
 				Swiz.addEventListener(ScenarioLoadedEvent.SCENARIO_LOADED, scenarioLoaded)
+				Swiz.addEventListener(ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED, onShortTermOutputUpdated)
 			}
 			
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
-			{		
+			{						
 				_sysVar = scenarioModel.getSysVar(_sysVarName)
+				
+				if (_sysVar.name=="FANTAirEnt")
+				{
+					Logger.debug("scenarioLoaded() _sysVar.name: " + _sysVar.name, this)
+					Logger.debug("scenarioLoaded() _sysVar.currValue: " + _sysVar.currValue, this)
+					Logger.debug("scenarioLoaded() _sysVar: " + _sysVar, this)
+				}
+				
 				
 				if (_sysVar!=null)
 				{
@@ -72,9 +81,12 @@
 				_sysVar = scenarioModel.getSysVar(_sysVarName)
 			}
 			
-			[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]
 			public function onShortTermOutputUpdated(event:ShortTermSimulationEvent):void
 			{				
+				if (_sysVar.name=="FANTAirEnt")
+				{
+					Logger.debug("onShortTermOutputUpdated() _sysVar.currValue: " + _sysVar.currValue, this)
+				}
 				if (_sysVar==null)
 				{
 					Logger.warn("Can't find system variable " + _sysVarName + " for ValueDisplayLabel", this)	

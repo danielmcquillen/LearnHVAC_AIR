@@ -298,7 +298,7 @@
 		paddingLeft="10"	 
 		verticalScrollPolicy="off" >
 		
-		<mx:HBox>
+		<mx:HBox paddingRight="10">
 			<mx:Label text="Current scenario:" color="#FFFFFF"/>
 			<mx:Label id="lblScenarioName" text="{scenarioModel.name}" color="#FFFFFF" />
 		</mx:HBox>
