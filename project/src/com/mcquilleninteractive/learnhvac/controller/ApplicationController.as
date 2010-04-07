@@ -3,6 +3,7 @@ package com.mcquilleninteractive.learnhvac.controller
 	
 	
 	import com.mcquilleninteractive.learnhvac.event.ApplicationEvent;
+	import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent;
 	import com.mcquilleninteractive.learnhvac.event.GetScenarioListEvent;
 	import com.mcquilleninteractive.learnhvac.event.LoggedInEvent;
 	import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
@@ -118,7 +119,11 @@ package com.mcquilleninteractive.learnhvac.controller
 		{
 			//do all cleanup necessary when user logs out...
 			Logger.debug("onLogout()",this)
-			applicationModel.loggedIn = false
+			
+			var evt:CloseScenarioEvent = new CloseScenarioEvent(CloseScenarioEvent.CLOSE_SCENARIO, true)
+			Swiz.dispatchEvent(evt)
+						
+			applicationModel.loggedIn = false		
 			
 			//setup for next login						
 			applicationModel.viewing = ApplicationModel.PANEL_SELECT_SCENARIO

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 	xmlns:mx="http://www.adobe.com/2006/mxml"
+			xmlns:view="com.mcquilleninteractive.learnhvac.view.*"
+			xmlns:scenario="com.mcquilleninteractive.learnhvac.view.scenario.*"
+			xmlns:analysis="com.mcquilleninteractive.learnhvac.view.analysis.*" 
+			height="100%" 
+			width="100%" 
+			horizontalScrollPolicy="off" 
+			verticalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.event.LoggedInEvent;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+			
+			[Autowire]
+			[Bindable]
+			public var applicationModel:ApplicationModel
+			
+			[Mediate(event="LoggedInEvent.LOGGED_IN")]
+			public function onLoggedIn(event:LoggedInEvent):void
+			{	
+				loginPanel.splashScreen.stopAnim()
+			}
+			
+		]]>
+	</mx:Script>
+
+	<view:Login 
+		id="loginPanel"
+		height="100%" width="100%"
+		visible="{!applicationModel.loggedIn}"
+		/>
+		
+	<mx:Canvas id="mainCanvas" 
+		height="100%" width="100%"
+		horizontalScrollPolicy="off"
+	 	verticalScrollPolicy="off"
+	 	visible="{applicationModel.loggedIn}"	    
+		>
+				
+		<mx:VBox width="100%" height="100%" verticalGap="0">
+			
+		<view:AppMenu id="appMenu" width="100%"/>
+		
+		<view:AppControlBar id="appBarCanvas" width="100%" />	
+		
+		<mx:ViewStack width="100%" height="100%"
+		  		paddingLeft="0" 
+				paddingRight="0" 
+				paddingBottom="0" 
+				paddingTop="0" 
+				resizeToContent="true" 
+				selectedIndex="{applicationModel.viewing}"
+			    historyManagementEnabled="false"
+			    creationPolicy="all"
+				>
+			<scenario:SelectScenario id="pnlSelectScenario"/>
+			<view:LongTermSimulation id="pnlSetup"/>
+			<view:ShortTermSimulation id="pnlSim"/>
+			<analysis:AnalysisPanel id="pnlAnalysis" />
+		</mx:ViewStack>
+	
+		</mx:VBox>
+	
+	</mx:Canvas>	
+	
+
+</mx:Canvas>	
+	

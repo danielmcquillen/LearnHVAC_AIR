@@ -12,6 +12,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.business.ShortTermSimulationDelegate;
 			import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent;
 			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 		import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
@@ -126,11 +127,29 @@
 		{
 			Logger.debug("onScenarioLoaded()",this)
 			currNode = ScenarioModel.SN_ROOF	
-			initBindings()
 			pe.initPE()
 			pe.setScene(currNode)
 			playIntroAnim()
 		}
+		
+		[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]
+		public function onSimOutputReceived(event:ShortTermSimulationEvent):void
+		{
+			try
+			{				
+				setDampersIA(scenarioModel.getSysVar("MXIntDampPos").currValue / 100)
+				setDampersEA(scenarioModel.getSysVar("MXExDampPos").currValue / 100)
+				setDampersRA(scenarioModel.getSysVar("MXRtnDampPos").currValue / 100)
+				setVAVDamper(scenarioModel.getSysVar("VAVDampPos").currValue / 100)
+			}
+			catch
+			(err:Error)
+			{
+				Logger.error("Couldn't set damper position: " + err, this)
+			}			
+			
+		}
+		
 		
 		[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
 		public function onShortTermSimStopped(event:ShortTermSimulationEvent):void
@@ -195,24 +214,8 @@
 			animPanel.playIntroAnim()
 		}
 		
-		private function initBindings():void
-		{						
-			while (cwArr.length>0)
-			{
-				ChangeWatcher(cwArr.pop()).unwatch()
-			}
-			
-			//setup any binding of viz objects to scenarioModel
-			//mixing box
-			cwArr.push(BindingUtils.bindSetter(setDampersIA, scenarioModel.getSysVar("MXIntDampPos"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setDampersEA, scenarioModel.getSysVar("MXExDampPos"), "currValue" ))
-			cwArr.push(BindingUtils.bindSetter(setDampersRA, scenarioModel.getSysVar("MXRtnDampPos"), "currValue" ))
-			//damper			
-			cwArr.push(BindingUtils.bindSetter(setVAVDamper, scenarioModel.getSysVar("VAVRhcPos"), "currValue" ))
-			
-		}
-			
 		
+				
 		public function setDampersIA(value:Number):void
 		{
 			mixingBox.setDamper("OA", value)		

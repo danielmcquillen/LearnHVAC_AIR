@@ -308,14 +308,15 @@
        					icon="{InfoIcon}"
        					click="onInformation()"
        		/>
-       			 
+       		
+       		<!--	 
        		<mx:Button id="btnLogout" 
        					width="60"
        					height="100%"
        					styleName="btnLogout"
        					label="Logout"
        					click="onLogout()" 
-       		/>
+       		/>-->
 	</mx:HBox>
              					
 			

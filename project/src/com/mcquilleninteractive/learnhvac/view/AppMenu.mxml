@@ -8,6 +8,9 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent;
 			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
@@ -40,9 +43,7 @@
 				var cmd:String = event.item.data
 				
 				switch(cmd)
-				{
-					
-						
+				{							
 					
 					/* COMFEN */ 	
 						
@@ -54,6 +55,10 @@
 						
 					case "hide":
 						Application.application.minimize()
+						break
+						
+					case "logout":
+						onLogout()
 						break
 						
 					case "preferences":
@@ -110,6 +115,28 @@
 			}
 					
 			
+			public function onLogout():void
+			{
+				Alert.show("Are you sure you want to log out?", "Logout", Alert.OK|Alert.CANCEL, null, onLogoutAlertListener)
+			}
+			
+			
+			public function onLogoutAlertListener(evt:CloseEvent):void
+			{
+				if (evt.detail == Alert.OK)
+				{	
+					Logger.debug("#LogoutCommand: user confirmed intention to log out. Launching app event...")
+					var event:LogoutEvent = new LogoutEvent(LogoutEvent.LOGOUT, true)
+					dispatchEvent(event)
+				}
+				else
+				{
+					//do nothing
+				}
+			}
+					
+					
+			
 		]]>
 	</mx:Script>
 	
@@ -130,10 +157,12 @@
 				<util:MenuItem type="separator"/>
 				<util:MenuItem label="Hide Learn HVAC" id="hide" data="hide"/>
 				<util:MenuItem type="separator"/>
+				<util:MenuItem label="Logout" id="logout" data="logout"/>
+				<util:MenuItem type="separator"/>
 				<util:MenuItem label="Quit" id="quit" data="quit"/>
 			</util:MenuItem>
 		
-			<util:MenuItem label="File" id="file">
+			<util:MenuItem label="Scenario" id="scenario">
 				<util:MenuItem label="Close scenario" 
 					id="close_project" 
 					data="close_scenario" 

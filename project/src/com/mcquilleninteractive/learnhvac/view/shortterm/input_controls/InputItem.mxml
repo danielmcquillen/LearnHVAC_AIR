@@ -59,21 +59,8 @@
 			{
 				Swiz.addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged, false, 0, true)
 				Swiz.addEventListener(LongTermImportEvent.RUN_CHANGED, onLTRunToImportChanged, false, 0, true)
-				Swiz.addEventListener(CloseScenarioEvent.CLOSE_SCENARIO, onCloseScenario, false, 0, true)
-			
 			}
 			
-			protected function onCloseScenario():void
-			{
-				removeListeners()
-			}
-			
-			protected function removeListeners():void
-			{
-				Swiz.addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged, false, 0, true)
-				Swiz.addEventListener(LongTermImportEvent.RUN_CHANGED, onLTRunToImportChanged, false, 0, true)
-				Swiz.addEventListener(CloseScenarioEvent.CLOSE_SCENARIO, onCloseScenario, false, 0, true)
-			}
 			
 			protected function onUnitsChanged(event:SetUnitsCompleteEvent):void
 			{

@@ -219,7 +219,8 @@ package com.mcquilleninteractive.particleengine
 				setCCTAirLvg(_scenarioModel.getSysVar("CCTAirLvg").currValue)
 				setFANTAirEnt(_scenarioModel.getSysVar("FANTAirEnt").currValue)
 				setFANTAirLvg(_scenarioModel.getSysVar("FANTAirLvg").currValue)
-				setMXRtnDampPos(_scenarioModel.getSysVar("MXRtnDampPos").currValue)
+				setMXRtnDampPos(_scenarioModel.getSysVar("MXRtnDampPos").currValue / 100)
+				setVAVDampPos(_scenarioModel.getSysVar("VAVDampPos").currValue / 100)				
 				setMXTAirRet(_scenarioModel.getSysVar("MXTAirRet").currValue)
 				setSYSTAirDB(_scenarioModel.getSysVar("SYSTAirDB").currValue)
 				setMXTAirMix(_scenarioModel.getSysVar("MXTAirMix").currValue)
@@ -372,7 +373,8 @@ package com.mcquilleninteractive.particleengine
 				setCCTAirLvg(_scenarioModel.getSysVar("CCTAirLvg").currValue)
 				setFANTAirEnt(_scenarioModel.getSysVar("FANTAirEnt").currValue)
 				setFANTAirLvg(_scenarioModel.getSysVar("FANTAirLvg").currValue)
-				setMXRtnDampPos(_scenarioModel.getSysVar("MXRtnDampPos").currValue)
+				setMXRtnDampPos(_scenarioModel.getSysVar("MXRtnDampPos").currValue / 100)
+				setVAVDampPos(_scenarioModel.getSysVar("VAVDampPos").currValue / 100)			
 				setMXTAirRet(_scenarioModel.getSysVar("MXTAirRet").currValue)
 				setSYSTAirDB(_scenarioModel.getSysVar("SYSTAirDB").currValue)
 				setMXTAirMix(_scenarioModel.getSysVar("MXTAirMix").currValue)
@@ -456,7 +458,7 @@ package com.mcquilleninteractive.particleengine
 			currSysVarValuesArr["MXTAirRet"] = -999
 			currSysVarValuesArr["VAVTAirEnt"] = -999
 			currSysVarValuesArr["VAVTAirLvg"] = -999
-			currSysVarValuesArr["VAVRhcPos"] = -999
+			currSysVarValuesArr["VAVDampPos"] = -999
 			currSysVarValuesArr["RMTemp"] = -999
 			currSysVarValuesArr["SYSTAirDB"] = -999
 			
@@ -502,7 +504,7 @@ package com.mcquilleninteractive.particleengine
 			initScene(SN_VAV)
 			setVAVTAirEnt(25)
 			setVAVTAirLvg(45)
-			setVAVRhcPos(0)
+			setVAVDampPos(0)
 			
 			//SYSTEM
 			sysNode = SN_SYSTEM
@@ -638,16 +640,23 @@ package com.mcquilleninteractive.particleengine
 		
 		public function setMXRtnDampPos(sysVarValue:Number):void
 		{
+			Logger.debug("setting setMXRtnDampPos to : " +sysVarValue,this)
+			// Both Mixing Box and System View
+			OABornProbability = 1 - sysVarValue
+			bornProbability = sysVarValue
+			Logger.debug("OABornProbability: " +OABornProbability,this)
+			Logger.debug("bornProbability: " + bornProbability,this)
+			
 			if (sysNode == SN_MIXINGBOX)
 			{
-				// Both Mixing Box and System View
-				OABornProbability = 1 - sysVarValue
-				bornProbability = OABornProbability
-				//System view
-				goalProbability[13] = sysVarValue
 				//Mixing box
 				goalProbability[1] = sysVarValue
 			}	
+			else if (sysNode == SN_SYSTEM)
+			{				
+				//System view
+				goalProbability[13] = sysVarValue
+			}
 		}
 		
 		public function setMXTAirRet(sysVarValue:Number):void
@@ -781,7 +790,7 @@ package com.mcquilleninteractive.particleengine
 			}
 		}
 		
-		public function setVAVRhcPos(sysVarValue:Number):void
+		public function setVAVDampPos(sysVarValue:Number):void
 		{
 			if (sysNode == SN_VAV)
 			{
