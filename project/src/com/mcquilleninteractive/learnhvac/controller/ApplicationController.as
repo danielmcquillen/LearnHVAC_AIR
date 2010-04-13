@@ -62,7 +62,7 @@ package com.mcquilleninteractive.learnhvac.controller
 								
 			//if this is first run, copy helper files to working directories
 			var ba:ByteArray = EncryptedLocalStore.getItem("lastInstalledVersion")	
-						
+									
 			if (ba==null || ba.readUTFBytes(ba.bytesAvailable)!=AboutInfo.applicationVersion)
 			{
 				Logger.debug("New version installed ... now copying helper files...",this)
@@ -88,8 +88,10 @@ package com.mcquilleninteractive.learnhvac.controller
 		[Mediate(event="ApplicationEvent.START_APP")]
 		public function startApp(event:ApplicationEvent):void
 		{
-			Logger.logToFile = applicationModel.logToFile	
-			
+			if (applicationModel.logToFile)
+			{
+				Logger.debug("Writing log to: " + applicationModel.logFile.nativePath, this)
+			}			
 			//check for correct flash version
 			Logger.debug("Flash player version: " + AboutInfo.flashPlayerVersion, this)
 			var versionMajor:String = AboutInfo.flashPlayerVersion.substr(4,2)
@@ -194,7 +196,8 @@ package com.mcquilleninteractive.learnhvac.controller
 			}
 			catch(error:Error)
 			{
-				Logger.error("Couldn't copy modelica files: Error: " + error,this)
+				Alert.show("Couldn't copy Modelica files to : " + copyModelicaFile.nativePath + ". Please try to start application again or copy manually.", "Error")
+				Logger.error("Couldn't copy Modelica files: Error: " + error,this)
 			}	
 			//copy the energyplus to the storage directory	
 			var eplusFile:File = File.applicationDirectory.resolvePath("energyplus")
@@ -205,8 +208,14 @@ package com.mcquilleninteractive.learnhvac.controller
 			}
 			Logger.debug("Moving EnergyPlus to: " + copyEplusFile.nativePath, this) 
 			copyEplusFile.createDirectory()
-			eplusFile.copyTo(copyEplusFile, true)		
-			
+			try
+			{
+				eplusFile.copyTo(copyEplusFile, true)		
+			}
+			catch(error:Error)
+			{
+				Alert.show("Couldn't copy EnergyPlus files to : " + copyEplusFile.nativePath + ". Please try to start application again or copy manually.", "Error")
+			}
 			//Don't need the following since we're embedding scenarios directly in code for now
 			//copy the included scenarios to the storage directory	
 			/*

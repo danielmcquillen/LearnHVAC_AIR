@@ -11,6 +11,8 @@ package com.mcquilleninteractive.learnhvac.util
 	import mx.logging.Log;
 	import mx.logging.LogEventLevel;
 	
+	import org.swizframework.Swiz;
+	
 	public class Logger	
 	{
 				
@@ -19,6 +21,7 @@ package com.mcquilleninteractive.learnhvac.util
 		private static var socket : XMLSocket;
 		public static var logFile:File		
 		public static var logFileStream:FileStream
+
 		public static var logToFile:Boolean = false
 
 		public static function debug(o:Object, target:Object=null):void
@@ -132,10 +135,12 @@ package com.mcquilleninteractive.learnhvac.util
 					{
 						logFileDir.createDirectory()
 					}
-					logFile = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "applicationLog.txt")
+					var appModel:ApplicationModel = Swiz.getBean("applicationModel") as ApplicationModel
+					logFile = appModel.logFile
 					logFileStream = new FileStream()
+					logToFile = appModel.logToFile				
 	   			}
-	   			if (logToFile )
+	   			if (logToFile)
 	   			{
 	   				logFileStream.open(logFile, FileMode.APPEND)
 	   				logFileStream.writeUTFBytes(File.lineEnding + o)

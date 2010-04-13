@@ -278,9 +278,7 @@
 			</mx:ComboBox>			
 		</mx:HBox>
 		
-		<mx:Spacer height="10"/>
-		<mx:HBox verticalAlign="middle" width="100%">			
-			<mx:Image source="{LongTermImportIcon}" />
+		<mx:HBox verticalAlign="middle" width="100%">	
 			<mx:Label text="Long-term Simulation Import"   fontWeight="bold" paddingTop="5"/>			
 		</mx:HBox>
 				
@@ -391,7 +389,7 @@
 		</mx:DataGrid>
 		<mx:Label text="NOTE: Values will update when simulation is running."/>
 		
-					
+		
 		
 </mx:VBox>
 

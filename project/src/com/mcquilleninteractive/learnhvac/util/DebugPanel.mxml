@@ -26,14 +26,13 @@
 				import com.adobe.onair.logging.TextAreaTarget
 				import org.swizframework.Swiz
 			
-				[Bindable]
-				[Autowire]
-				public var scenarioModel:ScenarioModel
-								
-				[Bindable]
-				[Autowire]
-				public var longTermSimulationDataModel:LongTermSimulationDataModel
-			
+				protected var _applicationModel:ApplicationModel
+				
+				protected var _scenarioModel:ScenarioModel
+							
+				protected var _longTermSimulationDataModel:LongTermSimulationDataModel
+				
+						
 				public var textAreaTarget:TextAreaTarget
 				
 				public function onCreationComplete():void
@@ -44,7 +43,24 @@
 					textAreaTarget.includeLevel = true
 					textAreaTarget.level = LogEventLevel.DEBUG
 					Log.addTarget(textAreaTarget)
-					txtDebug.text += "Learn HVAC Debugger Window\n-------------------------\n\nVersion: " + AboutInfo.applicationVersion +"\n\n"
+					
+					var initialMsg:String = "Learn HVAC Debugger Window\n"
+					initialMsg+= "-------------------------\n\n"
+					initialMsg+= "Version: " + AboutInfo.applicationVersion +"\n"
+					
+					_applicationModel = Swiz.getBean("applicationModel") as ApplicationModel				
+					if (_applicationModel.logToFile)
+					{
+						initialMsg += "Log file: " + _applicationModel.logFile.nativePath + "\n"
+					}					
+					
+					initialMsg +="\n\nType 'help' for commands\n\n"
+					
+					txtDebug.text += initialMsg
+						
+					_scenarioModel = Swiz.getBean("scenarioModel") as ScenarioModel	
+					_longTermSimulationDataModel = Swiz.getBean("longTermSimulationDataModel") as LongTermSimulationDataModel
+							
 				}
 			
 				public function onPanelClose(evt:Event):void
@@ -77,23 +93,28 @@
 									"\n  vars:all         - list all variables and their current values  (SI and IP)" +
 									"\n  vars:input       - list all input variables and their current values  (SI and IP)" + 
 									"\n  vars:output      - list all output variables and their current values  (SI and IP)" +
-									"\n  vars:[varname]   - list specific variable and current values  (SI and IP) e.g. vars:SYSTAirDB"
+									"\n  vars:[varname]   - list specific variable and current values  (SI and IP) e.g. vars:SYSTAirDB" +
+									"\n  mtrace:on        - turns on certain tracing mechanisms to help debug Modelica model." +
+									"\n                      + more detailed Modelica communication messages are logged to the debug window" +
+									"\n                      + a log of values is written to file " +
+									"\n                      + dslog.txt and dsres.mat are archived after each run" +
+									"\n  mtrace:off       - turns off trace mode\n\n"
+									
+									
 									//"\n\n  vars:LTtoST:[run1/run2]   - list specific SPARK variables and current values  (SI and IP) e.g. vars:TAirOut"
 									//"\n\n  testMode:[false/true]   - turn test mode on/off. In test mode, simulations use stored data (and E+ are not run)."
 							break
-						
-						case "testMode":
-						
-							if (args[1]=="true")
-							{							
-								ApplicationModel.testMode = true	
-							}
-							else
+							
+						case "mtrace":						
+							if (args[1]!="on" && args[1]!="off")
 							{
-								ApplicationModel.testMode = false
+								Logger.error("unrecognized settings for mtrace. Use either 'on' or 'off'")
+								return
 							}
-						
+							_applicationModel.mTrace = (args[1] == "on")
+							Logger.debug("mtrace set to : " + args[1], this)
 							break
+									
 						
 						case "load":
 							if (args[1]=="eplus")
@@ -124,7 +145,7 @@
 							switch(args[1])
 							{
 								case "all" :
-									for each (sysNode in scenarioModel.sysNodesAC)
+									for each (sysNode in _scenarioModel.sysNodesAC)
 									{
 										for each (sysVar in sysNode.sysVarsArr)
 										{
@@ -135,7 +156,7 @@
 							
 								case "input":
 							
-									for each (sysNode in scenarioModel.sysNodesAC)
+									for each (sysNode in _scenarioModel.sysNodesAC)
 									{
 										for each (sysVar in sysNode.sysVarsArr)
 										{
@@ -146,7 +167,7 @@
 								
 								case "output":
 								
-									for each (sysNode in scenarioModel.sysNodesAC)
+									for each (sysNode in _scenarioModel.sysNodesAC)
 									{
 										for each (sysVar in sysNode.sysVarsArr)
 										{
@@ -175,7 +196,7 @@
 									}				
 									
 									//get SparkInputVarsVOs and show values of each for each date
-									var ePlusData:EnergyPlusData = longTermSimulationDataModel.getEnergyPlusData(runID)
+									var ePlusData:EnergyPlusData = _longTermSimulationDataModel.getEnergyPlusData(runID)
 									var zoneDataArr:Array = ePlusData.zoneDataArr
 									var dateArr:Array = ePlusData.dataArr[ePlusData.dateTimeID]
 									var len:uint = zoneDataArr.length
@@ -230,7 +251,7 @@
 																		
 								default:
 								
-									sysVar = scenarioModel.getSysVar(args[1])
+									sysVar = _scenarioModel.getSysVar(args[1])
 									var s:String = sysVar.name + " (" + sysVar.ioType + ")  "
 									if (sysVar!=null)
 									{
@@ -246,7 +267,7 @@
 							break
 							
 						default:
-							msg = "\n unrecognized command"
+							msg = "\n unrecognized command\n"
 					}											
 				
 					txtDebug.text = txtDebug.text + msg

@@ -1,11 +1,9 @@
 package com.mcquilleninteractive.learnhvac.model
 {
-	import com.mcquilleninteractive.learnhvac.business.GraphManager;
-	import com.mcquilleninteractive.learnhvac.vo.UserVO;
+	import flash.events.EventDispatcher;
+	import flash.filesystem.File;
 	
 	import mx.collections.ArrayCollection;
-	import flash.events.EventDispatcher
-	import com.mcquilleninteractive.learnhvac.vo.ScenarioListItemVO;
 	
 	[Bindable]
 	public class ApplicationModel extends EventDispatcher
@@ -14,12 +12,11 @@ package com.mcquilleninteractive.learnhvac.model
 					
 		// ATTRIBUTES FOR CONTROLLING TEST/MOCK MODE
 		//This flag will cause certain functions to auto-submit (login)
-		public static var testMode:Boolean = false
-		public static var traceModelicaIO:Boolean = false
-		
+		public static var testMode:Boolean = false		
 				
 		//(e.g. existing E+ output is loaded rather than running simulation)		
 		public static var mockEPlusData:Boolean = false
+		
 		
 		// REGULAR CLASS ATTRIBUTES
 		
@@ -31,6 +28,11 @@ package com.mcquilleninteractive.learnhvac.model
 		public static const PANEL_ANALYSIS : Number = 3
 		
 		
+		//Controls a couple tracing methods used for debugging Modelica (e.g. copying dsres.txt and dslog.txt)
+		public var mTrace:Boolean = false
+		
+		public var logFile:File
+		public var logToFile:Boolean = true
 		public var viewing:uint = PANEL_SELECT_SCENARIO	
 		public var isFirstStartup:Boolean = false				
 		public var loggedIn: Boolean = false
@@ -50,7 +52,6 @@ package com.mcquilleninteractive.learnhvac.model
 		public var bldgSetupEnabled:Boolean = false
 		public var showFramesPerSecondBar:Boolean = false
 		public var debug:Boolean = false
-		public var logToFile:Boolean = true
 		
 		// Vars for managing communication with SPARK
 		public static var ANIMATION_SPEED_FULL:String = "full"
@@ -87,6 +88,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function ApplicationModel()
 		{
+			logFile = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "applicationLog.txt")
 		}
 		
 		public static function currentTempUnits():String
@@ -101,6 +103,8 @@ package com.mcquilleninteractive.learnhvac.model
 				return "\u00B0C"
 			}
 		}
+		
+			
 		
 		
 	}

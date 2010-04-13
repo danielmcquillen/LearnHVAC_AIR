@@ -249,7 +249,7 @@
 		   
 			>
 			<mx:dataProvider>       
-				<mx:Object label="Real-time Sim."  
+				<mx:Object label="Short-term Sim."  
 						icon="{BuildingIcon}"
 						data="modelica"/>
 				<mx:Object label="Long-term Sim." 

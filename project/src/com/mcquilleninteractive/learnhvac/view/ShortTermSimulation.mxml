@@ -76,7 +76,7 @@
 		
 		[Bindable]
 		[Embed(source='assets/img/long_term_import_icon.png')]
-		public var RealTimeImportIcon:Class
+		public var LongTermImportIcon:Class
 							
 		private function onHide():void
 		{

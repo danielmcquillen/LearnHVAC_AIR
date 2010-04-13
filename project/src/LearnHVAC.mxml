@@ -87,8 +87,8 @@ building has been developed by two national laboratories and is excluded from th
 	<swizframework:SwizConfig 
 		strict="true"
 		eventPackages="com.mcquilleninteractive.learnhvac.event"
-		mediateBubbledEvents="true"
 		viewPackages="com.mcquilleninteractive.learnhvac.view"
+		mediateBubbledEvents="true"
         injectionEvent="preinitialize"
 		beanLoaders="{[Beans]}"
 		logEventLevel="{LogEventLevel.WARN}"

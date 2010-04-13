@@ -1,5 +1,6 @@
 package com.mcquilleninteractive.learnhvac.business
 {
+	import com.mcquilleninteractive.learnhvac.event.ModelicaInputsTrace;
 	import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
@@ -29,6 +30,8 @@ package com.mcquilleninteractive.learnhvac.business
 			Documentation on protocol is at bottom of class
 	
 	*/
+	
+	
 		
 	public class ShortTermSimulationDelegate extends EventDispatcher implements IShortTermSimulationDelegate
 	{
@@ -47,6 +50,9 @@ package com.mcquilleninteractive.learnhvac.business
  		// simulation terminates due to error during time integration. 	
  		public static const SIM_FATAL_INTEGRATION:Number = -20;	
 			
+		[Autowire]
+		public var applicationModel:ApplicationModel
+		
 		[Autowire]
 		public var scenarioModel:ScenarioModel
 				
@@ -242,7 +248,7 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		protected function setupModelicaProcess():void
 		{
-			 _startupInfo = new NativeProcessStartupInfo()
+			_startupInfo = new NativeProcessStartupInfo()
 			_startupInfo.executable = _modelicaExe
 			_startupInfo.workingDirectory = _modelicaDir
 			
@@ -343,10 +349,10 @@ package com.mcquilleninteractive.learnhvac.business
 				var sysVar:SystemVariable = SystemVariable(outputSysVarsArr[i])		
 				
 				sysVar.baseSIValue = outArr[i+6]								
-				if (ApplicationModel.traceModelicaIO) out +=  "\n " + (i+1).toString() + " var: " + sysVar.name + " value: " + outArr[i+6];				
+				if (applicationModel.mTrace) out +=  "\n " + (i+1).toString() + " var: " + sysVar.name + " value: " + outArr[i+6];				
 			}
 			
-			if (ApplicationModel.traceModelicaIO) Logger.debug("Values set by Modelica: \n----------------------------\n " + out, this);
+			if (applicationModel.mTrace) Logger.debug("Values set by Modelica: \n----------------------------\n " + out, this);
 			
 			
 						
@@ -357,13 +363,50 @@ package com.mcquilleninteractive.learnhvac.business
 			var inputs:String = ""
 			var len:uint = inputSysVarsArr.length
 			
+			//this variable is used to build a debug trace for inputs
 			var tr:String = "(time: " + _simTime + ")"
+			//this variable is used to build a debug output
+			var inputsTrace:String = ""
+			
 			for(var i:uint=0;i<len;i++)
 			{
 				inputs += " " + inputSysVarsArr[i].baseSIValue	
-				if (ApplicationModel.traceModelicaIO) tr += "\n" + inputSysVarsArr[i].name + " : " + inputSysVarsArr[i].baseSIValue;	
+				
+				
+				if (applicationModel.mTrace)
+				{
+					tr += "\n" + inputSysVarsArr[i].name + " : " + inputSysVarsArr[i].baseSIValue;	
+			
+					//build a string for special file requested by MWetter for debugging
+					//input vales should be written like {val1, val2, val3...}
+					inputsTrace += inputSysVarsArr[i].baseSIValue
+					if (i!=len-1)
+					{
+						inputsTrace +=","
+					}
+				} 
 			}		
 			
+			if (applicationModel.mTrace)
+			{
+				var s:String = ""
+				s = "{" 
+				s += MODELICA_VERSION
+				s += FLAG_NORMAL_OPERATION+ ","
+				s += len + ","
+				s += "0," //never integers
+				s += "0," //never booleans
+				s +=  _simTime + ","
+				s += inputsTrace
+				s += "}\n"
+			
+				var evt:ModelicaInputsTrace = new ModelicaInputsTrace(ModelicaInputsTrace.INPUTS_TRACE, true)
+				evt.inputsTrace = s
+				dispatchEvent(evt)
+								
+				Logger.debug("Input string: " + out, this);
+				Logger.debug("Inputs details :\n---------------------\n" + tr, this);
+			}
 			
 			var out:String = ""
 			out += MODELICA_VERSION
@@ -375,8 +418,6 @@ package com.mcquilleninteractive.learnhvac.business
 			out += inputs
 			out += "\n"
 			
-			if (ApplicationModel.traceModelicaIO)Logger.debug("Input string: " + out, this);
-			if (ApplicationModel.traceModelicaIO)Logger.debug("Inputs details :\n---------------------\n" + tr, this);
 			
 			return out
 		}

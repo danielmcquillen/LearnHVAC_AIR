@@ -51,7 +51,6 @@ package com.mcquilleninteractive.particleengine
 		public var particleMax:Number
 		public var sysVarsArr:Array
 		
-		public var OABornProbability:Number
 		public var bornProbability:Number
 		
 		public var particleMax_SYS:Number
@@ -104,7 +103,6 @@ package com.mcquilleninteractive.particleengine
 		public var VAVgoalColorG:Array
 		public var VAVgoalColorB:Array
 					
-		public var returnProb:Number
 		public var bornHeadGoal:Number
 		public var bornTailGoal:Number
 		public var iSize:Number	
@@ -168,27 +166,10 @@ package com.mcquilleninteractive.particleengine
 				startPE()
 			}
 			
-			// TODO: for some obscure reason, MX doesn't show correct MXTAirRet when first 
-			//       going to MX node, so update manually here
-			if (systemNode==ScenarioModel.SN_MIXINGBOX)
-			{
-				var mxTAirRet:SystemVariable = _scenarioModel.getSysVar("MXTAirRet")
-				if (mxTAirRet)
-				{					
-					setMXTAirRet(mxTAirRet.currValue)
-				}
-				else
-				{
-					Logger.error("Couldn't find MXTAirTRet system variable",this)
-				}
-			}
-			
 		}
 		
 		public function startPE():void
 		{
-			Logger.debug("#PE: startPE() current node: " + sysNode)
-			
 			//TODO: implement different air animations speeds...until then, just turn on or off 
 			// depending on user settings
 			var applicationModel:ApplicationModel = Swiz.getBean("applicationModel") as ApplicationModel
@@ -238,7 +219,6 @@ package com.mcquilleninteractive.particleengine
 		
 		public function stopPE():void
 		{
-			Logger.debug("#PE: stopPE()") 
 			stopAnim() 
 			running = false
 			visible = false
@@ -252,10 +232,10 @@ package com.mcquilleninteractive.particleengine
 		}
 
 			
-		//TEMP function name is setParticleEngine
-		public function spe(evt:Object):void
+		public function setParticleEngine(evt:Object):void
 		{
-			if (evt.setting == "full" || evt.setting=="reduced"){
+			if (evt.setting == "full" || evt.setting=="reduced")
+			{
 				if (evt.setting=="full")
 				{
 					particleMax_SYS = 170
@@ -321,7 +301,6 @@ package com.mcquilleninteractive.particleengine
 		
 		public function initPE():void
 		{
-			Logger.debug("#PE: initPE()")
 			currSysVarValuesArr = []	
 			sysVarsArr=[]
 			
@@ -335,8 +314,6 @@ package com.mcquilleninteractive.particleengine
 			
 			Swiz.addEventListener(ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED, onUpdateOuputValues)
 			
-			Logger.debug("#PE: initPE() _scenarioModel: " + _scenarioModel)
-	
 			running = false
 			sysVarsArr = []
 	
@@ -364,7 +341,7 @@ package com.mcquilleninteractive.particleengine
 		
 		public function onUpdateOuputValues(event:ShortTermSimulationEvent):void
 		{
-			
+			Logger.debug("onUpdateOuputValues()", this)
 			try
 			{
 				setHCTAirEnt(_scenarioModel.getSysVar("HCTAirEnt").currValue)		
@@ -397,7 +374,6 @@ package com.mcquilleninteractive.particleengine
 		
 		private function stopAnim():void
 		{
-			Logger.debug("#PE: stopAnim() called")
 			timer.stop()
 			particleManager.removeAllParticles()
 		}
@@ -407,7 +383,6 @@ package com.mcquilleninteractive.particleengine
 		private function initColors():void
 		{
 		
-			Logger.debug("#PE:initColors()")
 			SYSgoalColorR = new Array(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
 			SYSgoalColorG = new Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100);
 			SYSgoalColorB = new Array(41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41);
@@ -445,6 +420,7 @@ package com.mcquilleninteractive.particleengine
 		
 		private function initSysVars():void
 		{
+			Logger.debug("initSysVars()", this)
 			//init array that holds current values
 			//this array allows us to skip updates if there's no change in value
 			currSysVarValuesArr = []
@@ -638,24 +614,29 @@ package com.mcquilleninteractive.particleengine
 			}	
 		}
 		
+		/* ********** */
+		/* MX RETURN  */
+		/* ********** */
+		
 		public function setMXRtnDampPos(sysVarValue:Number):void
 		{
-			Logger.debug("setting setMXRtnDampPos to : " +sysVarValue,this)
-			// Both Mixing Box and System View
-			OABornProbability = 1 - sysVarValue
-			bornProbability = sysVarValue
-			Logger.debug("OABornProbability: " +OABornProbability,this)
-			Logger.debug("bornProbability: " + bornProbability,this)
+			Logger.debug("setMXRtnDampPos() value:" + sysVarValue, this)
 			
+			// Both Mixing Box and System View				
 			if (sysNode == SN_MIXINGBOX)
 			{
 				//Mixing box
+				bornProbability = 1 - sysVarValue
+				//MX exhaust prob
 				goalProbability[1] = sysVarValue
 			}	
 			else if (sysNode == SN_SYSTEM)
 			{				
 				//System view
-				goalProbability[13] = sysVarValue
+				bornProbability = sysVarValue
+				goalProbability[14] = 1 - sysVarValue
+				Logger.debug("goalProbability[15]: "+ sysVarValue, this)
+				Logger.debug("bornProbability: "+ bornProbability, this)
 			}
 		}
 		
@@ -869,8 +850,7 @@ package com.mcquilleninteractive.particleengine
 				
 				case SN_SYSTEM:
 					
-					bornProbability = OABornProbability
-					returnProb = 1 - OABornProbability
+					bornProbability = 1
 					bornHeadGoal = 0;
 					bornTailGoal = 1;
 					iSize = 5
@@ -878,10 +858,10 @@ package com.mcquilleninteractive.particleengine
 					birthPace = particleBirth_SYS 
 					particleMax = particleMax_SYS
 					
-					goalProbability = new Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, returnProb, 1, 1);
+					goalProbability = new Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 					goalHead = new Array(2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 2, 0, 0);
-					goalTail = new Array(2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
-					goalPositionX = new Array(270, 160, 275, 362, 413, 575, 600, 600, 525, 450, 420, 300, 275, 165, 165, -10);
+					goalTail = new Array(2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16);
+					goalPositionX = new Array(270, 220, 275, 362, 413, 575, 600, 600, 525, 450, 420, 300, 275, 165, 165, -10);
 					goalPositionY = new Array(10, 120, 120, 120, 120, 120, 150, 220, 220, 220, 350, 350, 225, 225, 125, 125);
 					goalFuzzyRadius = new Array(15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15);
 					goalNearRadius = new Array(5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
@@ -905,14 +885,18 @@ package com.mcquilleninteractive.particleengine
 				
 					bornHeadGoal = 0;
 					bornTailGoal = 4;
-					bornProbability = OABornProbability
-					exhaustProb = OABornProbability
+					
+					// bornProb for this node is how likely it will be born at the bottom
+					// of the return air ductwork
+					bornProbability = 1
 					iSize = 11
 					rGGrav = 1.15
 					birthPace = particleBirth_MX
 					particleMax =  particleMax_MX
 					
-					goalProbability = new Array(1, exhaustProb, 1, 1, 1, 1, 1, 1, 1, 1);
+					//exhaustProb = goalProbability[1]
+					
+					goalProbability = new Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 					goalHead = new Array(1, 2, x, x, x, x, x, x, x, x)
 					goalTail = new Array(1, 3, 6, 7, 5, 6, 7, 8, 9, 0)
 					goalPositionX = new Array(285, 290, -50, 490, 492, 495, 595, 740, 740, 320);

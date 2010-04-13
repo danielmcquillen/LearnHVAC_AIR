@@ -56,7 +56,8 @@
 				if (performValidation() && _applicationModel)
 				{	
 					_applicationModel.animationSpeed = rdoAnimation.selectedValue.toString()													
-					_applicationModel.logToFile = cboLogToFile.selected												
+					_applicationModel.logToFile = cboLogToFile.selected																			
+					_applicationModel.mTrace = cboMTrace.selected								
 																	
 					//only launch setUnitsEvent if different from current value
 					/*if (ApplicationModel.currUnits != rdoUnits.selectedValue)
@@ -109,6 +110,10 @@
 	    		    			
 			<mx:FormItem label="Write log messages to log.txt:" >
 				<mx:CheckBox id="cboLogToFile" label="Log to file" selected="{_applicationModel.logToFile}"/>
+	    	</mx:FormItem>
+	    		    		
+			<mx:FormItem label="Trace Modelica inputs/outputs:" >
+				<mx:CheckBox id="cboMTrace" label="Modelica trace" selected="{_applicationModel.mTrace}"/>
 	    	</mx:FormItem>
 	
 			<mx:Spacer height="10"/>

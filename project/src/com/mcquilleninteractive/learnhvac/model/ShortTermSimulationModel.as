@@ -12,11 +12,13 @@ package com.mcquilleninteractive.learnhvac.model
 	 *        model will remember the settings for that run.
 	 */
 	 
+	import com.mcquilleninteractive.learnhvac.event.ModelicaInputsTrace;
 	import com.mcquilleninteractive.learnhvac.event.ShortTermTimerEvent;
 	import com.mcquilleninteractive.learnhvac.util.DateUtil;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
 	import flash.events.EventDispatcher;
+	import flash.filesystem.File;
 	
 	import org.swizframework.Swiz;
 	
@@ -26,12 +28,12 @@ package com.mcquilleninteractive.learnhvac.model
 		public static const MAX_TIME_STEP:Number = 1000
 		public static const STATE_OFF:String = "off"
 		public static const STATE_RUNNING:String = "running"
-		public static const STATE_PAUSED:String = "paused"
+		public static const STATE_PAUSED:String = "paused";
 		
 		//set to realtimeStartDatetime from scenario and then incremented while modelica is running
 		public var startDateTime:Date	
 		public var currDateTime:Date	
-		
+				
 		//seconds elapsed since start time		
 		public var timeInSec:int		
 							
@@ -47,6 +49,11 @@ package com.mcquilleninteractive.learnhvac.model
 		//(this will be set by model based on Scenario)
 		public var realtimeStartDatetime:Date
 					
+		//for debugging 
+		public var modelicaInputsTraceFile:File		
+		public var modelicaInputsTrace:String = ""
+		
+		
 		protected var _currentState:String = STATE_OFF
 				
 		public function ShortTermSimulationModel()
@@ -129,7 +136,8 @@ package com.mcquilleninteractive.learnhvac.model
 			}
 			updateTimer(0)
 		}
-			
+		
+		
 		
 		
 	}

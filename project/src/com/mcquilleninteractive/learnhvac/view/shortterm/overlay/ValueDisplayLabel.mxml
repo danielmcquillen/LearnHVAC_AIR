@@ -54,14 +54,7 @@
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{						
 				_sysVar = scenarioModel.getSysVar(_sysVarName)
-				
-				if (_sysVar.name=="FANTAirEnt")
-				{
-					Logger.debug("scenarioLoaded() _sysVar.name: " + _sysVar.name, this)
-					Logger.debug("scenarioLoaded() _sysVar.currValue: " + _sysVar.currValue, this)
-					Logger.debug("scenarioLoaded() _sysVar: " + _sysVar, this)
-				}
-				
+						
 				
 				if (_sysVar!=null)
 				{
@@ -83,10 +76,7 @@
 			
 			public function onShortTermOutputUpdated(event:ShortTermSimulationEvent):void
 			{				
-				if (_sysVar.name=="FANTAirEnt")
-				{
-					Logger.debug("onShortTermOutputUpdated() _sysVar.currValue: " + _sysVar.currValue, this)
-				}
+				
 				if (_sysVar==null)
 				{
 					Logger.warn("Can't find system variable " + _sysVarName + " for ValueDisplayLabel", this)	
