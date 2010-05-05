@@ -1,63 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:LinkButton xmlns:mx="http://www.adobe.com/2006/mxml"
-	creationComplete="onCC()"
-	toolTip="toggle between SI and IP units."
     click="onClick()"
     color="#BBBBBB"
-    label="{_label}"
+    label="{ApplicationModel.currUnits}"
+	toolTip="{_toolTip}"
 	>
 	
 	<mx:Script>
 		<![CDATA[
-			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent;
 			import com.mcquilleninteractive.learnhvac.event.SettingsEvent;
-			import com.mcquilleninteractive.learnhvac.util.Logger
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+			import com.mcquilleninteractive.learnhvac.util.Logger;
 			
 			[Bindable]
-			private var _label:String = ""
+			private var _toolTip:String = "";
 			
-			private function onCC():void
+			[Bindable]
+			[Autowire]
+			public var applicationModel:ApplicationModel
+						
+						
+			[Mediate(event="UnitsEvent.UNITS_CHANGED")]
+			public function onUnitsChange(event:UnitsEvent):void
 			{
-				_label = ApplicationModel.currUnits
-			}
-			
-			[Mediate(event="SettingsEvent.SETTINGS_LOADED")]
-			public function onSettingsLoaded():void
-			{
-				_label = ApplicationModel.currUnits
-			}
-			
-			
-			[Mediate(event="SetUnitsEvent.SET_UNITS")]
-			public function onUnitsChange(event:SetUnitsEvent):void
-			{
-				Logger.debug("onUnitsChange event.target : " + event.target,this)
-				if (event.target == this) return
-				
-				if (event.units=="SI")
+				if (ApplicationModel.currUnits=="SI")
 				{
-					_label = "SI"
+					_toolTip = "Click to change to IP units"
 				}
 				else
-				{
-					_label = "IP"
+				{					
+					_toolTip = "Click to change to SI units"
 				}
 			}
-				
+			
 			private function onClick():void
 			{	
-				if (_label == "SI")
+				var newUnits:String
+					
+				if (this.label == "SI")
 				{
-					_label = "IP"
+					newUnits = "IP"
 				}
 				else
 				{
-					_label = "SI"
+					newUnits = "SI"
 				}
 							
-				var evt:SetUnitsEvent = new SetUnitsEvent(SetUnitsEvent.SET_UNITS,true)
-				evt.units = this.label
+				var evt:UnitsEvent = new UnitsEvent(UnitsEvent.CHANGE_UNITS,true)
+				evt.units = newUnits
 				dispatchEvent(evt)
 			}
 				

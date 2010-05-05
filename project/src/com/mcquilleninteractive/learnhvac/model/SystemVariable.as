@@ -114,7 +114,8 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function resetToInitialValue():void
 		{
-			_baseSIValue = _initialValue
+			baseSIValue = initialValue
+			
 		}
 		
 		/**  Adds conversions functions based on units SI and IP strings. Function assumes that _unitSI and _unitIP attributes have already been set. */

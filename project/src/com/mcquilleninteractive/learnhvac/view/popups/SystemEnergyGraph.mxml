@@ -19,7 +19,7 @@
 			import com.mcquilleninteractive.learnhvac.util.ColorSetting
 			import com.mcquilleninteractive.learnhvac.util.Logger
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
-   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+   			import com.mcquilleninteractive.learnhvac.event.UnitsEvent
 			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			
@@ -58,8 +58,8 @@
 				
 			}
 			
-			[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]			
-			public function onUnitsChanged(event:SetUnitsCompleteEvent):void
+			[Mediate(event="UnitsEvent.UNITS_CHANGED")]			
+			public function onUnitsChanged(event:UnitsEvent):void
 			{
 				getRelevantValues()				
 			}

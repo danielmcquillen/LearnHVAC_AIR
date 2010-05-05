@@ -127,8 +127,8 @@
 				iptTemp.text = currTemp
 			}
 								
-			[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
-			public function onUnitsChange(event:SetUnitsCompleteEvent):void
+			[Mediate(event="UnitsEvent.UNITS_CHANGED")]
+			public function onUnitsChange(event:UnitsEvent):void
 			{				
 				lblTempUnits.text = event.units
 				lblTempRealUnits.text = event.units

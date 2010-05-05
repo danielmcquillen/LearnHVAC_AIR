@@ -8,15 +8,25 @@ package com.mcquilleninteractive.learnhvac.model
 	[Bindable]
 	public class ApplicationModel extends EventDispatcher
 	{
-		public static const baseStoragePath:String = "LearnHVAC/"
+		public static const baseStorageDirPath:String = "LearnHVAC/"
 					
 		// ATTRIBUTES FOR CONTROLLING TEST/MOCK MODE
-		//This flag will cause certain functions to auto-submit (login)
-		public static var testMode:Boolean = false		
-				
+		//This flag makes debugging easier --> will cause certain functions to auto-submit (login)
+		public static var debugMode:Boolean = false		
+		
+		//run testing suite
+		public static var runTests:Boolean = false
+			
 		//(e.g. existing E+ output is loaded rather than running simulation)		
 		public static var mockEPlusData:Boolean = false
 		
+		//always act like this is first run of this version
+		public static var alwaysFirstRun:Boolean = false
+			
+			
+			
+			
+			
 		
 		// REGULAR CLASS ATTRIBUTES
 		
@@ -88,7 +98,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function ApplicationModel()
 		{
-			logFile = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "applicationLog.txt")
+			logFile = File.userDirectory.resolvePath(ApplicationModel.baseStorageDirPath + "applicationLog.txt")
 		}
 		
 		public static function currentTempUnits():String

@@ -35,7 +35,7 @@
 			
 			protected function onATS() : void
 			{
-				if (ApplicationModel.testMode)
+				if (ApplicationModel.debugMode)
 				{
 					var event : LoginEvent = new LoginEvent( LoginEvent.LOGIN, true );
 					event.username = "daniel"

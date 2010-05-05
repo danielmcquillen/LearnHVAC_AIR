@@ -6,23 +6,17 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import org.swizframework.Swiz;
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
-
-
-			/** This component links up a label with a system variable and displays it's value dynamically.
-			 *  It also
-			 *    - adds on any required unit string, or other formatting string (e.g. %)
-			 *    - formats variable according to default or supplied precision
-			 */ 
-		
-			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
-			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 			import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+			import com.mcquilleninteractive.learnhvac.util.Logger;
+			
 			import mx.formatters.NumberFormatter;
-			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.mcquilleninteractive.learnhvac.util.Logger
+			
+			import org.swizframework.Swiz;
 			
 			
 			
@@ -95,8 +89,8 @@
 				}
 			}
 			
-			[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]					
-			public function onUnitsChange(event:SetUnitsCompleteEvent):void
+			[Mediate(event="UnitsEvent.UNITS_CHANGED")]					
+			public function onUnitsChange(event:UnitsEvent):void
 			{
 				if (_sysVar) _units = _sysVar.units
 				//refresh the display

@@ -44,16 +44,13 @@
 		[Mediate(event="LongTermSimulationEvent.FILE_LOADED")]		
 		public function onEPlusFileLoaded(event:LongTermSimulationEvent):void
 		{
-			Logger.debug("#RunningEPlusModal: onEPlusFileLoaded() called")
 			//change popup status
 			lblStatus.text = "Parsing output data..."
-			
 		}
 		
-		[Mediate(event="ScenarioDataLoadedEvent.ENERGY_PLUS_DATA_PARSED")]	
-		public function onEPlusDataParsed(event:ScenarioDataLoadedEvent):void
+		[Mediate(event="LongTermSimulationEvent.SIM_COMPLETE")]	
+		public function onSimComplete(event:ScenarioDataLoadedEvent):void
 		{
-			Logger.debug("#RunningEPlusModal: onEPlusDataParsed() called. Removing modal popup.")
 			//clean up refs before destroying this popup
 			PopUpManager.removePopUp(this)	
 		}

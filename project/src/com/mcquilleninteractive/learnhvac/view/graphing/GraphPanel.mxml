@@ -29,7 +29,7 @@
 			import mx.controls.Tree	
 			
 			import com.mcquilleninteractive.learnhvac.event.AddVarToGraphEvent
-			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent
 			import com.mcquilleninteractive.learnhvac.event.GraphEvent
 			import mx.controls.Alert
 			import com.mcquilleninteractive.learnhvac.view.graphing.DataTree
@@ -82,16 +82,14 @@
 				graphVars= new Array()
 			}
 
-			[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
-			public function onUnitsChanged(event:SetUnitsCompleteEvent):void
+			[Mediate(event="UnitsEvent.UNITS_CHANGED")]
+			public function onUnitsChanged(event:UnitsEvent):void
 			{
 				refreshData(null)
 			}
 
 			public function setGraphType (graphType:String) :void
 			{
-				Logger.debug("setGraphType() graphType: " + graphType, this)
-								
 				this.graphType = graphType
 				
 				lineChart.visible = (graphType==GraphPanel.TIME_SERIES_GRAPH )
@@ -209,7 +207,6 @@
 				var dataTree:DataTree = DataTree(dragEvent.dragInitiator)
 				graphDataModel = dataTree.graphDataModel
 				
-				Logger.debug("#GraphPanel: onDragDrop: dataTree.type; " + dataTree.type)
 				
 				switch (dataTree.type)
 				{
@@ -246,7 +243,7 @@
 						break
 						
 					default:
-						Logger.error("#GraphPanel: unrecognized GraphDataModel type: "+ graphType)
+						Logger.error(" unrecognized GraphDataModel type: "+ graphType, this)
 				}
 				
 				var ds:DragSource = dragEvent.dragSource
@@ -255,7 +252,7 @@
  				
          		if (item.@id==undefined)
          		{
-         			Logger.error("#GraphPanel: onDragDrop(): dropped item from menu did not have id attribute")
+         			Logger.error("onDragDrop(): dropped item from menu did not have id attribute", this)
          			mx.controls.Alert.show("Internal Error. Cannot graph this variable. See log for details.")
          			return
          		}
@@ -283,7 +280,6 @@
 			
 			private function addVarToGraph(itemID:String):void
 			{
-				Logger.debug("#GraphPanel: addVarToGraph() itemID: " + itemID)
 				if (isVarGraphed(itemID)){
 					mx.controls.Alert.show("That variable is already being graphed")
 					return
@@ -300,16 +296,13 @@
 				//replace second variable when 3rd or more is dragged on
 				if (graphVars.length>1)
 				{
-					Logger.debug("#GraphPanel: replacing " + graphVars[1] + " with " + itemID)
 					graphVars[1] = itemID
 				}
 				else
 				{
-					Logger.debug("#GraphPanel: adding first variable ")
 					graphVars.push(itemID)
 				}
 				
-				Logger.debug("#GraphPanel: now setting axis titles, title and getting data...")
 				setAxisTitles()
 				setGraphTitle()
 				getDataAndPlot()
@@ -366,7 +359,6 @@
 			
 			public function setAxisTitles():void
 			{
-   				Logger.debug("setAxisTItles()")
 				if (graphType==GraphPanel.TIME_SERIES_GRAPH )
 				{
 					if (dataSourceType==EnergyPlusData.ENERGY_PLUS_DATA_TYPE)
@@ -378,24 +370,19 @@
 						_horizontalTitle = "Time (secs)"
 					}
 					
-   					Logger.debug("settting _verticalTitle")
 					_verticalTitle = getVarTitle(graphVars[0])
-   					Logger.debug("_verticalTitle: " + _verticalTitle)
 					if (graphVars.length>1)
 					{	
 						var2Renderer.visible = true
 						_verticalTitle2 = getVarTitle(graphVars[1])
-   						Logger.debug("_verticalTitle2: " + _verticalTitle2)
 					}
 				}
 				else if (graphType==GraphPanel.XY_PLOT_GRAPH )
 				{
 					_horizontalTitle = graphVars[0]
-   					Logger.debug("_horizontalTitle: " + _horizontalTitle)
 					if (graphVars.length>1)
 					{
 						_verticalTitle = graphVars[1]
-   						Logger.debug("_verticalTitle: " + _verticalTitle)
 					}
 				}
 			}
@@ -424,9 +411,7 @@
 					
 			
 			public function getDataAndPlot():void
-			{
-				Logger.debug("#GraphPanel: getDataAndPlot()")	
-				
+			{				
 				try
 				{
 					if (graphType==GraphPanel.TIME_SERIES_GRAPH )

@@ -130,7 +130,7 @@ package com.mcquilleninteractive.learnhvac.util
             {
 				if (logFile==null)
 				{
-					var logFileDir:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath)
+					var logFileDir:File = File.userDirectory.resolvePath(ApplicationModel.baseStorageDirPath)
 					if (logFileDir.exists==false)
 					{
 						logFileDir.createDirectory()

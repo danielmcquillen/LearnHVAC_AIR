@@ -71,7 +71,7 @@
 				this.cboZone.enabled = false
 			}
 			
-			[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
+			[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
 			public function onShortTermSimulationStopped(event:ShortTermSimulationEvent):void
 			{
 				cboRun.enabled = true

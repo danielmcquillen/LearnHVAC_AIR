@@ -1,4 +1,4 @@
-<scenario id="3" scenID="SummerDayPhoenixModelicaModel" name="Summer Day in Phoenix - Modelic Model" shortDescription="This is a basic scenario for checking how the system responds to summer coolingconditions." goal="The purpose of this model is as a vehicle to test the operation of the Modelica model of the VAV system, the interface between Modelica and Flex, and the Flex-based GUI." thumbnailURL="" longtermStartDate="01/01" longtermStopDate="12/31" allowLongtermDateChange="false" realtimeStartDatetime="01/01/2009 00:00" allowRealtimeDatetimeChange="false" forceLongTermSim="false">
+<scenario id="3" scenID="SummerDayPhoenixModelicaModel" name="Summer Day in Phoenix - Modelica Model" shortDescription="This is a basic scenario for checking how the system responds to summer cooling  conditions." goal="The purpose of this model is as a vehicle to test the operation of the Modelica model of the VAV system, the interface between Modelica and Flex, and the Flex-based GUI." thumbnailURL="" longtermStartDate="01/01" longtermStopDate="12/31" allowLongtermDateChange="false" realtimeStartDatetime="01/01/2009 00:00" allowRealtimeDatetimeChange="false" forceLongTermSim="false">
 <!-- Input Area -->
 <inputPanel visible="true" enabled="true"/>
 <faultPanel visible="false" enabled="false"/>
@@ -16,7 +16,7 @@
 	<systemNode id="CC" name="Cooling Coil">
 		<sysVar name="CCKi" displayName="Cooling coil valve controller integrator time constant" description="" index="16" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
 
-		<sysVar name="CCKp" displayName="Cooling coil valve controller P gain" description="" index="15" minValue="-100.0" lowValue="-100.0" initialValue="-1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
+		<sysVar name="CCKp" displayName="Cooling coil valve controller P gain" description="" index="15" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
 
 		<sysVar name="CCPos" displayName="Cooling coil valve position" description="" index="21" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
 
@@ -41,7 +41,7 @@
 	<systemNode id="HC" name="Heating Coil">
 		<sysVar name="HCKi" displayName="Heating coil valve controller integrator time constant" description="" index="14" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
 
-		<sysVar name="HCKp" displayName="Heating coil valve controller P gain" description="" index="13" minValue="-100.0" lowValue="-100.0" initialValue="-1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
+		<sysVar name="HCKp" displayName="Heating coil valve controller P gain" description="" index="13" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
 
 		<sysVar name="HCPos" displayName="Heating coil valve position" description="" index="20" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
 
@@ -68,7 +68,7 @@
 
 		<sysVar name="MXKi" displayName="Economizer PI controller integrator time constant" description="" index="8" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
 
-		<sysVar name="MXKp" displayName="Economizer PI controller P gain" description="" index="7" minValue="-100.0" lowValue="-100.0" initialValue="-1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
+		<sysVar name="MXKp" displayName="Economizer PI controller P gain" description="" index="7" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
 
 		<sysVar name="MXMinPos" displayName="Outside air damper min position" description="" index="5" minValue="0.0" lowValue="0.0" initialValue="10.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
 
@@ -117,7 +117,7 @@
 	<systemNode id="FAN" name="Fan">
 		<sysVar name="FANki" displayName="Fan speed controller integrator time constant" description="" index="11" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
 
-		<sysVar name="FANKp" displayName="Fan speed controller P gain" description="" index="10" minValue="-100.0" lowValue="-100.0" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
+		<sysVar name="FANKp" displayName="Fan speed controller P gain" description="" index="10" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
 
 		<sysVar name="FANSpdMin" displayName="Fan minimum speed ratio" description="" index="9" minValue="0.0" lowValue="0.0" initialValue="30.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
 
@@ -158,13 +158,13 @@
 	<systemNode id="VAV" name="VAV Box">
 		<sysVar name="VAVDmprKi" displayName="VAV damper controller integrator time constant" description="" index="18" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
 
-		<sysVar name="VAVDmprKp" displayName="VAV damper controller P gain" description="" index="17" minValue="-100.0" lowValue="-100.0" initialValue="-1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
+		<sysVar name="VAVDmprKp" displayName="VAV damper controller P gain" description="" index="17" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
 
 		<sysVar name="VAVMinPos" displayName="VAV damper min position" description="" index="19" minValue="0.0" lowValue="0.0" initialValue="20.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
 
 		<sysVar name="VAVRhcKi" displayName="VAV reheat coil controller integrator time constant" description="" index="21" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
 
-		<sysVar name="VAVRhcKp" displayName="VAV reheat coil controller P gain" description="" index="20" minValue="-100.0" lowValue="-100.0" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
+		<sysVar name="VAVRhcKp" displayName="VAV reheat coil controller P gain" description="" index="20" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
 
 		<sysVar name="VAVAirFlw" displayName="VAV Air flow rate" description="" index="14" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="m3/s" SItoIP="SI*2118.88" unitIP="CFM" disabled="false" isFault="false"/>
 

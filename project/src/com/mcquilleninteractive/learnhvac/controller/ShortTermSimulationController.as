@@ -127,15 +127,21 @@ package com.mcquilleninteractive.learnhvac.controller
 			
 		[Mediate(event="ResetInputsEvent.RESET_SHORT_TERM_INPUTS_TO_INITIAL_VALUES")]
 		public function onResetInputsToInitialValues(event:ResetInputsEvent):void
-		{		
-			//cycle through all systemvariables and reset value to initial value
+		{	
+			Logger.debug("onResetInputsToInitialValues()",this)
+			//cycle through all input systemvariables and reset value to initial value
 			for each (var sysNode:SystemNodeModel in scenarioModel.sysNodesAC)
 			{
 				for each (var sysVar:SystemVariable in sysNode.sysVarsArr)
 				{
 					sysVar.resetToInitialValue()
+					
 				}	
 			}
+			scenarioModel.sysNodesAC.refresh()
+			
+			var evt:ResetInputsEvent = new ResetInputsEvent(ResetInputsEvent.SHORT_TERM_INPUTS_RESET)
+			Swiz.dispatchEvent(evt)
 		}
 			
 		[Mediate(event="ShortTermSimulationEvent.SIM_RETURN_TO_START")]
@@ -229,7 +235,7 @@ package com.mcquilleninteractive.learnhvac.controller
 				
 			var d:Date = new Date()
 			var timestamp:String = "_" + (d.month + 1) + "_" + d.day+ "_" + d.fullYear + "_" + d.hours + "_"+ d.minutes + "_" + d.seconds
-			var copyDir:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "modelica/output")
+			var copyDir:File = File.userDirectory.resolvePath(ApplicationModel.baseStorageDirPath + "modelica/output")
 			if (copyDir.exists==false)
 			{
 				copyDir.createDirectory()

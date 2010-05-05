@@ -40,10 +40,7 @@
 			[Embed(source='/assets/DawaAssets.swf', symbol='mcSliderDragger')]
 			[Bindable]
 			private var SliderDragger:Class;
-			
-			[Bindable]
-			private var _inputsEnabled:Boolean = true;
-					
+								
 			private var _currElevationView:String = LongTermSimulationModel.SOUTH
 			
 			public var _errorMsg:String
@@ -78,10 +75,7 @@
 			/* Enable or disable the fields in this options panel (based on instructor setting in scenario)
 			   If disabled, student uses this panel simply as an information display */
 			   
-			public function set inputsEnabled(v:Boolean):void
-			{
-				_inputsEnabled = v
-			}
+		
 			
 			public function getWidthForElevation():Number
 			{
@@ -149,8 +143,7 @@
 			{
 				var currUnits:String = ApplicationModel.currUnits
 				
-				this._inputsEnabled = longTermSimulationModel.buildingPropertiesEnabled
-											
+										
 				//initialize sliders				
 				if (currUnits =="SI")
 				{										
@@ -384,7 +377,7 @@
 		
 		<mx:Spacer width="25"/>
 		
-		<mx:Label text="3" width="25"  textAlign="right" visible="{_inputsEnabled}" />
+		<mx:Label text="3" width="25"  textAlign="right" visible="{longTermSimulationModel.buildingPropertiesEnabled}" />
 		<mx:HSlider 
 				id="sldStories"
 				dataTipOffset="2"
@@ -401,9 +394,9 @@
 				thumbOverSkin="{SliderDragger}"
 				thumbUpSkin="{SliderDragger}"
 				thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
-				visible="{_inputsEnabled}"
+				visible="{longTermSimulationModel.buildingPropertiesEnabled}"
 				/>		
-		<mx:Label text="30" width="40" visible="{_inputsEnabled}"/>
+		<mx:Label text="30" width="40" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		
 			
 	</mx:HBox>
@@ -421,7 +414,7 @@
 				height="20"
 				paddingRight="0"/>
 		<mx:Label id="lblStoryHeightUnits" paddingLeft="0" text="ft." width="20"/>
-		<mx:Label id="lblStoryHeightLeftLabel" text="8'" width="25" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:Label id="lblStoryHeightLeftLabel" text="8'" width="25" textAlign="right" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		<mx:HSlider 
 				id="sldStoryHeight"									
 				value="{longTermSimulationModel.storyHeight}"
@@ -433,13 +426,13 @@
 				height="25" 
 				minimum="8.5"
 				maximum="20"
-				visible="{_inputsEnabled}"
+				visible="{longTermSimulationModel.buildingPropertiesEnabled}"
 				thumbDownSkin="{SliderDragger}" 
 				thumbOverSkin="{SliderDragger}"
 				thumbUpSkin="{SliderDragger}"
 				thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
 				/>	
-		<mx:Label text="50'" width="40" id="lblStoryHeightRightLabel" visible="{_inputsEnabled}"/>	
+		<mx:Label text="50'" width="40" id="lblStoryHeightRightLabel" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>	
 		
 	</mx:HBox>
 						
@@ -455,7 +448,7 @@
 				textAlign="right"
 				height="20"/>
 		<mx:Label id="lblBldgWidthUnits" paddingLeft="0" text="ft." width="20"/>
-		<mx:Label id="lblBldgWidthLeftLabel" text="50'" width="25" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:Label id="lblBldgWidthLeftLabel" text="50'" width="25" textAlign="right" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		<mx:HSlider 
 			id="sldBldgWidth"
 				dataTipOffset="2"
@@ -467,13 +460,13 @@
 				value="{longTermSimulationModel.buildingWidth}" 
 				minimum="50"
 				maximum="300"
-				visible="{_inputsEnabled}"
+				visible="{longTermSimulationModel.buildingPropertiesEnabled}"
 				thumbDownSkin="{SliderDragger}" 
 				thumbOverSkin="{SliderDragger}"
 				thumbUpSkin="{SliderDragger}"
 				thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
 				/>	
-		<mx:Label id="lblBldgWidthRightLabel"  text="300'"  width="40" visible="{_inputsEnabled}" />
+		<mx:Label id="lblBldgWidthRightLabel"  text="300'"  width="40" visible="{longTermSimulationModel.buildingPropertiesEnabled}" />
 		
 									
 	</mx:HBox>
@@ -490,7 +483,7 @@
 				textAlign="right"
 				height="20"/>
 		<mx:Label id="lblBldgLengthUnits" paddingLeft="0" text="ft." width="20"/>
-		<mx:Label id="lblBldgLengthLeftLabel"  text="50'" width="25" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:Label id="lblBldgLengthLeftLabel"  text="50'" width="25" textAlign="right" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		<mx:HSlider 
 				id="sldBldgLength"
 				dataTipOffset="2"
@@ -506,8 +499,8 @@
 				thumbOverSkin="{SliderDragger}"
 				thumbUpSkin="{SliderDragger}"
 				thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
-				visible="{_inputsEnabled}"/>	
-		<mx:Label id="lblBldgLengthRightLabel" text="300'" width="40" visible="{_inputsEnabled}"/>					
+				visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>	
+		<mx:Label id="lblBldgLengthRightLabel" text="300'" width="40" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>					
 		
 	</mx:HBox>
 						
@@ -524,7 +517,7 @@
 			height="20"
 			/>
 		<mx:Spacer width="25"/>
-		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		<mx:HSlider 
 			id="sldNorth"
 			dataTipOffset="2"
@@ -540,8 +533,8 @@
 			thumbOverSkin="{SliderDragger}"
 			thumbUpSkin="{SliderDragger}"
 			thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
-			visible="{_inputsEnabled}"/>		
-		<mx:Label text="1" width="40"  paddingTop="5" visible="{_inputsEnabled}"/>
+			visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>		
+		<mx:Label text="1" width="40"  paddingTop="5" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		
 		
 	</mx:HBox>
@@ -558,7 +551,7 @@
 			textAlign="right"
 			height="20"/>
 		<mx:Spacer width="25"/>
-		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		<mx:HSlider 
 			id="sldSouth"
 			dataTipOffset="2"
@@ -574,8 +567,8 @@
 			thumbOverSkin="{SliderDragger}"
 			thumbUpSkin="{SliderDragger}"
 			thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
-			visible="{_inputsEnabled}"/>		
-		<mx:Label text="1" width="40"  paddingTop="5" visible="{_inputsEnabled}"/>
+			visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>		
+		<mx:Label text="1" width="40"  paddingTop="5" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		
 		
 	</mx:HBox>
@@ -591,7 +584,7 @@
 			textAlign="right"
 			height="20"/>
 		<mx:Spacer width="25"/>
-		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		<mx:HSlider 
 			id="sldEast"
 			dataTipOffset="2"
@@ -607,8 +600,8 @@
 			thumbOverSkin="{SliderDragger}"
 			thumbUpSkin="{SliderDragger}"
 			thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
-			visible="{_inputsEnabled}"/>		
-		<mx:Label text="1" width="40"  paddingTop="5" visible="{_inputsEnabled}"/>
+			visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>		
+		<mx:Label text="1" width="40"  paddingTop="5" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		
 		
 	</mx:HBox>
@@ -626,7 +619,7 @@
 			height="20"
 			/>
 		<mx:Spacer width="25"/>
-		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{_inputsEnabled}"/>
+		<mx:Label text="0" width="25" paddingTop="5" textAlign="right" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		<mx:HSlider 
 			id="sldWest"
 			dataTipOffset="2"
@@ -642,8 +635,8 @@
 			thumbOverSkin="{SliderDragger}"
 			thumbUpSkin="{SliderDragger}"
 			thumbDisabledSkin="@Embed('/assets/DawaAssets.swf', symbol='mcSliderDraggerDisabled')"
-			visible="{_inputsEnabled}"/>		
-		<mx:Label text="1" width="40"  paddingTop="5" visible="{_inputsEnabled}"/>
+			visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>		
+		<mx:Label text="1" width="40"  paddingTop="5" visible="{longTermSimulationModel.buildingPropertiesEnabled}"/>
 		
 		
 	</mx:HBox>
@@ -652,7 +645,7 @@
 						
 	<mx:HBox >
 		<mx:Label id="lblNorthAxis" text="North Axis:" width="100" styleName="longTermOptionsLabel"/>
-		<mx:TextInput id="txtNorthAxis" text="0" width="70" enter="axisChange(event)"  focusOut="axisChange(event)" enabled="{_inputsEnabled}"  />
+		<mx:TextInput id="txtNorthAxis" text="0" width="70" enter="axisChange(event)"  focusOut="axisChange(event)" enabled="{longTermSimulationModel.buildingPropertiesEnabled}"  />
 	</mx:HBox>
 				
 	<mx:Label text="Windows" styleName="longTermOptionsSectionHeader"/>
@@ -660,7 +653,7 @@
 	
 	<mx:HBox> 
 		<mx:Label id="lblWindowType" text="Window Type:" width="100" styleName="longTermOptionsLabel"/>
-		<mx:ComboBox id="cboWindowType" change="onWindowTypeChange()" enabled="{_inputsEnabled}" />
+		<mx:ComboBox id="cboWindowType" change="onWindowTypeChange()" enabled="{longTermSimulationModel.buildingPropertiesEnabled}" />
 	</mx:HBox>
 					
 	
@@ -682,7 +675,7 @@
 	
 	<mx:HBox>
 		<mx:Label id="lblMassLevel" text="Mass level:" width="100" styleName="longTermOptionsLabel"/>
-		<mx:ComboBox id="cboMassLevel" enabled="{_inputsEnabled}" change="onMassLevelChange()"/>
+		<mx:ComboBox id="cboMassLevel" enabled="{longTermSimulationModel.buildingPropertiesEnabled}" change="onMassLevelChange()"/>
 		
 	</mx:HBox>
 				

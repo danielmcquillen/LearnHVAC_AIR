@@ -7,9 +7,8 @@ package com.mcquilleninteractive.learnhvac.controller
 	import com.mcquilleninteractive.learnhvac.event.GetScenarioListEvent;
 	import com.mcquilleninteractive.learnhvac.event.LoggedInEvent;
 	import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
-	import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
-	import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent;
 	import com.mcquilleninteractive.learnhvac.event.SettingsEvent;
+	import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
 	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
@@ -22,6 +21,7 @@ package com.mcquilleninteractive.learnhvac.controller
 	import flash.data.EncryptedLocalStore;
 	import flash.events.Event;
 	import flash.filesystem.*;
+	import flash.system.Capabilities;
 	import flash.utils.ByteArray;
 	
 	import mx.collections.ArrayCollection;
@@ -62,7 +62,12 @@ package com.mcquilleninteractive.learnhvac.controller
 								
 			//if this is first run, copy helper files to working directories
 			var ba:ByteArray = EncryptedLocalStore.getItem("lastInstalledVersion")	
-									
+			
+			if (ApplicationModel.alwaysFirstRun)
+			{
+				ba = null
+			}
+				
 			if (ba==null || ba.readUTFBytes(ba.bytesAvailable)!=AboutInfo.applicationVersion)
 			{
 				Logger.debug("New version installed ... now copying helper files...",this)
@@ -99,8 +104,11 @@ package com.mcquilleninteractive.learnhvac.controller
 			{
 				Alert.show("Please install Flash Player 10 before using Learn HVAC.","Flash Version Error")
 			}
-			//TESTING: UNCOMMENT TO RUN TESTS
-			//runTests()			
+			
+			if (ApplicationModel.runTests)
+			{
+				runTests()
+			}	
 		}
 
 
@@ -109,7 +117,7 @@ package com.mcquilleninteractive.learnhvac.controller
 		{
 			applicationModel.loggedIn = true
 			applicationModel.viewing = ApplicationModel.PANEL_SELECT_SCENARIO				
-			if (ApplicationModel.testMode)
+			if (ApplicationModel.debugMode)
 			{
 				var evt : GetScenarioListEvent = new GetScenarioListEvent(GetScenarioListEvent.GET_DEFAULT_SCENARIO_LIST, true);
 				Swiz.dispatchEvent( evt );
@@ -134,10 +142,9 @@ package com.mcquilleninteractive.learnhvac.controller
 
 
 
-		[Mediate(event="SetUnitsEvent.SET_UNITS")]
-		public function setUnits(event:SetUnitsEvent):void
-		{											
-						
+		[Mediate(event="UnitsEvent.CHANGE_UNITS")]
+		public function setUnits(event:UnitsEvent):void
+		{				
 			if (event.units != ApplicationModel.currUnits)
 			{
 				// change model units first, so that components that bind to units can 
@@ -146,7 +153,7 @@ package com.mcquilleninteractive.learnhvac.controller
 				
 				//TODO: should probably change all sysVars to simple listen to the scenModel property for units
 				//      However, I'm not sure what this would do to speed...so for now I'm changing sysVars individually...
-				Logger.debug("#ScenarioModel: changing units on variables to : " + event.type)
+		
 				//loop through system variables and change units
 				var sysNodesAC:ArrayCollection = scenarioModel.sysNodesAC
 				
@@ -155,16 +162,15 @@ package com.mcquilleninteractive.learnhvac.controller
 					for each (var sysVar:SystemVariable in sysNode.sysVarsArr)
 					{
 						sysVar.units = event.units
-						if (ApplicationModel.currUnits=="IP") sysVar.updateHistoryIP()
-						sysVar.resetToInitialValue()
+						//if (ApplicationModel.currUnits=="IP") sysVar.updateHistoryIP()
+						//sysVar.resetToInitialValue()
 					}
 				}
-				Logger.debug("#SetUnitsCommand: model's units are now : " + ApplicationModel.currUnits)
 			}
 			
 			
-			var evt:SetUnitsCompleteEvent = new SetUnitsCompleteEvent(SetUnitsCompleteEvent.UNITS_CHANGED, true)
-			evt.units = event.units			
+			var evt:UnitsEvent = new UnitsEvent(UnitsEvent.UNITS_CHANGED, true)
+			evt.units = ApplicationModel.currUnits			
 			Swiz.dispatchEvent(evt)	
 		
 		}
@@ -175,7 +181,7 @@ package com.mcquilleninteractive.learnhvac.controller
 		{ 
 			Logger.debug("copyHelperFiles()",this)		
 			
-			var baseStorageDir:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath)
+			var baseStorageDir:File = File.userDirectory.resolvePath(ApplicationModel.baseStorageDirPath)
 			if (baseStorageDir.exists==false)
 			{
 				baseStorageDir.createDirectory()
@@ -183,13 +189,12 @@ package com.mcquilleninteractive.learnhvac.controller
 							
 			//copy the modelica File to the storage directory		
 			var modelicaFile:File = File.applicationDirectory.resolvePath("modelica")
-			var copyModelicaFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "modelica")
+			var copyModelicaFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStorageDirPath + "modelica")
 			if (copyModelicaFile.exists==false)
 			{
 				copyModelicaFile.createDirectory()
 			}
 			Logger.debug("Moving modelica to : " +  copyModelicaFile.nativePath, this) 
-			copyModelicaFile.createDirectory()
 			try
 			{
 				modelicaFile.copyTo(copyModelicaFile, true)
@@ -199,23 +204,64 @@ package com.mcquilleninteractive.learnhvac.controller
 				Alert.show("Couldn't copy Modelica files to : " + copyModelicaFile.nativePath + ". Please try to start application again or copy manually.", "Error")
 				Logger.error("Couldn't copy Modelica files: Error: " + error,this)
 			}	
-			//copy the energyplus to the storage directory	
-			var eplusFile:File = File.applicationDirectory.resolvePath("energyplus")
-			var copyEplusFile:File = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "energyplus")
-			if (copyEplusFile.exists==false)
-			{
-				copyEplusFile.createDirectory()
+			
+			//COPY ENERGYPLUS			
+			//if this is mac, copy the mac E+ files, otherwise copy the default (PC) ones
+			if (Capabilities.os.toLowerCase().indexOf("mac") != -1)
+			{				
+				var copyEnergyPlusFromDir:File = File.applicationDirectory.resolvePath("EnergyPlusMac")
 			}
-			Logger.debug("Moving EnergyPlus to: " + copyEplusFile.nativePath, this) 
-			copyEplusFile.createDirectory()
+			else
+			{
+				copyEnergyPlusFromDir = File.applicationDirectory.resolvePath("EnergyPlus")
+			}
+			
+			var copyEnergyPlusToDir:File = File.userDirectory.resolvePath(ApplicationModel.baseStorageDirPath + "EnergyPlus")
 			try
 			{
-				eplusFile.copyTo(copyEplusFile, true)		
+				copyEnergyPlusFromDir.copyTo(copyEnergyPlusToDir, true)
 			}
 			catch(error:Error)
 			{
-				Alert.show("Couldn't copy EnergyPlus files to : " + copyEplusFile.nativePath + ". Please try to start application again or copy manually.", "Error")
+				Logger.error("Couldn't copy the EnergyPlus directory to directory: " + copyEnergyPlusToDir.nativePath + " error: " + error, this)
+				throw new Error("Couldn't copy " + copyEnergyPlusFromDir.nativePath +  " directory to the " + copyEnergyPlusToDir.nativePath + " folder.", "Startup Error")
 			}
+			
+			//If this is mac, copy the lib folder too
+			if (Capabilities.os.toLowerCase().indexOf("mac") != -1)
+			{				
+				var copyLibFromDir:File = File.applicationDirectory.resolvePath("lib")
+				var copyLibToDir:File = File.userDirectory.resolvePath(ApplicationModel.baseStorageDirPath + "lib")
+				try
+				{
+					copyLibFromDir.copyTo(copyLibToDir, true)
+				}
+				catch(error:Error)
+				{
+					Logger.error("Couldn't copy the lib directory to directory: " + copyLibToDir.nativePath + " error: " + error, this)
+					throw new Error("Couldn't copy " + copyLibFromDir.nativePath +  " directory to the " + copyLibToDir.nativePath + " folder.", "Startup Error")
+				}
+			}
+			
+			
+			
+			//copy the weather files to the storage directory	
+			var weatherFiles:File = File.applicationDirectory.resolvePath("weather")
+			var copyWeatherFiles:File = File.userDirectory.resolvePath(ApplicationModel.baseStorageDirPath + "weather")
+			if (copyWeatherFiles.exists==false)
+			{
+				copyWeatherFiles.createDirectory()
+			}
+			Logger.debug("Moving weather files to: " + copyWeatherFiles.nativePath, this) 
+			try
+			{
+				weatherFiles.copyTo(copyWeatherFiles, true)		
+			}
+			catch(error:Error)
+			{
+				Alert.show("Couldn't copy weather files to : " + copyWeatherFiles.nativePath + ". Please try to start application again or copy manually.", "Error")
+			}
+			
 			//Don't need the following since we're embedding scenarios directly in code for now
 			//copy the included scenarios to the storage directory	
 			/*

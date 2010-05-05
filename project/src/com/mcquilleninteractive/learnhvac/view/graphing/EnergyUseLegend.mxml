@@ -16,7 +16,6 @@
 			
 			public function onLegendClick(event:Event):void
 			{
-				Logger.debug("#EULegend: click : " + event.currentTarget.label)
 				var item:EnergyUseLegendItem = EnergyUseLegendItem(event.currentTarget)
 				item.live = !(item.live)
 			

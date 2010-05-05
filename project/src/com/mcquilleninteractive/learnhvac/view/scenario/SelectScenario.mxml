@@ -83,8 +83,7 @@
 					width="209" height="32" 
 					id="btnGetRemoteScenarioList" 
 					click="getRemoteScenarioList()"
-					visible = "{!userModel.loggedInAsGuest}"
-					icon="{ServerIcon}"					
+					visible = "{!userModel.loggedInAsGuest}"	
 					/>
 			
 				<mx:Button label="Get default scenarios"

@@ -1,0 +1,1 @@
+This directory has one file that is required by the Mac version of EnergyPlus

@@ -2,7 +2,7 @@ package com.mcquilleninteractive.learnhvac.controller
 {
 	import com.mcquilleninteractive.learnhvac.business.LongTermSimulationDelegate;
 	import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent;
-	import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
+	import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
 	import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
 	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
@@ -61,17 +61,18 @@ package com.mcquilleninteractive.learnhvac.controller
 						
 			_view = LongTermSimulationEvent(event).view
 			
-			try 
-			{
+				//TEMP
+			//try 
+			//{
 				delegate.runLongTermSimulation()
-			}
-			catch(err:Error)
-			{
-				Logger.error("error when calling runLongTermSimulation on delegate: e: " +err, this)  
-				var evt:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED)
-				evt.errorMessage = err.message
-				simulationFailed(evt)
-			}						
+			//}
+			//catch(err:Error)
+			//{
+			///	Logger.error("error when calling runLongTermSimulation on delegate: e: " +err, this)  
+			//	var evt:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED)
+			//	evt.errorMessage = err.message
+			//	simulationFailed(evt)
+			//}						
 		}
 						
 		[Mediate(event="LongTermSimulationEvent.SIM_CANCEL")]
@@ -79,13 +80,13 @@ package com.mcquilleninteractive.learnhvac.controller
 		{
 			Logger.debug("onCancel()", this)
 			PopUpManager.removePopUp(_popUp)
-			delegate.cancelEPlus()
+			delegate.cancelSimulation()
 			longTermSimulationDataModel.continueParsing = false
 		}		
 		
 		
-		[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
-		public function onUnitsChanged(event:SetUnitsCompleteEvent):void
+		[Mediate(event="UnitsEvent.UNITS_CHANGED")]
+		public function onUnitsChanged(event:UnitsEvent):void
 		{
 			//update any other models or controls that are affected by changes in units
 			longTermSimulationDataModel.onUnitsChange(event.units)			

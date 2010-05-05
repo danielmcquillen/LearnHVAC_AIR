@@ -15,28 +15,27 @@
 	<mx:Script>
 		<![CDATA[
 			
+		import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent;
+		import com.mcquilleninteractive.learnhvac.event.ResetInputsEvent;
+		import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
+		import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
+		import com.mcquilleninteractive.learnhvac.event.VisualizationEvent;
+		import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 		import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
-		import mx.collections.SortField
-		import mx.collections.Sort
-		import com.mcquilleninteractive.learnhvac.event.VisualizationEvent
-		import mx.collections.ArrayCollection
-		import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-		import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel
-		import com.mcquilleninteractive.learnhvac.model.SystemVariable
-		import com.mcquilleninteractive.learnhvac.util.Logger
-		import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent
-		import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
-		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
-		import com.mcquilleninteractive.learnhvac.event.ResetInputsEvent
-		import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
-		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel
+		import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
+		import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+		import com.mcquilleninteractive.learnhvac.util.Logger;
 		
-		import mx.controls.Alert
-		import mx.collections.ListCollectionView
-		import mx.binding.utils.BindingUtils
+		import mx.binding.utils.BindingUtils;
+		import mx.collections.ArrayCollection;
+		import mx.collections.ListCollectionView;
+		import mx.collections.Sort;
+		import mx.collections.SortField;
+		import mx.controls.Alert;
+		import mx.controls.TabBar;
 		import mx.events.ItemClickEvent;
-        import mx.controls.TabBar;
 				
 
 		[Bindable]
@@ -119,6 +118,8 @@
 			btnUpdate.enabled = false
 		}
 		
+	
+			
 		
 		public function clearInputPanel():void
 		{

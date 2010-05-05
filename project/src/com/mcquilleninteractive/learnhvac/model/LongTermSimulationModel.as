@@ -2,9 +2,12 @@ package com.mcquilleninteractive.learnhvac.model
 {
 	import com.mcquilleninteractive.learnhvac.event.ZoneChangeEvent;
 	import com.mcquilleninteractive.learnhvac.util.Conversions;
-	import com.mcquilleninteractive.learnhvac.util.Logger;	
-	import flash.events.EventDispatcher;	
-	import mx.collections.ArrayCollection;	
+	import com.mcquilleninteractive.learnhvac.util.Logger;
+	
+	import flash.events.EventDispatcher;
+	
+	import mx.collections.ArrayCollection;
+	
 	import org.swizframework.Swiz;
 	
 	/** Class LongTermSimulationModel
@@ -30,7 +33,7 @@ package com.mcquilleninteractive.learnhvac.model
 		public static const WEST:String = "west"
 		public static const EAST:String = "east" 
 		
-		public var buildingPropertiesEnabled:Boolean = false
+		public var buildingPropertiesEnabled:Boolean = true
 										
 		/* *********** SIMULATION PROPERTIES *********** */
 						
@@ -39,42 +42,44 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		/* *********** ZONE AND FLOOR *********** */
 		
-		protected var _zoneOfInterest
-		protected var _floorOfInterest
+		protected var _zoneOfInterest:int
+		protected var _floorOfInterest:int
 		
 		/* *********** ENVIRONMENT *********** */
-				
+		
+		public var selectedWeatherFileName:String = "" //set by user to one of the values below...
+		
 		public var regionsAC:ArrayCollection = new ArrayCollection([	{label:"Pacific", data:"Pacific"},
 																		{label:"Northeast", data:"Northeast"},
 																		{label:"South", data:"South"}
 																	]);
 
 
-		public var pacificCitiesAC:ArrayCollection = new ArrayCollection([{label:"San Francisco", data:"SanFrancisco"},
-												{label:"Los Angeles", data:"LosAngeles"},
-												{label:"Phoenix", data:"Phoenix"},
-												{label:"Salem", data:"Salem"},
-												{label:"Boise", data:"Boise"},
-												{label:"Helena", data:"Helena"}
+		public var pacificCitiesAC:ArrayCollection = new ArrayCollection([{label:"San Francisco", data:"USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw"},
+												{label:"Los Angeles", data:"USA_CA_Los.Angeles.Intl.AP.722950_TMY3.epw"},
+												{label:"Phoenix", data:"USA_AZ_Phoenix-Deer.Valley.AP.722784_TMY3.epw"},
+												{label:"Salem", data:"USA_OR_Salem-McNary.Field.726940_TMY3.epw"},
+												{label:"Boise", data:"USA_ID_Boise.Air.Terminal.726810_TMY3.epw"},
+												{label:"Helena", data:"USA_MT_Helena.Rgnl.AP.727720_TMY3.epw"}
 												])
 
-		public var northeastCitiesAC:ArrayCollection = new ArrayCollection([{label:"Baltimore", data:"Baltimore"},
-												{label:"Burlington", data:"Burlington"},
-												{label:"Chicago", data:"Chicago"},
-												{label:"Duluth", data:"Duluth"},
-												{label:"Fairbanks", data:"Fairbanks"}	
+		public var northeastCitiesAC:ArrayCollection = new ArrayCollection([{label:"Baltimore", data:"USA_MD_Baltimore-Washington.Intl.AP.724060_TMY3.epw"},
+												{label:"Burlington", data:"USA_VT_Burlington.Intl.AP.726170_TMY3.epw"},
+												{label:"Chicago", data:"USA_IL_Chicago-Midway.AP.725340_TMY3.epw"},
+												{label:"Duluth", data:"USA_MN_Duluth.Intl.AP.727450_TMY3.epw"},
+												{label:"Fairbanks", data:"USA_AK_Fairbanks.Intl.AP.702610_TMY3.epw"}	
 												]);
 		
-		public var southCitiesAC:ArrayCollection = new ArrayCollection([{label:"Miami", data:"Miami"},
-												{label:"Houston", data:"Houston"},
-												{label:"Memphis", data:"Memphis"},
-												{label:"El Paso", data:"ElPaso"},
-												{label:"Albuquerque", data:"Albuquerque"}	
+		public var southCitiesAC:ArrayCollection = new ArrayCollection([{label:"Miami", data:"USA_FL_Miami-Kendall-Tamiami.Executive.AP.722029_TMY3.epw"},
+												{label:"Houston", data:"USA_TX_Houston-Bush.Intercontinental.AP.722430_TMY3.epw"},
+												{label:"Memphis", data:"USA_TN_Memphis.Intl.AP.723340_TMY3.epw"},
+												{label:"El Paso", data:"USA_TX_El.Paso.Intl.AP.722700_TMY3.epw"},
+												{label:"Albuquerque", data:"USA_NM_Albuquerque.Intl.AP.723650_TMY3.epw"}	
 												]);
 		
 		
-		protected var _regionSelectedIndex
-		protected var _citySelectedIndex
+		protected var _regionSelectedIndex:uint
+		protected var _citySelectedIndex:uint
 		
 		
 		/* *********** BUILDLING PROPERTIES *********** */
@@ -155,8 +160,8 @@ package com.mcquilleninteractive.learnhvac.model
 			_citySelectedIndex = 0
 		
 			_storyHeight = 3.6576 //12 feet
-			_buildingLength = 24.38 
-			_buildingWidth = 38.1
+			_buildingLength = 30 
+			_buildingWidth = 40
 			
 			_windowTypeSelectedIndex = 0
 			_shell = LongTermSimulationModel.SHELL_TYPE_NEW
@@ -377,67 +382,6 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		
 				
-		public function get weatherFile():String
-		{							
-			//set appropriate weatherfile
-			switch(this.city)
-			{
-				case "Baltimore":
-					return "USA_MD_Baltimore-Washington.Intl.AP_TMY3.epw"
-					break
-				case "Burlington":
-					return "USA_VT_Burlington.Intl.AP_TMY3.epw"
-					break
-				case "Chicago":
-					return "USA_IL_Chicago-OHare.Intl.AP_TMY3.epw"
-					break
-				case "Duluth":
-					return "USA_MN_Duluth_TMY2.epw"
-					break
-				case "Fairbanks":
-					return "USA_AK_Fairbanks_TMY2.epw"
-					break
-				case "Miami":
-					return "USA_FL_Miami_TMY2.epw"
-					break
-				case "Houston":
-					return "USA_TX_Houston-Intercontinental_TMY2.epw"
-					break
-				case "Memphis":
-					return "USA_TN_Memphis_TMY2.epw"
-					break
-				case "ElPaso":
-					return "USA_TX_El.Paso_TMY2.epw"
-					break
-				case "Albuquerque":
-					return "USA_NM_Albuquerque_TMY2.epw"
-					break
-				case "SanFrancisco":
-					return "USA_CA_San.Francisco_TMY2.epw"
-					break
-				case "LosAngeles":
-					return "USA_CA_Los.Angeles_TMY2.epw"
-					break
-				case "Phoenix":
-					return "USA_AZ_Phoenix_TMY2.epw"
-					break
-				case "Salem":
-					return "USA_OR_Salem_TMY2.epw"
-					break
-				case "Boise":
-					return "USA_ID_Boise_TMY2.epw"
-					break
-				case "Helena":
-					return "USA_MT_Helena_TMY2.epw"
-					break
-				default:					
-					Logger.error("unrecognized city. Setting to San Francisco", this)
-					return "USA_CA_San.Francisco_TMY2.epw"
-					
-			}
-		
-
-		}
 		
 		public function get city():String
 		{
@@ -445,18 +389,23 @@ package com.mcquilleninteractive.learnhvac.model
 			switch (regionsAC.getItemAt(regionSelectedIndex).data)
 			{
 				case "Pacific":
-					return pacificCitiesAC.getItemAt(citySelectedIndex).data
+					//return pacificCitiesAC.getItemAt(citySelectedIndex).data
+					var cityName:String = pacificCitiesAC.getItemAt(citySelectedIndex).label
 					break
 				case "Northeast":				
-					return northeastCitiesAC.getItemAt(citySelectedIndex).data
+					//return northeastCitiesAC.getItemAt(citySelectedIndex).data
+					var cityName:String = northeastCitiesAC.getItemAt(citySelectedIndex).label
 					break
 				case "South":
-					return southCitiesAC.getItemAt(citySelectedIndex).data				
+					//return southCitiesAC.getItemAt(citySelectedIndex).data
+					var cityName:String = southCitiesAC.getItemAt(citySelectedIndex).label				
 					break
 				default:
 					Logger.error("unexpected region index", this)
 			}
-			return regionsAC.getItemAt(regionSelectedIndex).data
+			//return regionsAC.getItemAt(regionSelectedIndex).data
+			cityName = cityName.replace(" ","")
+			return cityName
 		}
 		
 		public function get ratioBldg():Number

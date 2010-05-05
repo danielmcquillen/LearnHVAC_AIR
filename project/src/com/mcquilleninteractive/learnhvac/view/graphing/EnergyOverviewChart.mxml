@@ -64,7 +64,6 @@
 	    	
 	    	public function set runID(id:String):void
 	    	{
-	    		Logger.debug("#EOChart runID() set to : " + id)
 	    		_runID = id	    		
 	    		setChartData()
 	    	}
@@ -82,7 +81,6 @@
 	    			if (_visibleFieldsArr[i].fieldName == fieldName)
 	    			{
 	    				_visibleFieldsArr[i].enabled = enabledState
-	    				Logger.debug("#EOChart: setting " + _visibleFieldsArr[i].fieldName + " to : " + enabledState.toString())
 	    			}
 	    		}
 	    	}
@@ -90,28 +88,21 @@
 	    	[Mediate(event="LongTermSimulationEvent.SIM_COMPLETE")]
 	    	public function onLongTermSimComplete(event:LongTermSimulationEvent):void
 	    	{
-	    		Logger.debug("onLongTermSimComplete()",this)
 	    		setChartData()
 	    	}
 	    	
 	    	public function setChartData():void
 	    	{
-	    		Logger.debug("setChartData() _runID: " + _runID,this)
 	    		if (!longTermSimulationDataModel.runLoaded(_runID)) return
 	    		if (scenarioModel!=null)
 	    		{
 	    			dataAC = longTermSimulationDataModel.getEnergyPlusData(_runID).hourlyMeterDataAC
 	    	   		var obj:Object = dataAC.getItemAt(0)
-	    	   		Logger.debug("first element of dataAC: " + obj,this)
-	    	   		for (var s:String in obj)
-					{
-						Logger.debug("first object in hourlyMeterDataAC" + s + " : " + obj[s], this)
-					}
 	    	   		dataAC.refresh()
 	    		}
 	    		else
 	    		{
-	    			Logger.warn("#EOChart: setChartData() no scenario available to get chart data")
+	    			Logger.warn("setChartData() no scenario available to get chart data",this)
 	    		}
 	    	}
 	    	

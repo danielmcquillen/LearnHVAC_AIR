@@ -15,8 +15,7 @@
             import com.mcquilleninteractive.learnhvac.event.ShowSchematicEvent
 			
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
-			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
-   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent
    			
 			[Embed(source='assets/DawaAssets.swf', symbol='CCValveOff')]
 			[Bindable]

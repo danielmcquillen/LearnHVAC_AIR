@@ -10,7 +10,7 @@
 	<mx:Script>
 		<![CDATA[
 		
-			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent;
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
 			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
 			import com.mcquilleninteractive.learnhvac.util.Logger            
@@ -57,16 +57,7 @@
 				{	
 					_applicationModel.animationSpeed = rdoAnimation.selectedValue.toString()													
 					_applicationModel.logToFile = cboLogToFile.selected																			
-					_applicationModel.mTrace = cboMTrace.selected								
-																	
-					//only launch setUnitsEvent if different from current value
-					/*if (ApplicationModel.currUnits != rdoUnits.selectedValue)
-					{
-						var evt:SetUnitsEvent = new SetUnitsEvent(SetUnitsEvent.SET_UNITS)
-						evt.units = rdoUnits.selectedValue.toString()
-						dispatchEvent(evt)
-					}*/
-					
+					_applicationModel.mTrace = cboMTrace.selected											
 				}
 				
 				//then close popup	
@@ -76,7 +67,6 @@
 			private function onChange():void
 			{
 				btnOK.enabled = performValidation()
-				Logger.debug("#buton should be set to :" + performValidation().toString())
 			}
 			private function performValidation():Boolean
 			{

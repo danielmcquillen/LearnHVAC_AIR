@@ -35,9 +35,6 @@
 			private var _validatorsArr:Array;
 			
 			
-			[Bindable]
-			private var _inputsEnabled:Boolean
-			
 			private var _elevationView:ElevationView
 			private var _zoneSelector:ZoneSelector		
 			
@@ -56,7 +53,6 @@
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 			public function onScenarioLoaded():void
 			{				
-				_inputsEnabled = longTermSimulationModel.buildingPropertiesEnabled				
 				cboRegion.dataProvider = longTermSimulationModel.regionsAC
 				cboRegion.selectedIndex = longTermSimulationModel.regionSelectedIndex
 				
@@ -79,6 +75,7 @@
 				}
 				
 				cboCity.selectedIndex = longTermSimulationModel.citySelectedIndex
+				longTermSimulationModel.selectedWeatherFileName = cboCity.selectedItem.data
 				
 			}
 				
@@ -151,11 +148,15 @@
 					default:
 						Logger.error("#LTS: onRegionChange() unrecognized data: " + cboRegion.selectedItem.data)
 				}
+				
+				longTermSimulationModel.citySelectedIndex = cboCity.selectedIndex
+				longTermSimulationModel.selectedWeatherFileName = cboCity.selectedItem.data
 			}
 			
 			public function onCityChange():void
 			{
 				longTermSimulationModel.citySelectedIndex = cboCity.selectedIndex
+				longTermSimulationModel.selectedWeatherFileName = cboCity.selectedItem.data
 			}
 			
 			

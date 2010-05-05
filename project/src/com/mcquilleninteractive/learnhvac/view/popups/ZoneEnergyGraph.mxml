@@ -9,19 +9,16 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
-			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.mcquilleninteractive.learnhvac.model.SystemVariable
-			import com.mcquilleninteractive.learnhvac.util.ColorSetting
-			import com.mcquilleninteractive.learnhvac.util.Logger
-   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
-   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
-			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
-			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.mcquilleninteractive.learnhvac.util.ColorSetting
-
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+			import com.mcquilleninteractive.learnhvac.util.ColorSetting;
+			import com.mcquilleninteractive.learnhvac.util.Logger;
+			
 			import mx.collections.ArrayCollection;
 			
 			
@@ -72,8 +69,8 @@
 				
 			}
 			
-			[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
-			public function onUnitsChanged(event:SetUnitsCompleteEvent):void
+			[Mediate(event="UnitsEvent.UNITS_CHANGED")]
+			public function onUnitsChanged(event:UnitsEvent):void
 			{
 				getRelevantValues()				
 			}

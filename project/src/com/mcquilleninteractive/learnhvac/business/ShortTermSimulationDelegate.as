@@ -76,7 +76,7 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		public function ShortTermSimulationDelegate() 
 		{
-			_modelicaDir = File.userDirectory.resolvePath(ApplicationModel.baseStoragePath + "modelica")
+			_modelicaDir = File.userDirectory.resolvePath(ApplicationModel.baseStorageDirPath + "modelica")
 			_modelicaExe = _modelicaDir.resolvePath("dymosim.exe")
 			
 			_timer = new Timer(1000)

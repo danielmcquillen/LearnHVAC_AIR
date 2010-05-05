@@ -15,7 +15,7 @@
 			import mx.events.DragEvent;
 			import mx.collections.ListCollectionView
 			import mx.collections.ArrayCollection
-			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent
 			import com.mcquilleninteractive.learnhvac.event.VisualizationEvent
 			import mx.collections.ListCollectionView
 			import mx.events.ItemClickEvent

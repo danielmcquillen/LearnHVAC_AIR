@@ -13,9 +13,8 @@
             import com.mcquilleninteractive.learnhvac.model.SystemVariable
             import com.mcquilleninteractive.learnhvac.model.ScenarioModel
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
-			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
-   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
-            import mx.controls.Label 
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent
+			import mx.controls.Label 
 		        			
 		    
 			public function onCC():void

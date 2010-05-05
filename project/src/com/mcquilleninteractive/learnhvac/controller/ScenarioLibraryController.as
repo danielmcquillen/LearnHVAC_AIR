@@ -79,12 +79,15 @@ package com.mcquilleninteractive.learnhvac.controller
 				
 		/*   LOCAL SCENARIO LIST  */		
 		[Mediate(event="GetScenarioListEvent.GET_LOCAL_SCENARIO_LIST")]
-		public function getLocalScenarioList():void
-		{			
-			var localScenariosAC:ArrayCollection
+		public function getLocalScenarioList(event:GetScenarioListEvent):void
+		{	
+			Logger.debug("getLocalScenarioList()",this)					
+			scenarioLibraryModel.scenarioListLocation = ScenarioLibraryModel.SCENARIOS_LIST_LOCAL			
+										
 			try
 			{
-				 localScenariosAC = localScenarioDelegate.loadScenarioList()
+				scenarioLibraryModel.currScenarioList = localScenarioDelegate.loadScenarioList()
+				scenarioLibraryModel.currScenarioList.refresh()	
 			}
 			catch(err:Error)
 			{
@@ -93,19 +96,14 @@ package com.mcquilleninteractive.learnhvac.controller
 				return
 			}
 						
-			Logger.debug( "localScenariosAC.length"+localScenariosAC.length,this );
-			if (localScenariosAC.length == 0)
+			if (scenarioLibraryModel.currScenarioList.length == 0)
 			{
 				Alert.show( "There are no valid scenarios in the scenarios folder." );
 				scenarioLibraryModel.currScenarioList = new ArrayCollection()
 				scenarioLibraryModel.currScenarioList.refresh()
 			}
 			else
-			{
-				scenarioLibraryModel.currScenarioList.removeAll()
-				scenarioLibraryModel.scenarioListLocation = ScenarioLibraryModel.SCENARIOS_LIST_LOCAL			
-				scenarioLibraryModel.currScenarioList = localScenariosAC
-				scenarioLibraryModel.currScenarioList.refresh()	
+			{				
 				Swiz.dispatchEvent(new GetScenarioListEvent(GetScenarioListEvent.SCENARIO_LIST_LOADED))
 			}
 		}
@@ -281,7 +279,6 @@ package com.mcquilleninteractive.learnhvac.controller
 		[Mediate(event="GetScenarioListEvent.GET_DEFAULT_SCENARIO_LIST")]
 		public function getDefaultScenarioList():void
 		{
-			scenarioLibraryModel.currScenarioList.removeAll()
 			scenarioLibraryModel.currScenarioList = scenarioLibraryModel.defaultScenarioList.defaultScenariosAC	
 			scenarioLibraryModel.scenarioListLocation = ScenarioLibraryModel.SCENARIOS_LIST_DEFAULT
 			scenarioLibraryModel.currScenarioList.refresh()
@@ -296,6 +293,7 @@ package com.mcquilleninteractive.learnhvac.controller
 		[Mediate(event="LoadScenarioEvent.LOAD_DEFAULT_SCENARIO")]		
 		public function onLoadDefaultScenario(event:LoadScenarioEvent):void
 		{	
+			Logger.debug("onLoadDefaultScenario()", this)
 			//TODO					
 			Logger.debug("onLoadDefaultScenarioCommand()", this)	
 			var success:Boolean = populateScenarioModel(defaultScenariosModel.defaultScenarioXML)
@@ -446,7 +444,8 @@ package com.mcquilleninteractive.learnhvac.controller
 				
 				//add to scenarioModel
 				scenarioModel.sysNodesAC.addItem(sysNode)
-				if (sysNode.id!="SPK") scenarioModel.sysNodesForNavAC.addItem(sysNode)
+				//add to navigation (if we want to hide any nodes from nav do a conditional add here based on node name)
+				scenarioModel.sysNodesForNavAC.addItem(sysNode)
 				
 				//parse this system node's sysVars
 				for each (var sysVarXML:XML in systemNodeXML.*)

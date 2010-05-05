@@ -15,7 +15,7 @@
 		<![CDATA[
 			import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
-			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent;
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
 			import org.swizframework.Swiz;
 			
 			
@@ -53,8 +53,8 @@
            }
             
 			
-			[Mediate(event="SetUnitsCompleteEvent.UNITS_CHANGED")]
-			public function onUnitsChange(event:SetUnitsCompleteEvent):void
+			[Mediate(event="UnitsEvent.UNITS_CHANGED")]
+			public function onUnitsChange(event:UnitsEvent):void
 			{
 				//don't need to lookup temp since we know the strings
 				if (event.units==ApplicationModel.UNITS_IP)

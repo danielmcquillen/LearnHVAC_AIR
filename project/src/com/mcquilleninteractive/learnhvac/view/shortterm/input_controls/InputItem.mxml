@@ -12,18 +12,21 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent;
+			import com.mcquilleninteractive.learnhvac.event.LongTermImportEvent;
+			import com.mcquilleninteractive.learnhvac.event.ResetInputsEvent;
+			import com.mcquilleninteractive.learnhvac.event.SysVarInfoPopupEvent;
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			import com.mcquilleninteractive.learnhvac.util.Logger;
+			
+			import mx.controls.Image;
+			import mx.core.DragSource;
+			import mx.events.ValidationResultEvent;
+			import mx.managers.DragManager;
+			import mx.validators.NumberValidator;
+			
 			import org.swizframework.Swiz;
-			import mx.events.ValidationResultEvent
-			import mx.validators.NumberValidator
-			import com.mcquilleninteractive.learnhvac.event.LongTermImportEvent
-			import com.mcquilleninteractive.learnhvac.util.Logger
-			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-   			import com.mcquilleninteractive.learnhvac.event.SysVarInfoPopupEvent
-			import mx.managers.DragManager
-      	  	import mx.core.DragSource
-       		import mx.controls.Image	
-			import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent
-			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
        		
        		[Embed(source='assets/DawaAssets.swf', symbol='mcInfoIconUp')]
 			[Bindable]
@@ -57,12 +60,18 @@
 			 				
 			protected function onCC():void
 			{
-				Swiz.addEventListener(SetUnitsCompleteEvent.UNITS_CHANGED, onUnitsChanged, false, 0, true)
+				Swiz.addEventListener(UnitsEvent.UNITS_CHANGED, onUnitsChanged, false, 0, true)
 				Swiz.addEventListener(LongTermImportEvent.RUN_CHANGED, onLTRunToImportChanged, false, 0, true)
+				Swiz.addEventListener(ResetInputsEvent.SHORT_TERM_INPUTS_RESET, onReset, false, 0, true)
+					
 			}
 			
+			protected function onReset(event:ResetInputsEvent):void
+			{
+				refresh()
+			}
 			
-			protected function onUnitsChanged(event:SetUnitsCompleteEvent):void
+			protected function onUnitsChanged(event:UnitsEvent):void
 			{
 				refresh()
 			}

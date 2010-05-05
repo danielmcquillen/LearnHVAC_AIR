@@ -14,8 +14,7 @@
             import com.mcquilleninteractive.learnhvac.model.SystemVariable
 			
    			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
-			import com.mcquilleninteractive.learnhvac.event.SetUnitsEvent
-   			import com.mcquilleninteractive.learnhvac.event.SetUnitsCompleteEvent
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent
    			import com.mcquilleninteractive.learnhvac.event.ShowSchematicEvent
    						
 		   			
