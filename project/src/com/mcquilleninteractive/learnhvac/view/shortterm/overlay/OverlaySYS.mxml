@@ -55,9 +55,9 @@
 				
 				
 				//set visibility of labels					
-				var varArr:Array = ["SYSTAirDB","HCPos","CCPos",
+				var varArr:Array = ["SYSTAirDB","SYSRHOutside","HCPos","CCPos",
 									"RMTemp","VAVTAirLvg","VAVDampPos",
-									"VAVRhcPos" 	]
+									"VAVRhcPos"	]
 									
 				setLabels(varArr) 
 				return
@@ -80,7 +80,7 @@
 		toolTip="Outdoor Air Dry Bulb Temperature"
 		styleName="overlayTitle" 
 		x="10" 
-		y="35"/>
+		y="25"/>
 		
 	<overlay:ValueDisplayLabel 	
 		id="lblSYSTAirDB" 
@@ -88,8 +88,25 @@
 		text="0" 
 		styleName="overlayValue" 
 		toolTip="Outdoor Air Dry Bulb Temperature"
-		x="70"
-		y="35"/>
+		x="90"
+		y="25"/>
+	
+	
+	<mx:Label 	id="lblSYSRHOutside_Title"
+				text="Rel. Humidity: "  
+				toolTip="Outdoor Air Relative Humidity"
+				styleName="overlayTitle" 
+				x="10" 
+				y="40"/>
+	
+	<overlay:ValueDisplayLabel 	
+		id="lblSYSRHOutside" 
+		sysVarName="SYSRHOutside"
+		text="0" 
+		styleName="overlayValue" 
+		toolTip="Outdoor Air Relative Humidity"
+		x="90"
+		y="40"/>
 			
 	<!--
 	<mx:Label id="lblTwAirOut_Title" 

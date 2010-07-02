@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:view="com.mcquilleninteractive.learnhvac.view.*" 
+	xmlns:graphing="com.mcquilleninteractive.learnhvac.view.graphing.*" xmlns:analysis="com.mcquilleninteractive.learnhvac.view.analysis.*" >
+	
+	<mx:DividedBox direction="horizontal" width="100%" height="100%" paddingTop="2" paddingBottom="3" paddingLeft="3" paddingRight="3">
+		
+		<analysis:AnalysisExplorer id="analysisExplorer" label="Structure" width="350" height="100%"/>
+		
+		<mx:Canvas height="100%" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">	
+			<mx:VBox height="100%" width="100%">
+				<graphing:DataVizPanel id="vizPanel1" width="100%" height="50%" position="1"/>
+				<graphing:DataVizPanel id="vizPanel2" width="100%" height="50%" position="2"/>
+			</mx:VBox>
+		</mx:Canvas>
+		
+	</mx:DividedBox>
+	
+</mx:Canvas>

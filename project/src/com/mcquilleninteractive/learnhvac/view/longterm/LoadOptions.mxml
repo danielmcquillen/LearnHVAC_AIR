@@ -10,15 +10,15 @@
 	
 	<mx:Script>
 			<![CDATA[
-			
-			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;			
-			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;				
-			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO	
-			import com.mcquilleninteractive.learnhvac.util.Logger
-			import com.mcquilleninteractive.learnhvac.util.Conversions
+				import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
+				import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+				import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
+				import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+				import com.mcquilleninteractive.learnhvac.util.Conversions;
+				import com.mcquilleninteractive.learnhvac.util.Logger;
+				import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO;
 				
-			import mx.validators.Validator
+				import mx.validators.Validator;
 			
 			
 			[Bindable]
@@ -67,7 +67,15 @@
 				resetValues()
 			}
 			
-			
+			[Mediate(event="UnitsEvent.UNITS_CHANGED")]
+			public function onUnitsChanged(event:UnitsEvent):void
+			{
+				vldAreaPerPerson.validate()
+				vldEquipPeakLoad.validate()
+				vldLightingPeakLoad.validate()
+			}
+				
+				
 			
 			public function setViewRefs(elevationView:ElevationView, zoneSelector:ZoneSelector):void
 			{				
@@ -155,6 +163,13 @@
 					longTermSimulationModel.lightingPeakLoad = Number(txtLightingPeakLoad.text)		
 			}
 				
+				
+			protected function onAreaPerPersonChange():void
+			{
+				if (vldAreaPerPerson.validate())
+					longTermSimulationModel.areaPerPerson = Number(txtAreaPerPerson.text)		
+			}
+				
 			]]>
 		</mx:Script>
 		
@@ -208,6 +223,7 @@
 			id="txtAreaPerPerson"
 			width="70" 
 			text="{longTermSimulationModel.areaPerPerson}"  
+			change="onAreaPerPersonChange()"
 			restrict="0-9"/>
 		<mx:Label text="{_peopleUnits}"/>
 	</mx:HBox>

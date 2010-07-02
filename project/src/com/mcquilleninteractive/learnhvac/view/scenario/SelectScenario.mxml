@@ -16,16 +16,18 @@
 	<mx:Script>
 	
 		<![CDATA[
-		import com.mcquilleninteractive.learnhvac.model.UserModel;
-		import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
-		import mx.collections.ArrayCollection;
-		
-		import mx.events.ListEvent;
-		import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent;
-		import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
-		import com.mcquilleninteractive.learnhvac.event.GetScenarioListEvent;
-		import com.mcquilleninteractive.learnhvac.view.scenario.SelectScenarioItemRenderer;
-		import com.mcquilleninteractive.learnhvac.util.Logger;
+			import com.mcquilleninteractive.learnhvac.event.GetScenarioListEvent;
+			import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioLibraryModel;
+			import com.mcquilleninteractive.learnhvac.model.UserModel;
+			import com.mcquilleninteractive.learnhvac.util.Logger;
+			import com.mcquilleninteractive.learnhvac.view.popups.SimulationModal;
+			import com.mcquilleninteractive.learnhvac.view.scenario.SelectScenarioItemRenderer;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
 	
 	
 		[Bindable]
@@ -43,7 +45,7 @@
 		[Bindable]
 		[Autowire]
 		public var userModel:UserModel
-		
+				
 			
 		private function getLocalScenarioList():void
 		{

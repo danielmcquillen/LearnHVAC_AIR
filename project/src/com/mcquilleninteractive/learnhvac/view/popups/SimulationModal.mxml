@@ -10,32 +10,28 @@
     paddingRight="20"
     paddingBottom="10"
     horizontalAlign="center"
-    initialize="onInit()"
 	>
 	
 	
 	<mx:Script>
 		<![CDATA[
 		
-		import com.mcquilleninteractive.learnhvac.util.Logger
-		import mx.managers.PopUpManager
+		import com.mcquilleninteractive.learnhvac.util.Logger;		
+		import mx.managers.PopUpManager;
 		
-		public function onInit():void
-		{
-				
-		}	
+		public static const DOWNLOADING:String = "Downloading scenario..."
+		public static const LOADING:String = "Loading scenario...";
+		public static const INITIALIZING:String = "Initializing scenario...";
 		
-
-		private function removeListeners():void
-		{
-		}
+		[Bindable]
+		public var message:String = SimulationModal.INITIALIZING;		
 		
 		]]>
 	</mx:Script>
 	
 	<mx:Canvas>
 		
-		<mx:Label id="lblStatus" x="0" y="5" text="Initializing scenario..." textAlign="center" width="100%" height="100%"/>
+		<mx:Label id="lblStatus" x="0" y="5" text="{message}" textAlign="center" width="100%" height="100%"/>
 		
 		<myComps:LoadingBarSmall x="220" y="30" />
 			

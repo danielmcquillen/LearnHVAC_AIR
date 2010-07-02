@@ -73,14 +73,14 @@
 			{					
 				try
 				{
-					var boiTLiqSup:SystemVariable = scenarioModel.getSysVar("CCTLiqEnt")
-					tPipe1.text = fmtRound.format(boiTLiqSup.currValue).toString()
+					var tLiqSup:SystemVariable = scenarioModel.getSysVar("CCTLiqEnt")
+					tPipe1.text = fmtRound.format(tLiqSup.currValue).toString()
 					
-					var hcTLiqLvg:SystemVariable = scenarioModel.getSysVar("CCTLiqLvg")
-					tPipe2.text = fmtRound.format(hcTLiqLvg.currValue).toString()
+					var tLiqLvg:SystemVariable = scenarioModel.getSysVar("CCTLiqLvg")
+					tPipe2.text = fmtRound.format(tLiqLvg.currValue).toString()
 					
-					var boiLiqFlw:SystemVariable = scenarioModel.getSysVar("CHLLiqFlw")
-					mPipe2.text = mPipe1.text = fmtRound.format(boiLiqFlw.currValue).toString()
+					var liqFlw:SystemVariable = scenarioModel.getSysVar("CHLLiqFlw")
+					mPipe2.text = mPipe1.text = fmtRound4.format(liqFlw.currValue).toString()
 					
 					var ccPos:SystemVariable = scenarioModel.getSysVar("CCPos")					
 					pos.text= String(uint(ccPos.currValue))+"%"
@@ -105,6 +105,7 @@
 	</mx:Script>	
 		
 	<mx:NumberFormatter id="fmtRound" precision="2" rounding="nearest" />
+	<mx:NumberFormatter id="fmtRound4" precision="4" rounding="nearest" />
 	
 	<mx:Canvas>
 	

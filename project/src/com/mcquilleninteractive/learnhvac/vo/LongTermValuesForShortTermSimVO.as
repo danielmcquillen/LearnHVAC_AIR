@@ -6,11 +6,11 @@ package com.mcquilleninteractive.learnhvac.vo
 	public class LongTermValuesForShortTermSimVO
 	{
 		
-		public var date:Date
+		public var dateInEpochSecs:Number
 		
 		public var rowIndex:Number = 0
 		public var _tAirOut:Number = 0
-		public var _twAirOut:Number = 0
+		public var _rhOutside:Number = 0
 		public var _lightingHeatGain:Number = 1
 		public var _electricEquipmentHeatGain:Number = 1
 		public var _peopleHeatGain:Number = 1
@@ -68,28 +68,14 @@ package com.mcquilleninteractive.learnhvac.vo
 			}
 		}
 
-		public function get twAirOut():Number
+		public function get rhOutside():Number
 		{
-			if (ApplicationModel.currUnits == ApplicationModel.UNITS_SI)
-			{
-				return _twAirOut	
-			}
-			else
-			{
-				return Conversions.celToFarh(_twAirOut)
-			}
+			return _rhOutside				
 		}
 		
-		public function set twAirOut(v:Number):void
+		public function set rhOutside(v:Number):void
 		{
-			if (ApplicationModel.currUnits == ApplicationModel.UNITS_SI)
-			{
-				_twAirOut = v
-			}
-			else
-			{
-				_twAirOut = Conversions.farhToCel(_tAirOut)
-			}
+			_rhOutside = v
 		}
 
 	}

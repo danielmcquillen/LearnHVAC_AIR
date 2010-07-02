@@ -81,6 +81,7 @@ package com.mcquilleninteractive.learnhvac.business
 			
 			_timer = new Timer(1000)
 			_timer.addEventListener(TimerEvent.TIMER, onTimer)
+			openSocket()
 			
 		}
 				
@@ -100,18 +101,16 @@ package com.mcquilleninteractive.learnhvac.business
 				_modelicaProcess = new NativeProcess()
 				setupModelicaProcess()	
 			}
-			
 			Logger.debug("start()",this)
-			openSocket()
-			launchModelicaProcess()	
+			//openSocket()
+			launchModelicaProcess()			
 		}
 		
 		public function stop():void
 		{
-			closeSocket()
+			//closeSocket()
 			_timer.stop()
-			_modelicaProcess.exit(true)
-			_simTime = 0
+			if (_modelicaProcess) _modelicaProcess.exit(true)			
 		}
 		
 		public function onTimer(event:TimerEvent):void
@@ -122,6 +121,14 @@ package com.mcquilleninteractive.learnhvac.business
 		public function get simTime():int
 		{
 			return _simTime
+		}
+		
+		/** resets the delegate so that simulation starts at correct start date/time 
+		 *  This function is called when user wants to "rewind" to start
+		 * */
+		public function reset():void
+		{
+			_simTime = 0
 		}
 		
 		public function set timeStep(value:int):void
@@ -183,31 +190,27 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		public function openSocket():void
 		{
-			try
-			{
-				if (_serverSocket) 
-				{
-					this.closeSocket()
-				}
+			//try
+			//{				
 				_serverSocket = new ServerSocket();
 				_serverSocket.addEventListener(Event.CONNECT, socketConnectHandler);
 				_serverSocket.bind(SOCKET_PORT)
 				_serverSocket.listen();				
-			}
-			catch (error:Error)
-			{
-				var msg:String = "Error when opening socket server on " + SOCKET_PORT + " " + error
-				Logger.error(msg, this )
-				Alert.show(msg, "Socket Error");
-			}			
+			//}
+			//catch (error:Error)
+			//{
+			//	var msg:String = "Error when opening socket server on " + SOCKET_PORT + " " + error
+			//	Logger.error(msg, this )
+			//	Alert.show(msg, "Socket Error");
+			//}			
 		}
-		
+				
 		public function closeSocket():void
 		{
-			if (_serverSocket)
+			if (_serverSocket && _serverSocket.listening)
 			{
-				_serverSocket.removeEventListener(Event.CONNECT, socketConnectHandler);
 				_serverSocket.close()
+				_serverSocket.removeEventListener(Event.CONNECT, socketConnectHandler);
 				_serverSocket = null
 			}
 		}
@@ -218,6 +221,12 @@ package com.mcquilleninteractive.learnhvac.business
 		{
 			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_STARTED,true)
 			dispatchEvent(evt)
+			
+			if (_modelicaSocket)
+			{
+				_modelicaSocket.removeEventListener(ProgressEvent.SOCKET_DATA, socketDataHandler);
+				_modelicaSocket = null
+			}
 			
 			_modelicaSocket = event.socket;
 			_modelicaSocket.addEventListener(ProgressEvent.SOCKET_DATA, socketDataHandler);
@@ -281,11 +290,11 @@ package com.mcquilleninteractive.learnhvac.business
 		public function onModelicaProcessExit(event:NativeProcessExitEvent):void
 		{
 			Logger.error("event.exitCode : " + event.exitCode, this)
-			_timer.stop()
-			//todo : launch a crashed event if exit code indicates error
+			
+			stop()
 			
 			if (event.exitCode >0)
-			{
+			{				
 				var evt:ShortTermSimulationEvent= new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_ERROR, true)
 				evt.errorMessage = "Error code : " + event.exitCode
 				dispatchEvent(evt)
@@ -302,7 +311,10 @@ package com.mcquilleninteractive.learnhvac.business
 		public function onModelicaStandardOutput(event:ProgressEvent):void
 		{
 			var text:String = _modelicaProcess.standardOutput.readUTFBytes(_modelicaProcess.standardOutput.bytesAvailable)
-			Logger.debug("Modelica process output: " + text, this)
+			if (applicationModel.mTrace)
+			{
+				Logger.debug("Modelica process output: " + text, this)
+			}
 		}
 
 		public function onModelicaStandardError(event:ProgressEvent):void
@@ -320,8 +332,7 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		protected function parseOutputFromModelica(outputFromModelica:String):void
 		{
-			//Logger.debug("Output string from modelica:" + outputFromModelica, this)
-			
+						
 			var outputSysVarsArr:Array = scenarioModel.getOutputSysVars()
 			var len:int = outputSysVarsArr.length
 					
@@ -370,12 +381,13 @@ package com.mcquilleninteractive.learnhvac.business
 			
 			for(var i:uint=0;i<len;i++)
 			{
+				var sysVar:SystemVariable = inputSysVarsArr[i] as SystemVariable
+				
 				inputs += " " + inputSysVarsArr[i].baseSIValue	
-				
-				
+							
 				if (applicationModel.mTrace)
 				{
-					tr += "\n" + inputSysVarsArr[i].name + " : " + inputSysVarsArr[i].baseSIValue;	
+					tr += "\n  " + (i+1).toString() + " : " + inputSysVarsArr[i].name + " : " + inputSysVarsArr[i].baseSIValue;	
 			
 					//build a string for special file requested by MWetter for debugging
 					//input vales should be written like {val1, val2, val3...}

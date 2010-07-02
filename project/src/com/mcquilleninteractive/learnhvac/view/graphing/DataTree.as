@@ -7,8 +7,8 @@ package com.mcquilleninteractive.learnhvac.view.graphing
 	public class DataTree extends Tree
 	{		
 		public var graphDataModel:IGraphDataModel //reference to relevant GraphDataModel object 		
-		public var type:String
-					
+		public var runID:String
+		
 		public function DataTree()
 		{
 			super()

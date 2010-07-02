@@ -9,7 +9,7 @@
 
   Output:Variable,
     *,                       !- Key_Value
-    Outdoor Wet Bulb,        !- Variable_Name
+    Outdoor Relative Humidity,        !- Variable_Name
     hourly;                  !- Reporting_Frequency
 
   Output:Variable,

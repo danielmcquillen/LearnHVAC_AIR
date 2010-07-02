@@ -2,18 +2,20 @@
 <util:DragPanel xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:util="com.mcquilleninteractive.learnhvac.util.*" 
 	title="ZONE ENERGY"    
-	preinitialize="onPreInit()" 
     minWidth="350"
     minHeight="200"
 	width="350" height="250" xmlns:popups="com.mcquilleninteractive.learnhvac.view.popups.*">
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.event.LongTermImportEvent;
 			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
 			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
 			import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
 			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
 			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioDataModel;
 			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
 			import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 			import com.mcquilleninteractive.learnhvac.util.ColorSetting;
@@ -21,75 +23,44 @@
 			
 			import mx.collections.ArrayCollection;
 			
-			
-
-			[Bindable]
-			[Autowire]
-			public var scenarioModel:ScenarioModel
-			
-			
-			[Bindable]
-			[Autowire]
-			public var longTermSimulationModel:LongTermSimulationModel
-
-			[Bindable]
-			private var zoneTotalsAC:ArrayCollection 
-			
-			private var _sysVarVAVRhcQd:SystemVariable 
-			private var _valuesArr:Array 
-			
 			/* Specs from Brian
 			
-				zone level
-				   * reheat coil power - ? (but for now, can use VAVRhcQd)
-				   * lighting power - lighting load * size of zone 
-				   * equipment power (ie. plug loads) - equipment load * size of zone
-
+			zone level
+			* reheat coil power - ? (but for now, can use VAVRhcQd)
+			* lighting power - lighting load * size of zone 
+			* equipment power (ie. plug loads) - equipment load * size of zone
+			
 			*/
 			
+
+			[Bindable]
+			[Autowire]
+			public var scenarioDataModel:ScenarioDataModel
 			
-			public function onPreInit():void
-			{	
-				_valuesArr = [{group:"Zone Energy Use", VAVRhcQd:12, lightingPower:5, equipPower:2}]		
-									
-				zoneTotalsAC = new ArrayCollection(_valuesArr)
+			[Bindable]
+			public var zoneEnergyUseAC:ArrayCollection;
 			
-				//when this graph is first shown, a scenario will already have been loaded, so call onScenarioLoaded once to get it set up correctly
-				onScenarioLoaded(null)
-				
-			}
 			
-			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
-			public function onScenarioLoaded(event:ScenarioLoadedEvent):void
+			[Mediate(event="LongTermImportEvent.RUN_CHANGED")]
+			public function longTermDataRunChanged(event:LongTermImportEvent):void
 			{
-				//the number and type of sysVar isn't going to change much, so I'm not going to use 
-				//binding, I'm just going to keep a ref and then update when the outputs are loaded
-				_sysVarVAVRhcQd = scenarioModel.getSysVar("VAVRhcQd")				
-				getRelevantValues()
-				
+				switch (event.runToImport)
+				{
+					case ScenarioModel.LT_IMPORT_NONE:
+						zoneEnergyUseAC = scenarioDataModel.zoneEnergyUseRun1AC
+						break
+					
+					case LongTermSimulationDataModel.RUN_1:
+						zoneEnergyUseAC = scenarioDataModel.zoneEnergyUseRun2AC
+						break
+					
+					case LongTermSimulationDataModel.RUN_2:
+						zoneEnergyUseAC = new ArrayCollection()
+						break
+				}
 			}
 			
-			[Mediate(event="UnitsEvent.UNITS_CHANGED")]
-			public function onUnitsChanged(event:UnitsEvent):void
-			{
-				getRelevantValues()				
-			}
-			
-			[Mediate(event="ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED")]			
-			public function onShortTermOutputUpdated(event:ShortTermSimulationEvent):void
-			{
-				getRelevantValues()
-			}
-			
-			private function getRelevantValues():void
-			{
-				var obj:Object = zoneTotalsAC.getItemAt(0)
-				var zoneSize:Number = longTermSimulationModel.getCurrentZoneSize()				
-				obj.VAVRhcQd = _sysVarVAVRhcQd.currValue
-				obj.lightingPower = longTermSimulationModel.lightingPeakLoad * zoneSize
-				obj.equipPower = longTermSimulationModel.equipPeakLoad * zoneSize
-				zoneTotalsAC.refresh()
-			}
+		
 			
 			private function onClose():void
 			{
@@ -111,7 +82,7 @@
 		
 		 <mx:ColumnChart id="chart" type="stacked" 
 		 	width="100%" height="100%" 
-		 	dataProvider="{zoneTotalsAC}"
+		 	dataProvider="{zoneEnergyUseAC}"
 		    maxColumnWidth="30"
 		    minWidth="150"
 		    minHeight="150"

@@ -17,24 +17,22 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
-			import com.mcquilleninteractive.learnhvac.model.DialogManager;
-							
-          	import mx.managers.PopUpManager;
-			import com.mcquilleninteractive.learnhvac.view.popups.ZoneEnergyGraph;
-			import com.mcquilleninteractive.learnhvac.view.popups.SystemEnergyGraph;
-			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel
-			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
-			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.mcquilleninteractive.learnhvac.model.data.EnergyPlusData
-			import com.mcquilleninteractive.learnhvac.util.Logger
-									
-			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
 			import com.mcquilleninteractive.learnhvac.event.LongTermImportEvent;
-		
-			import mx.controls.Alert
-			import mx.collections.ArrayCollection
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+			import com.mcquilleninteractive.learnhvac.model.DialogManager;
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel;
+			import com.mcquilleninteractive.learnhvac.model.data.EnergyPlusData;
+			import com.mcquilleninteractive.learnhvac.util.Logger;
+			import com.mcquilleninteractive.learnhvac.view.popups.SystemEnergyGraph;
+			import com.mcquilleninteractive.learnhvac.view.popups.ZoneEnergyGraph;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
 			
 			public static var START_SIM:String = "startSim"
 			public static var STOP_SIM:String = "stopSim";
@@ -43,6 +41,8 @@
 			[Autowire]
 			public var scenarioModel:ScenarioModel
 			
+			[Autowire]
+			public var dialogManager:DialogManager
 			
 			[Embed('assets/img/control_start.png')]
 			[Bindable]
@@ -170,30 +170,30 @@
 				
 			public function onViewOutput():void
 			{
-				DialogManager.getInstance().showOutputPanel()
+				dialogManager.showOutputPanel()
 			}
 			
 			public function onViewWatch():void
 			{
-				DialogManager.getInstance().showWatchPanel()			
+				dialogManager.showWatchPanel()			
 			}
 				
 				
 			public function onViewMovie():void
 			{
-				DialogManager.getInstance().showMovieViewer()
+				dialogManager.showMovieViewer()
 			}
           	
           	
           	public function onSystemEnergy():void
           	{
-          		DialogManager.getInstance().showSystemEnergyGraph()
+          		dialogManager.showSystemEnergyGraph()
           	}
           	
           		
           	public function onZoneEnergy():void
           	{          		
-          		DialogManager.getInstance().showZoneEnergyGraph()
+          		dialogManager.showZoneEnergyGraph()
           	}
 			
 		]]>
@@ -265,7 +265,7 @@
    			click="onSystemEnergy()"
    			styleName="sectionToolBarButton"
 			 />	 
-	-->
+
 	<mx:Button id="btnZoneEnergyGraph" 
    			width="35"
    			height="30"
@@ -275,7 +275,7 @@
    			click="onZoneEnergy()"
    			styleName="sectionToolBarButton"
 			 />	 
-				 			 
+			 
 	<mx:Button id="btnViewMovie" 
    			width="35"
    			height="30"
@@ -285,7 +285,7 @@
 			toolTip="{scenarioModel.movieToolTip}"
    			styleName="sectionToolBarButton"
 			 />
-	
+	--> 	
 					
 	<mx:Spacer width="100%" />		
 				

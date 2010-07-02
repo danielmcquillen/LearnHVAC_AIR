@@ -22,7 +22,8 @@ package com.mcquilleninteractive.learnhvac.model
 	 *  
 	 *  The ScenarioModel should not manage the data that's specific to a specific simulation
 	 *  run, either long-term or short-term. That data is held in the 
-	 *  LongTermSimulationDataModel and ShortTermSimulationDatamodel.
+	 *  LongTermSimulationDataModel and ShortTermSimulationDatamodel, or in the ScenarioSimulationData 
+	 *  when the output data is a combination of both or a product of neither
 	 * 
 	 *  Most visual displays will listen to this model for updates and get retrieve this model's
 	 *  data to display when those updates happen.
@@ -84,13 +85,19 @@ package com.mcquilleninteractive.learnhvac.model
 		public var sysVarsImportedFromShortTermAC:ArrayCollection = new ArrayCollection()//holds group of SystVars that are imported form ShortTerm into LongTerm sim
 		
 		//CONFIGURE THIS TO CHANGE WHICH VARS ARE TO BE IMPORTED FROM LONG-TERM INTO SHORT-TERM
-		public var longTermVarsToImportArr:Array = ["SYSTAirDB" ] //, "RmQSENS"]			
+		//TODO: add SYSRmQSens to this list when we implement parameters			
+		public var longTermVarsToImportArr:Array = [	"SYSTAirDB",
+														"SYSRHOutside"]
+		
 														
 		//CONFIGURE THIS TO CHANGE WHICH VARS ARE TO BE IMPORTED FROM SHORT-TERM INTO LONG-TERM
 		public var shortTermVarsToImportArr:Array = [	"SYSTRmSPHeat",
 														"SYSTRmSPCool",
 											  			"SYSTSupS",
-											  			"VAVMinPos"]; //PAtm
+														"HCUA",
+														"CCUA",
+														"VAVMinFlwRatio",
+														"VAVRhcQd" ]; 
 		// OTHER CLASS PROPERTIES
 			
 		// values for short-term simulation
@@ -103,13 +110,14 @@ package com.mcquilleninteractive.learnhvac.model
 		public var scenID:String 						//Text-based ID for scenario
 		public var name:String 
 		public var shortDescription:String
+		public var description:String
 		public var goal:String							//as in didactic goal as described by Instructor
 		public var thumbnailURL:String
 		public var movieURL:String						//URL of a movie that explains a certain concept
 		
 		//dates 
-		public var allowLongtermDateChange:Boolean = true
-		public var allowRealtimeDatetimeChange:Boolean = true
+		public var allowLongTermDateChange:Boolean = true
+		public var allowRealTimeDateTimeChange:Boolean = true
 		public var WDDStartDate:Date = new Date("01/21/2009 12:00:00 AM")
 		public var WDDStopDate:Date = new Date("01/21/2009 11:59:59 PM")
 		public var SDDStartDate:Date = new Date("08/21/2009 12:00:00 AM")
@@ -274,14 +282,12 @@ package com.mcquilleninteractive.learnhvac.model
 					{
 						if (sysVar.name == sysVarName)
 						{		
-							if (sysVarName=="FANTAirEnt") Logger.debug("found in sysNode", this)
 							lookupArr[sysVarName] = sysVar
 							return sysVar
 						}
 					}
 				}	
 			}			
-			if (sysVarName=="FANTAirEnt") Logger.error("getSysVar() can't find variable : " + sysVarName, this)
 			return null
 		}
 			
@@ -478,9 +484,7 @@ package com.mcquilleninteractive.learnhvac.model
 		 * 
 		 * */
 		public function importLongTermVars():void
-		{	
-			Logger.debug ("importLongTermVars() importLongTermVarsFromRun: " + importLongTermVarsFromRun)
-				
+		{					
 			if (importLongTermVarsFromRun==ScenarioModel.LT_IMPORT_NONE) return 
 												
 			var ePlusData:EnergyPlusData = longTermSimulationDataModel.getEnergyPlusData(importLongTermVarsFromRun)	
@@ -491,16 +495,8 @@ package com.mcquilleninteractive.learnhvac.model
 				return
 			}
 			
-			//try
-			//{		
-				var incomingLTvalues:LongTermValuesForShortTermSimVO  = ePlusData.getLongTermInputs(shortTermSimulationModel.currDateTime, _floorOfInterest, _zoneOfInterest)
-			//}
-			//catch(err:Error)
-			//{
-			//	Logger.error(": importLongTermVars() error: " + err)
-			//	return
-			//}
-			
+			var incomingLTvalues:LongTermValuesForShortTermSimVO  = ePlusData.getLongTermInputs(shortTermSimulationModel.currDateTime, _floorOfInterest, _zoneOfInterest)
+						
 			if (incomingLTvalues==null)
 			{
 				Logger.warn("shortTermInputsVO returned from ePlusData was null.", this)
@@ -512,13 +508,16 @@ package com.mcquilleninteractive.learnhvac.model
 								
 				var rmQSensVar:SystemVariable = getSysVar("SYSRmQSens")
 				rmQSensVar.baseSIValue = incomingLTvalues.getRmQSens("SI")
-				
+				rmQSensVar.localValue = rmQSensVar.currValue
+					
 				var tAirOut:SystemVariable = getSysVar("SYSTAirDB")
 				tAirOut.baseSIValue = incomingLTvalues._tAirOut
+				tAirOut.localValue = tAirOut.currValue	
 				
-				//Waiting to see whether Modelica will have WB temp
-				//var twAirOut:SystemVariable = getSysVar("SYSTAirWB")
-				//twAirOut.baseSIValue = incomingLTvalues._twAirOut
+				var rhOut:SystemVariable = getSysVar("SYSRHOutside")
+				rhOut.baseSIValue = incomingLTvalues._rhOutside
+				rhOut.localValue = rhOut.currValue	
+					
 						
 			}
 		}

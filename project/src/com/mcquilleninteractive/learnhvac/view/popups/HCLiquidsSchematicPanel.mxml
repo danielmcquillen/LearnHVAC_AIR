@@ -74,14 +74,14 @@
 			{					
 				try
 				{
-					var boiTLiqSup:SystemVariable = scenarioModel.getSysVar("HCTLiqEnt")
-					tPipe1.text = fmtRound.format(boiTLiqSup.currValue).toString()
+					var tLiqEnt:SystemVariable = scenarioModel.getSysVar("HCTLiqEnt")
+					tPipe1.text = fmtRound.format(tLiqEnt.currValue).toString()
 					
-					var hcTLiqLvg:SystemVariable = scenarioModel.getSysVar("HCTLiqLvg")
-					tPipe2.text = fmtRound.format(hcTLiqLvg.currValue).toString()
+					var tLiqLvg:SystemVariable = scenarioModel.getSysVar("HCTLiqLvg")
+					tPipe2.text = fmtRound.format(tLiqLvg.currValue).toString()
 					
-					var boiLiqFlw:SystemVariable = scenarioModel.getSysVar("BOILiqFlw")
-					mPipe2.text = mPipe1.text = fmtRound.format(boiLiqFlw.currValue).toString()
+					var liqFlw:SystemVariable = scenarioModel.getSysVar("BOILiqFlw")
+					mPipe2.text = mPipe1.text = fmtRound4.format(liqFlw.currValue).toString()
 														
 					var hcPos:SystemVariable = scenarioModel.getSysVar("HCPos")					
 					pos.text= String(uint(hcPos.currValue))+"%"
@@ -102,8 +102,9 @@
 		]]>
 	</mx:Script>	
 		
-	<mx:NumberFormatter id="fmtRound" precision="2" rounding="nearest" />	
-		
+	<mx:NumberFormatter id="fmtRound" precision="2" rounding="nearest" />		
+	<mx:NumberFormatter id="fmtRound4" precision="4" rounding="nearest" />	
+	
 	<mx:Canvas>
 		<mx:Image id="liquidsDiagram" source="{LiquidsDiagram}"/> 
 		

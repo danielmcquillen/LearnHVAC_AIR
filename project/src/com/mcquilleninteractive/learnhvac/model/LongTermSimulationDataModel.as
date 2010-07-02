@@ -7,16 +7,25 @@ package com.mcquilleninteractive.learnhvac.model
 	 */
 	
 	import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent;
+	import com.mcquilleninteractive.learnhvac.model.data.EnergyPlusData;
+	import com.mcquilleninteractive.learnhvac.model.data.IGraphDataModel;
+	import com.mcquilleninteractive.learnhvac.model.data.ZoneEnergyUseDataPoint;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
-	import com.mcquilleninteractive.learnhvac.model.data.EnergyPlusData
-	import com.mcquilleninteractive.learnhvac.model.data.IGraphDataModel
+	
+	import mx.collections.ArrayCollection;
+	
 	import org.swizframework.Swiz;
+	
+	
 	
 	[Bindable]
 	public class LongTermSimulationDataModel
 	{				
 		public static var RUN_1:String = "eplus_run1"
-		public static var RUN_2:String = "eplus_run2"
+		public static var RUN_2:String = "eplus_run2";
+			
+		[Autowire]
+		public var longTermSimulationModel:LongTermSimulationModel
 		
 		public var currRunID:String	= LongTermSimulationDataModel.RUN_1;		//current run as selected by user
 		public var run1Loaded:Boolean = false
@@ -24,12 +33,12 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		// holds instances of EPlusDataOutput, each of which can hold data from an E+ run
 		public var runsArr:Array  
-	
+			
 		public var dateTimeID:String = "Date/Time"
 		public var continueParsing:Boolean = true//flag for when user selects cancel
 		private var firstTick:Number //epoch milliseconds for first time data point
 		
-		
+				
 		public function LongTermSimulationDataModel()
 		{
 			init()
@@ -45,7 +54,6 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function init():void
 		{
-			
 			//currently we're just storing two runs for EPlus, a base run and a delta run
 			//later we will allow multiple runs to be held in memory and accessed by user
 			runsArr = []
@@ -80,6 +88,9 @@ package com.mcquilleninteractive.learnhvac.model
 			var eplusData:EnergyPlusData = EnergyPlusData(runsArr[runID])			
 			eplusData.loadData(outputCSV, meterDataCSV)
 			
+			//store a memento of the inputs
+			eplusData.energyPlusInputsMemento = longTermSimulationModel.getEnergyPlusInputsMemento()
+				
 			//launch event
 			var event:ScenarioDataLoadedEvent = new ScenarioDataLoadedEvent(ScenarioDataLoadedEvent.ENERGY_PLUS_DATA_PARSED, true )
 			event.graphDataModel = IGraphDataModel(eplusData)
@@ -88,61 +99,17 @@ package com.mcquilleninteractive.learnhvac.model
 						
 			if (runID==LongTermSimulationDataModel.RUN_1) run1Loaded=true
 			if (runID==LongTermSimulationDataModel.RUN_2) run2Loaded=true
-						
+			
+				
 			return true		
 		}
 		
-		/* This function loads E+ data saved by Learn HVAC (E+ outputs two files,
-		   but we save as one. So, when loading only need to parse one file */
-			
-		public function loadEPlusOutputFromFile(outputCSV:String, runID:String):Boolean
-		{
-			// error check...simplest way right now to check if this is a DRQAT output file
-			// is to see if the first few characters match what DRQAT writes out on the first line
-			var firstLine:String = outputCSV
-			if (firstLine.slice(0,9)!="Date/Time")
-			{
-				Logger.error("loadEPlusOutputFromFile: the output file selected by the user doesn't appear to be a valid Learn HVAC E+ output file.", this)
-				return false	
-			}			
-			
-			if (runsArr[runID]==undefined)
-			{
-				Logger.error("loadEPlusOutputFromFile: no model with id: " + runID, this)
-				//create new model if ID doesn't exist
-				runsArr[runID] = new EnergyPlusData()
-			}
-		
-			var eplusData:EnergyPlusData = EnergyPlusData(runsArr[runID])
-			
-			try
-			{
-				eplusData.loadData(outputCSV)
-			}
-			catch(e:Error)
-			{
-				Logger.error("loadEPlusOutputFromFile() error: " + e, this)
-			}
-			
-			//launch event
-			var event:ScenarioDataLoadedEvent = new ScenarioDataLoadedEvent(ScenarioDataLoadedEvent.ENERGY_PLUS_DATA_PARSED, true )
-			event.graphDataModel = IGraphDataModel(eplusData)
-			event.graphDataModelID = runID
-			Swiz.dispatchEvent(event)
-			
-			if (runID==LongTermSimulationDataModel.RUN_1) run1Loaded=true
-			if (runID==LongTermSimulationDataModel.RUN_2) run2Loaded=true
-			
-			return true		
-		}
 		
 		
 		public function getEnergyPlusData(runID:String):EnergyPlusData
 		{
-			Logger.debug("getEnergyPlusData() runID: " + runID)
 			if (runsArr[runID]==undefined)
 			{
-				Logger.warn("getEnergyPlusData() runID: " +runID+" not found", this)
 				return null
 			}
 			return EnergyPlusData(runsArr[runID])
@@ -153,6 +120,9 @@ package com.mcquilleninteractive.learnhvac.model
 			if (runsArr[runID]==null) return false
 			return EnergyPlusData(runsArr[runID]).dataLoaded
 		}
+		
+		
+		
 		
 		
 	}

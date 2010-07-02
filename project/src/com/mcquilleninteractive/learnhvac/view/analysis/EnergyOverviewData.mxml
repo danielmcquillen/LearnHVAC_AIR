@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:view="com.mcquilleninteractive.learnhvac.view.*" 
+	xmlns:graphing="com.mcquilleninteractive.learnhvac.view.graphing.*" 
+    backgroundColor="0xFFFFFF"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
+			
+						
+		]]>
+	</mx:Script>
+	
+	<graphing:EnergyOverviewChart height="50%" width="100%" title="EnergyPlus Run 1" layout="horizontal" runID="{LongTermSimulationDataModel.RUN_1}" />
+	
+	<graphing:EnergyOverviewChart height="50%" width="100%" title="EnergyPlus Run 2" layout="horizontal" runID="{LongTermSimulationDataModel.RUN_2}"/>
+		
+	
+		
+</mx:Panel>

@@ -11,15 +11,18 @@ package com.mcquilleninteractive.learnhvac.model
 	[Bindable]
 	public class SystemVariable
 	{
-				
+		
+		
+		//viewType settings
 		public static var OUTPUT:String = "OUTPUT"
 		public static var INPUT:String = "INPUT"
-		public static var INPUT_PARAMETER:String = "INPUT_PARAMETER"
-		public static var INPUT_VARIABLE:String = "INPUT_VARIABLE"
-		
+		public static var PARAMETER:String = "PARAMETER"
+
+		//faultWidgetType settings
 		public static var FAULT_SLIDER:String = "SLIDER"
 		public static var FAULT_CHECKBOX:String = "CHECKBOX"
 		
+		//ioType settings
 		public static var VIEW_TYPE_PUBLIC:String = "PUBLIC"
 		public static var VIEW_TYPE_PRIVATE:String = "PRIVATE";
 				
@@ -38,12 +41,15 @@ package com.mcquilleninteractive.learnhvac.model
 		public var description:String = ""
 		
 		//if INPUT, INPUT_PARAMETER or INPUT_VARIABLE
-		public var ioType:String
+		private var _ioType:String
 		
 		// PUBLIC or PRIVATE
-		public var viewType:String 
+		private var _viewType:String 
 		
 		private var _faultIsActive:Boolean = false
+		//Holds the initial disabled state as set by the instructor
+		public var initiallyFaultIsActive:Boolean = true
+			
 				
 		public var minValue:Number = 0
 		public var _lowValue:Number = 0
@@ -74,7 +80,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		//Holds initial SI value of variable provided by scenario
 		private var _initialValue:Number = 0
-		
+			
 		//Holds the current SI value of the variable
 		private var _baseSIValue:Number = 0		
 		
@@ -102,7 +108,7 @@ package com.mcquilleninteractive.learnhvac.model
 		//this getter is used for labels
 		public function get visible():Boolean
 		{
-			if (viewType=="PUBLIC")
+			if (viewType=="PUBLIC" || viewType=="public")
 			{
 				return true
 			}	
@@ -115,6 +121,8 @@ package com.mcquilleninteractive.learnhvac.model
 		public function resetToInitialValue():void
 		{
 			baseSIValue = initialValue
+			localValue = currValue
+			faultIsActive = initiallyFaultIsActive
 			
 		}
 		
@@ -131,6 +139,24 @@ package com.mcquilleninteractive.learnhvac.model
 		}
 		
 	
+		public function set viewType(value:String):void
+		{
+			_viewType = value.toUpperCase()
+		}
+		public function get viewType():String
+		{
+			return _viewType
+		}
+		
+		public function set ioType(value:String):void
+		{
+			_ioType = value.toUpperCase()
+		}
+		public function get ioType():String
+		{
+			return _ioType
+		}
+		
 		/** Sets initial value for variable. Expects SI value.*/
 		public function set initialValue(value:Number):void
 		{
@@ -166,7 +192,7 @@ package com.mcquilleninteractive.learnhvac.model
 			
 			if (!this.faultIsActive && this.isFault)
 			{
-				return -999
+				return -99999999
 			}
 			
 			return _baseSIValue
@@ -355,7 +381,7 @@ package com.mcquilleninteractive.learnhvac.model
 		}
 		
 		// GET/SET: zone_position
-		public function set zone_position(value:String):void
+		public function set zonePosition(value:String):void
 		{
 			
 			if (value == "LEFT" || value == "CENTER" || value == "NO_GRADIENT"){
@@ -368,7 +394,7 @@ package com.mcquilleninteractive.learnhvac.model
 			
 		}
 		
-		public function get zone_position():String
+		public function get zonePosition():String
 		{
 			return _zonePosition
 		}
@@ -537,6 +563,8 @@ package com.mcquilleninteractive.learnhvac.model
 			scenarioModel = null
 		}
 		
+		
+	
 	}
 }
 

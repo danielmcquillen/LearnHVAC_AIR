@@ -98,7 +98,7 @@
         <mx:Canvas width="125" height="90">
         
         		<mx:Image id="scenarioThumbnail" 
-		    		source="{data.thumbnailURL}"
+		    		source="{defaultScenarioPic}"
 		    		height="90" width="125" 
 		    	    ioError="showDefaultImage()"
 		    		 />

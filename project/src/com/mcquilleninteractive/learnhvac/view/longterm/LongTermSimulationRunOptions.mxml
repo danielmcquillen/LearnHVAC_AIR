@@ -12,17 +12,17 @@
 	
 		<mx:Script>
 			<![CDATA[
-			
-			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
-			import com.mcquilleninteractive.learnhvac.util.Logger
-			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-			import com.mcquilleninteractive.learnhvac.model.SystemVariable
-			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel
-			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel
-			
-			import mx.collections.ArrayCollection
-			import mx.validators.Validator
+				import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+				import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
+				import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
+				import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+				import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+				import com.mcquilleninteractive.learnhvac.util.Logger;
+				import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO;
+				
+				import mx.collections.ArrayCollection;
+				import mx.controls.Alert;
+				import mx.validators.Validator;
 						
 			[Bindable]
 			[Autowire]
@@ -67,8 +67,8 @@
 			public function resetValues():void
 			{
 				//set start and stop dates
-				dfStartDate.enabled = scenarioModel.allowLongtermDateChange
-				dfStopDate.enabled = scenarioModel.allowLongtermDateChange
+				dfStartDate.enabled = scenarioModel.allowLongTermDateChange
+				dfStopDate.enabled = scenarioModel.allowLongTermDateChange
 				dfStartDate.selectedDate = longTermSimulationModel.startDate
 				dfStopDate.selectedDate = longTermSimulationModel.stopDate
 				
@@ -120,11 +120,23 @@
 			
 			protected function dfStartDayChange():void
 			{
+				if (dfStartDate.selectedDate.fullYear != longTermSimulationModel.startDate.fullYear)
+				{
+					Alert.show("Please pick a date within this year.")
+					dfStartDate.selectedDate = longTermSimulationModel.startDate
+					return
+				}				
 				longTermSimulationModel.startDate = dfStartDate.selectedDate
 			}
 			
 			protected function dfStopDayChange():void
 			{
+				if (dfStopDate.selectedDate.fullYear != longTermSimulationModel.stopDate.fullYear)
+				{
+					Alert.show("Please pick a date within this year.")
+					dfStopDate.selectedDate = longTermSimulationModel.stopDate
+					return
+				}	
 				longTermSimulationModel.stopDate = dfStopDate.selectedDate 
 			}
 			

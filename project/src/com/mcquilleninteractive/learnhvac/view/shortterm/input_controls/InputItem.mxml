@@ -120,8 +120,7 @@
       		}
       		
       		public function refresh():void
-      		{
-      			Logger.debug("refreshing...",this)      			
+      		{ 			
 	      		if (data!=null) 
 	      		{
 	      			data.localValue = data.currValue
@@ -160,14 +159,7 @@
 				_isDirty = (data.localValue != data.currValue) 				
 				setBackground()		
 			}
-			
-			public function commitValue():void
-			{
-				Logger.debug("commitValue()",this)
-				data.currValue = data.localValue
-				_isDirty = false
-				setBackground()
-			}
+					
 			
 			public function showInfoPanel():void
 			{
@@ -198,7 +190,6 @@
             	 var dragSource:DragSource = new DragSource();
                 
             	 var itemArr:Array = [data]
-            	 Logger.debug("#InputPanel: onDrag: itemArr = " + itemArr)
                         
             	 dragSource.addData(itemArr, "items")
                         

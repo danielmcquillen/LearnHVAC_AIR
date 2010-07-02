@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   xmlns:graphing="com.mcquilleninteractive.learnhvac.view.graphing.*"
+		   creationComplete="onCC()"
+		   backgroundColor="#FFFFFF"
+		   >
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			import com.mcquilleninteractive.learnhvac.model.data.*;
+			import com.mcquilleninteractive.learnhvac.util.Logger;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.XMLListCollection;
+			import mx.events.DragEvent;
+			
+			[Bindable]
+			public var title:String
+			
+			//load icons
+			[Embed (source = '/assets/img/campus_icon.png')]
+			[Bindable]
+			public var icoCampus : Class;
+			
+			[Embed (source = '/assets/img/building_icon_off.png')]
+			[Bindable]
+			public var icoBuilding : Class;
+			
+			[Embed (source = '/assets/img/system_icon.png')]
+			[Bindable]
+			public var icoSystem : Class;
+			
+			[Embed (source = '/assets/img/equipment_icon.png')]
+			[Bindable]
+			public var icoEquipment : Class;
+			
+			[Embed (source = '/assets/img/floor_icon_off.png')]
+			[Bindable]
+			public var icoFloor : Class;
+			
+			[Embed (source = '/assets/img/zone_icon_off.png')]
+			[Bindable]
+			public var icoZone : Class;
+			
+			[Embed (source = '/assets/img/component_icon.png')]
+			[Bindable]
+			public var icoComponent : Class;
+			
+			[Embed (source = '/assets/img/dataPoint_AI_icon.png')]
+			[Bindable]
+			public var icoDataPoint : Class;
+			
+			[Embed (source = '/assets/img/default_icon.png')]
+			[Bindable]
+			public var icoDefault : Class;
+			
+			
+			[Bindable]
+			public var dataStructure:XMLList
+			
+			[Bindable]
+			
+			
+			// If this is showing data from a long term simulation
+			// this AC will get populated with the INPUTS for that 
+			// simulation
+			[Bindable]
+			public var longTermInputsAC:ArrayCollection = new ArrayCollection()
+			
+			public function set runID(value:String):void
+			{
+				treVariables.runID = value
+			}
+			
+			private var DP_SHORT_NAME:String = "shortName"
+			private var DP_ID:String = "id"
+			private var treeLabelState:String 
+			
+			
+			
+			public function loadData(gdModel:IGraphDataModel):void
+			{				
+				mainView.visible = true
+				vbxNoData.visible = false
+				initTree(gdModel)
+				txtStartDateTime.text = gdModel.startDateTimeString
+				txtStopDateTime.text = gdModel.stopDateTimeString
+				callLater(expandAll)				
+			}
+			
+			public function initTree(gdModel:IGraphDataModel):void
+			{
+				treVariables.graphDataModel = gdModel
+				dataStructure = gdModel.dataStructureXML.Campus.Building
+				treVariables.invalidateProperties()
+			}		
+			
+			public function onCC():void
+			{
+				//start out viewing short name
+				treeLabelState= DP_SHORT_NAME
+			}
+			
+			private function collapseAll():void
+			{
+				treVariables.expandChildrenOf(dataStructure, false)
+			}
+			
+			private function expandAll():void
+			{
+				treVariables.expandChildrenOf(dataStructure, true)
+			}	
+			
+			//Label and icon functions for tree
+			
+			public function treeLabel(item:Object):String
+			{
+				var node:XML  = XML(item)
+				if (treeLabelState==DP_SHORT_NAME){
+					return node.@label
+				}
+				else
+				{
+					return node.@id
+				}
+			}
+			
+			public function treeIcon(item:Object):Class
+			{
+				var node:XML = XML(item)
+				switch (node.localName()){
+					
+					case "Campus":
+						return icoCampus
+						break
+					case "Building":
+						return icoBuilding
+						break
+					case "Equipment":
+						return icoEquipment
+						break
+					case "Floor":
+						return icoFloor
+						break
+					case "Zone":
+						return icoZone
+						break
+					case "System":
+						return icoSystem
+						break
+					case "Component":
+						return icoComponent
+						break
+					case "dataPoint":
+						return icoDataPoint
+						break
+					case "floor":
+						return icoFloor
+						break
+					default:
+						
+						break					
+				}
+				return icoDefault
+			}
+			
+			
+		]]>
+	</mx:Script>
+	
+	
+	<mx:VBox id="vbxNoData" width="100%" height="100%" paddingLeft="5">			
+		<mx:Label text="{title}" fontWeight="bold" paddingTop="5" paddingBottom="5"/>
+		<mx:Label id="lblNoData" text="No data loaded " visible="true" width="120" />
+	</mx:VBox>
+	
+	<mx:VBox  
+		    id="mainView"
+			width="100%" 
+			height="100%"
+			backgroundColor="0xFFFFFF"
+			paddingBottom="5"
+			minHeight="50"
+			visible="false"
+			>
+		
+		<mx:Label text="{title}" fontWeight="bold" paddingTop="5" paddingBottom="5"/>
+		
+		<mx:VBox width="100%"
+				 paddingTop="5" 
+				 backgroundColor="0xfbf3bf" 
+				 borderColor="#fcf7d4" 
+				 paddingLeft="5"
+				 paddingBottom="5"
+				 borderStyle="solid"
+				 borderSides="bottom"
+				 verticalGap="-1"
+				 >
+			<mx:Label text="Period:" id="lblPeriod" fontWeight="bold"/>			
+			<mx:HBox>
+				<mx:Label width="95" text="Start date/time:" color="#8f843b"/>
+				<mx:Label id="txtStartDateTime" width="120" text=""/>
+			</mx:HBox>
+			<mx:Spacer height="3"/>
+			<mx:HBox>
+				<mx:Label width="95" text="Stop date/time:" color="#8f843b"/>
+				<mx:Label id="txtStopDateTime" width="120" text=""/>
+			</mx:HBox>
+		</mx:VBox>
+		
+		<mx:Label text="Outputs:" id="lblOutputs" fontWeight="bold" paddingLeft="5"/>
+		<graphing:DataTree id="treVariables" 
+						   borderStyle="none"
+						   height="100%" width="100%" 
+						   iconFunction="treeIcon" 
+						   dataProvider="{dataStructure}"
+						   labelFunction="treeLabel" 
+						   dragEnabled="true"
+						   dragMoveEnabled="false"
+						   dropEnabled="false"
+						   openDuration="50"
+						   
+						   />
+	</mx:VBox>
+		
+	
+</mx:Canvas>

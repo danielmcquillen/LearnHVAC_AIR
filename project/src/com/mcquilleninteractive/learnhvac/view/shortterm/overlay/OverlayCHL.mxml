@@ -28,10 +28,6 @@
 				this.graphics.lineTo(392,127)
 				this.graphics.drawCircle(387,127,5)
 				
-				//evapflow
-				this.graphics.moveTo(412, 177)
-				this.graphics.lineTo(392,177)
-				this.graphics.drawCircle(387,177,5)
 								
 				//evapin
 				this.graphics.moveTo(445, 325)
@@ -80,34 +76,43 @@
 	
 	<mx:Label id="lblCHLTLiqEnt_Title" 
 		text="Chilled Water Inlet Temp"  
-		styleName="overlayTitle"
-		x="440" y="330" />
+		styleName="overlayTitle" 
+		x="415" y="120"
+		/>
 	<overlay:ValueDisplayLabel id="lblCHLTLiqEnt" 
 		sysVarName="CHLTLiqEnt"
 		text="0"
 		styleName="overlayValue"
-		x="440" y="345"/>
+		x="415" y="135" 
+		/>
 		
 		
-	<mx:Label id="lblCHLTLiqSup_Title" text="Chilled Water Outlet Temp"  styleName="overlayTitle"
-					 x="415" y="120" textAlign="left"/>
+	
+	
+	<mx:Label id="lblCHLTLiqSup_Title" 
+			  text="Chilled Water Outlet Temp"  
+			  styleName="overlayTitle"
+			  x="440" y="330" 
+			   
+			   textAlign="left"/>
 	<overlay:ValueDisplayLabel id="lblCHLTLiqSup" 
 		sysVarName="CHLTLiqSup"
 		text="0" 
 		styleName="overlayValue"
-		x="415" y="135" 
+		x="440" y="345"
 		textAlign="left"/>
-		
-			 
-					 
-	<mx:Label id="lblCHLLiqFlw_Title" text="Chilled Water Flow Rate"  styleName="overlayTitle"
-					 x="415" y="170" textAlign="left" />
+							 
+	<mx:Label id="lblCHLLiqFlw_Title" 
+			  text="Chilled Water Flow Rate"  
+			  styleName="overlayTitle"
+			  x="440" y="370" textAlign="left" />
 	<overlay:ValueDisplayLabel id="lblCHLLiqFlw"
 		sysVarName="CHLLiqFlw"
 		text="0" 
+		precision="4"
 		styleName="overlayValue"
-		x="415" 
-		y="185" 
+		x="440" 
+		y="385" 
 		textAlign="left" />
 					 
 					 

@@ -6,7 +6,7 @@
 	<mx:Script>
 		<![CDATA[
 		
-			import com.mcquilleninteractive.learnhvac.view.analysis.EnergyOverview
+			import com.mcquilleninteractive.learnhvac.view.analysis.EnergyOverviewData
 			import com.mcquilleninteractive.learnhvac.view.graphing.EnergyOverviewChart
 			import com.mcquilleninteractive.learnhvac.util.Logger
 			import com.mcquilleninteractive.learnhvac.util.ColorSetting

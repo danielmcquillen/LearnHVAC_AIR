@@ -165,7 +165,19 @@
 			}
 		}
 		
-		
+		[Mediate(event="ShortTermSimulationEvent.SIM_ERROR")]
+		public function onShortTermSimulationCrash(event:ShortTermSimulationEvent):void
+		{
+			pe.stopPE()
+			if (	currNode == ScenarioModel.SN_FAN 
+				|| currNode == ScenarioModel.SN_ROOF 
+				|| currNode == ScenarioModel.SN_SYSTEM)
+			{
+				fan.currentState = currNode + "_OFF"				
+				Logger.debug("Setting fan to state: " + fan.currentState, this)
+			}
+		}
+			
 		
 		/* If the zone is 5, we show the zone 5 system view hack image, otherwise we hide it*/
 		[Mediate(event="ZoneChangeEvent.ZONE_CHANGED")]
@@ -267,8 +279,7 @@
 		public function onSimNavEvent(event:SimNavEvent):void
 		{
 			Logger.debug("onSimNavEvent()",this)
-			navigateTo(event.node)			
-			
+			navigateTo(event.node)						
 		}
 						
 		public function showNode():void
@@ -291,7 +302,6 @@
 					break
 					
 				case ScenarioModel.SN_CC:
-					Logger.debug("#Viz: setting CC pipeLiquids to disabled=false")
 					pipeLiquidsCC.active = true
 					break
 				
@@ -302,10 +312,7 @@
 					{
 						case ShortTermSimulationModel.STATE_OFF:
 						case ShortTermSimulationModel.STATE_PAUSED:
-							Logger.debug("Setting fan to FAN_OFF",this)
-							Logger.debug("fan.currentState: "+ fan.currentState,this)
 							fan.currentState = "FAN_OFF"
-							Logger.debug("fan.currentState: "+ fan.currentState,this)
 							break
 						case ShortTermSimulationModel.STATE_RUNNING:
 							fan.currentState = "FAN_ON"
@@ -384,7 +391,7 @@
 					break
 				
 				default:
-					Logger.error("#VisualiazationPanel: setView() unrecognized node:" + currNode)
+					Logger.error("setView() unrecognized node:" + currNode, this)
 						
 			}
 			

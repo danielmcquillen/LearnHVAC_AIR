@@ -341,7 +341,6 @@ package com.mcquilleninteractive.particleengine
 		
 		public function onUpdateOuputValues(event:ShortTermSimulationEvent):void
 		{
-			Logger.debug("onUpdateOuputValues()", this)
 			try
 			{
 				setHCTAirEnt(_scenarioModel.getSysVar("HCTAirEnt").currValue)		
@@ -619,9 +618,7 @@ package com.mcquilleninteractive.particleengine
 		/* ********** */
 		
 		public function setMXRtnDampPos(sysVarValue:Number):void
-		{
-			Logger.debug("setMXRtnDampPos() value:" + sysVarValue, this)
-			
+		{		
 			// Both Mixing Box and System View				
 			if (sysNode == SN_MIXINGBOX)
 			{
@@ -635,8 +632,6 @@ package com.mcquilleninteractive.particleengine
 				//System view
 				bornProbability = sysVarValue
 				goalProbability[14] = 1 - sysVarValue
-				Logger.debug("goalProbability[15]: "+ sysVarValue, this)
-				Logger.debug("bornProbability: "+ bornProbability, this)
 			}
 		}
 		

@@ -39,8 +39,8 @@
 			{						
 				Logger.debug("scenarioLoaded()", this)	
 															//set visibility of labels							
-				var varArr:Array = ["CCTAirEnt","CCTAirLvg","CHLTLiqSup",
-									"CCTLiqLvg","CCPos"	]
+				var varArr:Array = ["CCTAirEnt","CCTAirLvg","CCTLiqEnt",
+									"CCTLiqLvg","CCPos","CHLLiqFlw"	]
 									
 				setLabels(varArr)					
 			}
@@ -103,13 +103,24 @@
 		styleName="overlayValue"
 		x="500" y="170" />
 					 
-	<mx:Label id="lblCHLTLiqSup_Title" text="Entering Liq. Temp: " styleName="overlayTitle"
+	<mx:Label id="lblCCTLiqEnt_Title" text="Entering Liq. Temp: " styleName="overlayTitle"
 			x="385" y="278"/>
-	<overlay:ValueDisplayLabel id="lblCHLTLiqSup" 
-		sysVarName="CHLTLiqSup"
+	<overlay:ValueDisplayLabel id="lblCCTLiqEnt" 							   
+		sysVarName="CCTLiqEnt"
 		text="0" 
+		precision="2"
 		styleName="overlayValue"
 		x="385" y="298" />
+	
+	<mx:Label id="lblCHLLiqFlw_Title" text="Entering Liq. Flow: " styleName="overlayTitle"
+			  x="385" y="320"/>
+	<overlay:ValueDisplayLabel id="lblCHLLiqFlw" 							   
+							   sysVarName="CHLLiqFlw"
+							   text="0" 
+							   precision="4"
+							   styleName="overlayValue"
+							   x="385" y="340" />
+	
 					 
 	<mx:Label id="lblCCTLiqLvg_Title" text="Leaving Liq. Temp: " styleName="overlayTitle"
 					   x="133" y="250" textAlign="right" width="150"/>

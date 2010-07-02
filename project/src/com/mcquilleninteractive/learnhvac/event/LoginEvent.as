@@ -8,6 +8,9 @@ package com.mcquilleninteractive.learnhvac.event
 	{
 		
 		public static const LOGIN : String = "login"
+		public static const LOGIN_FAILED : String = "loginFailed"
+		public static const LOGIN_COMPLETE : String = "loginComplete"
+		public static const CANCEL : String = "cancelLogin"
 		
 		public var username : String
 		public var password : String

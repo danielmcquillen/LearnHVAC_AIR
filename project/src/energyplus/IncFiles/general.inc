@@ -92,18 +92,6 @@ SimulationControl,
   No,   !- Run Simulation for Sizing Periods
   Yes;  !- Run Simulation for Weather File Run Periods
 
-!RunPeriod,  
-!    LH_startMonth[],  !- Begin Month 
-!    LH_startDay[],  !- Begin Day Of Month 
-!    LH_stopMonth[],  !- End Month 
-!    LH_stopDay[],  !- End Day Of Month 
-!    UseWeatherFile,  !- Day Of Week For Start Day 
-!    Yes,  !- Use WeatherFile Holidays/Special Days 
-!    Yes,  !- Use WeatherFile DaylightSavingPeriod 
-!    No,  !- Apply Weekend Holiday Rule 
-!    Yes,  !- Use WeatherFile Rain Indicators 
-!    Yes,  !- Use WeatherFile Snow Indicators
-!    1.0000;  !- Number of Times Runperiod to be Done  
 
 SurfaceConvectionAlgorithm:Inside,
   Detailed;  !- Algorithm
@@ -134,7 +122,7 @@ GlobalGeometryRules,
   Relative;  !- Daylighting Reference Point Coordinate System
 
 Building,
-  LH_ScenarioName[],  !- Name
+  LH_BldgName[],  !- Name
   Bldg_Azimuth[],  !- North Axis
   City,  !- Terrain
   0.0400,  !- Loads Convergence Tolerance Value

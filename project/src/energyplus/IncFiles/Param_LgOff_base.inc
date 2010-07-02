@@ -9,11 +9,9 @@
 ! ******************************************
  
 
-! following line gets replaced
-! ##set1 Start_Day         UseWeatherFile
 
 RunPeriod,  
-    LH_run,   	!- run name
+    LH_RunName[],   	!- run name
     LH_startMonth[],  !- Begin Month 
     LH_startDay[],  !- Begin Day Of Month 
     LH_stopMonth[],  !- End Month 

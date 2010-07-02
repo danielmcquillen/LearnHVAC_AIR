@@ -109,6 +109,11 @@
 	    	public function updateChart():void
 	    	{
 	    		//update dataprovider for chart: create subTotal for fields displayed
+				if (dataAC==null)
+				{
+					Logger.warn("updateChart() dataAC is null",this)
+					return
+				}
 	    		var len:Number = dataAC.length
 	    		var numFields:Number = _visibleFieldsArr.length
 	    		for (i=0; i<len; i++)

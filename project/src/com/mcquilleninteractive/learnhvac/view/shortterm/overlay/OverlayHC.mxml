@@ -37,8 +37,8 @@
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{																					
 				//set visibility of labels					
-				var varArr:Array = ["BOITLiqSup","HCPos","HCTAirEnt",
-									"HCTAirLvg","HCTLiqLvg"	]
+				var varArr:Array = ["HCTLiqEnt","HCPos","HCTAirEnt",
+									"HCTAirLvg","HCTLiqLvg", "BOILiqFlw"]
 									
 				setLabels(varArr) 				  				
 			}
@@ -119,19 +119,27 @@
 					   
 					   
 					   
-	<mx:Label id="lblBOITLiqSup_Title" 
+	<mx:Label id="lblHCTLiqEnt_Title" 
 					x="300" y="258" 
 					text="Entering Liq. Temp: " 
 					styleName="overlayTitle"
 					  />
 					  
-	<overlay:ValueDisplayLabel id="lblBOITLiqSup" 
-					sysVarName="BOITLiqSup"
+	<overlay:ValueDisplayLabel id="lblHCTLiqEnt" 
+					sysVarName="HCTLiqEnt"
 		 			x="300" y="278"
 		 			text="0" 
 		 			styleName="overlayValue"
 					/>
-					
+	
+	<mx:Label id="lblBOILiqFlw_Title" text="Entering Liq. Flow: " styleName="overlayTitle"
+			  x="385" y="320"/>
+	<overlay:ValueDisplayLabel id="lblBOILiqFlw" 							   
+							   sysVarName="BOILiqFlw"
+							   text="0" 
+							   precision="4"
+							   styleName="overlayValue"
+							   x="385" y="340" />
 					
 					
 	<mx:Label id="lblHCTLiqLvg_Title" 

@@ -49,7 +49,7 @@
 		}
 		
 		[Mediate(event="LongTermSimulationEvent.SIM_COMPLETE")]	
-		public function onSimComplete(event:ScenarioDataLoadedEvent):void
+		public function onSimComplete(event:LongTermSimulationEvent):void
 		{
 			//clean up refs before destroying this popup
 			PopUpManager.removePopUp(this)	

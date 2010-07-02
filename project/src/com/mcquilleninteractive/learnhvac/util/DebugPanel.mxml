@@ -197,9 +197,9 @@
 									
 									//get SparkInputVarsVOs and show values of each for each date
 									var ePlusData:EnergyPlusData = _longTermSimulationDataModel.getEnergyPlusData(runID)
-									var zoneDataArr:Array = ePlusData.zoneDataArr
+									var floorZoneDataArr:Array = ePlusData.floorZoneDataArr
 									var dateArr:Array = ePlusData.dataArr[ePlusData.dateTimeID]
-									var len:uint = zoneDataArr.length
+									var len:uint = floorZoneDataArr.length
 									
 									if (rowIndex >= 0)
 									{
@@ -210,14 +210,14 @@
 											msg += "\n  Floor: " + (j+1).toString()
 											for (var k:uint=0;k<5;k++)
 											{
-												var vo:LongTermValuesForShortTermSimVO = zoneDataArr[i][j][k] as LongTermValuesForShortTermSimVO
+												var vo:LongTermValuesForShortTermSimVO = floorZoneDataArr[i][j][k] as LongTermValuesForShortTermSimVO
 												msg += "\n    Zone: " + (k + 1).toString()
 												msg += "\n        equip.: " + vo._electricEquipmentHeatGain
 												msg += "\n      lighting: " + vo._lightingHeatGain
 												msg += "\n        people: " + vo._peopleHeatGain
 												msg += "\n        RmQSens: " + vo.getRmQSens()
 												msg += "\n        tAirOut: " + vo.tAirOut
-												msg += "\n        twAirOut: " + vo.twAirOut
+												msg += "\n        rhOutside: " + vo.rhOutside
 												
 											}
 										}
@@ -234,14 +234,14 @@
 												msg += "\n  Floor: " + (j+1).toString()
 												for (k=0;k<5;k++)
 												{
-													vo = zoneDataArr[i][j][k] as LongTermValuesForShortTermSimVO
+													vo = floorZoneDataArr[i][j][k] as LongTermValuesForShortTermSimVO
 													msg += "\n    Zone: " + (k + 1).toString()
 													msg += "\n        equip.: " + vo._electricEquipmentHeatGain
 													msg += "\n      lighting: " + vo._lightingHeatGain
 													msg += "\n        people: " + vo._peopleHeatGain
 													msg += "\n        RmQSens: " + vo.getRmQSens()
 													msg += "\n        tAirOut: " + vo.tAirOut
-													msg += "\n        twAirOut: " + vo.twAirOut
+													msg += "\n        rhOutside: " + vo.rhOutside
 													
 												}
 											}
@@ -252,15 +252,16 @@
 								default:
 								
 									sysVar = _scenarioModel.getSysVar(args[1])
-									var s:String = sysVar.name + " (" + sysVar.ioType + ")  "
-									if (sysVar!=null)
-									{
-										msg = msg + s + addSpaces(s, 25) + sysVar.baseSIValue + addSpaces(sysVar.baseSIValue.toString(), 20) + sysVar.IPValue + "\n"
-									}	
-									else
+									if (sysVar==null)
 									{
 										msg = msg + "can't find variable named " + args[1]
 									}
+									else
+									{
+										var s:String = sysVar.name + " (" + sysVar.ioType + ")  "
+										msg = msg + s + addSpaces(s, 25) + sysVar.baseSIValue + addSpaces(sysVar.baseSIValue.toString(), 20) + sysVar.IPValue + "\n"
+									}
+									
 							}
 							
 							

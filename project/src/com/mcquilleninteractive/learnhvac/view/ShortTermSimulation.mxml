@@ -18,52 +18,56 @@
 	
 	<mx:Script>
 		<![CDATA[
-		
+			
+		import com.mcquilleninteractive.learnhvac.event.ApplicationEvent;
 		import com.mcquilleninteractive.learnhvac.event.CloseScenarioEvent;
-		import com.mcquilleninteractive.learnhvac.view.popups.ShortTermSimulationPopup
-		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
+		import com.mcquilleninteractive.learnhvac.event.GraphEvent;
+		import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent;
 		import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
-		import com.mcquilleninteractive.learnhvac.model.DialogManager
-		import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-		import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel
-		import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel
+		import com.mcquilleninteractive.learnhvac.event.ResetInputsEvent;
+		import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
+		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationUIEvent;
+		import com.mcquilleninteractive.learnhvac.event.ShowSchematicEvent;
+		import com.mcquilleninteractive.learnhvac.event.SimNavEvent;
+		import com.mcquilleninteractive.learnhvac.event.SysVarInfoPopupEvent;
 		import com.mcquilleninteractive.learnhvac.event.ViewMovieEvent;
-		import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
-		import com.mcquilleninteractive.learnhvac.event.ResetInputsEvent
-		import com.mcquilleninteractive.learnhvac.event.GraphEvent
-		import com.mcquilleninteractive.learnhvac.view.popups.SimulationModal
-		import com.mcquilleninteractive.learnhvac.view.LongTermSimulation
-		import com.mcquilleninteractive.learnhvac.model.ApplicationModel	
-		import com.mcquilleninteractive.learnhvac.event.VisualizationEvent	
-		import com.mcquilleninteractive.learnhvac.event.ShowSchematicEvent	
-		import com.mcquilleninteractive.learnhvac.event.ApplicationEvent	
-		import com.mcquilleninteractive.learnhvac.event.SysVarInfoPopupEvent	
-		import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent	
-		import com.mcquilleninteractive.learnhvac.event.LoadScenarioEvent
-		import com.mcquilleninteractive.learnhvac.event.SimNavEvent   
-		import com.mcquilleninteractive.learnhvac.view.popups.HCLiquidsSchematicPanel
-		import com.mcquilleninteractive.learnhvac.view.popups.CCLiquidsSchematicPanel
-		import com.mcquilleninteractive.learnhvac.util.Logger		
-		
-		import mx.core.IFlexDisplayObject;
-		import mx.containers.Panel;
-		import mx.managers.PopUpManager
-		import flash.events.Event
-		import mx.controls.Alert
-		import mx.collections.ArrayCollection
-		import mx.core.UIComponent
+		import com.mcquilleninteractive.learnhvac.event.VisualizationEvent;
+		import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+		import com.mcquilleninteractive.learnhvac.model.DialogManager;
+		import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+		import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel;
+		import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
+		import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
 		import com.mcquilleninteractive.learnhvac.util.DebugPanel;
-
-		private var dest:String 
-									
-		private var hcLiquidsSchematic:HCLiquidsSchematicPanel = null
-		private var ccLiquidsSchematic:CCLiquidsSchematicPanel = null
+		import com.mcquilleninteractive.learnhvac.util.Logger;
+		import com.mcquilleninteractive.learnhvac.view.LongTermSimulation;
+		import com.mcquilleninteractive.learnhvac.view.popups.CCLiquidsSchematicPanel;
+		import com.mcquilleninteractive.learnhvac.view.popups.HCLiquidsSchematicPanel;
+		import com.mcquilleninteractive.learnhvac.view.popups.ShortTermSimulationPopup;
+		import com.mcquilleninteractive.learnhvac.view.popups.SimulationModal;
 		
-		private var simModal:IFlexDisplayObject
+		import flash.events.Event;
+		
+		import mx.collections.ArrayCollection;
+		import mx.containers.Panel;
+		import mx.controls.Alert;
+		import mx.core.IFlexDisplayObject;
+		import mx.core.UIComponent;
+		import mx.managers.PopUpManager;
+
+		[Autowire]
+		public var dialogManager:DialogManager
+			
+		protected var dest:String 
+									
+		protected var hcLiquidsSchematic:HCLiquidsSchematicPanel = null
+		protected var ccLiquidsSchematic:CCLiquidsSchematicPanel = null
+		
+		protected var simModal:SimulationModal
 		
 		protected var _shortTermSimPopup:ShortTermSimulationPopup
 		
-		//public var topNavFunctionList:Array
 		
 		[Bindable]
 		[Autowire]
@@ -78,14 +82,14 @@
 		[Embed(source='assets/img/long_term_import_icon.png')]
 		public var LongTermImportIcon:Class
 							
-		private function onHide():void
+		protected function onHide():void
 		{
-			DialogManager.getInstance().hideAll()
+			dialogManager.hideAll()
 		}
 		
-		private function onShow():void
+		protected function onShow():void
 		{			
-			DialogManager.getInstance().showAll()
+			dialogManager.showAll()
 		}
 		
 		public function onCC():void
@@ -108,7 +112,7 @@
         		PopUpManager.removePopUp(_shortTermSimPopup)
         		_shortTermSimPopup = null
         	}
-        	controlBar.simError()        	      	        	        
+        	controlBar.simError()        
         }
                 
 		[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
@@ -139,7 +143,7 @@
 			//clean up VizPanel
 			if (pnlViz!=null) pnlViz.clearVizPanel() //if user logs out before loading a scenario, this will be null
 			
-			DialogManager.getInstance().removeAllPopUps()
+			dialogManager.removeAllPopUps()
 									
 			//turn off AHU and Spark
 			if (scenarioModel != null)
@@ -211,37 +215,26 @@
 					
    		[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
 		public function onScenarioLoaded(event:Event):void
-		{			
-			//show modal
-			simModal = PopUpManager.createPopUp(this.parent, SimulationModal, true)
-			PopUpManager.centerPopUp(simModal)
-			
+		{	
 			//set combobox dataProvider
 			vizInfo.cboAhuNav.dataProvider = scenarioModel.sysNodesForNavAC			
 		}
 		
 		public function onIntroAnimFinished(e:Event):void
 		{
-			try
-			{
-				PopUpManager.removePopUp(simModal)
-				simModal = null
-			}
-			catch(e:Error)
-			{
-				Logger.error("#Simulation: onAnimationStarted error e: " + e.message)
-			}
+			var evt:ShortTermSimulationUIEvent = new ShortTermSimulationUIEvent(ShortTermSimulationUIEvent.UI_READY, true)
+			dispatchEvent(evt)			
 		}
 		
 		[Mediate(event="ShowSchematicEvent.SHOW_HC_LIQUIDS_POPUP")]
 		public function onShowHCSchematicPopup(event:ShowSchematicEvent):void
 		{
-			DialogManager.getInstance().showHCLiquidsSchematic()	
+			dialogManager.showHCLiquidsSchematic()	
 		}
 		[Mediate(event="ShowSchematicEvent.SHOW_CC_LIQUIDS_POPUP")]
    		public function onShowCCSchematicPopup(event:ShowSchematicEvent):void
 		{
-			DialogManager.getInstance().showCCLiquidsSchematic()
+			dialogManager.showCCLiquidsSchematic()
 		}
 			
 		

@@ -40,7 +40,7 @@ package com.mcquilleninteractive.learnhvac.business
 			
 		protected var _energyPlusPath:String = ApplicationModel.baseStorageDirPath + "EnergyPlus/"
 		protected var _weatherFilesPath:String = ApplicationModel.baseStorageDirPath + "weather/"
-		protected var _dummyDataPath:String = ApplicationModel.baseStorageDirPath + "dummyData/"
+		protected var _mockDataPath:String = ApplicationModel.baseStorageDirPath + "mockData/"
 			
 					
 		//names of executables
@@ -61,7 +61,7 @@ package com.mcquilleninteractive.learnhvac.business
 		protected var _outputDir:File
 		protected var _inputDir:File		
 		protected var _outputFilesArr:Array
-		protected var _dummyDataDir:File 
+		protected var _mockDataDir:File 
 		protected var _eplusOutVarsFile:File
 		protected var _eplusOutputMeterFile:File
 		protected var _outputErrFile:File		
@@ -162,15 +162,21 @@ package com.mcquilleninteractive.learnhvac.business
 				
 			_runID = longTermSimulationModel.runID
 						
-			//if this is test mode, copy over dummy data and jump straight to reading output
+			//if this is test mode, copy over mock data and jump straight to reading output
 			if (ApplicationModel.mockEPlusData)
 			{
 				
-				var dummyEPlusOut:File = File.userDirectory.resolvePath(_dummyDataPath + "eplusout.csv")					
-				var dummyEPlusOutMeter:File = File.userDirectory.resolvePath(_dummyDataPath + "eplusoutMeter.csv")
+				var mockEPlusOut:File = File.userDirectory.resolvePath(_mockDataPath + "eplusout.csv")					
+				var mockEPlusOutMeter:File = File.userDirectory.resolvePath(_mockDataPath + "eplusoutMeter.csv")
 				
-				dummyEPlusOut.copyTo(_eplusOutVarsFile)
-				dummyEPlusOutMeter.copyTo(_eplusOutputMeterFile)				
+				if (_eplusOutVarsFile.exists==false)
+				{					
+					mockEPlusOut.copyTo(_eplusOutVarsFile)
+				}
+				if (_eplusOutputMeterFile.exists==false)
+				{					
+					mockEPlusOutMeter.copyTo(_eplusOutputMeterFile)	
+				}			
 				loadOutputFiles()
 				return
 			}
@@ -369,7 +375,8 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		public function onEnergyPlusStandardOutput(event:ProgressEvent):void
 		{
-			var text:String = _energyPlusProcess.standardOutput.readUTFBytes(_energyPlusProcess.standardOutput.bytesAvailable)		
+			var text:String = _energyPlusProcess.standardOutput.readUTFBytes(_energyPlusProcess.standardOutput.bytesAvailable)	
+			Logger.debug("onEnergyPlusStandardOutput() text:" + text, this)	
 			//send an event to update dialog
 			var evt:EnergyPlusEvent = new EnergyPlusEvent(EnergyPlusEvent.ENERGY_PLUS_OUTPUT,true)
 			evt.output = text
@@ -378,8 +385,21 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		public function onEnergyPlusStandardError(event:ProgressEvent):void
 		{
+			_energyPlusProcess.exit()
 			var text:String = _energyPlusProcess.standardError.readUTFBytes(_energyPlusProcess.standardError.bytesAvailable)
-			Logger.error("EnergyPlus error: " + text, this)			
+			Logger.debug("onEnergyPlusStandardError() text:" + text, this)
+				
+			if (text.indexOf("error")>-1)
+			{
+				this.removeEnergyPlusEventListeners()
+				var evt:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_FAILED, true)
+				var message:String = "EnergyPlus failed. Please see EnergyPlus error file for details : " + this._energyPlusDir.nativePath + "/eplusout.err"
+				Logger.error( message, this)
+				evt.errorMessage = message
+				dispatchEvent(evt)
+			}
+			
+				
 		}
 		
 		public function onEnergyPlusProcessFinished(event:NativeProcessExitEvent):void
@@ -713,7 +733,8 @@ package com.mcquilleninteractive.learnhvac.business
 			//write in .inc lines, substituting in values from MODELICA
 			lhInc += nl + "! Variables for general setup"
 			lhInc += nl + "##def1 LH_ScenarioName	   " + scenarioModel.name
-			//lhInc += nl + "##def1 LH_weatherFile      " + longTermSimulationModel.selectedWeatherFileName
+			lhInc += nl + "##def1 LH_RunName      " + longTermSimulationModel.getCity(true)
+			lhInc += nl + "##def1 LH_BldgName      " + "Large Office in " + longTermSimulationModel.getCity(true)
 			
 			//make sure to add one to months, since Flex stores dates as
 			// 0 index and E+ wants them as 1 index.
@@ -742,7 +763,7 @@ package com.mcquilleninteractive.learnhvac.business
 			lhInc += nl + "##def1 LH_Orientation      " + longTermSimulationModel.northAxis
 			lhInc += nl + "##def1 LH_zoneOfInterest   " + longTermSimulationModel.zoneOfInterest
 			lhInc += nl + "##def1 LH_region           " + longTermSimulationModel.region
-			lhInc += nl + "##def1 LH_location         " + longTermSimulationModel.city
+			lhInc += nl + "##def1 LH_location         " + longTermSimulationModel.getCity(true)
 			lhInc += nl + "##def1 LH_shell            " + longTermSimulationModel.shell
 			
 			lhInc += nl + nl + "! Variables for building geometry " 
@@ -773,54 +794,22 @@ package com.mcquilleninteractive.learnhvac.business
 			   but should be MDL_
 			*/
 			
-			lhInc += nl + nl + "! SPK Variables for temp of room & supply air"
-			
-			var tRoomSPHeat:SystemVariable = scenarioModel.getSysVar("SYSTRmSPHeat")
-			var tRoomSPCool:SystemVariable = scenarioModel.getSysVar("SYSTRmSPCool")
-			
-			//lhInc += nl + "##def1 MOD_TRoomSP       " + tRoomSP_val
-			lhInc += nl + "##def1 MOD_HRoomSP       " + tRoomSPHeat.baseSIValue
-			lhInc += nl + "##def1 MOD_CRoomSP       " + tRoomSPCool.baseSIValue
-			
-			var tSupS:SystemVariable = scenarioModel.getSysVar("SYSTSupS")			
-			lhInc += nl + "##def1 MOD_TSupS         " + tSupS.baseSIValue
+			lhInc += nl + nl + "! Modelica Variables import..."
+							
+			//set to output variable VAVMinPosRatio
+			lhInc += nl + "##def1 MOD_HRoomSP       " + longTermSimulationModel._zoneHeatingSetpointTemp
+			lhInc += nl + "##def1 MOD_CRoomSP       " + longTermSimulationModel._zoneCoolingSetpointTemp				
+			lhInc += nl + "##def1 MOD_TSupS         " + longTermSimulationModel._supplyAirSetpointTemp
+			lhInc += nl + "##def1 MOD_HCUA     "+ longTermSimulationModel.hcUA			
+			lhInc += nl + "##def1 MOD_CCUA     "+ longTermSimulationModel.ccUA
+			lhInc += nl + "##def1 MOD_VAVminpos       " + (longTermSimulationModel.vavMinFlwRatio / 100).toString() // since we keep as percentage and E+ expects 0 > value >1
+			lhInc += nl + "##def1 MOD_VAVHCUA     "+ longTermSimulationModel.vavHcQd					
+			//We don't have the following vars from Modelica, so use just use default values	
 			lhInc += nl + "##def1 MOD_DCSupS        15 ! For now set this = 15 C"
 			lhInc += nl + "##def1 MOD_DHSupS        35 ! For now set this = 35 C"
-
-			var rmQSens:SystemVariable = scenarioModel.getSysVar("SYSRmQSens") 
-			var rmQSens_val:Number = rmQSens.baseSIValue
-			lhInc += nl + nl +"! SPK Variable for total room internal load" 
-			lhInc += nl + "##def1 MOD_RmQSENS         " + rmQSens.baseSIValue
-
-	
-			var vavPosMin:SystemVariable = scenarioModel.getSysVar("VAVMinPos") 
-			lhInc += nl + nl + "! SPK Variable for equip max/min settings"
-			lhInc += nl + "##def1 MOD_VAVminpos       " + (vavPosMin.baseSIValue / 100).toString() // since we keep as percentage and E+ expects 0 > value >1
-			
-			var fanpower:SystemVariable = scenarioModel.getSysVar("FANPwr") 
-			lhInc += nl + "##def1 MOD_FanpowerTot     "+ fanpower.baseSIValue
-			
-			var hcUA:SystemVariable = scenarioModel.getSysVar("HCQd") 
-			lhInc += nl + "##def1 MOD_HCUA     "+ hcUA.baseSIValue
-			
-			var vavHCUA:SystemVariable = scenarioModel.getSysVar("VAVRhcQd") 
-			lhInc += nl + "##def1 MOD_VAVHCUA     "+ vavHCUA.baseSIValue
-			
-			var ccUA:SystemVariable = scenarioModel.getSysVar("CCQd") 
-			lhInc += nl + "##def1 MOD_CCUA     "+ ccUA.baseSIValue
-						
-			//We don't have PAtm right now (3/11/2010) so just use default value			
-			//var pAtm:SystemVariable = scenarioModel.getSysVar("PAtm") 
-			//lhInc += nl + "##def1 MOD_PAtm     "+ pAtm.baseSIValue
 			lhInc += nl + "##def1 MOD_PAtm     101325.0"
 						
-			var mxTOut:SystemVariable = scenarioModel.getSysVar("SYSTAirDB") 
-			lhInc += nl + "##def1 MOD_MXTOut     "+ mxTOut.baseSIValue
-			
-			
-			var mxTwOut:SystemVariable = scenarioModel.getSysVar("SYSTAirDB") 
-			lhInc += nl + "##def1 MOD_MXTwOut     "+ mxTwOut.baseSIValue
-			
+				
 			return lhInc
 		}
 		

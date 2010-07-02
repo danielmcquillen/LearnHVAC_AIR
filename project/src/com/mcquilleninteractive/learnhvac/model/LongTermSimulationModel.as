@@ -1,6 +1,7 @@
 package com.mcquilleninteractive.learnhvac.model
 {
 	import com.mcquilleninteractive.learnhvac.event.ZoneChangeEvent;
+	import com.mcquilleninteractive.learnhvac.model.data.ZoneEnergyUseDataPoint;
 	import com.mcquilleninteractive.learnhvac.util.Conversions;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
@@ -23,8 +24,12 @@ package com.mcquilleninteractive.learnhvac.model
 	[Bindable]
 	public class LongTermSimulationModel extends EventDispatcher
 	{
-		public static const SHELL_TYPE_NEW:String = "new"
+		public static const STATE_RUNNING:String = "longTermSimRunning"
+		public static const STATE_OFF:String = "longTermSimOff"
+			
 		
+		public static const SHELL_TYPE_NEW:String = "new"
+			
 		public static const WINDOW_STYLE_PUNCH:String = "punch";
 		public static const WINDOW_STYLE_STRIP:String = "strip";
 	
@@ -33,17 +38,17 @@ package com.mcquilleninteractive.learnhvac.model
 		public static const WEST:String = "west"
 		public static const EAST:String = "east" 
 		
-		public var buildingPropertiesEnabled:Boolean = true
 										
 		/* *********** SIMULATION PROPERTIES *********** */
-						
-		protected var _runID:String 
-		protected var _timeStepEP:int
+		
+		public var currentState:String 
+		public var runID:String 
+		public var timeStepEP:int
 		
 		/* *********** ZONE AND FLOOR *********** */
 		
-		protected var _zoneOfInterest:int
-		protected var _floorOfInterest:int
+		public var _zoneOfInterest:int
+		public var floorOfInterest:int
 		
 		/* *********** ENVIRONMENT *********** */
 		
@@ -78,14 +83,15 @@ package com.mcquilleninteractive.learnhvac.model
 												]);
 		
 		
-		protected var _regionSelectedIndex:uint
-		protected var _citySelectedIndex:uint
+		public var regionSelectedIndex:uint
+		public var citySelectedIndex:uint
 		
 		
 		/* *********** BUILDLING PROPERTIES *********** */
 		
-		public var windowTypesAC:ArrayCollection = new ArrayCollection( [	{label:"punch", data:"punch"},
-																			{label:"strip", data:"strip"}] )
+		public var windowTypesAC:ArrayCollection = new ArrayCollection( [	{label:"strip", data:"strip"},
+																			{label:"punch", data:"punch"}
+																			] )
 		
 		public var massLevelsAC:ArrayCollection = new ArrayCollection([ {label:"low", data:"low"},
 																		{label:"medium", data:"medium"},
@@ -95,49 +101,58 @@ package com.mcquilleninteractive.learnhvac.model
 		public var _buildingLength:Number 
 		public var _buildingWidth:Number
 		
-		protected var _windowTypeSelectedIndex:uint
-		protected var _shell:String
-		protected var _stories:int 	
-		protected var _windowStyle:String
-		protected var _northAxis:Number 		
-		protected var _massLevelSelectedIndex:uint 	
-		protected var _windowRatioNorth:Number;
-		protected var _windowRatioSouth:Number 
-		protected var _windowRatioEast:Number 
-		protected var _windowRatioWest:Number
+		public var windowTypeSelectedIndex:uint 
+		public var shell:String
+		public var stories:int 	
+		public var windowType:String
+		public var northAxis:Number 		
+		public var massLevelSelectedIndex:uint 	
+		public var windowRatioNorth:Number;
+		public var windowRatioSouth:Number 
+		public var windowRatioEast:Number 
+		public var windowRatioWest:Number
 						
 		public var _areaPerPerson:Number 
 		public var _equipPeakLoad:Number
-		public var _lightingPeakLoad:Number = 23.69
+		public var _lightingPeakLoad:Number
 		
 			
 		/* *********** DATE PROPERTIES *********** */
 		
-		protected var _startDate:Date
-		protected var _stopDate:Date
+		public var startDate:Date
+		public var stopDate:Date
 				
-		protected var _wddStartDate:Date 
-		protected var _wddStopDate:Date 
-		protected var _wddTypeOfDD:String 
+		public var wddStartDate:Date 
+		public var wddStopDate:Date 
+		public var wddTypeOfDD:String 
 		
-		protected var _sddStartDate:Date 
-		protected var _sddStopDate:Date 
-		protected var _sddTypeOfDD:String 
+		public var sddStartDate:Date 
+		public var sddStopDate:Date 
+		public var sddTypeOfDD:String 
 				
-		protected var _weekdayBegin:int 
-		protected var _weekdayEnd:int 
-		protected var _holidayBegin:int
-		protected var _holidayEnd:int 
+		public var weekdayBegin:int 
+		public var weekdayEnd:int 
+		public var holidayBegin:int
+		public var holidayEnd:int 
 		
-		protected var _ddCooling:String
-		protected var _ddHeating:String
-		protected var _ddOther:String	
+		public var ddCooling:String
+		public var ddHeating:String
+		public var ddOther:String	
 				
 		
-		/* *********** ZONE HEATING AND COOLING PROPERTIES *********** */
+		/* *********** PROPERTIES IMPORTED FROM SHORT-TERM *********** */
 		 
-       	protected var _zoneHeatingSetpointTemp:Number
-		protected var _zoneCoolingSetpointTemp:Number
+		public var _zoneHeatingSetpointTemp:Number
+		public var _zoneCoolingSetpointTemp:Number
+		public var _supplyAirSetpointTemp:Number
+		public var vavMinFlwRatio:Number
+		public var rmQSens:Number
+		public var vavHcQd:Number
+		public var hcUA:Number
+		public var ccUA:Number
+		public var fanPwr:Number
+		
+		
 		
 		
 		public function LongTermSimulationModel()
@@ -146,72 +161,127 @@ package com.mcquilleninteractive.learnhvac.model
 		}
 		
 		public function init():void
-		{
+		{				
 			
-			buildingPropertiesEnabled = false
+			currentState = STATE_OFF
+			
+			_zoneHeatingSetpointTemp = 0
+			_zoneCoolingSetpointTemp = 0
+			_supplyAirSetpointTemp = 0
+			vavMinFlwRatio = 0
+			rmQSens = 0
+			vavHcQd = 0
+			hcUA = 0
+			ccUA = 0
+			fanPwr= 0
+			
+			
 									
-			_runID = LongTermSimulationDataModel.RUN_1 //default to run 1
-			_timeStepEP = 1
+			runID = LongTermSimulationDataModel.RUN_1 //default to run 1
+			timeStepEP = 1
 				
-			_zoneOfInterest = 1
-			_floorOfInterest = 2
+			zoneOfInterest = 1
+			floorOfInterest = 2
 		
-			_regionSelectedIndex = 0
-			_citySelectedIndex = 0
+			regionSelectedIndex = 0
+			citySelectedIndex = 0
 		
 			_storyHeight = 3.6576 //12 feet
-			_buildingLength = 30 
-			_buildingWidth = 40
+			_buildingLength = 30.48 
+			_buildingWidth = 30.48
 			
-			_windowTypeSelectedIndex = 0
-			_shell = LongTermSimulationModel.SHELL_TYPE_NEW
-			_stories = 3		
-			_windowStyle = LongTermSimulationModel.WINDOW_STYLE_PUNCH
-			_northAxis = 0;		
-			_massLevelSelectedIndex = 0		
-			_windowRatioNorth = .4;
-			_windowRatioSouth = .4;
-			_windowRatioEast = .4;
-			_windowRatioWest = .4;
+			windowTypeSelectedIndex = 0
+			shell = LongTermSimulationModel.SHELL_TYPE_NEW
+			stories = 3		
+			windowType = LongTermSimulationModel.WINDOW_STYLE_STRIP
+			windowTypeSelectedIndex = 0
+			northAxis = 0;		
+			massLevelSelectedIndex = 0		
+			windowRatioNorth = .4;
+			windowRatioSouth = .4;
+			windowRatioEast = .4;
+			windowRatioWest = .4;
 							
 			_areaPerPerson = 10.764		//1.0 in IP
 			_equipPeakLoad = 10.764		//1.0 in IP
-			 _lightingPeakLoad = 23.69		//255 sq. ft
+			_lightingPeakLoad = 23.69		//255 sq. ft
 						
-			_weekdayBegin = 8
-			_weekdayEnd = 17
-			_holidayBegin = 10
-			_holidayEnd = 15	
+			weekdayBegin = 8
+			weekdayEnd = 17
+			holidayBegin = 10
+			holidayEnd = 15	
 			
-			_startDate = new Date("",0,1)
-			_stopDate = new Date("",0, 31)
+			startDate = new Date("",0,1)
+			stopDate = new Date("",0, 31)
 					
-			_wddStartDate = new Date("",0,21)
-			_wddStopDate = new Date("", 0,21)
-			_wddTypeOfDD = "Winter Typical"
+			wddStartDate = new Date("",0,21)
+			wddStopDate = new Date("", 0,21)
+			wddTypeOfDD = "Winter Typical"
 			
-			_sddStartDate = new Date("", 5,21)
-			_sddStopDate = new Date("", 5,21)
-			_sddTypeOfDD = "Summer Typical"
+			sddStartDate = new Date("", 5,21)
+			sddStopDate = new Date("", 5,21)
+			sddTypeOfDD = "Summer Typical"
 					
-			_weekdayBegin = 8
-			_weekdayEnd = 17
-			_holidayBegin = 10
-			_holidayEnd = 15	
+			weekdayBegin = 8
+			weekdayEnd = 17
+			holidayBegin = 10
+			holidayEnd = 15	
 		}		
-						
+				
+		
+		
+		/** Generate an ArrayCollection containing the inputs to EnergyPlus.
+		 *  This information is put into generic objects with {name:, value_SI:, value_IP}  
+		 *  The arrayCollection is used in the Analysis section to show the user what the inputs were*/
+		public function getEnergyPlusInputsMemento():EnergyPlusInputMemento
+		{
+			var mem:EnergyPlusInputMemento = new EnergyPlusInputMemento()
+			mem._areaPerPerson = this._areaPerPerson
+			mem._buildingLength = this._buildingLength
+			mem._buildingWidth = this._buildingWidth
+			mem._equipPeakLoad = this._equipPeakLoad
+			mem._lightingPeakLoad = this._lightingPeakLoad
+			mem._storyHeight = this._storyHeight
+			mem.city = this.getCity()
+			mem.citySelectedIndex = this.citySelectedIndex
+			mem.region = this.region
+			mem.regionSelectedIndex = this.regionSelectedIndex
+			mem.floorOfInterest = this.floorOfInterest
+			mem.massLevel = this.massLevel
+			mem.massLevelSelectedIndex = this.massLevelSelectedIndex
+			mem.northAxis = this.northAxis
+			mem.shell= this.shell
+			mem.startDate = this.startDate
+			mem.stopDate = this.stopDate
+			mem.stories = this.stories
+			mem.timeStepEP = this.timeStepEP
+			mem.windowRatioEast = this.windowRatioEast
+			mem.windowRatioNorth = this.windowRatioNorth
+			mem.windowRatioSouth = this.windowRatioSouth
+			mem.windowRatioWest = this.windowRatioWest
+			mem.windowType = this.windowType
+				
+			//modelica input variables			
+			mem._zoneCoolingSetpointTemp = this._zoneCoolingSetpointTemp
+			mem._zoneHeatingSetpointTemp = this._zoneHeatingSetpointTemp
+			mem._supplyAirSetpointTemp = this._supplyAirSetpointTemp
+			mem.vavMinFlwRatio = vavMinFlwRatio
+			mem.rmQSens = rmQSens
+			mem.fanPwr = fanPwr
+			mem.vavHcQd = vavHcQd
+			mem.hcUA = hcUA
+			mem.ccUA = ccUA
+				
+				
+			return mem
+		}
+		
+		
+		
 		/* ****************************************** */
 		/* *********** GETTER AND SETTERS *********** */
 		/* ****************************************** */
-		
-		public function get runID():String
-		{
-			return _runID
-		}
-		public function set runID(value:String):void
-		{
-			_runID = value
-		}
+	
 		
 		public function get zoneOfInterest():uint
 		{
@@ -227,145 +297,17 @@ package com.mcquilleninteractive.learnhvac.model
 			Swiz.dispatchEvent(evt)
 		}
 			
-		public function get floorOfInterest():uint
+		public function get massLevel():String
 		{
-			return _floorOfInterest
+			return massLevelsAC.getItemAt(massLevelSelectedIndex).data
 		}
-		public function set floorOfInterest(val:uint):void
-		{
-			_floorOfInterest = val
-		}
-		
-		public function get citySelectedIndex():uint
-		{
-			return _citySelectedIndex
-		}
-		public function set citySelectedIndex(val:uint):void
-		{
-			_citySelectedIndex = val
-		}
-
-		public function get timeStepEP():uint
-		{
-			return _timeStepEP
-		}
-		public function set timeStepEP(val:uint):void
-		{
-			_timeStepEP = val
-		}
-
-		public function get regionSelectedIndex():uint
-		{
-			return _regionSelectedIndex
-		}
-		public function set regionSelectedIndex(val:uint):void
-		{
-			_regionSelectedIndex = val
-		}		
-	
+				
 		public function getCurrentZoneSize():Number
 		{			
 			//temp
 			return 100
 		}
-		
-		
-		public function get windowTypeSelectedIndex():uint
-		{
-			return _windowTypeSelectedIndex
-		}
-		
-		public function set windowTypeSelectedIndex(value:uint):void
-		{
-			_windowTypeSelectedIndex = value
-		}
-		
-		public function get shell():String
-		{
-			return _shell
-		}		
-		public function set shell(value:String):void
-		{
-			_shell = value
-		}
-		
-		public function get stories():int
-		{
-			return _stories
-		}		
-		public function set stories(value:int):void
-		{
-			_stories = value
-		}
-		
-		public function get windowStyle():String
-		{
-			return _windowStyle
-		}		
-		public function set windowStyle(value:String):void
-		{
-			_windowStyle = value
-		}
-	
-		public function get northAxis():Number
-		{
-			return _northAxis
-		}		
-		public function set northAxis(value:Number):void
-		{
-			_northAxis = value
-		}
-	
-		public function get massLevelSelectedIndex():uint
-		{
-			return _massLevelSelectedIndex
-		}		
-		public function set massLevelSelectedIndex(value:uint):void
-		{
-			_massLevelSelectedIndex = value
-		}
-		
-		public function get windowRatioNorth():Number
-		{
-			return _windowRatioNorth
-		}		
-		public function set windowRatioNorth(value:Number):void
-		{
-			_windowRatioNorth = value
-		}
-		
-		public function get windowRatioSouth():Number
-		{
-			return _windowRatioSouth
-		}		
-		public function set windowRatioSouth(value:Number):void
-		{
-			_windowRatioSouth = value
-		}
-				
-		public function get windowRatioEast():Number
-		{
-			return _windowRatioEast
-		}		
-		public function set windowRatioEast(value:Number):void
-		{
-			_windowRatioEast = value
-		}
-		
-		public function get windowRatioWest():Number
-		{
-			return _windowRatioWest
-		}		
-		public function set windowRatioWest(value:Number):void
-		{
-			_windowRatioWest = value
-		}
-		
-		public function get massLevel():String
-		{
-			return massLevelsAC.getItemAt(massLevelSelectedIndex).data
-		}				
-		
+						
 		public function get region():String
 		{
 			return regionsAC.getItemAt(regionSelectedIndex).data
@@ -380,10 +322,7 @@ package com.mcquilleninteractive.learnhvac.model
 			}
 		}
 		
-		
-				
-		
-		public function get city():String
+		public function getCity(removeSpaces:Boolean = false):String
 		{
 			//This is kind of hokey but works for now...
 			switch (regionsAC.getItemAt(regionSelectedIndex).data)
@@ -394,17 +333,20 @@ package com.mcquilleninteractive.learnhvac.model
 					break
 				case "Northeast":				
 					//return northeastCitiesAC.getItemAt(citySelectedIndex).data
-					var cityName:String = northeastCitiesAC.getItemAt(citySelectedIndex).label
+					cityName = northeastCitiesAC.getItemAt(citySelectedIndex).label
 					break
 				case "South":
 					//return southCitiesAC.getItemAt(citySelectedIndex).data
-					var cityName:String = southCitiesAC.getItemAt(citySelectedIndex).label				
+					cityName = southCitiesAC.getItemAt(citySelectedIndex).label				
 					break
 				default:
 					Logger.error("unexpected region index", this)
 			}
 			//return regionsAC.getItemAt(regionSelectedIndex).data
-			cityName = cityName.replace(" ","")
+			if (removeSpaces)
+			{
+				cityName = cityName.replace(" ","")
+			}
 			return cityName
 		}
 		
@@ -417,8 +359,7 @@ package com.mcquilleninteractive.learnhvac.model
 			}
 			return ((windowRatioNorth * wallAreaNorth) + (windowRatioEast * wallAreaEast) + (windowRatioSouth * wallAreaSouth) + (windowRatioWest * wallAreaWest)) / ( wallAreaNorth + wallAreaEast + wallAreaSouth + wallAreaWest )  
 		}
-		
-	
+			
 	
 		public function get wallAreaNorth():Number
 		{
@@ -511,9 +452,7 @@ package com.mcquilleninteractive.learnhvac.model
 				_buildingWidth = v
 			}
 		}
-		
-		
-		
+			
 		
 		public function get equipPeakLoad():Number
 		{
@@ -587,51 +526,6 @@ package com.mcquilleninteractive.learnhvac.model
 			}
 		}
 		
-		public function get sddStartDate():Date { return _sddStartDate }
-		public function set sddStartDate(value:Date):void { _sddStartDate = value }
-		
-		public function get sddStopDate():Date { return _sddStopDate }
-		public function set sddStopDate(value:Date):void { _sddStopDate = value }
-		
-		public function get wddStartDate():Date { return _wddStartDate }
-		public function set wddStartDate(value:Date):void { _wddStartDate = value }
-		
-		public function get wddStopDate():Date { return _wddStopDate }
-		public function set wddStopDate(value:Date):void { _wddStopDate = value }
-		
-		public function get startDate():Date { return _startDate }
-		public function set startDate(value:Date):void { _startDate = value }
-		
-		public function get stopDate():Date { return _stopDate }
-		public function set stopDate(value:Date):void { _stopDate = value }
-		
-		public function get sddTypeOfDD():String { return _sddTypeOfDD }
-		public function set sddTypeOfDD(value:String):void { _sddTypeOfDD = value }
-		
-		public function get wddTypeOfDD():String { return _wddTypeOfDD }
-		public function set wddTypeOfDD(value:String):void  { _wddTypeOfDD = value }
-		
-		public function get weekdayBegin():int { return _weekdayBegin }
-		public function set weekdayBegin(value:int):void  { _weekdayBegin = value }
-		
-		public function get weekdayEnd():int { return _weekdayEnd }
-		public function set weekdayEnd(value:int):void  { _weekdayEnd = value }
-		
-		public function get holidayBegin():int { return _holidayBegin }
-		public function set holidayBegin(value:int):void  { _holidayBegin = value }
-		
-		public function get holidayEnd():int { return _holidayEnd }
-		public function set holidayEnd(value:int):void  { _holidayEnd = value }
-		
-		public function get ddCooling():String { return _ddCooling }
-		public function set ddCooling(value:String):void  { _ddCooling = value }
-		
-		public function get ddHeating():String { return _ddHeating }
-		public function set ddHeating(value:String):void  { _ddHeating = value }
-		
-		public function get ddOther():String { return _ddOther }
-		public function set ddOther(value:String):void  { _ddOther = value }
-		
 				
         public function set zoneHeatingSetpointTemp(value:Number):void
         {
@@ -680,8 +574,88 @@ package com.mcquilleninteractive.learnhvac.model
 				return Conversions.celToFarh(_zoneCoolingSetpointTemp)
 			}
         }
-  
-     
+		
+		
+		public function set supplyAirSetpointTemp(value:Number):void
+		{
+			if (ApplicationModel.currUnits=="SI")
+			{
+				_supplyAirSetpointTemp = value
+			}
+			else
+			{
+				_supplyAirSetpointTemp = Conversions.farhToCel(value)
+			}
+		}
+		
+		public function get supplyAirSetpointTemp():Number
+		{
+			if (ApplicationModel.currUnits=="SI")
+			{
+				return _supplyAirSetpointTemp
+			}
+			else
+			{
+				return Conversions.celToFarh(_supplyAirSetpointTemp)
+			}
+		}
+		
+		
+				
+		public function getWidthForElevation(currElevationView:String, units:String=""):Number
+		{
+			if (units=="") units = ApplicationModel.currUnits				
+			var width:Number
+			
+			if (currElevationView == LongTermSimulationModel.NORTH || currElevationView == LongTermSimulationModel.SOUTH)
+			{
+				if (units=="SI")
+				{
+					width = _buildingWidth
+				}
+				else
+				{
+					width = buildingWidth
+				}
+			}
+			else
+			{
+				if (units=="SI")
+				{
+					width = _buildingLength
+				}
+				else
+				{
+					width = buildingLength
+				}	
+			}
+			return width
+		}
+		
+		public function getWindowRatioForElevation(currElevationView:String):Number
+		{
+			var windowRatio:Number 
+			switch (currElevationView)
+			{
+				case LongTermSimulationModel.NORTH:
+					windowRatio = windowRatioNorth
+					break
+				case LongTermSimulationModel.SOUTH:
+					windowRatio = windowRatioSouth
+					break
+				case LongTermSimulationModel.EAST:
+					windowRatio = windowRatioEast
+					break
+				case LongTermSimulationModel.WEST:
+					windowRatio = windowRatioWest
+					break
+				default:
+					Logger.error("on_elevationViewChange() unrecognized _elevationView: " + currElevationView, this)
+					return .5
+			}	
+			return windowRatio
+		}
+		
 	
 
 	}

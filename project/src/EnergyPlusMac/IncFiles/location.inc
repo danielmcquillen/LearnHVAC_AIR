@@ -1,71 +1,57 @@
-! Location.inc
-!
-
-##if #[location[] eqs Albuquerque]  
-
+##if #[Location[] eqs Albuquerque]
+ 
 Site:Location,
-  albuquerque,     !- Location Name
-      35.05,     !- Latitude {N+ S-}
+  Albuquerque Intl Arpt  Isis_NM_USA Design_Conditions,     !- Location Name
+      35.04,     !- Latitude {N+ S-}
     -106.62,     !- Longitude {W- E+}
       -7.00,     !- Time Zone Relative to GMT {GMT+/-}
     1619.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- 8.738377,
- 6.903116,
- 6.756156,
- 7.627078,
- 11.12333,
- 14.60328,
- 17.62025,
- 19.5314,
- 19.69375,
- 18.13936,
- 15.19936,
- 11.82611;
  
- !  WMO=723650 Time Zone=NAM: (GMT-07:00) Mountain Time (US & Canada)
- !  Data Source=ASHRAE 2005 Annual Design Conditions
-  RunPeriodControl:DaylightSavingTime,
-    2nd Sunday in March,     !- Start Date
-    1st Sunday in November;  !- End Date
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! albuquerque_NM_USA Extreme Annual Wind Speeds, 1%=12.6m/s, 2.5%=11.1m/s, 5%=9.3m/s
- ! albuquerque_NM_USA Extreme Annual Temperatures, Max Drybulb=37.8°C Min Drybulb=-12.9°C
-  
- ! albuquerque_NM_USA Annual Heating Design Conditions Wind Speed=3.3m/s Wind Dir=0
- ! Coldest Month=JAN
- ! albuquerque_NM_USA Annual Heating 99.6%, MaxDB=-9°C
- SizingPeriod:DesignDay,
-  albuquerque Ann Htg 99.6% Condns DB,     !- Name
-         -9,      !- Max Dry-Bulb {C}
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     8.62,     !- January Ground Temperature {C}
+     8.27,     !- February Ground Temperature {C}
+     9.24,     !- March Ground Temperature {C}
+     10.65,     !- April Ground Temperature {C}
+     14.20,     !- May Ground Temperature {C}
+     16.86,     !- June Ground Temperature {C}
+     18.58,     !- July Ground Temperature {C}
+     19.00,     !- August Ground Temperature {C}
+     17.93,     !- September Ground Temperature {C}
+     15.74,    !- October Ground Temperature {C}
+     12.91,    !- November Ground Temperature {C}
+     10.36;    !- December Ground Temperature {C}
+ 
+ ! Albuquerque Intl Arpt  Isis_NM_USA Annual Heating 99.6%, MaxDB=-7.9°C
+SizingPeriod:DesignDay,
+  Albuquerque Intl Arpt  Isis Ann Htg 99.6% Condns DB,     !- Name
+       -7.9,      !- Maximum Dry-Bulb Temperature {C}
         0.0,      !- Daily Temp Range {C}
-         -9,      !- Humidity Indicating Condition at Max Dry-Bulb
+       -7.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
      83328.,      !- Barometric Pressure {Pa}
-        3.3,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+        3.2,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
           0,      !- Wind Direction {Degrees; N=0, S=180}
        0.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
           0,      !- Snow on ground {0-no,1-yes}
          21,      !- Day of Month
-          1,      !- Month
+         12,      !- Month
   WinterDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
+WetBulb;
  
-
- ! albuquerque Annual Cooling Design Conditions Wind Speed=4.4m/s Wind Dir=260
+ ! Albuquerque Intl Arpt  Isis Annual Cooling Design Conditions Wind Speed=4.4m/s Wind Dir=220
  ! Hottest Month=JUL
- ! albuquerque_NM_USA Annual Cooling (DB=>MWB) .4%, MaxDB=35.6°C MWB=15.7°C
- SizingPeriod:DesignDay,
-  albuquerque Ann Clg .4% Condns DB=>MWB,     !- Name
-       35.6,      !- Max Dry-Bulb {C}
-       14.1,      !- Daily Temp Range {C}
-       15.7,      !- Humidity Indicating Condition at Max Dry-Bulb
+ ! Albuquerque Intl Arpt  Isis_NM_USA Annual Cooling (DB=>MWB) .4%, MaxDB=35.1°C MWB=15.7°C
+SizingPeriod:DesignDay,
+  Albuquerque Intl Arpt  Isis Ann Clg .4% Condns DB=>MWB,     !- Name
+       35.1,      !- Maximum Dry-Bulb Temperature {C}
+       13.5,      !- Daily Temp Range {C}
+       15.7,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
      83328.,      !- Barometric Pressure {Pa}
         4.4,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
-        260,      !- Wind Direction {Degrees; N=0, S=180}
+        220,      !- Wind Direction {Degrees; N=0, S=180}
        1.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
           0,      !- Snow on ground {0-no,1-yes}
@@ -73,53 +59,45 @@ Site:GroundTemperature:BuildingSurface,
           7,      !- Month
   SummerDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Baltimore] 
+WetBulb;
  
- Site:Location,
-  baltimore,     !- Location Name
-      39.18,     !- Latitude {N+ S-}
-     -76.67,     !- Longitude {W- E+}
+ 
+ 
+ 
+##elseif #[Location[] eqs Baltimore]
+ 
+Site:Location,
+  Baltimore Blt Washngtn IntL_MD_USA Design_Conditions,     !- Location Name
+      39.17,     !- Latitude {N+ S-}
+     -76.68,     !- Longitude {W- E+}
       -5.00,     !- Time Zone Relative to GMT {GMT+/-}
-      47.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- 7.875406,
- 5.945236,
- 5.790664,
- 6.706633,
- 10.38372,
- 14.04366,
- 17.21664,
- 19.22667,
- 19.39739,
- 17.7626,
- 14.67052,
- 11.12285;
+      45.00;     !- Elevation {m}
  
- !  WMO=724060 Time Zone=NAE: (GMT-05:00) Eastern Time (US & Canada)
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! baltimore_MD_USA Extreme Annual Wind Speeds, 1%=10.3m/s, 2.5%=8.7m/s, 5%=7.9m/s
- ! baltimore_MD_USA Extreme Annual Temperatures, Max Drybulb=36.5°C Min Drybulb=-15.1°C
-  
- ! baltimore_MD_USA Annual Heating Design Conditions Wind Speed=3.9m/s Wind Dir=270
- ! Coldest Month=JAN
- ! baltimore_MD_USA Annual Heating 99.6%, MaxDB=-11°C
- SizingPeriod:DesignDay,
-  baltimore Ann Htg 99.6% Condns DB,     !- Name
-        -11,      !- Max Dry-Bulb {C}
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     9.57,     !- January Ground Temperature {C}
+     7.66,     !- February Ground Temperature {C}
+     7.24,     !- March Ground Temperature {C}
+     7.82,     !- April Ground Temperature {C}
+     10.69,     !- May Ground Temperature {C}
+     13.78,     !- June Ground Temperature {C}
+     16.62,     !- July Ground Temperature {C}
+     18.59,     !- August Ground Temperature {C}
+     19.05,     !- September Ground Temperature {C}
+     17.94,    !- October Ground Temperature {C}
+     15.48,    !- November Ground Temperature {C}
+     12.47;    !- December Ground Temperature {C}
+ 
+ ! Baltimore Blt Washngtn IntL_MD_USA Annual Heating 99.6%, MaxDB=-10.6°C
+SizingPeriod:DesignDay,
+  Baltimore Blt Washngtn IntL Ann Htg 99.6% Condns DB,     !- Name
+      -10.6,      !- Maximum Dry-Bulb Temperature {C}
         0.0,      !- Daily Temp Range {C}
-        -11,      !- Humidity Indicating Condition at Max Dry-Bulb
-    100762.,      !- Barometric Pressure {Pa}
+      -10.6,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100786.,      !- Barometric Pressure {Pa}
         3.9,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-        270,      !- Wind Direction {Degrees; N=0, S=180}
+        290,      !- Wind Direction {Degrees; N=0, S=180}
        0.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
           0,      !- Snow on ground {0-no,1-yes}
@@ -127,19 +105,18 @@ Site:GroundTemperature:BuildingSurface,
           1,      !- Month
   WinterDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
+WetBulb;
  
- 
- ! baltimore Annual Cooling Design Conditions Wind Speed=4.7m/s Wind Dir=280
+ ! Baltimore Blt Washngtn IntL Annual Cooling Design Conditions Wind Speed=4.6m/s Wind Dir=280
  ! Hottest Month=JUL
- ! baltimore_MD_USA Annual Cooling (DB=>MWB) .4%, MaxDB=34.2°C MWB=23.9°C
- SizingPeriod:DesignDay,
-  baltimore Ann Clg .4% Condns DB=>MWB,     !- Name
-       34.2,      !- Max Dry-Bulb {C}
+ ! Baltimore Blt Washngtn IntL_MD_USA Annual Cooling (DB=>MWB) .4%, MaxDB=34.4°C MWB=23.9°C
+SizingPeriod:DesignDay,
+  Baltimore Blt Washngtn IntL Ann Clg .4% Condns DB=>MWB,     !- Name
+       34.4,      !- Maximum Dry-Bulb Temperature {C}
        10.4,      !- Daily Temp Range {C}
-       23.9,      !- Humidity Indicating Condition at Max Dry-Bulb
-    100762.,      !- Barometric Pressure {Pa}
-        4.7,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+       23.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100786.,      !- Barometric Pressure {Pa}
+        4.6,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
         280,      !- Wind Direction {Degrees; N=0, S=180}
        1.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
@@ -148,73 +125,64 @@ Site:GroundTemperature:BuildingSurface,
           7,      !- Month
   SummerDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Boise]  
-
- Site:Location,
-  boise,     !- Location Name
-      43.57,     !- Latitude {N+ S-}
-    -116.22,     !- Longitude {W- E+}
-      -7.00,     !- Time Zone Relative to GMT {GMT+/-}
-     874.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- 5.174768,
- 3.102504,
- 2.936556,
- 3.919952,
- 7.867726,
- 11.79709,
- 15.20367,
- 17.36163,
- 17.54498,
- 15.78981,
- 12.47014,
- 8.661285;
+WetBulb;
  
- !  WMO=726810 Time Zone=NAM: (GMT-07:00) Mountain Time (US & Canada)
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! boise_ID_USA Extreme Annual Wind Speeds, 1%=10m/s, 2.5%=8.6m/s, 5%=7.8m/s
- ! boise_ID_USA Extreme Annual Temperatures, Max Drybulb=39.5°C Min Drybulb=-19.1°C
-  
- ! boise_ID_USA Annual Heating Design Conditions Wind Speed=2.4m/s Wind Dir=120
- ! Coldest Month=JAN
- ! boise_ID_USA Annual Heating 99.6%, MaxDB=-16.9°C
- SizingPeriod:DesignDay,
-  boise Ann Htg 99.6% Condns DB,     !- Name
-      -16.9,      !- Max Dry-Bulb {C}
+ 
+ 
+ 
+##elseif #[Location[] eqs Boise]
+ 
+Site:Location,
+  Boise Air Terminal  Uo_ID_USA Design_Conditions,     !- Location Name
+      43.62,     !- Latitude {N+ S-}
+    -116.21,     !- Longitude {W- E+}
+      -7.00,     !- Time Zone Relative to GMT {GMT+/-}
+     701.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     7.51,     !- January Ground Temperature {C}
+     5.58,     !- February Ground Temperature {C}
+     5.15,     !- March Ground Temperature {C}
+     5.74,     !- April Ground Temperature {C}
+     8.65,     !- May Ground Temperature {C}
+     11.79,     !- June Ground Temperature {C}
+     14.66,     !- July Ground Temperature {C}
+     16.66,     !- August Ground Temperature {C}
+     17.13,     !- September Ground Temperature {C}
+     16.00,    !- October Ground Temperature {C}
+     13.50,    !- November Ground Temperature {C}
+     10.46;    !- December Ground Temperature {C}
+ 
+ ! Boise Air Terminal  Uo_ID_USA Annual Heating 99.6%, MaxDB=-16.3°C
+SizingPeriod:DesignDay,
+  Boise Air Terminal  Uo Ann Htg 99.6% Condns DB,     !- Name
+      -16.3,      !- Maximum Dry-Bulb Temperature {C}
         0.0,      !- Daily Temp Range {C}
-      -16.9,      !- Humidity Indicating Condition at Max Dry-Bulb
-     91257.,      !- Barometric Pressure {Pa}
-        2.4,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+      -16.3,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     93182.,      !- Barometric Pressure {Pa}
+        2.3,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
         120,      !- Wind Direction {Degrees; N=0, S=180}
        0.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
           0,      !- Snow on ground {0-no,1-yes}
          21,      !- Day of Month
-          1,      !- Month
+         12,      !- Month
   WinterDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
+WetBulb;
  
- 
- ! boise Annual Cooling Design Conditions Wind Speed=4.4m/s Wind Dir=330
+ ! Boise Air Terminal  Uo Annual Cooling Design Conditions Wind Speed=4.2m/s Wind Dir=330
  ! Hottest Month=JUL
- ! boise_ID_USA Annual Cooling (DB=>MWB) .4%, MaxDB=36.1°C MWB=17.7°C
- SizingPeriod:DesignDay,
-  boise Ann Clg .4% Condns DB=>MWB,     !- Name
-       36.1,      !- Max Dry-Bulb {C}
-       16.8,      !- Daily Temp Range {C}
-       17.7,      !- Humidity Indicating Condition at Max Dry-Bulb
-     91257.,      !- Barometric Pressure {Pa}
-        4.4,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+ ! Boise Air Terminal  Uo_ID_USA Annual Cooling (DB=>MWB) .4%, MaxDB=36.7°C MWB=17.9°C
+SizingPeriod:DesignDay,
+  Boise Air Terminal  Uo Ann Clg .4% Condns DB=>MWB,     !- Name
+       36.7,      !- Maximum Dry-Bulb Temperature {C}
+       16.7,      !- Daily Temp Range {C}
+       17.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     93182.,      !- Barometric Pressure {Pa}
+        4.2,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
         330,      !- Wind Direction {Degrees; N=0, S=180}
        1.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
@@ -223,53 +191,45 @@ Site:GroundTemperature:BuildingSurface,
           7,      !- Month
   SummerDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Burlington]  
-
- Site:Location,
-  burlington,     !- Location Name
+WetBulb;
+ 
+ 
+ 
+ 
+##elseif #[Location[] eqs Burlington]
+ 
+Site:Location,
+  Burlington International Ap_VT_USA Design_Conditions,     !- Location Name
       44.47,     !- Latitude {N+ S-}
      -73.15,     !- Longitude {W- E+}
       -5.00,     !- Time Zone Relative to GMT {GMT+/-}
-     104.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- 1.806727,
- -0.3939653,
- -0.5702044,
- 0.4741248,
- 4.666582,
- 8.839492,
- 12.45718,
- 14.74892,
- 14.94362,
- 13.07967,
- 9.554231,
- 5.509326;
+     101.00;     !- Elevation {m}
  
- !  WMO=726170 Time Zone=NAE: (GMT-05:00) Eastern Time (US & Canada)
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! burlington_VT_USA Extreme Annual Wind Speeds, 1%=10.5m/s, 2.5%=9m/s, 5%=8.2m/s
- ! burlington_VT_USA Extreme Annual Temperatures, Max Drybulb=34°C Min Drybulb=-27.7°C
-  
- ! burlington_VT_USA Annual Heating Design Conditions Wind Speed=2.8m/s Wind Dir=70
- ! Coldest Month=JAN
- ! burlington_VT_USA Annual Heating 99.6%, MaxDB=-22.9°C
- SizingPeriod:DesignDay,
-  burlington Ann Htg 99.6% Condns DB,     !- Name
-      -22.9,      !- Max Dry-Bulb {C}
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     3.87,     !- January Ground Temperature {C}
+     1.78,     !- February Ground Temperature {C}
+     1.33,     !- March Ground Temperature {C}
+     1.96,     !- April Ground Temperature {C}
+     5.10,     !- May Ground Temperature {C}
+     8.48,     !- June Ground Temperature {C}
+     11.58,     !- July Ground Temperature {C}
+     13.74,     !- August Ground Temperature {C}
+     14.24,     !- September Ground Temperature {C}
+     13.02,    !- October Ground Temperature {C}
+     10.33,    !- November Ground Temperature {C}
+     7.05;    !- December Ground Temperature {C}
+ 
+ ! Burlington International Ap_VT_USA Annual Heating 99.6%, MaxDB=-22.4°C
+SizingPeriod:DesignDay,
+  Burlington International Ap Ann Htg 99.6% Condns DB,     !- Name
+      -22.4,      !- Maximum Dry-Bulb Temperature {C}
         0.0,      !- Daily Temp Range {C}
-      -22.9,      !- Humidity Indicating Condition at Max Dry-Bulb
-    100082.,      !- Barometric Pressure {Pa}
-        2.8,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-         70,      !- Wind Direction {Degrees; N=0, S=180}
+      -22.4,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100118.,      !- Barometric Pressure {Pa}
+          3,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+         60,      !- Wind Direction {Degrees; N=0, S=180}
        0.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
           0,      !- Snow on ground {0-no,1-yes}
@@ -277,20 +237,19 @@ Site:GroundTemperature:BuildingSurface,
           1,      !- Month
   WinterDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
+WetBulb;
  
- 
- ! burlington Annual Cooling Design Conditions Wind Speed=4.7m/s Wind Dir=180
+ ! Burlington International Ap Annual Cooling Design Conditions Wind Speed=4.5m/s Wind Dir=170
  ! Hottest Month=JUL
- ! burlington_VT_USA Annual Cooling (DB=>MWB) .4%, MaxDB=31.2°C MWB=21.7°C
- SizingPeriod:DesignDay,
-  burlington Ann Clg .4% Condns DB=>MWB,     !- Name
-       31.2,      !- Max Dry-Bulb {C}
-       10.9,      !- Daily Temp Range {C}
-       21.7,      !- Humidity Indicating Condition at Max Dry-Bulb
-    100082.,      !- Barometric Pressure {Pa}
-        4.7,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
-        180,      !- Wind Direction {Degrees; N=0, S=180}
+ ! Burlington International Ap_VT_USA Annual Cooling (DB=>MWB) .4%, MaxDB=31.3°C MWB=21.7°C
+SizingPeriod:DesignDay,
+  Burlington International Ap Ann Clg .4% Condns DB=>MWB,     !- Name
+       31.3,      !- Maximum Dry-Bulb Temperature {C}
+       10.7,      !- Daily Temp Range {C}
+       21.7,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100118.,      !- Barometric Pressure {Pa}
+        4.5,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+        170,      !- Wind Direction {Degrees; N=0, S=180}
        1.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
           0,      !- Snow on ground {0-no,1-yes}
@@ -298,352 +257,44 @@ Site:GroundTemperature:BuildingSurface,
           7,      !- Month
   SummerDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Chicago] 
-
- Site:Location,
-  chicago,     !- Location Name
+WetBulb;
+ 
+ 
+ 
+ 
+##elseif #[Location[] eqs Chicago]
+ 
+Site:Location,
+  Chicago Midway Ap_IL_USA Design_Conditions,     !- Location Name
       41.78,     !- Latitude {N+ S-}
      -87.75,     !- Longitude {W- E+}
       -6.00,     !- Time Zone Relative to GMT {GMT+/-}
-     190.00;     !- Elevation {m}
-
+     186.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
 Site:GroundTemperature:BuildingSurface,
- 4.469574,
- 2.317235,
- 2.144879,
- 3.166269,
- 7.26658,
- 11.34777,
- 14.88598,
- 17.12733,
- 17.31772,
- 15.49477,
- 12.04682,
- 8.090793;
+     10.51,     !- January Ground Temperature {C}
+     7.04,     !- February Ground Temperature {C}
+     4.91,     !- March Ground Temperature {C}
+     4.25,     !- April Ground Temperature {C}
+     5.51,     !- May Ground Temperature {C}
+     8.38,     !- June Ground Temperature {C}
+     11.95,     !- July Ground Temperature {C}
+     15.46,     !- August Ground Temperature {C}
+     17.82,     !- September Ground Temperature {C}
+     18.38,    !- October Ground Temperature {C}
+     17.03,    !- November Ground Temperature {C}
+     14.21;    !- December Ground Temperature {C}
  
- !  WMO=725300 Time Zone=NAC: (GMT-06:00) Central Time (US & Canada)
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! chicago_IL_USA Extreme Annual Wind Speeds, 1%=11.2m/s, 2.5%=9.9m/s, 5%=8.7m/s
- ! chicago_IL_USA Extreme Annual Temperatures, Max Drybulb=35.7°C Min Drybulb=-24.2°C
-  
- ! chicago_IL_USA Annual Heating Design Conditions Wind Speed=4.9m/s Wind Dir=270
- ! Coldest Month=JAN
- ! chicago_IL_USA Annual Heating 99.6%, MaxDB=-20.6°C
- SizingPeriod:DesignDay,
-  chicago Ann Htg 99.6% Condns DB,     !- Name
-      -20.6,      !- Max Dry-Bulb {C}
+ ! Chicago Midway Ap_IL_USA Annual Heating 99.6%, MaxDB=-18.7°C
+SizingPeriod:DesignDay,
+  Chicago Midway Ap Ann Htg 99.6% Condns DB,     !- Name
+      -18.7,      !- Maximum Dry-Bulb Temperature {C}
         0.0,      !- Daily Temp Range {C}
-      -20.6,      !- Humidity Indicating Condition at Max Dry-Bulb
-     99063.,      !- Barometric Pressure {Pa}
-        4.9,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-        270,      !- Wind Direction {Degrees; N=0, S=180}
-       0.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          1,      !- Month
-  WinterDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
- 
- 
- ! chicago Annual Cooling Design Conditions Wind Speed=5.3m/s Wind Dir=230
- ! Hottest Month=JUL
- ! chicago_IL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2°C MWB=23.8°C
- SizingPeriod:DesignDay,
-  chicago Ann Clg .4% Condns DB=>MWB,     !- Name
-       33.2,      !- Max Dry-Bulb {C}
-       10.7,      !- Daily Temp Range {C}
-       23.8,      !- Humidity Indicating Condition at Max Dry-Bulb
-     99063.,      !- Barometric Pressure {Pa}
-        5.3,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
-        230,      !- Wind Direction {Degrees; N=0, S=180}
-       1.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          7,      !- Month
-  SummerDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Duluth] 
-
- Site:Location,
-  duluth,     !- Location Name
-      46.83,     !- Latitude {N+ S-}
-     -92.18,     !- Longitude {W- E+}
-      -6.00,     !- Time Zone Relative to GMT {GMT+/-}
-     432.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- -2.76442,
- -5.191451,
- -5.385814,
- -4.23408,
- 0.3895572,
- 4.991645,
- 8.981415,
- 11.50883,
- 11.72357,
- 9.667926,
- 5.779898,
- 1.318988;
- 
- !  WMO=727450 Time Zone=NAC: (GMT-06:00) Central Time (US & Canada)
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! duluth_MN_USA Extreme Annual Wind Speeds, 1%=11.1m/s, 2.5%=9.3m/s, 5%=8.5m/s
- ! duluth_MN_USA Extreme Annual Temperatures, Max Drybulb=32.1°C Min Drybulb=-32.9°C
-  
- ! duluth_MN_USA Annual Heating Design Conditions Wind Speed=4.3m/s Wind Dir=310
- ! Coldest Month=JAN
- ! duluth_MN_USA Annual Heating 99.6%, MaxDB=-29°C
- SizingPeriod:DesignDay,
-  duluth Ann Htg 99.6% Condns DB,     !- Name
-        -29,      !- Max Dry-Bulb {C}
-        0.0,      !- Daily Temp Range {C}
-        -29,      !- Humidity Indicating Condition at Max Dry-Bulb
-     96242.,      !- Barometric Pressure {Pa}
-        4.3,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-        310,      !- Wind Direction {Degrees; N=0, S=180}
-       0.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          1,      !- Month
-  WinterDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
- 
-
- ! duluth Annual Cooling Design Conditions Wind Speed=5.2m/s Wind Dir=230
- ! Hottest Month=JUL
- ! duluth_MN_USA Annual Cooling (DB=>MWB) .4%, MaxDB=29°C MWB=20.6°C
- SizingPeriod:DesignDay,
-  duluth Ann Clg .4% Condns DB=>MWB,     !- Name
-         29,      !- Max Dry-Bulb {C}
-       10.9,      !- Daily Temp Range {C}
-       20.6,      !- Humidity Indicating Condition at Max Dry-Bulb
-     96242.,      !- Barometric Pressure {Pa}
-        5.2,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
-        230,      !- Wind Direction {Degrees; N=0, S=180}
-       1.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          7,      !- Month
-  SummerDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs ElPaso] 
-
- Site:Location,
-  elpaso,     !- Location Name
-      31.80,     !- Latitude {N+ S-}
-    -106.40,     !- Longitude {W- E+}
-      -7.00,     !- Time Zone Relative to GMT {GMT+/-}
-    1194.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- 13.79508,
- 12.15794,
- 12.02682,
- 12.80373,
- 15.92256,
- 19.02688,
- 21.71812,
- 23.42297,
- 23.56779,
- 22.18121,
- 19.55856,
- 16.54949;
-
- !  WMO=722700 Time Zone=NAM: (GMT-07:00) Mountain Time (US & Canada)
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! elpaso_TX_USA Extreme Annual Wind Speeds, 1%=11.2m/s, 2.5%=9.2m/s, 5%=8m/s
- ! elpaso_TX_USA Extreme Annual Temperatures, Max Drybulb=40.8°C Min Drybulb=-9.4°C
-  
- ! elpaso_TX_USA Annual Heating Design Conditions Wind Speed=2.1m/s Wind Dir=20
- ! Coldest Month=JAN
- ! elpaso_TX_USA Annual Heating 99.6%, MaxDB=-5.5°C
- SizingPeriod:DesignDay,
-  elpaso Ann Htg 99.6% Condns DB,     !- Name
-       -5.5,      !- Max Dry-Bulb {C}
-        0.0,      !- Daily Temp Range {C}
-       -5.5,      !- Humidity Indicating Condition at Max Dry-Bulb
-     87780.,      !- Barometric Pressure {Pa}
-        2.1,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-         20,      !- Wind Direction {Degrees; N=0, S=180}
-       0.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          1,      !- Month
-  WinterDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
- 
- 
- ! elpaso Annual Cooling Design Conditions Wind Speed=3.8m/s Wind Dir=280
- ! Hottest Month=JUL
- ! elpaso_TX_USA Annual Cooling (DB=>MWB) .4%, MaxDB=38.6°C MWB=18.2°C
- SizingPeriod:DesignDay,
-  elpaso Ann Clg .4% Condns DB=>MWB,     !- Name
-       38.6,      !- Max Dry-Bulb {C}
-       13.5,      !- Daily Temp Range {C}
-       18.2,      !- Humidity Indicating Condition at Max Dry-Bulb
-     87780.,      !- Barometric Pressure {Pa}
-        3.8,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
-        280,      !- Wind Direction {Degrees; N=0, S=180}
-       1.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          7,      !- Month
-  SummerDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Fairbanks] 
-
- Site:Location,
-  fairbanks,     !- Location Name
-      64.82,     !- Latitude {N+ S-}
-    -147.87,     !- Longitude {W- E+}
-      -9.00,     !- Time Zone Relative to GMT {GMT+/-}
-     138.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- -10.59151,
- -13.65636,
- -13.90178,
- -12.44737,
- -6.608672,
- -0.7971706,
- 4.241082,
- 7.432698,
- 7.703846,
- 5.108002,
- 0.1982288,
- -5.434999;
- 
- !  WMO=702610 Time Zone=NAK: (GMT-09:00) Alaska
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! fairbanks_AK_USA Extreme Annual Wind Speeds, 1%=8.1m/s, 2.5%=7.1m/s, 5%=5.8m/s
- ! fairbanks_AK_USA Extreme Annual Temperatures, Max Drybulb=30.5°C Min Drybulb=-43.1°C
-  
- ! fairbanks_AK_USA Annual Heating Design Conditions Wind Speed=0.5m/s Wind Dir=10
- ! Coldest Month=JAN
- ! fairbanks_AK_USA Annual Heating 99.6%, MaxDB=-42.5°C
- SizingPeriod:DesignDay,
-  fairbanks Ann Htg 99.6% Condns DB,     !- Name
-      -42.5,      !- Max Dry-Bulb {C}
-        0.0,      !- Daily Temp Range {C}
-      -42.5,      !- Humidity Indicating Condition at Max Dry-Bulb
-     99678.,      !- Barometric Pressure {Pa}
-        0.5,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-         10,      !- Wind Direction {Degrees; N=0, S=180}
-       0.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          1,      !- Month
-  WinterDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
- 
- 
- ! fairbanks Annual Cooling Design Conditions Wind Speed=3.3m/s Wind Dir=180
- ! Hottest Month=JUL
- ! fairbanks_AK_USA Annual Cooling (DB=>MWB) .4%, MaxDB=27.2°C MWB=16.1°C
- SizingPeriod:DesignDay,
-  fairbanks Ann Clg .4% Condns DB=>MWB,     !- Name
-       27.2,      !- Max Dry-Bulb {C}
-       10.3,      !- Daily Temp Range {C}
-       16.1,      !- Humidity Indicating Condition at Max Dry-Bulb
-     99678.,      !- Barometric Pressure {Pa}
-        3.3,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
-        180,      !- Wind Direction {Degrees; N=0, S=180}
-       1.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          7,      !- Month
-  SummerDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Helena] 
-
- Site:Location,
-  helena,     !- Location Name
-      46.60,     !- Latitude {N+ S-}
-    -112.00,     !- Longitude {W- E+}
-      -7.00,     !- Time Zone Relative to GMT {GMT+/-}
-    1188.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- 1.626622,
- -0.4956567,
- -0.6656228,
- 0.3415089,
- 4.3846,
- 8.408837,
- 11.89763,
- 14.10771,
- 14.29546,
- 12.49794,
- 9.098111,
- 5.197317;
- 
- !  WMO=727720 Time Zone=NAM: (GMT-07:00) Mountain Time (US & Canada)
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! helena_MT_USA Extreme Annual Wind Speeds, 1%=10.9m/s, 2.5%=9.2m/s, 5%=8.3m/s
- ! helena_MT_USA Extreme Annual Temperatures, Max Drybulb=35.9°C Min Drybulb=-30.6°C
-  
- ! helena_MT_USA Annual Heating Design Conditions Wind Speed=1.7m/s Wind Dir=300
- ! Coldest Month=JAN
- ! helena_MT_USA Annual Heating 99.6%, MaxDB=-27.3°C
- SizingPeriod:DesignDay,
-  helena Ann Htg 99.6% Condns DB,     !- Name
-      -27.3,      !- Max Dry-Bulb {C}
-        0.0,      !- Daily Temp Range {C}
-      -27.3,      !- Humidity Indicating Condition at Max Dry-Bulb
-     87844.,      !- Barometric Pressure {Pa}
-        1.7,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+      -18.7,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     99110.,      !- Barometric Pressure {Pa}
+        5.3,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
         300,      !- Wind Direction {Degrees; N=0, S=180}
        0.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
@@ -652,18 +303,281 @@ Site:GroundTemperature:BuildingSurface,
           1,      !- Month
   WinterDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
+WetBulb;
  
-
- ! helena Annual Cooling Design Conditions Wind Speed=4.9m/s Wind Dir=290
+ ! Chicago Midway Ap Annual Cooling Design Conditions Wind Speed=5.6m/s Wind Dir=220
  ! Hottest Month=JUL
- ! helena_MT_USA Annual Cooling (DB=>MWB) .4%, MaxDB=32.8°C MWB=16.1°C
- SizingPeriod:DesignDay,
-  helena Ann Clg .4% Condns DB=>MWB,     !- Name
-       32.8,      !- Max Dry-Bulb {C}
-       15.7,      !- Daily Temp Range {C}
-       16.1,      !- Humidity Indicating Condition at Max Dry-Bulb
-     87844.,      !- Barometric Pressure {Pa}
+ ! Chicago Midway Ap_IL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.4°C MWB=23.8°C
+SizingPeriod:DesignDay,
+  Chicago Midway Ap Ann Clg .4% Condns DB=>MWB,     !- Name
+       33.4,      !- Maximum Dry-Bulb Temperature {C}
+        8.8,      !- Daily Temp Range {C}
+       23.8,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     99110.,      !- Barometric Pressure {Pa}
+        5.6,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+        220,      !- Wind Direction {Degrees; N=0, S=180}
+       1.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          7,      !- Month
+  SummerDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ 
+ 
+ 
+##elseif #[Location[] eqs Duluth]
+ 
+Site:Location,
+  Duluth International Arpt_MN_USA Design_Conditions,     !- Location Name
+      46.83,     !- Latitude {N+ S-}
+     -92.22,     !- Longitude {W- E+}
+      -6.00,     !- Time Zone Relative to GMT {GMT+/-}
+     433.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     -0.33,     !- January Ground Temperature {C}
+     -2.60,     !- February Ground Temperature {C}
+     -3.10,     !- March Ground Temperature {C}
+     -2.41,     !- April Ground Temperature {C}
+     1.02,     !- May Ground Temperature {C}
+     4.71,     !- June Ground Temperature {C}
+     8.09,     !- July Ground Temperature {C}
+     10.44,     !- August Ground Temperature {C}
+     11.00,     !- September Ground Temperature {C}
+     9.66,    !- October Ground Temperature {C}
+     6.73,    !- November Ground Temperature {C}
+     3.14;    !- December Ground Temperature {C}
+ 
+ ! Duluth International Arpt_MN_USA Annual Heating 99.6%, MaxDB=-28.6°C
+SizingPeriod:DesignDay,
+  Duluth International Arpt Ann Htg 99.6% Condns DB,     !- Name
+      -28.6,      !- Maximum Dry-Bulb Temperature {C}
+        0.0,      !- Daily Temp Range {C}
+      -28.6,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     96230.,      !- Barometric Pressure {Pa}
+        4.6,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+        310,      !- Wind Direction {Degrees; N=0, S=180}
+       0.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          1,      !- Month
+  WinterDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ ! Duluth International Arpt Annual Cooling Design Conditions Wind Speed=5.2m/s Wind Dir=220
+ ! Hottest Month=JUL
+ ! Duluth International Arpt_MN_USA Annual Cooling (DB=>MWB) .4%, MaxDB=29.2°C MWB=21°C
+SizingPeriod:DesignDay,
+  Duluth International Arpt Ann Clg .4% Condns DB=>MWB,     !- Name
+       29.2,      !- Maximum Dry-Bulb Temperature {C}
+       10.9,      !- Daily Temp Range {C}
+         21,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     96230.,      !- Barometric Pressure {Pa}
+        5.2,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+        220,      !- Wind Direction {Degrees; N=0, S=180}
+       1.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          7,      !- Month
+  SummerDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ 
+ 
+ 
+##elseif #[Location[] eqs ElPaso]
+ 
+Site:Location,
+  El Paso International Ap  Ut_TX_USA Design_Conditions,     !- Location Name
+      31.77,     !- Latitude {N+ S-}
+    -106.50,     !- Longitude {W- E+}
+      -7.00,     !- Time Zone Relative to GMT {GMT+/-}
+    1186.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     17.39,     !- January Ground Temperature {C}
+     15.02,     !- February Ground Temperature {C}
+     13.57,     !- March Ground Temperature {C}
+     13.12,     !- April Ground Temperature {C}
+     13.98,     !- May Ground Temperature {C}
+     15.94,     !- June Ground Temperature {C}
+     18.38,     !- July Ground Temperature {C}
+     20.77,     !- August Ground Temperature {C}
+     22.38,     !- September Ground Temperature {C}
+     22.76,    !- October Ground Temperature {C}
+     21.84,    !- November Ground Temperature {C}
+     19.92;    !- December Ground Temperature {C}
+ 
+ ! El Paso International Ap  Ut_TX_USA Annual Heating 99.6%, MaxDB=-5.2°C
+SizingPeriod:DesignDay,
+  El Paso International Ap  Ut Ann Htg 99.6% Condns DB,     !- Name
+       -5.2,      !- Maximum Dry-Bulb Temperature {C}
+        0.0,      !- Daily Temp Range {C}
+       -5.2,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     87865.,      !- Barometric Pressure {Pa}
+        2.2,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+         20,      !- Wind Direction {Degrees; N=0, S=180}
+       0.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+         12,      !- Month
+  WinterDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ ! El Paso International Ap  Ut Annual Cooling Design Conditions Wind Speed=3.9m/s Wind Dir=280
+ ! Hottest Month=JUL
+ ! El Paso International Ap  Ut_TX_USA Annual Cooling (DB=>MWB) .4%, MaxDB=38.1°C MWB=18.1°C
+SizingPeriod:DesignDay,
+  El Paso International Ap  Ut Ann Clg .4% Condns DB=>MWB,     !- Name
+       38.1,      !- Maximum Dry-Bulb Temperature {C}
+         13,      !- Daily Temp Range {C}
+       18.1,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     87865.,      !- Barometric Pressure {Pa}
+        3.9,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+        280,      !- Wind Direction {Degrees; N=0, S=180}
+       1.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          7,      !- Month
+  SummerDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ 
+ 
+ 
+##elseif #[Location[] eqs Fairbanks]
+ 
+Site:Location,
+  Fairbanks Intl Arpt_AK_USA Design_Conditions,     !- Location Name
+      64.82,     !- Latitude {N+ S-}
+    -147.85,     !- Longitude {W- E+}
+      -9.00,     !- Time Zone Relative to GMT {GMT+/-}
+     133.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     -6.53,     !- January Ground Temperature {C}
+     -9.19,     !- February Ground Temperature {C}
+     -9.78,     !- March Ground Temperature {C}
+     -8.97,     !- April Ground Temperature {C}
+     -4.96,     !- May Ground Temperature {C}
+     -0.64,     !- June Ground Temperature {C}
+     3.32,     !- July Ground Temperature {C}
+     6.08,     !- August Ground Temperature {C}
+     6.72,     !- September Ground Temperature {C}
+     5.16,    !- October Ground Temperature {C}
+     1.73,    !- November Ground Temperature {C}
+     -2.47;    !- December Ground Temperature {C}
+ 
+ ! Fairbanks Intl Arpt_AK_USA Annual Heating 99.6%, MaxDB=-41.9°C
+SizingPeriod:DesignDay,
+  Fairbanks Intl Arpt Ann Htg 99.6% Condns DB,     !- Name
+      -41.9,      !- Maximum Dry-Bulb Temperature {C}
+        0.0,      !- Daily Temp Range {C}
+      -41.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     99737.,      !- Barometric Pressure {Pa}
+        0.3,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+         20,      !- Wind Direction {Degrees; N=0, S=180}
+       0.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          1,      !- Month
+  WinterDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ ! Fairbanks Intl Arpt Annual Cooling Design Conditions Wind Speed=3.1m/s Wind Dir=180
+ ! Hottest Month=JUL
+ ! Fairbanks Intl Arpt_AK_USA Annual Cooling (DB=>MWB) .4%, MaxDB=27.4°C MWB=16.1°C
+SizingPeriod:DesignDay,
+  Fairbanks Intl Arpt Ann Clg .4% Condns DB=>MWB,     !- Name
+       27.4,      !- Maximum Dry-Bulb Temperature {C}
+       10.2,      !- Daily Temp Range {C}
+       16.1,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     99737.,      !- Barometric Pressure {Pa}
+        3.1,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+        180,      !- Wind Direction {Degrees; N=0, S=180}
+       1.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          7,      !- Month
+  SummerDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ 
+ 
+ 
+##elseif #[Location[] eqs Helena]
+ 
+Site:Location,
+  Helena Regional Airport_MT_USA Design_Conditions,     !- Location Name
+      46.60,     !- Latitude {N+ S-}
+    -111.97,     !- Longitude {W- E+}
+      -7.00,     !- Time Zone Relative to GMT {GMT+/-}
+    1167.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     3.56,     !- January Ground Temperature {C}
+     1.67,     !- February Ground Temperature {C}
+     1.26,     !- March Ground Temperature {C}
+     1.83,     !- April Ground Temperature {C}
+     4.67,     !- May Ground Temperature {C}
+     7.73,     !- June Ground Temperature {C}
+     10.53,     !- July Ground Temperature {C}
+     12.48,     !- August Ground Temperature {C}
+     12.93,     !- September Ground Temperature {C}
+     11.83,    !- October Ground Temperature {C}
+     9.40,    !- November Ground Temperature {C}
+     6.43;    !- December Ground Temperature {C}
+ 
+ ! Helena Regional Airport_MT_USA Annual Heating 99.6%, MaxDB=-26.3°C
+SizingPeriod:DesignDay,
+  Helena Regional Airport Ann Htg 99.6% Condns DB,     !- Name
+      -26.3,      !- Maximum Dry-Bulb Temperature {C}
+        0.0,      !- Daily Temp Range {C}
+      -26.3,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     88069.,      !- Barometric Pressure {Pa}
+        1.6,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+        300,      !- Wind Direction {Degrees; N=0, S=180}
+       0.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+         12,      !- Month
+  WinterDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ ! Helena Regional Airport Annual Cooling Design Conditions Wind Speed=4.9m/s Wind Dir=290
+ ! Hottest Month=JUL
+ ! Helena Regional Airport_MT_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.7°C MWB=16.4°C
+SizingPeriod:DesignDay,
+  Helena Regional Airport Ann Clg .4% Condns DB=>MWB,     !- Name
+       33.7,      !- Maximum Dry-Bulb Temperature {C}
+       16.1,      !- Daily Temp Range {C}
+       16.4,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     88069.,      !- Barometric Pressure {Pa}
         4.9,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
         290,      !- Wind Direction {Degrees; N=0, S=180}
        1.00,      !- Clearness {0.0 to 1.1}
@@ -673,52 +587,44 @@ Site:GroundTemperature:BuildingSurface,
           7,      !- Month
   SummerDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Houston]
-
- Site:Location,
-  houston,     !- Location Name
-      29.98,     !- Latitude {N+ S-}
+WetBulb;
+ 
+ 
+ 
+ 
+##elseif #[Location[] eqs Houston]
+ 
+Site:Location,
+  Houston Bush Intercontinental_TX_USA Design_Conditions,     !- Location Name
+      30.00,     !- Latitude {N+ S-}
      -95.37,     !- Longitude {W- E+}
       -6.00,     !- Time Zone Relative to GMT {GMT+/-}
-      33.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- 16.84378,
- 15.53804,
- 15.43346,
- 16.05311,
- 18.54063,
- 21.01656,
- 23.16306,
- 24.52283,
- 24.63835,
- 23.53243,
- 21.44065,
- 19.04064;
+      29.00;     !- Elevation {m}
  
- !  WMO=722430 Time Zone=NAC: (GMT-06:00) Central Time (US & Canada)
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! houston_TX_USA Extreme Annual Wind Speeds, 1%=8.5m/s, 2.5%=7.8m/s, 5%=7.2m/s
- ! houston_TX_USA Extreme Annual Temperatures, Max Drybulb=37.6°C Min Drybulb=-5.3°C
-  
- ! houston_TX_USA Annual Heating Design Conditions Wind Speed=2.7m/s Wind Dir=0
- ! Coldest Month=JAN
- ! houston_TX_USA Annual Heating 99.6%, MaxDB=-2.4°C
- SizingPeriod:DesignDay,
-  houston Ann Htg 99.6% Condns DB,     !- Name
-       -2.4,      !- Max Dry-Bulb {C}
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     19.86,     !- January Ground Temperature {C}
+     17.86,     !- February Ground Temperature {C}
+     16.63,     !- March Ground Temperature {C}
+     16.25,     !- April Ground Temperature {C}
+     16.98,     !- May Ground Temperature {C}
+     18.63,     !- June Ground Temperature {C}
+     20.69,     !- July Ground Temperature {C}
+     22.70,     !- August Ground Temperature {C}
+     24.06,     !- September Ground Temperature {C}
+     24.38,    !- October Ground Temperature {C}
+     23.61,    !- November Ground Temperature {C}
+     21.98;    !- December Ground Temperature {C}
+ 
+ ! Houston Bush Intercontinental_TX_USA Annual Heating 99.6%, MaxDB=-1.6°C
+SizingPeriod:DesignDay,
+  Houston Bush Intercontinental Ann Htg 99.6% Condns DB,     !- Name
+       -1.6,      !- Maximum Dry-Bulb Temperature {C}
         0.0,      !- Daily Temp Range {C}
-       -2.4,      !- Humidity Indicating Condition at Max Dry-Bulb
-    100929.,      !- Barometric Pressure {Pa}
-        2.7,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+       -1.6,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100977.,      !- Barometric Pressure {Pa}
+        2.8,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
           0,      !- Wind Direction {Degrees; N=0, S=180}
        0.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
@@ -727,19 +633,18 @@ Site:GroundTemperature:BuildingSurface,
           1,      !- Month
   WinterDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
+WetBulb;
  
- 
- ! houston Annual Cooling Design Conditions Wind Speed=3.7m/s Wind Dir=170
+ ! Houston Bush Intercontinental Annual Cooling Design Conditions Wind Speed=3.5m/s Wind Dir=170
  ! Hottest Month=JUL
- ! houston_TX_USA Annual Cooling (DB=>MWB) .4%, MaxDB=36.1°C MWB=24.9°C
- SizingPeriod:DesignDay,
-  houston Ann Clg .4% Condns DB=>MWB,     !- Name
-       36.1,      !- Max Dry-Bulb {C}
-       10.6,      !- Daily Temp Range {C}
-       24.9,      !- Humidity Indicating Condition at Max Dry-Bulb
-    100929.,      !- Barometric Pressure {Pa}
-        3.7,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+ ! Houston Bush Intercontinental_TX_USA Annual Cooling (DB=>MWB) .4%, MaxDB=36°C MWB=24.8°C
+SizingPeriod:DesignDay,
+  Houston Bush Intercontinental Ann Clg .4% Condns DB=>MWB,     !- Name
+         36,      !- Maximum Dry-Bulb Temperature {C}
+       10.1,      !- Daily Temp Range {C}
+       24.8,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100977.,      !- Barometric Pressure {Pa}
+        3.5,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
         170,      !- Wind Direction {Degrees; N=0, S=180}
        1.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
@@ -748,53 +653,45 @@ Site:GroundTemperature:BuildingSurface,
           7,      !- Month
   SummerDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Memphis]
-
- Site:Location,
-  memphis,     !- Location Name
-      35.05,     !- Latitude {N+ S-}
-     -89.98,     !- Longitude {W- E+}
-      -6.00,     !- Time Zone Relative to GMT {GMT+/-}
-      87.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- 12.61147,
- 10.94149,
- 10.80776,
- 11.60025,
- 14.78164,
- 17.94822,
- 20.69348,
- 22.43254,
- 22.58028,
- 21.16586,
- 18.49058,
- 15.42115;
+WetBulb;
  
- !  WMO=723340 Time Zone=NAC: (GMT-06:00) Central Time (US & Canada)
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! memphis_TN_USA Extreme Annual Wind Speeds, 1%=9.2m/s, 2.5%=8.3m/s, 5%=7.6m/s
- ! memphis_TN_USA Extreme Annual Temperatures, Max Drybulb=37°C Min Drybulb=-11.9°C
-  
- ! memphis_TN_USA Annual Heating Design Conditions Wind Speed=4.4m/s Wind Dir=350
- ! Coldest Month=JAN
- ! memphis_TN_USA Annual Heating 99.6%, MaxDB=-8.5°C
- SizingPeriod:DesignDay,
-  memphis Ann Htg 99.6% Condns DB,     !- Name
-       -8.5,      !- Max Dry-Bulb {C}
+ 
+ 
+ 
+##elseif #[Location[] eqs LosAngeles]
+ 
+Site:Location,
+  Los Angeles Intl Arpt_CA_USA Design_Conditions,     !- Location Name
+      33.93,     !- Latitude {N+ S-}
+    -118.40,     !- Longitude {W- E+}
+      -8.00,     !- Time Zone Relative to GMT {GMT+/-}
+      30.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     15.95,     !- January Ground Temperature {C}
+     15.48,     !- February Ground Temperature {C}
+     15.38,     !- March Ground Temperature {C}
+     15.52,     !- April Ground Temperature {C}
+     16.22,     !- May Ground Temperature {C}
+     16.98,     !- June Ground Temperature {C}
+     17.67,     !- July Ground Temperature {C}
+     18.15,     !- August Ground Temperature {C}
+     18.26,     !- September Ground Temperature {C}
+     17.99,    !- October Ground Temperature {C}
+     17.39,    !- November Ground Temperature {C}
+     16.66;    !- December Ground Temperature {C}
+ 
+ ! Los Angeles Intl Arpt_CA_USA Annual Heating 99.6%, MaxDB=6.9°C
+SizingPeriod:DesignDay,
+  Los Angeles Intl Arpt Ann Htg 99.6% Condns DB,     !- Name
+        6.9,      !- Maximum Dry-Bulb Temperature {C}
         0.0,      !- Daily Temp Range {C}
-       -8.5,      !- Humidity Indicating Condition at Max Dry-Bulb
-    100284.,      !- Barometric Pressure {Pa}
-        4.4,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-        350,      !- Wind Direction {Degrees; N=0, S=180}
+        6.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100965.,      !- Barometric Pressure {Pa}
+        2.4,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+         90,      !- Wind Direction {Degrees; N=0, S=180}
        0.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
           0,      !- Snow on ground {0-no,1-yes}
@@ -802,19 +699,84 @@ Site:GroundTemperature:BuildingSurface,
           1,      !- Month
   WinterDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
+WetBulb;
+ 
+ ! Los Angeles Intl Arpt Annual Cooling Design Conditions Wind Speed=4.1m/s Wind Dir=250
+ ! Hottest Month=AUG
+ ! Los Angeles Intl Arpt_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=28.7°C MWB=17.9°C
+SizingPeriod:DesignDay,
+  Los Angeles Intl Arpt Ann Clg .4% Condns DB=>MWB,     !- Name
+       28.7,      !- Maximum Dry-Bulb Temperature {C}
+          6,      !- Daily Temp Range {C}
+       17.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100965.,      !- Barometric Pressure {Pa}
+        4.1,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+        250,      !- Wind Direction {Degrees; N=0, S=180}
+       1.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          8,      !- Month
+  SummerDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
  
  
- ! memphis Annual Cooling Design Conditions Wind Speed=3.9m/s Wind Dir=240
+ 
+ 
+##elseif #[Location[] eqs Memphis]
+ 
+Site:Location,
+  Memphis International Ap_TN_USA Design_Conditions,     !- Location Name
+      35.07,     !- Latitude {N+ S-}
+     -89.98,     !- Longitude {W- E+}
+      -6.00,     !- Time Zone Relative to GMT {GMT+/-}
+      81.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     13.63,     !- January Ground Temperature {C}
+     11.84,     !- February Ground Temperature {C}
+     11.45,     !- March Ground Temperature {C}
+     11.99,     !- April Ground Temperature {C}
+     14.68,     !- May Ground Temperature {C}
+     17.57,     !- June Ground Temperature {C}
+     20.23,     !- July Ground Temperature {C}
+     22.07,     !- August Ground Temperature {C}
+     22.51,     !- September Ground Temperature {C}
+     21.46,    !- October Ground Temperature {C}
+     19.16,    !- November Ground Temperature {C}
+     16.35;    !- December Ground Temperature {C}
+ 
+ ! Memphis International Ap_TN_USA Annual Heating 99.6%, MaxDB=-8.3°C
+SizingPeriod:DesignDay,
+  Memphis International Ap Ann Htg 99.6% Condns DB,     !- Name
+       -8.3,      !- Maximum Dry-Bulb Temperature {C}
+        0.0,      !- Daily Temp Range {C}
+       -8.3,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100356.,      !- Barometric Pressure {Pa}
+        4.1,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+          0,      !- Wind Direction {Degrees; N=0, S=180}
+       0.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          1,      !- Month
+  WinterDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ ! Memphis International Ap Annual Cooling Design Conditions Wind Speed=3.8m/s Wind Dir=240
  ! Hottest Month=JUL
- ! memphis_TN_USA Annual Cooling (DB=>MWB) .4%, MaxDB=35.7°C MWB=25.3°C
- SizingPeriod:DesignDay,
-  memphis Ann Clg .4% Condns DB=>MWB,     !- Name
-       35.7,      !- Max Dry-Bulb {C}
-        9.3,      !- Daily Temp Range {C}
-       25.3,      !- Humidity Indicating Condition at Max Dry-Bulb
-    100284.,      !- Barometric Pressure {Pa}
-        3.9,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+ ! Memphis International Ap_TN_USA Annual Cooling (DB=>MWB) .4%, MaxDB=35.6°C MWB=25.2°C
+SizingPeriod:DesignDay,
+  Memphis International Ap Ann Clg .4% Condns DB=>MWB,     !- Name
+       35.6,      !- Maximum Dry-Bulb Temperature {C}
+        9.2,      !- Daily Temp Range {C}
+       25.2,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100356.,      !- Barometric Pressure {Pa}
+        3.8,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
         240,      !- Wind Direction {Degrees; N=0, S=180}
        1.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
@@ -823,53 +785,45 @@ Site:GroundTemperature:BuildingSurface,
           7,      !- Month
   SummerDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Miami]
-
- Site:Location,
-  miami,     !- Location Name
-      25.80,     !- Latitude {N+ S-}
-     -80.27,     !- Longitude {W- E+}
+WetBulb;
+ 
+ 
+ 
+ 
+##elseif #[Location[] eqs Miami]
+ 
+Site:Location,
+  Miami Kendall Tamia_FL_USA Design_Conditions,     !- Location Name
+      25.65,     !- Latitude {N+ S-}
+     -80.43,     !- Longitude {W- E+}
       -5.00,     !- Time Zone Relative to GMT {GMT+/-}
-       2.00;     !- Elevation {m}
-
+       3.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
 Site:GroundTemperature:BuildingSurface,
- 22.81832,
- 22.20912,
- 22.16032,
- 22.44943,
- 23.60998,
- 24.76514,
- 25.76659,
- 26.40098,
- 26.4549,
- 25.93891,
- 24.96299,
- 23.84327;
-
- !  WMO=722020 Time Zone=NAE: (GMT-05:00) Eastern Time (US & Canada)
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! miami_FL_USA Extreme Annual Wind Speeds, 1%=9.4m/s, 2.5%=8.6m/s, 5%=8m/s
- ! miami_FL_USA Extreme Annual Temperatures, Max Drybulb=34.7°C Min Drybulb=4.4°C
-  
- ! miami_FL_USA Annual Heating Design Conditions Wind Speed=4.4m/s Wind Dir=340
- ! Coldest Month=JAN
- ! miami_FL_USA Annual Heating 99.6%, MaxDB=8°C
- SizingPeriod:DesignDay,
-  miami Ann Htg 99.6% Condns DB,     !- Name
-          8,      !- Max Dry-Bulb {C}
+     21.28,     !- January Ground Temperature {C}
+     21.15,     !- February Ground Temperature {C}
+     21.52,     !- March Ground Temperature {C}
+     22.06,     !- April Ground Temperature {C}
+     23.41,     !- May Ground Temperature {C}
+     24.42,     !- June Ground Temperature {C}
+     25.08,     !- July Ground Temperature {C}
+     25.24,     !- August Ground Temperature {C}
+     24.83,     !- September Ground Temperature {C}
+     24.00,    !- October Ground Temperature {C}
+     22.92,    !- November Ground Temperature {C}
+     21.95;    !- December Ground Temperature {C}
+ 
+ ! Miami Kendall Tamia_FL_USA Annual Heating 99.6%, MaxDB=7.4°C
+SizingPeriod:DesignDay,
+  Miami Kendall Tamia Ann Htg 99.6% Condns DB,     !- Name
+        7.4,      !- Maximum Dry-Bulb Temperature {C}
         0.0,      !- Daily Temp Range {C}
-          8,      !- Humidity Indicating Condition at Max Dry-Bulb
-    101301.,      !- Barometric Pressure {Pa}
-        4.4,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-        340,      !- Wind Direction {Degrees; N=0, S=180}
+        7.4,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    101289.,      !- Barometric Pressure {Pa}
+        3.2,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+        350,      !- Wind Direction {Degrees; N=0, S=180}
        0.00,      !- Clearness {0.0 to 1.1}
           0,      !- Rain {0-no,1-yes}
           0,      !- Snow on ground {0-no,1-yes}
@@ -877,301 +831,113 @@ Site:GroundTemperature:BuildingSurface,
           1,      !- Month
   WinterDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
+WetBulb;
  
- 
- ! miami Annual Cooling Design Conditions Wind Speed=4.7m/s Wind Dir=140
- ! Hottest Month=JUL
- ! miami_FL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.1°C MWB=25.3°C
- SizingPeriod:DesignDay,
-  miami Ann Clg .4% Condns DB=>MWB,     !- Name
-       33.1,      !- Max Dry-Bulb {C}
-        6.7,      !- Daily Temp Range {C}
-       25.3,      !- Humidity Indicating Condition at Max Dry-Bulb
-    101301.,      !- Barometric Pressure {Pa}
-        4.7,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
-        140,      !- Wind Direction {Degrees; N=0, S=180}
-       1.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          7,      !- Month
-  SummerDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Phoenix]
-
- Site:Location,
-  phoenix,     !- Location Name
-      33.43,     !- Latitude {N+ S-}
-    -112.02,     !- Longitude {W- E+}
-      -7.00,     !- Time Zone Relative to GMT {GMT+/-}
-     339.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- 18.40703,
- 16.72836,
- 16.59395,
- 17.39056,
- 20.58846,
- 23.77152,
- 26.53102,
- 28.2791,
- 28.42762,
- 27.00584,
- 24.3167,
- 21.2313;
- 
- !  WMO=722780 Time Zone=NAZ: (GMT-07:00) Arizona
- !  Data Source=ASHRAE 2005 Annual Design Conditions
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! phoenix_AZ_USA Extreme Annual Wind Speeds, 1%=8.3m/s, 2.5%=7.2m/s, 5%=5.9m/s
- ! phoenix_AZ_USA Extreme Annual Temperatures, Max Drybulb=45.8°C Min Drybulb=0.4°C
-  
- ! phoenix_AZ_USA Annual Heating Design Conditions Wind Speed=2m/s Wind Dir=120
- ! Coldest Month=DEC
- ! phoenix_AZ_USA Annual Heating 99.6%, MaxDB=2.9°C
- SizingPeriod:DesignDay,
-  phoenix Ann Htg 99.6% Condns DB,     !- Name
-        2.9,      !- Max Dry-Bulb {C}
-        0.0,      !- Daily Temp Range {C}
-        2.9,      !- Humidity Indicating Condition at Max Dry-Bulb
-     97318.,      !- Barometric Pressure {Pa}
-          2,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-        120,      !- Wind Direction {Degrees; N=0, S=180}
-       0.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-         12,      !- Month
-  WinterDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
- 
- 
- ! phoenix Annual Cooling Design Conditions Wind Speed=4.1m/s Wind Dir=270
- ! Hottest Month=JUL
- ! phoenix_AZ_USA Annual Cooling (DB=>MWB) .4%, MaxDB=43.4°C MWB=21.1°C
- SizingPeriod:DesignDay,
-  phoenix Ann Clg .4% Condns DB=>MWB,     !- Name
-       43.4,      !- Max Dry-Bulb {C}
-       12.3,      !- Daily Temp Range {C}
-       21.1,      !- Humidity Indicating Condition at Max Dry-Bulb
-     97318.,      !- Barometric Pressure {Pa}
-        4.1,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
-        270,      !- Wind Direction {Degrees; N=0, S=180}
-       1.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          7,      !- Month
-  SummerDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Salem]
-
- Site:Location,
-  salem,     !- Location Name
-      44.92,     !- Latitude {N+ S-}
-    -123.02,     !- Longitude {W- E+}
-      -8.00,     !- Time Zone Relative to GMT {GMT+/-}
-      61.00;     !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- 8.103254,
- 6.917018,
- 6.822023,
- 7.384954,
- 9.644817,
- 11.89413,
- 13.84421,
- 15.07953,
- 15.18447,
- 14.17973,
- 12.2794,
- 10.09909;
- 
- !  WMO=726940 Time Zone=NAP: (GMT-08:00) Pacific Time (US & Canada); Tijuana
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! salem_OR_USA Extreme Annual Wind Speeds, 1%=9.3m/s, 2.5%=8.2m/s, 5%=7.3m/s
- ! salem_OR_USA Extreme Annual Temperatures, Max Drybulb=37.4°C Min Drybulb=-9.4°C
-  
- ! salem_OR_USA Annual Heating Design Conditions Wind Speed=2.4m/s Wind Dir=0
- ! Coldest Month=DEC
- ! salem_OR_USA Annual Heating 99.6%, MaxDB=-6.4°C
- SizingPeriod:DesignDay,
-  salem Ann Htg 99.6% Condns DB,     !- Name
-       -6.4,      !- Max Dry-Bulb {C}
-        0.0,      !- Daily Temp Range {C}
-       -6.4,      !- Humidity Indicating Condition at Max Dry-Bulb
-    100594.,      !- Barometric Pressure {Pa}
-        2.4,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-          0,      !- Wind Direction {Degrees; N=0, S=180}
-       0.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-         12,      !- Month
-  WinterDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
- 
-
- ! salem Annual Cooling Design Conditions Wind Speed=4.3m/s Wind Dir=0
- ! Hottest Month=JUL
- ! salem_OR_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2°C MWB=19.5°C
- SizingPeriod:DesignDay,
-  salem Ann Clg .4% Condns DB=>MWB,     !- Name
-       33.2,      !- Max Dry-Bulb {C}
-         15,      !- Daily Temp Range {C}
-       19.5,      !- Humidity Indicating Condition at Max Dry-Bulb
-    100594.,      !- Barometric Pressure {Pa}
-        4.3,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
-          0,      !- Wind Direction {Degrees; N=0, S=180}
-       1.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          7,      !- Month
-  SummerDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs SanFrancisco]
-
- Site:Location,
-      San Francisco,     !- Location Name
-      37.62,             !- Latitude {N+ S-}
-      -122.40,           !- Longitude {W- E+}
-      -8.0,              !- Time Zone Relative to GMT {GMT+/-}
-       2.0;              !- Elevation {m}
-
-Site:GroundTemperature:BuildingSurface,
- 11.58207,
- 10.96887,
- 10.91976,
- 11.21074,
- 12.37896,
- 13.54168,
- 14.54974,
- 15.18831,
- 15.24253,
- 14.72318,
- 13.74086,
- 12.61377;
- 
- !  WMO=724940 Time Zone=NAP: (GMT-08:00) Pacific Time (US & Canada); Tijuana
- !  Data Source=ASHRAE 2005 Annual Design Conditions
- RunPeriodControl:DaylightSavingTime,
-   2nd Sunday in March,    !- StartDate
-   1st Sunday in November;    !- EndDate
-  
- ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
- ! sanfrancisco_CA_USA Extreme Annual Wind Speeds, 1%=12.7m/s, 2.5%=11.4m/s, 5%=10.5m/s
- ! sanfrancisco_CA_USA Extreme Annual Temperatures, Max Drybulb=34.7°C Min Drybulb=1.4°C
-  
- ! sanfrancisco_CA_USA Annual Heating Design Conditions Wind Speed=2.4m/s Wind Dir=140
- ! Coldest Month=JAN
- ! sanfrancisco_CA_USA Annual Heating 99.6%, MaxDB=3.2°C
- SizingPeriod:DesignDay,
-  sanfrancisco Ann Htg 99.6% Condns DB,     !- Name
-        3.2,      !- Max Dry-Bulb {C}
-        0.0,      !- Daily Temp Range {C}
-        3.2,      !- Humidity Indicating Condition at Max Dry-Bulb
-    101265.,      !- Barometric Pressure {Pa}
-        2.4,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-        140,      !- Wind Direction {Degrees; N=0, S=180}
-       0.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          1,      !- Month
-  WinterDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
- 
- 
- ! sanfrancisco Annual Cooling Design Conditions Wind Speed=5.8m/s Wind Dir=310
- ! Hottest Month=SEP
- ! sanfrancisco_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=28.3°C MWB=17.2°C
- SizingPeriod:DesignDay,
-  sanfrancisco Ann Clg .4% Condns DB=>MWB,     !- Name
-       28.3,      !- Max Dry-Bulb {C}
-          9,      !- Daily Temp Range {C}
-       17.2,      !- Humidity Indicating Condition at Max Dry-Bulb
-    101265.,      !- Barometric Pressure {Pa}
-        5.8,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
-        310,      !- Wind Direction {Degrees; N=0, S=180}
-       1.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-          9,      !- Month
-  SummerDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-
-##elseif #[location[] eqs Seattle]
-
- Site:Location,
-   seattle,  ! LocationName
-   47.45,  ! Latitude
-   -122.3,  ! Longitude
-   -8.,  ! TimeZone
-   122.0114;  ! Elevation
-
-Site:GroundTemperature:BuildingSurface,
- 8.349904,
- 7.320257,
- 7.237792,
- 7.726413,
- 9.687948,
- 11.64036,
- 13.33297,
- 14.40522,
- 14.4963,
- 13.62421,
- 11.97477,
- 10.08225;
-
- SizingPeriod:DesignDay,
-  seattle Ann Htg 99.6% Condns DB,     !- Name
-       -4.5,      !- Max Dry-Bulb {C}
-        0.0,      !- Daily Temp Range {C}
-       -4.5,      !- Humidity Indicating Condition at Max Dry-Bulb
-     99868.,      !- Barometric Pressure {Pa}
-        4.2,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
-         20,      !- Wind Direction {Degrees; N=0, S=180}
-       0.00,      !- Clearness {0.0 to 1.1}
-          0,      !- Rain {0-no,1-yes}
-          0,      !- Snow on ground {0-no,1-yes}
-         21,      !- Day of Month
-         12,      !- Month
-  WinterDesignDay,!- Day Type
-          0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
- ! seattle Annual Cooling Design Conditions Wind Speed=4.3m/s Wind Dir=0
+ ! Miami Kendall Tamia Annual Cooling Design Conditions Wind Speed=4.7m/s Wind Dir=120
  ! Hottest Month=AUG
- ! seattle_WA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=29.4°C MWB=18.4°C
- SizingPeriod:DesignDay,
-  seattle Ann Clg .4% Condns DB=>MWB,     !- Name
-       29.4,      !- Max Dry-Bulb {C}
-       10.1,      !- Daily Temp Range {C}
-       18.4,      !- Humidity Indicating Condition at Max Dry-Bulb
-     99868.,      !- Barometric Pressure {Pa}
+ ! Miami Kendall Tamia_FL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.6°C MWB=25.4°C
+SizingPeriod:DesignDay,
+  Miami Kendall Tamia Ann Clg .4% Condns DB=>MWB,     !- Name
+       33.6,      !- Maximum Dry-Bulb Temperature {C}
+        8.4,      !- Daily Temp Range {C}
+       25.4,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    101289.,      !- Barometric Pressure {Pa}
+        4.7,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+        120,      !- Wind Direction {Degrees; N=0, S=180}
+       1.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          8,      !- Month
+  SummerDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ 
+ 
+ 
+##elseif #[Location[] eqs Phoenix]
+ 
+Site:Location,
+  Deer Valley Phoenix_AZ_USA Design_Conditions,     !- Location Name
+      33.68,     !- Latitude {N+ S-}
+    -112.08,     !- Longitude {W- E+}
+      -7.00,     !- Time Zone Relative to GMT {GMT+/-}
+     450.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     19.82,     !- January Ground Temperature {C}
+     18.27,     !- February Ground Temperature {C}
+     17.93,     !- March Ground Temperature {C}
+     18.40,     !- April Ground Temperature {C}
+     20.73,     !- May Ground Temperature {C}
+     23.23,     !- June Ground Temperature {C}
+     25.53,     !- July Ground Temperature {C}
+     27.13,     !- August Ground Temperature {C}
+     27.50,     !- September Ground Temperature {C}
+     26.60,    !- October Ground Temperature {C}
+     24.61,    !- November Ground Temperature {C}
+     22.17;    !- December Ground Temperature {C}
+ 
+ 
+ 
+ 
+ 
+ 
+##elseif #[Location[] eqs Salem]
+ 
+Site:Location,
+  Salem Mcnary Field_OR_USA Design_Conditions,     !- Location Name
+      44.90,     !- Latitude {N+ S-}
+    -123.00,     !- Longitude {W- E+}
+      -8.00,     !- Time Zone Relative to GMT {GMT+/-}
+      60.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     8.38,     !- January Ground Temperature {C}
+     8.15,     !- February Ground Temperature {C}
+     8.79,     !- March Ground Temperature {C}
+     9.72,     !- April Ground Temperature {C}
+     12.07,     !- May Ground Temperature {C}
+     13.83,     !- June Ground Temperature {C}
+     14.97,     !- July Ground Temperature {C}
+     15.24,     !- August Ground Temperature {C}
+     14.53,     !- September Ground Temperature {C}
+     13.09,    !- October Ground Temperature {C}
+     11.22,    !- November Ground Temperature {C}
+     9.53;    !- December Ground Temperature {C}
+ 
+ ! Salem Mcnary Field_OR_USA Annual Heating 99.6%, MaxDB=-5.6°C
+SizingPeriod:DesignDay,
+  Salem Mcnary Field Ann Htg 99.6% Condns DB,     !- Name
+       -5.6,      !- Maximum Dry-Bulb Temperature {C}
+        0.0,      !- Daily Temp Range {C}
+       -5.6,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100606.,      !- Barometric Pressure {Pa}
+        2.1,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+          0,      !- Wind Direction {Degrees; N=0, S=180}
+       0.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+         12,      !- Month
+  WinterDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ ! Salem Mcnary Field Annual Cooling Design Conditions Wind Speed=4.3m/s Wind Dir=0
+ ! Hottest Month=AUG
+ ! Salem Mcnary Field_OR_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.3°C MWB=19.4°C
+SizingPeriod:DesignDay,
+  Salem Mcnary Field Ann Clg .4% Condns DB=>MWB,     !- Name
+       33.3,      !- Maximum Dry-Bulb Temperature {C}
+       15.4,      !- Daily Temp Range {C}
+       19.4,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    100606.,      !- Barometric Pressure {Pa}
         4.3,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
           0,      !- Wind Direction {Degrees; N=0, S=180}
        1.00,      !- Clearness {0.0 to 1.1}
@@ -1181,11 +947,141 @@ Site:GroundTemperature:BuildingSurface,
           8,      !- Month
   SummerDesignDay,!- Day Type
           0,      !- Daylight Savings Time Indicator
-   WetBulb;      !- Humidity Indicating Type
-
-##endif
+WetBulb;
  
-
-
-
-
+ 
+ 
+ 
+##elseif #[Location[] eqs SanFrancisco]
+ 
+Site:Location,
+  San Francisco Intl Ap_CA_USA Design_Conditions,     !- Location Name
+      37.62,     !- Latitude {N+ S-}
+    -122.40,     !- Longitude {W- E+}
+      -8.00,     !- Time Zone Relative to GMT {GMT+/-}
+       2.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     12.79,     !- January Ground Temperature {C}
+     12.27,     !- February Ground Temperature {C}
+     12.15,     !- March Ground Temperature {C}
+     12.31,     !- April Ground Temperature {C}
+     13.10,     !- May Ground Temperature {C}
+     13.96,     !- June Ground Temperature {C}
+     14.74,     !- July Ground Temperature {C}
+     15.28,     !- August Ground Temperature {C}
+     15.41,     !- September Ground Temperature {C}
+     15.10,    !- October Ground Temperature {C}
+     14.42,    !- November Ground Temperature {C}
+     13.60;    !- December Ground Temperature {C}
+ 
+ ! San Francisco Intl Ap_CA_USA Annual Heating 99.6%, MaxDB=3.8°C
+SizingPeriod:DesignDay,
+  San Francisco Intl Ap Ann Htg 99.6% Condns DB,     !- Name
+        3.8,      !- Maximum Dry-Bulb Temperature {C}
+        0.0,      !- Daily Temp Range {C}
+        3.8,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    101301.,      !- Barometric Pressure {Pa}
+        2.2,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+        150,      !- Wind Direction {Degrees; N=0, S=180}
+       0.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          1,      !- Month
+  WinterDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ ! San Francisco Intl Ap Annual Cooling Design Conditions Wind Speed=5.9m/s Wind Dir=310
+ ! Hottest Month=AUG
+ ! San Francisco Intl Ap_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=28.3°C MWB=17.2°C
+SizingPeriod:DesignDay,
+  San Francisco Intl Ap Ann Clg .4% Condns DB=>MWB,     !- Name
+       28.3,      !- Maximum Dry-Bulb Temperature {C}
+        8.5,      !- Daily Temp Range {C}
+       17.2,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+    101301.,      !- Barometric Pressure {Pa}
+        5.9,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+        310,      !- Wind Direction {Degrees; N=0, S=180}
+       1.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          8,      !- Month
+  SummerDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ 
+ 
+ 
+##elseif #[Location[] eqs Seattle]
+ 
+Site:Location,
+  Seattle Seattle Tacoma Intl A_WA_USA Design_Conditions,     !- Location Name
+      47.47,     !- Latitude {N+ S-}
+    -122.32,     !- Longitude {W- E+}
+      -8.00,     !- Time Zone Relative to GMT {GMT+/-}
+     122.00;     !- Elevation {m}
+ 
+ 
+!- 4m depth undisturbed ground temperatures
+Site:GroundTemperature:BuildingSurface,
+     10.83,     !- January Ground Temperature {C}
+     9.23,     !- February Ground Temperature {C}
+     8.24,     !- March Ground Temperature {C}
+     7.93,     !- April Ground Temperature {C}
+     8.52,     !- May Ground Temperature {C}
+     9.85,     !- June Ground Temperature {C}
+     11.50,     !- July Ground Temperature {C}
+     13.13,     !- August Ground Temperature {C}
+     14.22,     !- September Ground Temperature {C}
+     14.48,    !- October Ground Temperature {C}
+     13.85,    !- November Ground Temperature {C}
+     12.55;    !- December Ground Temperature {C}
+ 
+ ! Seattle Seattle Tacoma Intl A_WA_USA Annual Heating 99.6%, MaxDB=-4.2°C
+SizingPeriod:DesignDay,
+  Seattle Seattle Tacoma Intl A Ann Htg 99.6% Condns DB,     !- Name
+       -4.2,      !- Maximum Dry-Bulb Temperature {C}
+        0.0,      !- Daily Temp Range {C}
+       -4.2,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     99868.,      !- Barometric Pressure {Pa}
+        4.3,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+         20,      !- Wind Direction {Degrees; N=0, S=180}
+       0.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+         12,      !- Month
+  WinterDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ ! Seattle Seattle Tacoma Intl A Annual Cooling Design Conditions Wind Speed=4.2m/s Wind Dir=350
+ ! Hottest Month=AUG
+ ! Seattle Seattle Tacoma Intl A_WA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=29.4°C MWB=18.3°C
+SizingPeriod:DesignDay,
+  Seattle Seattle Tacoma Intl A Ann Clg .4% Condns DB=>MWB,     !- Name
+       29.4,      !- Maximum Dry-Bulb Temperature {C}
+       10.4,      !- Daily Temp Range {C}
+       18.3,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+     99868.,      !- Barometric Pressure {Pa}
+        4.2,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+        350,      !- Wind Direction {Degrees; N=0, S=180}
+       1.00,      !- Clearness {0.0 to 1.1}
+          0,      !- Rain {0-no,1-yes}
+          0,      !- Snow on ground {0-no,1-yes}
+         21,      !- Day of Month
+          8,      !- Month
+  SummerDesignDay,!- Day Type
+          0,      !- Daylight Savings Time Indicator
+WetBulb;
+ 
+ 
+ 
+ 
+##endif

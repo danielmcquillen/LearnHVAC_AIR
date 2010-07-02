@@ -3,7 +3,6 @@
 			xmlns:validator="com.mcquilleninteractive.learnhvac.view.validators.*"
 			width="315" 
 			height="65"
-		    initialize="onInitialize()"
 		    creationComplete="onCreationComplete()"
 		    borderStyle="none"
 		    paddingLeft="0"
@@ -17,27 +16,17 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.mcquilleninteractive.learnhvac.event.SysVarInfoPopupEvent;
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+			import com.mcquilleninteractive.learnhvac.util.Logger;
+			
+			import mx.controls.Image;
+			import mx.core.DragSource;
 			import mx.core.UIComponent;
-		
-			/* FaultItem:
-			   This mxml class needs to represent more than one kind of fault. Currently
-			   there is a checkbox fault control and a checkbox+slider control.
-			   This would seem to call for a base class and subclasses, but I'm not sure how 
-			   that is done when the class is being used as an itemRenderer
-			   
-			   
-			*/
-			import mx.events.SliderEvent
-			import mx.events.ValidationResultEvent
-			import mx.validators.NumberValidator
-			import com.mcquilleninteractive.learnhvac.util.Logger
-			import com.mcquilleninteractive.learnhvac.model.SystemVariable
-   			import com.mcquilleninteractive.learnhvac.event.SysVarInfoPopupEvent  
-   			import mx.core.UIComponent
-			import com.mcquilleninteractive.learnhvac.util.Logger
+			import mx.events.SliderEvent;
+			import mx.events.ValidationResultEvent;
 			import mx.managers.DragManager;
-      	  	import mx.core.DragSource;
-       		import mx.controls.Image;
+			import mx.validators.NumberValidator;
        		
 		       		
 		    [Embed(source='assets/DawaAssets.swf', symbol='no_sign')]
@@ -65,17 +54,16 @@
  			[Bindable]
  			public var InfoIconUp : Class;      
  			
-       		
-       		
-       		
 			private var origBGColor:Number
 			private var activeBarOff:UIComponent
 			private var activeBarOn:UIComponent
-			private var faultItemInitialized:Boolean = false		
-						
-			private function onInitialize():void
-			{
-			}
+			private var faultItemInitialized:Boolean = false;
+				
+			[Bindable]
+			protected var _faultSliderSnapInterval:int = 1;
+			
+			protected var _isDirty:Boolean = false
+				
 			
 			private function onCreationComplete():void
 			{
@@ -89,88 +77,103 @@
       			super.data = value
       			if (data == null) return;
       			
-      	     			
-      			//initialize components if not yet set:
-      			//if (!faultItemInitialized)
-      			//{
-      				faultItemInitialized = true
-      				//when faultItem is first set via binding
- 					//do a little housekeeping to make sure control is in right state
- 					
- 					//show checkbox or no sign
-      				cboActivate.visible = !data.disabled
-      				btnDisabled.visible = data.disabled
- 	     			
-      				if (data.faultWidgetType==SystemVariable.FAULT_CHECKBOX)
-      				{
-      					//hide controls associated with slider
-      					lblLeftLabel.visible = false
-      					lblRightLabel.visible = false
-      					sldFaultValue.visible = false
-      					lblCurrFaultValue.visible = false
-      				}
-      				else if (data.faultWidgetType==SystemVariable.FAULT_SLIDER)
-      				{
-      					//show controls associated with slider
-      					lblLeftLabel.visible = true
-      					lblRightLabel.visible = true
-      					sldFaultValue.visible = true
-      				
-      					lblCurrFaultValue.visible = data.faultIsActive
-						sldFaultValue.enabled = data.faultIsActive && (!data.disabled)
-      				
-      					//set only first and last tickmark
-      					sldFaultValue.tickValues = [data.lowValue, data.highValue]
-      				
-      					//make sure current value is showing
-      					if (lblCurrFaultValue.text=="")  lblCurrFaultValue.text = sldFaultValue.value.toString()
-      				}
-      				else
-      				{
-      					Logger.error("#FaultItem: unrecognized faultWidgetType: " + data.faultWidgetType)
-      				}
-      			//}
+				var sysVar:SystemVariable = SystemVariable(data)
+      	     			      			
+      			faultItemInitialized = true
+					
+  				//when faultItem is first set via binding
+ 				//do a little housekeeping to make sure control is in right state
+ 						
+ 				//show checkbox or no sign
+      			cboFaultIsActive.visible = !sysVar.disabled
+				cboFaultIsActive.selected = sysVar.faultIsActive
+      			btnDisabled.visible = sysVar.disabled
+      			
+  				if (sysVar.faultWidgetType==SystemVariable.FAULT_CHECKBOX)
+  				{
+  					//hide controls associated with slider
+  					lblLeftLabel.visible = false
+  					lblRightLabel.visible = false
+  					sldFaultValue.visible = false
+  					lblCurrFaultValue.visible = false
+  				}
+  				else if (sysVar.faultWidgetType==SystemVariable.FAULT_SLIDER)
+  				{
+  					//show controls associated with slider
+  					lblLeftLabel.visible = true
+  					lblRightLabel.visible = true
+  					sldFaultValue.visible = true
+  				
+  					lblCurrFaultValue.visible = sysVar.faultIsActive
+					sldFaultValue.enabled = sysVar.faultIsActive && (!sysVar.disabled)
+  				
+  					//set only first and last tickmark
+  					sldFaultValue.tickValues = [sysVar.lowValue, sysVar.highValue]
+  				
+  					//make sure current value is showing
+  					if (lblCurrFaultValue.text=="")  lblCurrFaultValue.text = sldFaultValue.value.toString()
+						
+					//set precision
+					if (data.highValue>1000)
+					{
+						fmtSlider.precision = 0
+						_faultSliderSnapInterval = 10
+					}
+					else if (data.highValue>10)
+					{
+						fmtSlider.precision = 1
+						_faultSliderSnapInterval = 1
+					}
+					else
+					{
+						fmtSlider.precision = 2
+						_faultSliderSnapInterval = .5	
+					}
+					sldFaultValue.invalidateProperties()
+					
+  				}
+  				else
+  				{
+  					Logger.error("#FaultItem: unrecognized faultWidgetType: " + sysVar.faultWidgetType)
+  				}
       		}
 					
 			private function sliderDataTip(val:Number):String
 			{
-				var displayVal:String  = val.toString()
-				
-				if (data.is_percentage)
+				var displayVal:String  = val.toString()				
+				var sysVar:SystemVariable = SystemVariable(data)
+				if (sysVar.isPercentage)
 				{
-					displayVal = String(Math.round(val*100))+"%"
+					return String(Math.round(val))+"%"
 				}
-				return displayVal
-				
-				//probably should separate this out into sliderChange function,
-				//but so easy to put it here!
-				return displayVal
-				
+				return fmtSlider.format(val).toString()
+						
 			}		
 			
 			public function checkboxChange(event:Event):void
 			{
 				var cboSelected:Boolean = event.target.selected
-				data.faultIsActive = cboSelected
-							
-				//events are handled above in set data function
-				
+				var sysVar:SystemVariable = SystemVariable(data)
+				sysVar.faultIsActive = cboSelected
+				_isDirty = cboSelected				
 			}
 			
 			public function sliderChange(event:Event):void
-			{
-				var sliderValue:Number = sldFaultValue.value
-				data.currValue = Math.round(sliderValue*100)/100
+			{					
+				SystemVariable(data).localValue = sldFaultValue.value
+				_isDirty = true
 			}
 			
 			public function showInfoPanel():void
 			{
 				var event:SysVarInfoPopupEvent = new SysVarInfoPopupEvent(SysVarInfoPopupEvent.SHOW_INFO, true)
-				event.sysVarDescription = data.description
-				event.lowValue = data.lowValue
-				event.highValue = data.highValue
-				event.sysVarDisplayName = data.displayName
-				event.sysVarName = data.name
+				
+				var sysVar:SystemVariable = SystemVariable(data)
+				event.sysVarDescription = sysVar.description
+				event.lowValue = sysVar.lowValue.toString()
+				event.highValue = sysVar.highValue.toString()
+				event.sysVarDisplayName = sysVar.displayName
+				event.sysVarName = sysVar.name
 				dispatchEvent(event)
 			}
 			
@@ -202,12 +205,13 @@
              	DragManager.doDrag(dragInitiator, dragSource, event, dragProxy, 0, 0, 1);
 			
 			}
+			
 		]]>
 	</mx:Script>
 	
+	<mx:NumberFormatter id="fmtSlider" precision="2" rounding="nearest" />
 	   
     <mx:Canvas id="mainCanvas">
-    	
     	
     	<mx:Image id="activeBar"
     			  source="{FaultActiveBar}" 
@@ -227,10 +231,11 @@
 				    toolTip="Fault is disabled in this scenario"
 		/>
 		
-		<mx:CheckBox id="cboActivate" 
+		<mx:CheckBox id="cboFaultIsActive" 
     				x="15" y="1"
     				selected="{data.faultIsActive}" 
     				change="checkboxChange(event)"
+					toolTip="Activate/deactivate fault"
     				
     		/>
 		
@@ -249,7 +254,7 @@
 					x="35" y="19" 
 				  	text="{data.leftLabel}"
 				  	textAlign="left"
-				  	color="0x999999"
+				  	color="0x555555"
 		/>
 	
 		<mx:Label 	id="lblRightLabel"
@@ -257,14 +262,15 @@
 					width="100"
 				  	text="{data.rightLabel}"
 				  	textAlign="right"
-				  	color="0x999999"
+				  	color="0x555555"
 		/>
 			 		
 		<mx:HSlider id="sldFaultValue"
 					x="35" y="35"
 					width="185"
 					height="25" 
-				    value="{data.currValue}"
+				    snapInterval="{_faultSliderSnapInterval}"
+				    value="{data.localValue}"
 					minimum="{data.lowValue}"
 					maximum="{data.highValue}"
 					dataTipFormatFunction="sliderDataTip"
@@ -273,13 +279,16 @@
         			thumbOverSkin="{SliderDragger}"
         			thumbUpSkin="{SliderDragger}"
         			thumbDisabledSkin="{SliderDraggerDisabled}"
+					fillAlphas="[1, 1, 1, 1]"
+
+				    
 		/>
 		
 		<mx:Label 	id="lblCurrFaultValue"
 					x="230" y="40"
 					width="60" height="22" 
 				  	textAlign="right"
-				  	text="{data.currValue}"
+				  	text="{data.localValue}"
 		/>
 			 
 		<mx:Button 	x="300" y="6"

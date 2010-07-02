@@ -475,12 +475,12 @@ Alert
 
 .tabNavigator 
 {
-    paddingLeft: 5; 
-    tabWidth: 105; 
+	paddingLeft: 5; 
     paddingRight: 5;
+	paddingBottom: 10; 
     backgroundAlpha: 0; 
+	tabWidth: 105; 
     borderStyle: none; 
-    paddingBottom: 10; 
     cornerRadius: 4;
     tabStyleName: "fseTabs";
 }

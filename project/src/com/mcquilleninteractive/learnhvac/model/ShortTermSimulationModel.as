@@ -1,4 +1,4 @@
-package com.mcquilleninteractive.learnhvac.model
+	package com.mcquilleninteractive.learnhvac.model
 {
 	
 	/** Class ShortTermSimulationModel
@@ -26,8 +26,8 @@ package com.mcquilleninteractive.learnhvac.model
 	public class ShortTermSimulationModel extends EventDispatcher
 	{
 		public static const MAX_TIME_STEP:Number = 1000
-		public static const STATE_OFF:String = "off"
-		public static const STATE_RUNNING:String = "running"
+		public static const STATE_OFF:String = "shortTermSimOff"
+		public static const STATE_RUNNING:String = "shortTermSimrunning"
 		public static const STATE_PAUSED:String = "paused";
 		
 		//set to realtimeStartDatetime from scenario and then incremented while modelica is running
@@ -54,8 +54,8 @@ package com.mcquilleninteractive.learnhvac.model
 		public var modelicaInputsTrace:String = ""
 		
 		
-		protected var _currentState:String = STATE_OFF
-				
+		public var currentState:String = STATE_OFF
+			
 		public function ShortTermSimulationModel()
 		{
 			init()
@@ -63,7 +63,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function init():void
 		{
-			_currentState = STATE_OFF
+			currentState = STATE_OFF
 			timeInSec = 0
 			stepArr = []
 			epochTimeArr = []
@@ -72,15 +72,7 @@ package com.mcquilleninteractive.learnhvac.model
 			realtimeStartDatetime = new Date("01/1/2010 12:00:00 PM")
 		}
 		
-		public function get currentState():String
-		{
-			return _currentState
-		}
-
-		public function set currentState(value:String):void
-		{
-			 _currentState = value
-		}
+		
 		
 		public function setRealTimeStartDate(d:Date):void
 		{
@@ -96,16 +88,13 @@ package com.mcquilleninteractive.learnhvac.model
 		//////////////////////////////////////
 		
 		public function updateTimer(seconds:Number):void
-		{
-			
-			//TODO: update time in seconds according to some kind of time step setting
-			//      For now, one step is one second
-			
+		{						
 			timeInSec = seconds
 			stepArr.push(timeInSec)
 			if (timeInSec!=0)
 			{
-				currDateTime.seconds = realtimeStartDatetime.seconds + seconds
+				currDateTime = new Date(realtimeStartDatetime)
+				currDateTime.seconds = currDateTime.seconds + seconds
 			}
 			
 			epochTimeArr.push(Date.parse(currDateTime.toString()))

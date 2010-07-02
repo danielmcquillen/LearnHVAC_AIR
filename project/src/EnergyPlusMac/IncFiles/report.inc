@@ -8,6 +8,11 @@
     hourly;                  !- Reporting_Frequency
 
   Output:Variable,
+    *,                       	!- Key_Value
+    Outdoor Relative Humidity,  !- Variable_Name
+    hourly;                  	!- Reporting_Frequency
+
+  Output:Variable,
     *,                       !- Key_Value
     Outdoor Wet Bulb,        !- Variable_Name
     hourly;                  !- Reporting_Frequency
@@ -109,7 +114,7 @@
 
   Output:Variable,
     *,                       !- Key_Value
-  Total Water Cooling Coil Rate,
+  	Total Water Cooling Coil Rate,
     hourly;                  !- Reporting_Frequency
 
   Output:Variable,
@@ -162,68 +167,67 @@
     Total Electric Demand,
     hourly;                  !- Reporting_Frequency
 
-
-	Output:Variable,
+  Output:Variable,
     COR1 INLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
     
-	Output:Variable,
+  Output:Variable,
     PER1WES INLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
     
-	Output:Variable,
+  Output:Variable,
     PER1EAS INLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
     
-	Output:Variable,
+  Output:Variable,
     PER1NOR INLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
     
-	Output:Variable,
+  Output:Variable,
     PER1SOU INLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
     
-	Output:Variable,
+  Output:Variable,
     COR3 INLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
     
-	Output:Variable,
+  Output:Variable,
     PER3WES INLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
     
-	Output:Variable,
+  Output:Variable,
     PER3EAS INLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
     
-	Output:Variable,
+  Output:Variable,
     PER3NOR INLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
     
-	Output:Variable,
+  Output:Variable,
     PER3SOU INLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
 
-	Output:Variable,
+  Output:Variable,
     MIXED AIR NODE 1,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
 
-	Output:Variable,
+  Output:Variable,
     COOLING COIL AIR OUTLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency
 
-	Output:Variable,
+  Output:Variable,
     HEATING COIL AIR OUTLET NODE,
     System Node Temp,
     hourly;                  !- Reporting_Frequency

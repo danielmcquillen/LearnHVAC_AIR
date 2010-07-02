@@ -18,6 +18,9 @@
    			         			
 		    private var unitsFltpreDrop:String 
 		    
+			[Bindable]
+			private var _fltPDropVisible:Boolean = true
+			
 			public function onCC():void
 			{				
 			}
@@ -26,7 +29,7 @@
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{																																			
 				//set visibility of labels	
-				lblFLTPDrop.visible=lblFLTPDrop_Title.visible=scenarioModel.getSysVar("FLTPDrop").visible
+				_fltPDropVisible =scenarioModel.getSysVar("FLTPDrop").visible
 			}
 			
 			
@@ -35,13 +38,19 @@
 	</mx:Script>
 	
 	
-	<mx:Label id="lblFLTPDrop_Title" text="Pressure Drop: "  styleName="overlayTitle"
-					 x="430" y="100"/>
+	<mx:Label id="lblFLTPDrop_Title" 
+			  text="Pressure Drop: "  
+			  styleName="overlayTitle"
+			  x="430" y="100"
+			  visible="{_fltPDropVisible}"
+				
+				/>
 	<overlay:ValueDisplayLabel id="lblFLTPDrop"
 		precision="7"
 		sysVarName="FLTPDrop" 
 		text="0" 
 		styleName="overlayValue"
+		visible="{_fltPDropVisible}"
 		x="430" y="117"/>
 		
 </overlay:OverlayBase>

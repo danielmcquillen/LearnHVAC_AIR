@@ -47,12 +47,18 @@ package com.mcquilleninteractive.learnhvac.model
 				md.buildMenuStructure(scenarioModel)
 			}
 					
-			//launch event
+			//launch event for each run
 			Logger.debug("init() dispatching loaded event", this)
 			var event:ScenarioDataLoadedEvent = new ScenarioDataLoadedEvent(ScenarioDataLoadedEvent.SHORT_TERM_SYSVARS_LOADED,true)
-			event.graphDataModel = IGraphDataModel(runsArr[currRunID])
+			event.graphDataModel = IGraphDataModel(runsArr[ShortTermSimulationDataModel.RUN_1])
 			event.graphDataModelID =  currRunID
 			Swiz.dispatchEvent(event)
+				
+			var event:ScenarioDataLoadedEvent = new ScenarioDataLoadedEvent(ScenarioDataLoadedEvent.SHORT_TERM_SYSVARS_LOADED,true)
+			event.graphDataModel = IGraphDataModel(runsArr[ShortTermSimulationDataModel.RUN_2])
+			event.graphDataModelID =  ShortTermSimulationDataModel.RUN_2
+			Swiz.dispatchEvent(event)
+			
 		}
 				
 		public function clearCurrentRun():void
@@ -71,7 +77,6 @@ package com.mcquilleninteractive.learnhvac.model
 		{
 			if (currRunID==ShortTermSimulationDataModel.RUN_1) initialLoaded = true
 			if (currRunID==ShortTermSimulationDataModel.RUN_2) comparisonLoaded = true
-						
 		}
 
 
@@ -85,9 +90,9 @@ package com.mcquilleninteractive.learnhvac.model
 			return ModelicaData(runsArr[runID])
 		}
 		
-		public function recordCurrentTimeStep(timeInSeconds:Number, sysVarsArr:Array):void
+		public function recordCurrentTimeStep(currDateTime:Date, sysVarsArr:Array):void
 		{
-			runsArr[currRunID].recordCurrentTimeStep(timeInSeconds, sysVarsArr)
+			ModelicaData(runsArr[currRunID]).recordCurrentTimeStep(currDateTime, sysVarsArr)
 		}
 
 	}

@@ -206,9 +206,8 @@
 			{
 				var dataTree:DataTree = DataTree(dragEvent.dragInitiator)
 				graphDataModel = dataTree.graphDataModel
-				
-				
-				switch (dataTree.type)
+								
+				switch (dataTree.runID)
 				{
 					case LongTermSimulationDataModel.RUN_1:
 						titlePrefix = "LT Run1: "
@@ -223,13 +222,12 @@
 						titlePrefix = "RT Run2: "
 						break
 					default:
-						Logger.error("#GraphPanel: onDragDrop() unrecognized dataTree.type: " + dataTree.type)
+						Logger.error("onDragDrop() unrecognized dataTree.runID: " + dataTree.runID, this)
 				}	
-					
-				var dataType:String = dataTree.type					
+						
 				
 				//update time axis to reflect datasource
-				dataSourceType = dataTree.graphDataModel.getDataType()
+				dataSourceType = dataTree.graphDataModel.dataType
 				switch(dataSourceType)
 				{
 					case EnergyPlusData.ENERGY_PLUS_DATA_TYPE:

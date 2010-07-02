@@ -16,6 +16,8 @@ package com.mcquilleninteractive.learnhvac.model.data
 	import com.mcquilleninteractive.learnhvac.util.DateUtil;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
+	import mx.collections.ArrayCollection;
+	
 		
 	public class ModelicaData extends BaseSimData implements IGraphDataModel
 	{
@@ -24,7 +26,7 @@ package com.mcquilleninteractive.learnhvac.model.data
 		public static const DATE_TIME:String = "dateTime"
 				
 		public var dataArr:Array
-		public var dataStructureXML	:XML
+		private var _dataStructureXML:XML
 		private var _startDateTime:Date
 		private var _startDateTimeMilli:Number
 		//this is the SysVar that marks time increments
@@ -37,29 +39,30 @@ package com.mcquilleninteractive.learnhvac.model.data
 			clearData()	
 		}
 		
-		public function set startDateTime(date:Date):void
-		{
-			_startDateTime = date
-			_startDateTimeMilli  = date.time		
-		}
+		
 		
 		public function clearData():void
 		{
 			dataArr = []
 			dataArr[DATE_TIME] = []
-			dataStructureXML  = createBaseXML()
+			_dataStructureXML  = createBaseXML()
 			// use the current year for timecode of output
 			currYear = String(new Date().fullYear)	
 		}
 		
-		public function getDataType():String
+		public function get dataType():String
 		{
 			return MODELICA_DATA_TYPE
 		}
 		
-		public function getDataStructureXML():XML
+		public function set dataStructureXML(dataXML:XML):void
 		{
-			return dataStructureXML
+			_dataStructureXML = dataXML
+		}
+		
+		public function get dataStructureXML():XML
+		{
+			return _dataStructureXML
 		}
 		
 		private function createBaseXML():XML
@@ -79,11 +82,9 @@ package com.mcquilleninteractive.learnhvac.model.data
 		}
 		
 		/* Record the state of each system variable at the current time interval */				
-		public function recordCurrentTimeStep(timeInSeconds:Number, sysVarsArr:Array):void
-		{
-			var d:Date = new Date(_startDateTimeMilli + (timeInSeconds * 1000))
-			
-			dataArr[DATE_TIME].push(d)
+		public function recordCurrentTimeStep(currDateTime:Date, sysVarsArr:Array):void
+		{			
+			dataArr[DATE_TIME].push(currDateTime)
 			for each (var sysVar:SystemVariable in sysVarsArr)
 			{
 				if (!dataArr[sysVar.name])
@@ -95,7 +96,7 @@ package com.mcquilleninteractive.learnhvac.model.data
 				dataArr[sysVar.name].historySI.push(sysVar.currValue)
 				dataArr[sysVar.name].historyIP.push(sysVar.currValue)	
 			}
-			totalElapsedTimeInSeconds = timeInSeconds
+			totalElapsedTimeInSeconds = currDateTime.time - startDateTime.time
 		}
 				
 		public function getVarName(varID:String):String
@@ -183,12 +184,27 @@ package com.mcquilleninteractive.learnhvac.model.data
 			return returnArr
 		}
 		
-		public function getStartDateTime():String
+		
+		public function set startDateTime(date:Date):void
+		{
+			_startDateTime = date
+			_startDateTimeMilli  = date.time		
+		}
+		
+		public function get startDateTime():Date
+		{
+			return _startDateTime
+		}
+						
+		public function get startDateTimeString():String
 		{
 			return DateUtil.formatDateTime(_startDateTime) 		
 		}
 		
-		public function getStopDateTime():String
+		
+		
+		
+		public function get stopDateTimeString():String
 		{
 			var len:Number = dataArr[DATE_TIME].length
 			if (len==0)
@@ -197,6 +213,11 @@ package com.mcquilleninteractive.learnhvac.model.data
 			}
 			var stopDateTime:Date = dataArr[DATE_TIME][len-1] as Date
 			return DateUtil.formatDateTime(stopDateTime)
+		}
+		
+		public function get inputListAC():ArrayCollection
+		{
+			return null //only used by EnergyPlusData implementation of IGraphDataModel
 		}
 		
 	}

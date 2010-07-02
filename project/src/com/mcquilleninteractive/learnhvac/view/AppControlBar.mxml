@@ -14,30 +14,36 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.containers.Panel;
-			import org.swizframework.Swiz;
-			import flash.net.navigateToURL; 	//use these two if I'm using Flex way of opening browser
-    		import flash.net.URLRequest;
-			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
-			import mx.charts.chartClasses.ChartElement;
+			import com.mcquilleninteractive.learnhvac.event.ApplicationEvent;
+			import com.mcquilleninteractive.learnhvac.event.GraphEvent;
 			import com.mcquilleninteractive.learnhvac.event.LogoutEvent;
-			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-			import com.mcquilleninteractive.learnhvac.view.popups.SettingsPanel
-			import com.mcquilleninteractive.learnhvac.event.GraphEvent
-			import com.mcquilleninteractive.learnhvac.event.ScenarioDataEvent
-			import com.mcquilleninteractive.learnhvac.event.ApplicationEvent
-			import com.mcquilleninteractive.learnhvac.util.Logger;            
-			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel    
-			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel
+			import com.mcquilleninteractive.learnhvac.event.ScenarioDataEvent;
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel;
+			import com.mcquilleninteractive.learnhvac.model.UserModel;
 			import com.mcquilleninteractive.learnhvac.util.DebugPanel;
-			import mx.managers.PopUpManager
+			import com.mcquilleninteractive.learnhvac.util.Logger;
+			import com.mcquilleninteractive.learnhvac.view.popups.SettingsPanel;
+			
+			import flash.net.URLRequest;
+			import flash.net.navigateToURL;
+			
 			import mx.binding.utils.BindingUtils;
-          	import mx.managers.PopUpManager;
-          	import mx.events.CloseEvent;
-          	import mx.events.MenuEvent;
-          	import mx.events.ItemClickEvent
-          	import mx.controls.Alert;
+			import mx.charts.chartClasses.ChartElement;
+			import mx.containers.Panel;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.ItemClickEvent;
+			import mx.events.MenuEvent;
+			import mx.managers.PopUpManager;
+			
+			import org.swizframework.Swiz;
           	
+			
+			[Autowire]
+			public var userModel:UserModel
           	          				
 			[Bindable]
             [Embed(source="assets/img/weather_sun.png")]
@@ -288,6 +294,7 @@
        					styleName="btnNavIcon"		    
 			    		toolTip="Open debug window"
 						icon="{BugIcon}"
+						visible="{userModel.role!='student'}"
 						click="onDebug()" 	
 				/>
 		

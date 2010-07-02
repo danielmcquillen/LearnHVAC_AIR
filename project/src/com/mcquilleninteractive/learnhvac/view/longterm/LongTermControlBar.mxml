@@ -59,10 +59,21 @@
 	<mx:Spacer 	width="100%" />		
 	
 	
-	<mx:HBox paddingRight="10">
-		<mx:Label text="Current scenario:" color="#FFFFFF"/>
-		<mx:Label id="lblScenarioName" text="{scenarioModel.name}" color="#FFFFFF" />
-	</mx:HBox>
+	
+	<mx:VBox width="400" 
+			 height="30"
+			 id="hbScenarioName"
+			 paddingTop="5"
+			 horizontalAlign="right"
+			 horizontalScrollPolicy="off"
+			 paddingLeft="10"	 
+			 verticalScrollPolicy="off" >
+		
+		<mx:HBox paddingRight="10">
+			<mx:Label text="Current scenario:" color="#FFFFFF"/>
+			<mx:Label id="lblScenarioName" text="{scenarioModel.name}" color="#FFFFFF" />
+		</mx:HBox>
+	</mx:VBox>
 	
 		
 				

@@ -70,7 +70,8 @@
 				this.cboFloor.enabled = false
 				this.cboZone.enabled = false
 			}
-			
+				
+			[Mediate(event="ShortTermSimulationEvent.SIM_ERROR")]
 			[Mediate(event="ShortTermSimulationEvent.SIM_STOPPED")]
 			public function onShortTermSimulationStopped(event:ShortTermSimulationEvent):void
 			{
@@ -141,11 +142,11 @@
 				Logger.debug("#VizPanelInfo: setting date time from model: " + shortTermSimulationModel.realtimeStartDatetime)
 				timeStepper.value = shortTermSimulationModel.realtimeStartDatetime
 				dateField.selectedDate = shortTermSimulationModel.realtimeStartDatetime
-				timeStepper.enabled = scenarioModel.allowRealtimeDatetimeChange
-				dateField.enabled = scenarioModel.allowRealtimeDatetimeChange
+				timeStepper.enabled = scenarioModel.allowRealTimeDateTimeChange
+				dateField.enabled = scenarioModel.allowRealTimeDateTimeChange
 				
 				//change toolTip to help user understand disabled
-				if (scenarioModel.allowRealtimeDatetimeChange)
+				if (scenarioModel.allowRealTimeDateTimeChange)
 				{
 					timeStepper.toolTip = "Select the start time for the real-time simulation"
 					dateField.toolTip = "Select the start date for the real-time simulation"

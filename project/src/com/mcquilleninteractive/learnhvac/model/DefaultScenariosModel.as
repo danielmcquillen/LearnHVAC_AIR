@@ -24,7 +24,7 @@ package com.mcquilleninteractive.learnhvac.model
 			scenObj.name = "Basic Scenario";
 			scenObj.shortDescription = "The basic scenario has all features enabled and is meant to provide a platform for experimentation with Learn HVAC.";
 			scenObj.sourceType = ScenarioListItemVO.SOURCE_DEFAULT;
-			scenObj.thumbnailURL = "http://admin.learnhvac.org/thumbnails/pic_scenario_spring.png"
+			//scenObj.thumbnailURL = "http://admin.learnhvac.org/thumbnails/pic_scenario_spring.png"
 			
 			//so stupid that I can't just embed the xml as mimeType='text/xml' or something 
 			var ba:ByteArray = new basicScenarioXML() as ByteArray;			

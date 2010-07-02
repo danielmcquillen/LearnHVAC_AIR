@@ -78,14 +78,11 @@ package com.mcquilleninteractive.learnhvac.controller
 		public function start(event:ShortTermSimulationEvent):void
 		{
 			Logger.debug("starting short term simulation", this)
-			shortTermSimulationDataModel.clearCurrentRun()
 			if (scenarioModel.importLongTermVarsFromRun!=ScenarioModel.LT_IMPORT_NONE)
 			{ 
 				scenarioModel.importLongTermVars()
 			}			
-			
-			
-			
+						
 			// ask all input system variables to update to the
 			// value user has entered in input panel
 			var inputSysVarsArr:Array = scenarioModel.getInputSysVars()
@@ -122,13 +119,20 @@ package com.mcquilleninteractive.learnhvac.controller
 			
 		}
 		
-		
+		[Mediate(event="ShortTermSimulationEvent.SIM_RETURN_TO_START")]
+		public function onReturnToStart(event:ShortTermSimulationEvent):void
+		{	
+			delegate.reset()
+			shortTermSimulationDataModel.clearCurrentRun()
+			shortTermSimulationModel.resetTimer()
+		}
 					
 			
 		[Mediate(event="ResetInputsEvent.RESET_SHORT_TERM_INPUTS_TO_INITIAL_VALUES")]
 		public function onResetInputsToInitialValues(event:ResetInputsEvent):void
 		{	
 			Logger.debug("onResetInputsToInitialValues()",this)
+				
 			//cycle through all input systemvariables and reset value to initial value
 			for each (var sysNode:SystemNodeModel in scenarioModel.sysNodesAC)
 			{
@@ -144,11 +148,7 @@ package com.mcquilleninteractive.learnhvac.controller
 			Swiz.dispatchEvent(evt)
 		}
 			
-		[Mediate(event="ShortTermSimulationEvent.SIM_RETURN_TO_START")]
-		public function onReturnToStart(event:ShortTermSimulationEvent):void
-		{	
-			shortTermSimulationModel.resetTimer()
-		}
+	
 
 		
 		/* ****************** */
@@ -180,7 +180,7 @@ package com.mcquilleninteractive.learnhvac.controller
 			shortTermSimulationModel.updateTimer(simTime)
 			
 			//record values in data model
-			shortTermSimulationDataModel.recordCurrentTimeStep(shortTermSimulationModel.timeInSec, scenarioModel.sysVarsArr)
+			shortTermSimulationDataModel.recordCurrentTimeStep(new Date(shortTermSimulationModel.currDateTime), scenarioModel.sysVarsArr)
 			
 			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_OUTPUT_RECEIVED)
 			Swiz.dispatchEvent(evt)
@@ -194,6 +194,8 @@ package com.mcquilleninteractive.learnhvac.controller
 			
 			var evt:ShortTermSimulationEvent = new ShortTermSimulationEvent(ShortTermSimulationEvent.SIM_ERROR, true)
 			Alert.show("Modelica experienced an error. " + event.errorMessage , "Modelica Error")
+			evt.code = 0
+			evt.errorMessage = "Modelica crash"
 			Swiz.dispatchEvent(evt)
 			
 			//do debug stuff if mtrace is on
@@ -228,6 +230,9 @@ package com.mcquilleninteractive.learnhvac.controller
 		}	
 		
 		
+		
+		/** This function is strictly for debugging efforts...it makes copies
+		 *  of specific Modelica files for later debugging */
 		
 		protected function copyDebugFiles():void
 		{

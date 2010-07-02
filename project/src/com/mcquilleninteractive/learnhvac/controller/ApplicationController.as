@@ -262,6 +262,27 @@ package com.mcquilleninteractive.learnhvac.controller
 				Alert.show("Couldn't copy weather files to : " + copyWeatherFiles.nativePath + ". Please try to start application again or copy manually.", "Error")
 			}
 			
+			
+			//copy test files 
+			if(ApplicationModel.mockEPlusData)
+			{
+				var mockDataFiles:File = File.applicationDirectory.resolvePath("mockData")
+				var copyMockDataFiles:File = File.userDirectory.resolvePath(ApplicationModel.baseStorageDirPath + "mockData")
+				if (copyMockDataFiles.exists==false)
+				{
+					copyMockDataFiles.createDirectory()
+				}
+				Logger.debug("Moving mockData files to: " + copyMockDataFiles.nativePath, this) 
+				try
+				{
+					mockDataFiles.copyTo(copyMockDataFiles, true)		
+				}
+				catch(error:Error)
+				{
+					Alert.show("Couldn't copy mockData files to : " + copyMockDataFiles.nativePath + ". Please try to start application again or copy manually.", "Error")
+				}
+			}
+			
 			//Don't need the following since we're embedding scenarios directly in code for now
 			//copy the included scenarios to the storage directory	
 			/*

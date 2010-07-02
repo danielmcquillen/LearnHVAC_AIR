@@ -1,10 +1,10 @@
-Log-file of program ./dymosim
-(generated: Wed Mar 03 12:36:35 2010)
+Log-file of program dymosim.exe
+(generated: Fri Jun 25 14:14:55 2010)
 
-dymosim started
-Model: LH_v2.HVAC_v2
+dymosim.exe started
+Model: LH_V1_6_3.HVAC_V1_0
 ... "dsin.txt" loading (dymosim input file)
-cliBCVTB.socketFD >= 0
+socketComm.cliBCVTB.socketFD >= 0
 The following error was detected at time: 0
 Socket file descripter for BCVTB must be positive.
    A negative value indicates that no connection

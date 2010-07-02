@@ -69,19 +69,16 @@
 			
 			public function updatePipes():void
 			{
-					var boiTLiqSup:SystemVariable = scenarioModel.getSysVar("BOITLiqSup")
-					setTLiqEnt(boiTLiqSup.baseSIValue)
-					setTLiqbypass(boiTLiqSup.baseSIValue)
+					var tLiqEnt:SystemVariable = scenarioModel.getSysVar("HCTLiqEnt")
+					setTLiqEnt(tLiqEnt.baseSIValue)
+					setTLiqbypass(tLiqEnt.baseSIValue)
 					
-					var hcTLiqLvg:SystemVariable = scenarioModel.getSysVar("HCTLiqLvg")
-					setTLiqLvg(hcTLiqLvg.baseSIValue)
-					setTLiqLvgValve(hcTLiqLvg.baseSIValue)
+					var tLiqLvg:SystemVariable = scenarioModel.getSysVar("HCTLiqLvg")
+					setTLiqLvg(tLiqLvg.baseSIValue)
+					setTLiqLvgValve(tLiqLvg.baseSIValue)
 										
-					var boiTLiqFlw:SystemVariable = scenarioModel.getSysVar("BOILiqFlw")
-					setmLiqLvgValve(boiTLiqFlw.baseSIValue)
-					setmLiqEnt(boiTLiqFlw.baseSIValue)
-					setmLiqbypass(boiTLiqFlw.baseSIValue)
-					setmLiqLvg(boiTLiqFlw.baseSIValue)
+					var tLiqFlw:SystemVariable = scenarioModel.getSysVar("BOILiqFlw")
+					setmLiqEnt(tLiqFlw.baseSIValue)
 				
 			}
 			
@@ -133,28 +130,13 @@
 				liquidsHC.setTemp(value, 4)
 			}
 						
-			public function setmLiqLvgValve(value:Number):void
-			{
-				if (!_active) return				
-				liquidsHC.setFlow(value, 0)
-				liquidsHC.setFlow(value, 4)
-			}
-			
 			public function setmLiqEnt(value:Number):void
 			{
-				if (!_active) return				
+				value = value * 10000
+				if (!_active) return						
+				liquidsHC.setFlow(value, 0)
 				liquidsHC.setFlow(value, 1)
-			}
-			
-			public function setmLiqbypass(value:Number):void
-			{
-				if (!_active) return				
 				liquidsHC.setFlow(value, 2)
-			}
-			
-			public function setmLiqLvg(value:Number):void
-			{
-				if (!_active) return				
 				liquidsHC.setFlow(value, 3)
 			}
 					

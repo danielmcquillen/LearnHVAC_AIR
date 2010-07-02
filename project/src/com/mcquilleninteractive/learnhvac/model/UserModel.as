@@ -7,16 +7,17 @@ package com.mcquilleninteractive.learnhvac.model
 	{		
 		
 		//Roles
-		public static var ROLE_GUEST:Number = 0
-		public static var ROLE_STUDENT:Number = 1
-		public static var ROLE_TEACHER:Number = 2
-		public static var ROLE_ADMINISTRATOR:Number = 3
+		public static var ROLE_GUEST:String = "guest"
+		public static var ROLE_STUDENT:String = "student"
+		public static var ROLE_INSTRUCTOR:String = "instructor"
+		public static var ROLE_ADMINISTRATOR:String = "admin"
 		
 		public var username:String
 		public var password:String
 		public var firstName:String
 		public var lastName:String
-		public var role:Number
+		public var role:String
+		public var institution:String
 		public var loggedInAsGuest:Boolean = false
 		
 		public function UserModel()

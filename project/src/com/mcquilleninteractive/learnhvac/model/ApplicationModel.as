@@ -8,6 +8,8 @@ package com.mcquilleninteractive.learnhvac.model
 	[Bindable]
 	public class ApplicationModel extends EventDispatcher
 	{
+		
+		public static const baseServiceURL:String = "http://app.learnhvac.org/api/"
 		public static const baseStorageDirPath:String = "LearnHVAC/"
 					
 		// ATTRIBUTES FOR CONTROLLING TEST/MOCK MODE
@@ -21,13 +23,8 @@ package com.mcquilleninteractive.learnhvac.model
 		public static var mockEPlusData:Boolean = false
 		
 		//always act like this is first run of this version
-		public static var alwaysFirstRun:Boolean = false
-			
-			
-			
-			
-			
-		
+		public static var alwaysFirstRun:Boolean = false	
+					
 		// REGULAR CLASS ATTRIBUTES
 		
 		// available values for the main viewstack

@@ -35,22 +35,8 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function DialogManager()
 		{
-			if(!_localInstantiation)
-			{
-				throw new Error("DialogManager is a singleton. Use DialogManager.getInstance() to get an instance of this class.")
-			}
 		}
 
-		public static function getInstance():DialogManager
-		{
-			if (!_instance)
-			{
-				_localInstantiation = true
-				_instance = new DialogManager()
-				_localInstantiation = false
-			}
-			return _instance
-		}
 		
 		public function showOutputPanel():void
 		{
@@ -65,7 +51,7 @@ package com.mcquilleninteractive.learnhvac.model
 				PopUpManager.addPopUp(_outputPopUp,  Application.application as DisplayObject, false);
 			}			
 			_outputPopUp.x=385
-			_outputPopUp.y=640
+			_outputPopUp.y=660
 			_outputPopUp.width=670
 			_outputPopUp.height=200	
 		}
@@ -90,7 +76,7 @@ package com.mcquilleninteractive.learnhvac.model
 				PopUpManager.addPopUp(_watchPopUp,  Application.application as DisplayObject, false);
 			}			
 			_watchPopUp.x=9
-			_watchPopUp.y=640	
+			_watchPopUp.y=660	
 			_watchPopUp.width=366
 			_watchPopUp.height=203
 		}

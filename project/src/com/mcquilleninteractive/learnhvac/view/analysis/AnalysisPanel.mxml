@@ -30,8 +30,8 @@
 		creationPolicy="all"
 		>
 		
-		<analysis:AllData id="allData" width="100%" height="100%"/>
-		<analysis:EnergyOverview id="energyOverview" width="100%" height="100%"/>
+		<analysis:OutputData id="dataExplorer" width="100%" height="100%"/>
+		<analysis:EnergyOverviewData id="energyOverview" width="100%" height="100%"/>
 		
 	</mx:ViewStack>
 	

@@ -1,195 +1,1934 @@
-<scenario id="3" scenID="SummerDayPhoenixModelicaModel" name="Summer Day in Phoenix - Modelica Model" shortDescription="This is a basic scenario for checking how the system responds to summer cooling  conditions." goal="The purpose of this model is as a vehicle to test the operation of the Modelica model of the VAV system, the interface between Modelica and Flex, and the Flex-based GUI." thumbnailURL="" longtermStartDate="01/01" longtermStopDate="12/31" allowLongtermDateChange="false" realtimeStartDatetime="01/01/2009 00:00" allowRealtimeDatetimeChange="false" forceLongTermSim="false">
-<!-- Input Area -->
-<inputPanel visible="true" enabled="true"/>
-<faultPanel visible="false" enabled="false"/>
-
-<!-- assets -->
-<scenarioMovie url=""/>
-
-<!-- visualization -->
-<visualizationPanel enableDragSensor="true" showValveInfoWindow="true"/>
-
-<!-- outputArea -->
-<outputPanel useCustomOutputGraphs="false"/>
-<!-- System Variables -->
-<sysVars>
-	<systemNode id="CC" name="Cooling Coil">
-		<sysVar name="CCKi" displayName="Cooling coil valve controller integrator time constant" description="" index="16" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
-
-		<sysVar name="CCKp" displayName="Cooling coil valve controller P gain" description="" index="15" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
-
-		<sysVar name="CCPos" displayName="Cooling coil valve position" description="" index="21" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
-
-		<sysVar name="CCTAirEnt" displayName="Cooling coil entering air temp" description="" index="7" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="CCTAirLvg" displayName="Cooling coil leaving air temp" description="" index="8" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="CCTLiqEnt" displayName="Cooling coil chilled water leaving temp" description="Cooling coil chilled water leaving temp" index="32" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="CCTLiqLvg" displayName="Cooling coil chilled water leaving temp" description=" " index="9" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="CCAirFlwd" displayName="cooling coil design air flow rate" description="" index="10" minValue="0.0" lowValue="0.0" initialValue="2.0" highValue="6.0" maxValue="6.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="kg/s" SItoIP="1653.46" unitIP="CFM" disabled="false" isFault="false"/>
-
-		<sysVar name="CCLiqFlwd" displayName="Cooling coil chilled water design mass flow rate" description="" index="8" minValue="0.0" lowValue="0.0" initialValue="1.0" highValue="3.0" maxValue="3.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="kg/s" SItoIP="SI*15.88" unitIP="GPM" disabled="false" isFault="false"/>
-
-		<sysVar name="CCPDd" displayName="cooling coil design air side pressure drop" description="" index="11" minValue="0.0" lowValue="0.0" initialValue="165.0" highValue="400.0" maxValue="400.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="Pa" SItoIP="SI/249.1" unitIP="In.W" disabled="false" isFault="false"/>
-
-		<sysVar name="CCQd" displayName="Cooling coil design cooling capacity" description="" index="9" minValue="0.0" lowValue="0.0" initialValue="29454.0" highValue="50000.0" maxValue="50000.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="W" SItoIP="SI*3.412" unitIP="Btu/h" disabled="false" isFault="false"/>
-
-	</systemNode>
-
-	<systemNode id="HC" name="Heating Coil">
-		<sysVar name="HCKi" displayName="Heating coil valve controller integrator time constant" description="" index="14" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
-
-		<sysVar name="HCKp" displayName="Heating coil valve controller P gain" description="" index="13" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
-
-		<sysVar name="HCPos" displayName="Heating coil valve position" description="" index="20" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
-
-		<sysVar name="HCTAirEnt" displayName="Heating coil hot water entering temp" description="Heating coil hot water entering temp" index="4" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="HCTAirLvg" displayName="Heating coil leaving air temp" description="" index="5" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="HCTLiqLvg" displayName="Heating coil leaving hot water temp" description="" index="6" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="HCAirFlwd" displayName="heating coil design air flow rate" description="" index="6" minValue="0.0" lowValue="0.0" initialValue="2.0" highValue="6.0" maxValue="6.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="kg/s" SItoIP="SI*1653.46" unitIP="CFM" disabled="false" isFault="false"/>
-
-		<sysVar name="HCLiqFlwd" displayName="Heating coil hot water design flow rate" description="" index="4" minValue="0.0" lowValue="0.0" initialValue="1.0" highValue="2.0" maxValue="2.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="kg/s" SItoIP="SI*15.88" unitIP="GPM" disabled="false" isFault="false"/>
-
-		<sysVar name="HCPDd" displayName="heating coil design air side pressure drop" description="" index="7" minValue="0.0" lowValue="0.0" initialValue="29.0" highValue="100.0" maxValue="100.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="Pa" SItoIP="SI/249.1" unitIP="In.W" disabled="false" isFault="false"/>
-
-		<sysVar name="HCQd" displayName="Heating coil design heating capacity" description="" index="5" minValue="0.0" lowValue="0.0" initialValue="37015.0" highValue="60000.0" maxValue="60000.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="W" SItoIP="SI*0.2931" unitIP="Btu/h" disabled="false" isFault="false"/>
-
-		<sysVar name="HCTLiqEnt" displayName="Heating coil hot water entering temp" description="" index="31" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-	</systemNode>
-
-	<systemNode id="MX" name="Mixing Box">
-		<sysVar name="MXEnableTAirOut" displayName="Economizer enable outside air temp" description="" index="6" minValue="15.0" lowValue="15.0" initialValue="24.0" highValue="30.0" maxValue="30.0" ioType="INPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="MXKi" displayName="Economizer PI controller integrator time constant" description="" index="8" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
-
-		<sysVar name="MXKp" displayName="Economizer PI controller P gain" description="" index="7" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
-
-		<sysVar name="MXMinPos" displayName="Outside air damper min position" description="" index="5" minValue="0.0" lowValue="0.0" initialValue="10.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
-
-		<sysVar name="MXExDampPos" displayName="Economizer exhaust air damper position" description="" index="2" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
-
-		<sysVar name="MXIntDampPos" displayName="Economizer intake air damper position" description="" index="25" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
-
-		<sysVar name="MXRtnDampPos" displayName="Economizer return air damper position" description="" index="24" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
-
-		<sysVar name="MXTAirMix" displayName="Economizer mixed air temperature" description="" index="27" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="MXTAirRet" displayName="Economizer return air temperature" description="" index="26" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-	</systemNode>
-
-	<systemNode id="RM" name="Room">
-		<sysVar name="RMTemp" displayName="Room temp" description="" index="1" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-	</systemNode>
-
-	<systemNode id="BOI" name="Boiler">
-		<sysVar name="BOILiqFlw" displayName="Hot water flow rate" description="" index="19" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="m3/s" SItoIP="SI*15850.32" unitIP="GPM" disabled="false" isFault="false"/>
-
-		<sysVar name="BOITLiqEnt" displayName="Boiler entering water temp" description="" index="28" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="BOITLiqSup" displayName="design hot water supply temperature" description="" index="17" minValue="60.0" lowValue="60.0" initialValue="82.0" highValue="95.0" maxValue="95.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-	</systemNode>
-
-	<systemNode id="CHL" name="Chiller">
-		<sysVar name="CHLLiqFlw" displayName="Chilled water flow rate" description="" index="18" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="m3/s" SItoIP="SI*15850.32" unitIP="GPM" disabled="false" isFault="false"/>
-
-		<sysVar name="CHLTLiqEnt" displayName="Chiller entering water temp" description="" index="29" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="CHLTLiqSup" displayName="design chilled water supply temperature" description="" index="16" minValue="2.0" lowValue="2.0" initialValue="7.0" highValue="13.0" maxValue="13.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-	</systemNode>
-
-	<systemNode id="DCT" name="Duct">
-		<sysVar name="DCTPstSP" displayName="Supply duct static pressure set point" description="" index="12" minValue="50.0" lowValue="50.0" initialValue="190.0" highValue="800.0" maxValue="800.0" ioType="INPUT" viewType="PUBLIC" unitSI="Pa" SItoIP="SI/249.1" unitIP="In.W" disabled="false" isFault="false"/>
-
-		<sysVar name="DCTStPre" displayName="Duct static pressure" description="" index="12" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="Pa" SItoIP="SI/249.1" unitIP="In.W" disabled="false" isFault="false"/>
-
-	</systemNode>
-
-	<systemNode id="FAN" name="Fan">
-		<sysVar name="FANki" displayName="Fan speed controller integrator time constant" description="" index="11" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
-
-		<sysVar name="FANKp" displayName="Fan speed controller P gain" description="" index="10" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
-
-		<sysVar name="FANSpdMin" displayName="Fan minimum speed ratio" description="" index="9" minValue="0.0" lowValue="0.0" initialValue="30.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
-
-		<sysVar name="FANAirFlw" displayName="Fan air flow rate" description="" index="13" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="m3/s" SItoIP="SI*2118.88" unitIP="CFM" disabled="false" isFault="false"/>
-
-		<sysVar name="FANPwr" displayName="Fan Power" description="" index="11" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="W" SItoIP="" unitIP="W" disabled="false" isFault="false"/>
-
-		<sysVar name="FANSpd" displayName="Fan speed" description="" index="10" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
-
-		<sysVar name="FANTAirEnt" displayName="Fan entering air temp" description="Fan entering air temp" index="23" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="FANTAirLvg" displayName="Fan leaving air temp" description="" index="22" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="FANAirFlwd" displayName="fan volume flow rate at design operating point" description="" index="3" minValue="0.0" lowValue="0.0" initialValue="2.0" highValue="6.0" maxValue="6.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="m3/s" SItoIP="SI*2118.88" unitIP="CFM" disabled="false" isFault="false"/>
-
-		<sysVar name="FANHd" displayName="fan head at design operating point" description="" index="2" minValue="0.0" lowValue="0.0" initialValue="461.0" highValue="1000.0" maxValue="1000.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="Pa" SItoIP="SI/249.1" unitIP="In.W" disabled="false" isFault="false"/>
-
-	</systemNode>
-
-	<systemNode id="FLT" name="Filter">
-		<sysVar name="FLTPDrop" displayName="filter pressure drop" description="" index="3" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="Pa" SItoIP="SI/249.1" unitIP="In.W" disabled="false" isFault="false"/>
-
-	</systemNode>
-
-	<systemNode id="SYS" name="System">
-		<sysVar name="SYSTAirDB" displayName="Outside air dry bulb" description="" index="1" minValue="-40.0" lowValue="-40.0" initialValue="35.0" highValue="50.0" maxValue="50.0" ioType="INPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="SYSTRmSPCool" displayName="Room temp cooling set point" description="" index="4" minValue="10.0" lowValue="10.0" initialValue="24.0" highValue="40.0" maxValue="40.0" ioType="INPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="SYSTRmSPHeat" displayName="Room temp heating set point" description="" index="2" minValue="10.0" lowValue="10.0" initialValue="20.0" highValue="30.0" maxValue="30.0" ioType="INPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="SYSTSupS" displayName="Supply air temp set point" description="" index="3" minValue="13.0" lowValue="13.0" initialValue="15.0" highValue="25.0" maxValue="25.0" ioType="INPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="SYSRmQSens" displayName="design room sensible heat gain" description="" index="1" minValue="0.0" lowValue="0.0" initialValue="8000.0" highValue="30000.0" maxValue="30000.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="W" SItoIP="SI*0.2931" unitIP="Btu/h" disabled="false" isFault="false"/>
-
-	</systemNode>
-
-	<systemNode id="VAV" name="VAV Box">
-		<sysVar name="VAVDmprKi" displayName="VAV damper controller integrator time constant" description="" index="18" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVDmprKp" displayName="VAV damper controller P gain" description="" index="17" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVMinPos" displayName="VAV damper min position" description="" index="19" minValue="0.0" lowValue="0.0" initialValue="20.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVRhcKi" displayName="VAV reheat coil controller integrator time constant" description="" index="21" minValue="0.0" lowValue="0.0" initialValue="60.0" highValue="1000.0" maxValue="1000.0" ioType="INPUT" viewType="PUBLIC" unitSI="sec" SItoIP="" unitIP="sec" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVRhcKp" displayName="VAV reheat coil controller P gain" description="" index="20" minValue="0.01" lowValue="0.01" initialValue="1.0" highValue="100.0" maxValue="100.0" ioType="INPUT" viewType="PUBLIC" unitSI="" SItoIP="" unitIP="" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVAirFlw" displayName="VAV Air flow rate" description="" index="14" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="m3/s" SItoIP="SI*2118.88" unitIP="CFM" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVDampPos" displayName="VAV box damper position" description="" index="15" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVRhcPos" displayName="VAV box reheat coil position" description="" index="16" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="%" SItoIP="" unitIP="%" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVTAirEnt" displayName="VAV entering air temp" description="" index="30" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVTAirLvg" displayName="VAV box leaving air temp" description="" index="17" minValue="0.0" lowValue="0.0" initialValue="0.0" highValue="0.0" maxValue="0.0" ioType="OUTPUT" viewType="PUBLIC" unitSI="C" SItoIP="SI*1.8+32" unitIP="F" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVAirFlwd" displayName="VAV max cooling air flow rate" description="" index="12" minValue="0.0" lowValue="0.0" initialValue="2.0" highValue="6.0" maxValue="6.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="kg/s" SItoIP="1653.46" unitIP="CFM" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVPDd" displayName="VAV air side pressure drop at max cooling" description="" index="13" minValue="0.0" lowValue="0.0" initialValue="3.0" highValue="10.0" maxValue="10.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="Pa" SItoIP="SI/249.1" unitIP="In.W" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVRhcPDd" displayName="VAV reheat coil air side pressure drop at design condition" description="" index="14" minValue="0.0" lowValue="0.0" initialValue="87.0" highValue="300.0" maxValue="300.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="Pa" SItoIP="SI/249.1" unitIP="In.W" disabled="false" isFault="false"/>
-
-		<sysVar name="VAVRhcQd" displayName="Reheat coil design heating capacity" description="" index="15" minValue="0.0" lowValue="0.0" initialValue="20000.0" highValue="50000.0" maxValue="50000.0" ioType="PARAMETER" viewType="PUBLIC" unitSI="W" SItoIP="" unitIP="W" disabled="false" isFault="false"/>
-
-	</systemNode>
-	<systemNode id="CTW" name="Cooling Tower"/>
-
-	<systemNode id="DIF" name="Diffuser"/>
-
-	<systemNode id="PLT" name="Plant"/>
-
-</sysVars>
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+  <id type="Integer">2</id>
+  <name type="String">Test Default Scenario</name>
+  <goal type="String"></goal>
+  <level type="Integer">1</level>
+  <client>
+    <version type="String">0_99.11</version>
+
+    <url type="String">http://github.com/downloads/danielmcquillen/LearnHVAC_AIR/LearnHVAC_Installer_0_99_11.exe</url>
+    <release_date type="Date">2010-04-05</release_date>
+  </client>
+  <shortDescription type="String">This is a test default scenario. This will be replaced by a complete default scenario at a later date.</shortDescription>
+  <description type="String"></description>
+  <valveInfoEnabled type="Boolean">true</valveInfoEnabled>
+  <faultsEnabled type="Boolean">true</faultsEnabled>
+
+  <allowRealTimeDateTimeChange type="Boolean">true</allowRealTimeDateTimeChange>
+  <allowLongTermDateChange type="Boolean">true</allowLongTermDateChange>
+  <inputsEnabled type="Boolean">true</inputsEnabled>
+  <inputsVisible type="Boolean">true</inputsVisible>
+  <faultsVisible type="Boolean">true</faultsVisible>
+  <faultsEnabled type="Boolean">true</faultsEnabled>
+
+  <longtermStartDate type="Time">04/06/2010</longtermStartDate>
+  <longtermStopDate type="Time">04/19/2010</longtermStopDate>
+  <realtimeStartDateTime type="Time">Tue Apr 06 12:00:00 -0400 2010</realtimeStartDateTime>
+  <sysVars>
+    <systemNode name="VAV Box" id="VAV">
+      <sysVar>
+        <name type="String">VAVBadZoneMeas</name>
+
+        <displayName type="String">Room temp sensor error</displayName>
+        <description type="String"></description>
+        <index type="Integer">32</index>
+        <lowValue type="Float">-200.0</lowValue>
+        <highValue type="Float">200.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+        <leftLabel type="String">Negative</leftLabel>
+        <rightLabel type="String">Positive</rightLabel>
+
+        <zonePosition type="String">CENTER</zonePosition>
+        <isPercentage type="Boolean">false</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVDampPos</name>
+        <displayName type="String">VAV box damper position</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">15</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+
+        <name type="String">VAVHCBootLeak</name>
+        <displayName type="String">VAV reheat coil valve boot leakage</displayName>
+        <description type="String"></description>
+        <index type="Integer">33</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+        <leftLabel type="String">Leaky</leftLabel>
+
+        <rightLabel type="String">Leaky</rightLabel>
+        <zonePosition type="String">LEFT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVBadFlowMeas</name>
+        <displayName type="String">VAV box air flow calibration error</displayName>
+
+        <description type="String"></description>
+        <index type="Integer">31</index>
+        <lowValue type="Float">-2.0</lowValue>
+        <highValue type="Float">2.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">m3/s</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">CFM</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+        <leftLabel type="String">Negative</leftLabel>
+        <rightLabel type="String">Positive</rightLabel>
+        <zonePosition type="String">CENTER</zonePosition>
+
+        <isPercentage type="Boolean">false</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVHCLeakyVlv</name>
+        <displayName type="String">Leaky VAV reheat coil valve</displayName>
+        <description type="String"></description>
+        <index type="Integer">34</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+
+        <subsection type="String"></subsection>
+        <leftLabel type="String">Leaky</leftLabel>
+        <rightLabel type="String">Leaky</rightLabel>
+        <zonePosition type="String">CENTER</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+
+        <name type="String">VAVHCStuckVlv</name>
+        <displayName type="String">Stuck VAV reheat coil valve</displayName>
+        <description type="String"></description>
+        <index type="Integer">35</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+        <leftLabel type="String">open</leftLabel>
+
+        <rightLabel type="String">open</rightLabel>
+        <zonePosition type="String">CENTER</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVDmprKi</name>
+        <displayName type="String">VAV damper controller integrator time constant</displayName>
+
+        <description type="String"></description>
+        <index type="Integer">18</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">1000.0</highValue>
+        <initialValue type="Float">60.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">second</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">second</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVHCFouledCoil</name>
+        <displayName type="String">VAV fouled reheat coil</displayName>
+        <description type="String"></description>
+        <index type="Integer">36</index>
+        <lowValue type="Float">0.0</lowValue>
+
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+
+        <leftLabel type="String">Fouled</leftLabel>
+        <rightLabel type="String">Fouled</rightLabel>
+        <zonePosition type="String">LEFT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVRhcKi</name>
+
+        <displayName type="String">VAV reheat coil controller integrator time constant</displayName>
+        <description type="String"></description>
+        <index type="Integer">21</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">1000.0</highValue>
+        <initialValue type="Float">60.0</initialValue>
+
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">second</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">second</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVAirFlw</name>
+        <displayName type="String">VAV Air flow rate</displayName>
+        <description type="String"></description>
+        <index type="Integer">14</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">m3/s</unitSI>
+
+        <SItoIP type="String">SI*2118.88</SItoIP>
+        <unitIP type="String">CFM</unitIP>
+        <disabled type="Boolean">false</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVTAirEnt</name>
+
+        <displayName type="String">VAV entering air temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">30</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVAirFlwd</name>
+        <displayName type="String">VAV max cooling air flow rate</displayName>
+        <description type="String"></description>
+        <index type="Integer">12</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">6.0</highValue>
+        <initialValue type="Float">2.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">kg/s</unitSI>
+
+        <SItoIP type="String">1653.46</SItoIP>
+        <unitIP type="String">CFM</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVRhcPDd</name>
+
+        <displayName type="String">VAV reheat coil air side pressure drop at design condition</displayName>
+        <description type="String"></description>
+        <index type="Integer">14</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">300.0</highValue>
+        <initialValue type="Float">87.0</initialValue>
+
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">Pa</unitSI>
+        <SItoIP type="String">SI/249.1</SItoIP>
+        <unitIP type="String">In.W</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVDmprKp</name>
+        <displayName type="String">VAV damper controller P gain</displayName>
+        <description type="String"></description>
+        <index type="Integer">17</index>
+
+        <lowValue type="Float">0.01</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">1.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String"></unitSI>
+
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String"></unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVHCUndersizedCoil</name>
+
+        <displayName type="String">VAV undersized reheat coil</displayName>
+        <description type="String"></description>
+        <index type="Integer">37</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String"></unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String"></unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+        <leftLabel type="String">Undersized</leftLabel>
+        <rightLabel type="String">Undersized</rightLabel>
+        <zonePosition type="String">LEFT</zonePosition>
+
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVPDd</name>
+        <displayName type="String">VAV air side pressure drop at max cooling</displayName>
+        <description type="String"></description>
+        <index type="Integer">13</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">10.0</highValue>
+        <initialValue type="Float">3.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">Pa</unitSI>
+
+        <SItoIP type="String">SI/249.1</SItoIP>
+        <unitIP type="String">In.W</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVRhcPos</name>
+
+        <displayName type="String">VAV box reheat coil position</displayName>
+        <description type="String"></description>
+        <index type="Integer">16</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVMinFlwRatio</name>
+        <displayName type="String">VAV min volume flow rate ratio</displayName>
+        <description type="String"></description>
+        <index type="Integer">19</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">20.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVRhcKp</name>
+
+        <displayName type="String">VAV reheat coil controller P gain</displayName>
+        <description type="String"></description>
+        <index type="Integer">20</index>
+        <lowValue type="Float">0.01</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">1.0</initialValue>
+
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String"></unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String"></unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVTAirLvg</name>
+        <displayName type="String">VAV box leaving air temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">17</index>
+        <lowValue type="Float">0.0</lowValue>
+
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">VAVRhcQd</name>
+        <displayName type="String">Reheat coil design heating capacity</displayName>
+
+        <description type="String"></description>
+        <index type="Integer">15</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">50000.0</highValue>
+        <initialValue type="Float">20000.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">W</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">W</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+
+      </sysVar>
+    </systemNode>
+    <systemNode name="Mixing Box" id="MX">
+      <sysVar>
+        <name type="String">MXLeakRetDmpr</name>
+        <displayName type="String">Leaky return air damper</displayName>
+        <description type="String"></description>
+        <index type="Integer">22</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+
+        <subsection type="String"></subsection>
+        <leftLabel type="String">0% open</leftLabel>
+        <rightLabel type="String">100% open</rightLabel>
+        <zonePosition type="String">NO_GRADIENT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+
+        <name type="String">MXTAirMix</name>
+        <displayName type="String">Economizer mixed air temperature</displayName>
+        <description type="String"></description>
+        <index type="Integer">27</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">MXKi</name>
+        <displayName type="String">Economizer PI controller integrator time constant</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">8</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">1000.0</highValue>
+        <initialValue type="Float">60.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">second</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">second</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+
+        <name type="String">MXMinPos</name>
+        <displayName type="String">Outside air damper min position</displayName>
+        <description type="String"></description>
+        <index type="Integer">5</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+
+        <initialValue type="Float">10.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">MXIntDampPos</name>
+        <displayName type="String">Economizer intake air damper position</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">25</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+
+        <name type="String">MXEnableTAirOut</name>
+        <displayName type="String">Economizer enable outside air temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">6</index>
+        <lowValue type="Float">15.0</lowValue>
+        <highValue type="Float">30.0</highValue>
+
+        <initialValue type="Float">24.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">MXTAirRet</name>
+        <displayName type="String">Economizer return air temperature</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">26</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+
+      <sysVar>
+        <name type="String">MXReverseActionAct</name>
+        <displayName type="String">Reverse Acting Damper</displayName>
+        <description type="String"></description>
+        <index type="Integer">23</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">1.0</highValue>
+
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String"></unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String"></unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">CHECKBOX</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+        <leftLabel type="String"></leftLabel>
+        <rightLabel type="String"></rightLabel>
+        <zonePosition type="String"></zonePosition>
+
+        <isPercentage type="Boolean">false</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">MXExDampPos</name>
+        <displayName type="String">Economizer exhaust air damper position</displayName>
+        <description type="String"></description>
+        <index type="Integer">2</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">MXStuckActuator</name>
+
+        <displayName type="String">Damper/actuator stuck position</displayName>
+        <description type="String"></description>
+        <index type="Integer">24</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String"></unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String"></unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+        <leftLabel type="String">0% open</leftLabel>
+        <rightLabel type="String">100% open</rightLabel>
+        <zonePosition type="String">NO_GRADIENT</zonePosition>
+
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">MXKp</name>
+        <displayName type="String">Economizer PI controller P gain</displayName>
+        <description type="String"></description>
+        <index type="Integer">7</index>
+
+        <lowValue type="Float">0.01</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">1.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String"></unitSI>
+
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String"></unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">MXRtnDampPos</name>
+
+        <displayName type="String">Economizer return air damper position</displayName>
+        <description type="String"></description>
+        <index type="Integer">24</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+    </systemNode>
+    <systemNode name="Cooling Coil" id="CC">
+      <sysVar>
+        <name type="String">CCAirFlwd</name>
+        <displayName type="String">cooling coil design air flow rate</displayName>
+
+        <description type="String"></description>
+        <index type="Integer">10</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">6.0</highValue>
+        <initialValue type="Float">2.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">kg/s</unitSI>
+        <SItoIP type="String">1653.46</SItoIP>
+        <unitIP type="String">CFM</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+
+      </sysVar>
+      <sysVar>
+        <name type="String">CCTLiqEnt</name>
+        <displayName type="String">Cooling coil chilled water entering temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">32</index>
+        <lowValue type="Float">0.0</lowValue>
+
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">false</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">CCFouledCoil</name>
+        <displayName type="String">Fouled cooling coil</displayName>
+
+        <description type="String"></description>
+        <index type="Integer">41</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+        <leftLabel type="String">Fouled</leftLabel>
+        <rightLabel type="String">Fouled</rightLabel>
+        <zonePosition type="String">LEFT</zonePosition>
+
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">CCKp</name>
+        <displayName type="String">Cooling coil valve controller P gain</displayName>
+        <description type="String"></description>
+        <index type="Integer">15</index>
+
+        <lowValue type="Float">0.01</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">1.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String"></unitSI>
+
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String"></unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">CCBootLeak</name>
+
+        <displayName type="String">Cooling coil valve boot leakage</displayName>
+        <description type="String"></description>
+        <index type="Integer">38</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+        <leftLabel type="String">Leaky</leftLabel>
+        <rightLabel type="String">Leaky</rightLabel>
+
+        <zonePosition type="String">LEFT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">CCPDd</name>
+        <displayName type="String">cooling coil design air side pressure drop</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">11</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">400.0</highValue>
+        <initialValue type="Float">165.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">Pa</unitSI>
+        <SItoIP type="String">SI/249.1</SItoIP>
+        <unitIP type="String">In.W</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+
+      <sysVar>
+        <name type="String">CCLiqFlwd</name>
+        <displayName type="String">Cooling coil chilled water design mass flow rate</displayName>
+        <description type="String"></description>
+        <index type="Integer">8</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">3.0</highValue>
+
+        <initialValue type="Float">1.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">kg/s</unitSI>
+        <SItoIP type="String">SI*15.88</SItoIP>
+        <unitIP type="String">GPM</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">CCStuckVlv</name>
+        <displayName type="String">Stuck cooling coil valve</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">40</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+        <leftLabel type="String">Stuck</leftLabel>
+        <rightLabel type="String">Stuck</rightLabel>
+        <zonePosition type="String">LEFT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+
+      </sysVar>
+      <sysVar>
+        <name type="String">CCPos</name>
+        <displayName type="String">Cooling coil valve position</displayName>
+        <description type="String"></description>
+        <index type="Integer">21</index>
+        <lowValue type="Float">0.0</lowValue>
+
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">CCUA</name>
+        <displayName type="String">Cooling coil design cooling capacity</displayName>
+
+        <description type="String"></description>
+        <index type="Integer">9</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">50000.0</highValue>
+        <initialValue type="Float">29454.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">W</unitSI>
+        <SItoIP type="String">SI*3.412</SItoIP>
+        <unitIP type="String">Btu/h</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+
+      </sysVar>
+      <sysVar>
+        <name type="String">CCLeakyVlv</name>
+        <displayName type="String">Leaky cooling coil valve</displayName>
+        <description type="String"></description>
+        <index type="Integer">39</index>
+        <lowValue type="Float">0.0</lowValue>
+
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+
+        <leftLabel type="String">Leaky</leftLabel>
+        <rightLabel type="String">Leaky</rightLabel>
+        <zonePosition type="String">LEFT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">CCTAirLvg</name>
+
+        <displayName type="String">Cooling coil leaving air temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">8</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">CCTLiqLvg</name>
+        <displayName type="String">Cooling coil leaving chilled water temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">9</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">CCKi</name>
+
+        <displayName type="String">Cooling coil valve controller integrator time constant</displayName>
+        <description type="String"></description>
+        <index type="Integer">16</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">1000.0</highValue>
+        <initialValue type="Float">60.0</initialValue>
+
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">second</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">second</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">CCTAirEnt</name>
+        <displayName type="String">Cooling coil entering air temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">7</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">CCUndersizedCoil</name>
+
+        <displayName type="String">Undersized cooling coil</displayName>
+        <description type="String"></description>
+        <index type="Integer">42</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String"></subsection>
+        <leftLabel type="String">Undersized</leftLabel>
+        <rightLabel type="String">Undersized</rightLabel>
+
+        <zonePosition type="String">LEFT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+    </systemNode>
+    <systemNode name="Diffuser" id="DIF">
+    </systemNode>
+    <systemNode name="System" id="SYS">
+      <sysVar>
+
+        <name type="String">SYSRmQSens</name>
+        <displayName type="String">design room sensible heat gain</displayName>
+        <description type="String"></description>
+        <index type="Integer">1</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">30000.0</highValue>
+
+        <initialValue type="Float">8000.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">W</unitSI>
+        <SItoIP type="String">SI*0.2931</SItoIP>
+        <unitIP type="String">Btu/h</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">SYSTRmSPHeat</name>
+        <displayName type="String">Room temp heating set point</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">2</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">18.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+
+      <sysVar>
+        <name type="String">SYSTAirDB</name>
+        <displayName type="String">Outside air dry bulb</displayName>
+        <description type="String"></description>
+        <index type="Integer">1</index>
+        <lowValue type="Float">-40.0</lowValue>
+        <highValue type="Float">50.0</highValue>
+
+        <initialValue type="Float">30.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">SYSTSupS</name>
+        <displayName type="String">Supply air temp set point</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">3</index>
+        <lowValue type="Float">13.0</lowValue>
+        <highValue type="Float">25.0</highValue>
+        <initialValue type="Float">15.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+
+      <sysVar>
+        <name type="String">SYSRHOutside</name>
+        <displayName type="String">Outside air relative humidity</displayName>
+        <description type="String"></description>
+        <index type="Integer">43</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+
+        <initialValue type="Float">30.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">SYSTRmSPCool</name>
+        <displayName type="String">Room temp cooling set point</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">4</index>
+        <lowValue type="Float">16.0</lowValue>
+        <highValue type="Float">26.0</highValue>
+        <initialValue type="Float">24.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+
+    </systemNode>
+    <systemNode name="Plant" id="PLT">
+    </systemNode>
+    <systemNode name="Filter" id="FLT">
+      <sysVar>
+        <name type="String">FLTPDrop</name>
+        <displayName type="String">filter pressure drop</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">3</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">Pa</unitSI>
+        <SItoIP type="String">SI/249.1</SItoIP>
+        <unitIP type="String">In.W</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+
+    </systemNode>
+    <systemNode name="Room" id="RM">
+      <sysVar>
+        <name type="String">RMTemp</name>
+        <displayName type="String">Room temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">1</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+    </systemNode>
+    <systemNode name="Heating Coil" id="HC">
+
+      <sysVar>
+        <name type="String">HCTLiqLvg</name>
+        <displayName type="String">Heating coil leaving hot water temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">6</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">HCBootLeak</name>
+        <displayName type="String">Heating coil valve boot leakage</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">25</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String">Valve</subsection>
+        <leftLabel type="String">0% open</leftLabel>
+        <rightLabel type="String">100% open</rightLabel>
+        <zonePosition type="String">NO_GRADIENT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+
+      </sysVar>
+      <sysVar>
+        <name type="String">HCStuckVlv</name>
+        <displayName type="String">Stuck heating coil valve</displayName>
+        <description type="String"></description>
+        <index type="Integer">27</index>
+        <lowValue type="Float">0.0</lowValue>
+
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String">Valve</subsection>
+
+        <leftLabel type="String">0% open</leftLabel>
+        <rightLabel type="String">100% open</rightLabel>
+        <zonePosition type="String">NO_GRADIENT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">HCPDd</name>
+
+        <displayName type="String">heating coil design air side pressure drop</displayName>
+        <description type="String"></description>
+        <index type="Integer">7</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">29.0</initialValue>
+
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">Pa</unitSI>
+        <SItoIP type="String">SI/249.1</SItoIP>
+        <unitIP type="String">In.W</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">HCPos</name>
+        <displayName type="String">Heating coil valve position</displayName>
+        <description type="String"></description>
+        <index type="Integer">20</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">HCKp</name>
+
+        <displayName type="String">Heating coil valve controller P gain</displayName>
+        <description type="String"></description>
+        <index type="Integer">13</index>
+        <lowValue type="Float">0.01</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">1.0</initialValue>
+
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String"></unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String"></unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+
+      </sysVar>
+      <sysVar>
+        <name type="String">HCTAirEnt</name>
+        <displayName type="String">Heating coil entering air temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">4</index>
+        <lowValue type="Float">0.0</lowValue>
+
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">HCUA</name>
+        <displayName type="String">Heating coil design heating capacity</displayName>
+
+        <description type="String"></description>
+        <index type="Integer">5</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">60000.0</highValue>
+        <initialValue type="Float">37015.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">W</unitSI>
+        <SItoIP type="String">SI*0.2931</SItoIP>
+        <unitIP type="String">Btu/h</unitIP>
+        <disabled type="Boolean">false</disabled>
+        <isFault type="Boolean">false</isFault>
+
+      </sysVar>
+      <sysVar>
+        <name type="String">HCLeakyVlv</name>
+        <displayName type="String">Leaky heating coil valve</displayName>
+        <description type="String"></description>
+        <index type="Integer">26</index>
+        <lowValue type="Float">0.0</lowValue>
+
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String">Valve</subsection>
+
+        <leftLabel type="String">0% leaky</leftLabel>
+        <rightLabel type="String">100% leaky</rightLabel>
+        <zonePosition type="String">LEFT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">HCTLiqEnt</name>
+
+        <displayName type="String">Heating coil hot water entering temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">31</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">false</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">HCAirFlwd</name>
+        <displayName type="String">heating coil design air flow rate</displayName>
+        <description type="String"></description>
+        <index type="Integer">6</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">6.0</highValue>
+        <initialValue type="Float">2.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">kg/s</unitSI>
+
+        <SItoIP type="String">SI*1653.46</SItoIP>
+        <unitIP type="String">CFM</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">HCFouledCoil</name>
+
+        <displayName type="String">Fouled heating coil</displayName>
+        <description type="String"></description>
+        <index type="Integer">28</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String">Coil</subsection>
+        <leftLabel type="String">0% fouled</leftLabel>
+        <rightLabel type="String">100% fouled</rightLabel>
+
+        <zonePosition type="String">LEFT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+      <sysVar>
+        <name type="String">HCLiqFlwd</name>
+        <displayName type="String">Heating coil hot water design flow rate</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">4</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">2.0</highValue>
+        <initialValue type="Float">1.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">kg/s</unitSI>
+        <SItoIP type="String">SI*15.88</SItoIP>
+        <unitIP type="String">GPM</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+
+      <sysVar>
+        <name type="String">HCTAirLvg</name>
+        <displayName type="String">Heating coil leaving air temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">5</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">HCKi</name>
+        <displayName type="String">Heating coil valve controller integrator time constant</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">14</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">1000.0</highValue>
+        <initialValue type="Float">60.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">second</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">second</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+
+        <name type="String">HCUndersizedCoil</name>
+        <displayName type="String">Under sized coil</displayName>
+        <description type="String"></description>
+        <index type="Integer">29</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+        <subsection type="String">Coil</subsection>
+        <leftLabel type="String">0% undersized</leftLabel>
+
+        <rightLabel type="String">100% undersized</rightLabel>
+        <zonePosition type="String">LEFT</zonePosition>
+        <isPercentage type="Boolean">true</isPercentage>
+      </sysVar>
+    </systemNode>
+    <systemNode name="Cooling Tower" id="CTW">
+    </systemNode>
+
+    <systemNode name="Boiler" id="BOI">
+      <sysVar>
+        <name type="String">BOITLiqEnt</name>
+        <displayName type="String">Boiler entering water temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">28</index>
+        <lowValue type="Float">0.0</lowValue>
+
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">BOITLiqSup</name>
+        <displayName type="String">design hot water supply temperature</displayName>
+
+        <description type="String"></description>
+        <index type="Integer">17</index>
+        <lowValue type="Float">60.0</lowValue>
+        <highValue type="Float">95.0</highValue>
+        <initialValue type="Float">82.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+
+      </sysVar>
+      <sysVar>
+        <name type="String">BOILiqFlw</name>
+        <displayName type="String">Hot water flow rate</displayName>
+        <description type="String"></description>
+        <index type="Integer">19</index>
+        <lowValue type="Float">0.0</lowValue>
+
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">m3/s</unitSI>
+        <SItoIP type="String">SI*15850.32</SItoIP>
+
+        <unitIP type="String">GPM</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+    </systemNode>
+    <systemNode name="Chiller" id="CHL">
+      <sysVar>
+
+        <name type="String">CHLLiqFlw</name>
+        <displayName type="String">Chilled water flow rate</displayName>
+        <description type="String"></description>
+        <index type="Integer">18</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">m3/s</unitSI>
+        <SItoIP type="String">SI*15850.32</SItoIP>
+        <unitIP type="String">GPM</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">CHLTLiqSup</name>
+        <displayName type="String">design chilled water supply temperature</displayName>
+        <description type="String"></description>
+
+        <index type="Integer">16</index>
+        <lowValue type="Float">2.0</lowValue>
+        <highValue type="Float">13.0</highValue>
+        <initialValue type="Float">7.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+
+      <sysVar>
+        <name type="String">CHLTLiqEnt</name>
+        <displayName type="String">Chiller entering water temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">29</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+    </systemNode>
+    <systemNode name="Fan" id="FAN">
+      <sysVar>
+        <name type="String">FANTAirEnt</name>
+
+        <displayName type="String">Fan entering air temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">23</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">false</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">FANAirFlw</name>
+        <displayName type="String">Fan air flow rate</displayName>
+        <description type="String"></description>
+        <index type="Integer">13</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">m3/s</unitSI>
+
+        <SItoIP type="String">SI*2118.88</SItoIP>
+        <unitIP type="String">CFM</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">FANPwr</name>
+
+        <displayName type="String">Fan Power</displayName>
+        <description type="String"></description>
+        <index type="Integer">11</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">W</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">W</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">FANAirFlwd</name>
+        <displayName type="String">fan volume flow rate at design operating point</displayName>
+        <description type="String"></description>
+        <index type="Integer">3</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">6.0</highValue>
+        <initialValue type="Float">2.0</initialValue>
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">m3/s</unitSI>
+
+        <SItoIP type="String">SI*2118.88</SItoIP>
+        <unitIP type="String">CFM</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">FANSpd</name>
+
+        <displayName type="String">Fan speed</displayName>
+        <description type="String"></description>
+        <index type="Integer">10</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">FANSpdMin</name>
+        <displayName type="String">Fan minimum speed ratio</displayName>
+        <description type="String"></description>
+        <index type="Integer">9</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">100.0</highValue>
+        <initialValue type="Float">30.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">%</unitSI>
+
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">%</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">FANTAirLvg</name>
+
+        <displayName type="String">Fan leaving air temp</displayName>
+        <description type="String"></description>
+        <index type="Integer">22</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+
+        <ioType type="String">OUTPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">C</unitSI>
+        <SItoIP type="String">SI*1.8+32</SItoIP>
+        <unitIP type="String">F</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">FANki</name>
+        <displayName type="String">Fan speed controller integrator time constant</displayName>
+        <description type="String"></description>
+        <index type="Integer">11</index>
+
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">1000.0</highValue>
+        <initialValue type="Float">60.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">second</unitSI>
+
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">second</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">FANHd</name>
+
+        <displayName type="String">fan head at design operating point</displayName>
+        <description type="String"></description>
+        <index type="Integer">2</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">1000.0</highValue>
+        <initialValue type="Float">461.0</initialValue>
+
+        <ioType type="String">PARAMETER</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">Pa</unitSI>
+        <SItoIP type="String">SI/249.1</SItoIP>
+        <unitIP type="String">In.W</unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+      <sysVar>
+        <name type="String">FANFailedFanSensor</name>
+        <displayName type="String">Duct static press sensor offset</displayName>
+        <description type="String"></description>
+        <index type="Integer">30</index>
+
+        <lowValue type="Float">-500.0</lowValue>
+        <highValue type="Float">500.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">Pa</unitSI>
+
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String">In.W</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">true</isFault>
+        <faultWidgetType type="String">SLIDER</faultWidgetType>
+        <faultIsActive type="Boolean">false</faultIsActive>
+
+        <subsection type="String">Negative</subsection>
+        <leftLabel type="String">Positive</leftLabel>
+        <rightLabel type="String"></rightLabel>
+        <zonePosition type="String">CENTER</zonePosition>
+        <isPercentage type="Boolean">false</isPercentage>
+      </sysVar>
+      <sysVar>
+
+        <name type="String">FANKp</name>
+        <displayName type="String">Fan speed controller P gain</displayName>
+        <description type="String"></description>
+        <index type="Integer">10</index>
+        <lowValue type="Float">0.01</lowValue>
+        <highValue type="Float">100.0</highValue>
+
+        <initialValue type="Float">1.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String"></unitSI>
+        <SItoIP type="String"></SItoIP>
+        <unitIP type="String"></unitIP>
+        <disabled type="Boolean">true</disabled>
+
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+    </systemNode>
+    <systemNode name="Duct" id="DCT">
+      <sysVar>
+        <name type="String">DCTStPre</name>
+        <displayName type="String">Duct static pressure</displayName>
+
+        <description type="String"></description>
+        <index type="Integer">12</index>
+        <lowValue type="Float">0.0</lowValue>
+        <highValue type="Float">0.0</highValue>
+        <initialValue type="Float">0.0</initialValue>
+        <ioType type="String">OUTPUT</ioType>
+
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">Pa</unitSI>
+        <SItoIP type="String">SI/249.1</SItoIP>
+        <unitIP type="String">In.W</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+
+      </sysVar>
+      <sysVar>
+        <name type="String">DCTPstSP</name>
+        <displayName type="String">Supply duct static pressure set point</displayName>
+        <description type="String"></description>
+        <index type="Integer">12</index>
+        <lowValue type="Float">50.0</lowValue>
+
+        <highValue type="Float">800.0</highValue>
+        <initialValue type="Float">190.0</initialValue>
+        <ioType type="String">INPUT</ioType>
+        <viewType type="String">PUBLIC</viewType>
+        <unitSI type="String">Pa</unitSI>
+        <SItoIP type="String">SI/249.1</SItoIP>
+
+        <unitIP type="String">In.W</unitIP>
+        <disabled type="Boolean">true</disabled>
+        <isFault type="Boolean">false</isFault>
+      </sysVar>
+    </systemNode>
+  </sysVars>
 </scenario>

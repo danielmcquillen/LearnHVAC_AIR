@@ -12,31 +12,31 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
 			import com.mcquilleninteractive.learnhvac.business.ShortTermSimulationMockDelegate;
-			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
-			import com.mcquilleninteractive.learnhvac.view.longterm.ILongTermOptionsPanel;
+			import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent;
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel;
-			import com.mcquilleninteractive.learnhvac.event.LongTermSimulationEvent
-			import com.mcquilleninteractive.learnhvac.view.popups.RunningLongTermSimulationPopup
-			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.mcquilleninteractive.learnhvac.model.SystemVariable	
-			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel	
-			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent	
-			import com.mcquilleninteractive.learnhvac.event.UnitsEvent
-			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO
-			import com.mcquilleninteractive.learnhvac.util.Logger
-			import com.mcquilleninteractive.learnhvac.util.Conversions
-				
-			import mx.managers.PopUpManager
-			import mx.collections.XMLListCollection;
+			import com.mcquilleninteractive.learnhvac.model.LongTermSimulationModel;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel;
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+			import com.mcquilleninteractive.learnhvac.util.Conversions;
+			import com.mcquilleninteractive.learnhvac.util.Logger;
+			import com.mcquilleninteractive.learnhvac.view.longterm.ILongTermOptionsPanel;
+			import com.mcquilleninteractive.learnhvac.view.popups.RunningLongTermSimulationPopup;
+			import com.mcquilleninteractive.learnhvac.vo.LongTermSimulationVO;
+			
 			import mx.collections.ArrayCollection;
-			import mx.events.SliderEvent
-			import mx.validators.Validator
-			import mx.controls.Alert
-			import mx.controls.textClasses.TextRange       
-			import mx.events.ItemClickEvent
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.controls.textClasses.TextRange;
+			import mx.events.ItemClickEvent;
+			import mx.events.SliderEvent;
+			import mx.managers.PopUpManager;
+			import mx.validators.Validator;
 			
 			
             
@@ -86,6 +86,8 @@
 											environmentOptions, 
 											loadOptions]
 				
+				cboElevationView.selectedIndex=1
+				
 				for each (var options:ILongTermOptionsPanel in longTermInputPanelsArr)
 				{
 					options.setViewRefs(elevationView, zoneSelector)
@@ -93,6 +95,8 @@
 				}
 													
 				
+				onZoneSelectorResize()
+				onElevationViewResize()
 				
 			}
 			
@@ -146,8 +150,6 @@
 						return false
 					}
 				}
-				
-				
 				return true
 			}
 			
@@ -192,7 +194,7 @@
 				var event:LongTermSimulationEvent = new LongTermSimulationEvent(LongTermSimulationEvent.SIM_START, true)
 				dispatchEvent(event)
 			}
-														
+			
 			private function onElevationViewResize():void
 			{
 				elevationView.setComponentSize(evCanvas.width, evCanvas.height); 
@@ -213,8 +215,12 @@
 			   
 			private function onZoneSelectorResize():void
 			{
-				zoneSelector.setComponentSize(zsCanvas.width, zsCanvas.height)
-				zsCanvas.invalidateProperties()
+				var w:Number = zsCanvas.width
+				var h:Number = zsCanvas.height
+				if (this.visible)
+				{				
+					zoneSelector.setComponentSize(w, h)
+				}
 			}
 				
 			/* updates elevation view when size of building changes in a different view */
@@ -222,17 +228,7 @@
 			public function onElevationViewChange(event:Event):void
 			{
 				currElevationView = event.currentTarget.selectedItem.data	
-				buildingPropertyOptions.setElevationView(currElevationView)
-
-				//draw floors
-				var width:Number = buildingPropertyOptions.getWidthForElevation()
-				var windowRatio:Number = buildingPropertyOptions.getWindowRatioForElevation()
-				
-				elevationView.drawFloors(	width, 
-											longTermSimulationModel.stories, 
-											longTermSimulationModel.storyHeight, 
-											windowRatio, 
-											longTermSimulationModel.windowStyle)
+				buildingPropertyOptions.setElevationView(currElevationView)					
 			}							
 			
 		]]>
@@ -299,8 +295,7 @@
 							minWidth="250"
 							minHeight="250" 
 							horizontalScrollPolicy="off"
-							verticalScrollPolicy="off"
-						    
+							verticalScrollPolicy="off"						    
 							resize="onZoneSelectorResize()"  >
 						<myComps:ZoneSelector id="zoneSelector" />		
 					</mx:Canvas>

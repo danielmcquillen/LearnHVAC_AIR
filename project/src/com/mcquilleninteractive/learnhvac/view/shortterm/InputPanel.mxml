@@ -123,7 +123,6 @@
 		
 		public function clearInputPanel():void
 		{
-			Logger.debug("#InputPanel: clearInputPanel()")
 			//clear out all inputs
 			for (var listName:String in inputLists)
 			{
@@ -139,9 +138,12 @@
 		
 		public function filterInputPanel(item:Object):Boolean 
 		{
-			return 	item.ioType=="INPUT" && 
-					item.viewType=="PUBLIC" && 
-					item.isFault == false
+			if(item.ioType=="INPUT" || item.ioType=="PARAMETER")
+			{
+				return item.viewType=="PUBLIC" && item.isFault == false
+			}
+			return false
+					
 		}
 		
 		public function filterFaultPanel(item:Object):Boolean 
@@ -160,8 +162,16 @@
 			{							
 				//assign each systemNodeModel's sysVarsArr to a respective list control
 				var sysNodeID:String = sysNode.id
-				var inputList:List = this["lstInputItems"+sysNodeID]
-				
+					
+				try
+				{
+					var inputList:List = this["lstInputItems"+sysNodeID]
+				}
+				catch(error:Error)
+				{
+					Logger.error("couldn't find the inputList for sysNodeID: " + sysNodeID, this)
+					continue
+				}
 				//add filter function for input panel
 				var sysVarArrView:ListCollectionView = new ListCollectionView(sysNode.sysVarsArr)
 				sysVarArrView.filterFunction = filterInputPanel
@@ -231,7 +241,6 @@
 		
 		public function onCurrNodeIndexChange():void
 		{
-			Logger.debug("#InputPanel: onCurrNodeIndexChange() called")
 			if (cbxSyncToNav.selected)
 			{
 				//update the combo box
@@ -242,10 +251,7 @@
 		}
 		
 		public function tabClickHandler(event:ItemClickEvent):void{
-			
-			Logger.debug("#tabClick() viewState = " + viewState)
-			
-			
+						
 			switch (event.label)
 			{
 				case "RUN OPTIONS":
@@ -281,7 +287,6 @@
 		}
 	
 		
-		
 		public function resetToInitial():void
 		{
 			dispatchEvent( new ResetInputsEvent(ResetInputsEvent.RESET_SHORT_TERM_INPUTS_TO_INITIAL_VALUES, true))			
@@ -292,10 +297,24 @@
 			Logger.debug("areInputsValid()",this)
 			inputsErrorMsg = "" 
 			
+			// INPUT CHECKS
+			// Do any input checks here and prevent submit if user has strange combinations
+			
+			// TODO : Make sure heating set point's max is cooling set point	
+			var coolingSetPoint:SystemVariable = scenarioModel.getSysVar("SYSTRmSPCool")
+			var heatingSetPoint:SystemVariable = scenarioModel.getSysVar("SYSTRmSPHeat")
+			if (coolingSetPoint < heatingSetPoint)
+			{
+				inputsErrorMsg = "Cooling setpoint must be greater than heating setpoint"
+				return false
+			}
+				
 			var inputSysVarsArr:Array = scenarioModel.getInputSysVars()
 			
 			for each (var sysVar:SystemVariable in inputSysVarsArr)
 			{
+				if (sysVar.isFault) continue //faults are only sliders and checkboxes so are always valid
+					
 				if (sysVar.isLocalValueValid()==false)
 				{
 					Logger.debug("Local value for sysVar: " + sysVar.name + " is invalid", this)
@@ -307,12 +326,6 @@
 					break
 				}
 			}		
-			
-			// INPUT CHECKS
-			// Do any input checks here and prevent submit if user has strange combinations
-			
-			// TODO : Make sure heating set point's max is cooling set point	
-			
 			
 			// CHECK OPTIONS
 			if (this.optionsPanel.isValid==false)

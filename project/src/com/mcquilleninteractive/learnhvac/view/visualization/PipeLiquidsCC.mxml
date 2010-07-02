@@ -67,7 +67,7 @@
 			{
 				try
 				{
-					setTLiqEntValve(scenarioModel.getSysVar("CHLTLiqSup").baseSIValue)
+					setTLiqEntValve(scenarioModel.getSysVar("CCTLiqEnt").baseSIValue)
 					setTLiqLvg(scenarioModel.getSysVar("CCTLiqLvg").baseSIValue)
 					setmLiqEnt(scenarioModel.getSysVar("CHLLiqFlw").baseSIValue	)			
 				}
@@ -116,6 +116,9 @@
 					
 			public function setmLiqEnt(value:Number):void
 			{
+				//we need to adjust becuase the value is so low between 0 and .0013
+				value = value * 10000
+					
 				if (!_active) return						
 				liquidsCC.setFlow(value, 0)
 				liquidsCC.setFlow(value, 1)

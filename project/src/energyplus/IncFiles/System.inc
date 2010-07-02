@@ -644,7 +644,7 @@ OutdoorAir:Mixer,
   Mixed Air Node 1,  !- Mixed Air Node Name
   VAV_5_OAInlet Node,  !- Outdoor Air Stream Node Name
   VAV_5_OARelief Node,  !- Relief Air Stream Node Name
-  VAV_5 Supply Equipment Inlet Node;  !- Return Air Stream Node Name
+  VAV_5 OA_Sys_Inlet Node;  !- Return Air Stream Node Name
 
 SetpointManager:MixedAir,
   VAV_5_OAMixed Air Temp Manager,  !- Name
@@ -657,7 +657,7 @@ SetpointManager:MixedAir,
 Controller:OutdoorAir,
   VAV_5_OA_Controller,  !- Name
   VAV_5_OARelief Node,  !- Relief Air Outlet Node Name
-  VAV_5 Supply Equipment Inlet Node,  !- Return Air Node Name
+  VAV_5 OA_Sys_Inlet Node,  !- Return Air Node Name
   Mixed Air Node 1,  !- Mixed Air Node Name
   VAV_5_OAInlet Node,  !- Actuator Node Name
 ##if #[HVAC_System[] eqs VAV]

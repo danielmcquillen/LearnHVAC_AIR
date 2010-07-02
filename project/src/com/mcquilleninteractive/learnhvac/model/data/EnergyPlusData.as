@@ -1,9 +1,10 @@
 package com.mcquilleninteractive.learnhvac.model.data
 {
-	import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel
-	import com.mcquilleninteractive.learnhvac.model.SystemVariable
 	import com.mcquilleninteractive.learnhvac.err.EPlusParseError;
+	import com.mcquilleninteractive.learnhvac.model.EnergyPlusInputMemento;
+	import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
+	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 	import com.mcquilleninteractive.learnhvac.util.DateUtil;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	import com.mcquilleninteractive.learnhvac.vo.LongTermValuesForShortTermSimVO;
@@ -17,37 +18,51 @@ package com.mcquilleninteractive.learnhvac.model.data
 	{
 		// type of data for analysis section
 		public static const ENERGY_PLUS_DATA_TYPE:String = "energyPlusDataType"; // for graphing
+				
+		/* zoneDataArray is a three dimensional array that holds a LongTermValuesForShortTermSimVO object for each time increment of E+ data
+		   The 3d array allows us to get the correct object for the current floor and zone selected by the user
 		
-		protected var _scenarioModel:ScenarioModel
+		          zoneDataArr [rowIndex of EPlus Results][floorIndex][zoneIndex] -> contains LongTermValuesForShortTermSimVO for that zone		
 		
-		//holds arrays that hold values for each variable
-		public var dataArr:Array					
-		public var dataXML:XML 
+		*/
+		public var floorZoneDataArr:Array
+		
+		
+		/* dataArr holds the actual data for each variable (e.g. dataAr[3] = [0,1,2,0,1....] where 3 is column index 3)*/
+		public var dataArr:Array			
+		
+		//remember inputs that fed into this run
+		public var energyPlusInputsMemento:EnergyPlusInputMemento
+		
+		//resultInputAC holds data that will be pushed back in short-term simulation.
+		//These values are held in LongTermValuesForShortTermSimVO	
+		public var resultInputAC:ArrayCollection = new ArrayCollection()	
+				
 		public var dateTimeID:String = "Date/Time"
-		
+					
 		//AC used for graphing hourly data
 		public var hourlyMeterDataAC:ArrayCollection = new ArrayCollection() 
 		//AC used for graphing monthly data
 		public var monthlyMeterDataAC:ArrayCollection = new ArrayCollection() 
 		
-		private var currYear:String 
-		
 		//the main .csv outputted by E+
-		private var outputCSV:String					
+		protected var _outputCSV:String			
+		
 		//another E+ .csv file with only meter data
-		private var meterDataCSV:String					
+		protected var _meterDataCSV:String					
 		
 		//special array that holds computed RmQSens array (add colums 4,6,8 from output)
-		private var rmQSENSArr:Array					
+		protected var rmQSENSArr:Array					
 		
-		//reInputAC holds data that will be pushed back in short-term simulation.
-		//Currently, this is { date: , rmQSens: , tAirOut:, twAirOut: }		
-		public var reInputAC:ArrayCollection	= new ArrayCollection()				
+		//holds arrays that hold values for each variable
+		protected var _dataStructureXML:XML 		
 		
-		// zoneDataArray is a three dimensional array 
-		//     zoneDataArr [rowIndex of EPlus Results][floorIndex][zoneIndex] -> contains SparkInputVarVOs for that zone
+		protected var _scenarioModel:ScenarioModel
 		
-		public var zoneDataArr:Array
+		protected var _currYear:String 
+		
+		
+	
 		
 		public var tempData:String = "Date/Time,PER-1T LIGHTS\n0" +
 								" 07/01  01:00:00,0.0\n" + 
@@ -58,15 +73,15 @@ package com.mcquilleninteractive.learnhvac.model.data
 		{
 			dataArr = []
 			rmQSENSArr = []
-			dataXML = createBaseXML()
+			_dataStructureXML = createBaseXML()
 			
 			// use the current year for timecode of output
-			currYear = String(new Date().fullYear)	
+			_currYear = String(new Date().fullYear)	
 			
 			
 		}
 		
-		private function createBaseXML():XML
+		protected function createBaseXML():XML
 		{
 			var xml:XML = 	<VizTool dataSourceType="" dataSourcePath="" >
 									<Campus>
@@ -98,32 +113,39 @@ package com.mcquilleninteractive.learnhvac.model.data
 			return xml
 		}
 			
-		public function getDataType():String
-		{
-			return ENERGY_PLUS_DATA_TYPE
-		}
+		
 
 		public function varExists(varID:String):Boolean
 		{
 			return (dataArr[varID]!=undefined)
 		}
 		
-		public function getDataStructureXML():XML
+		public function get dataType():String
 		{
-			return dataXML
+			return ENERGY_PLUS_DATA_TYPE
 		}
 		
-		/** Finds the reInputs for a given dateTime, floor and zone (will only match by the hour) */
+		public function get dataStructureXML():XML
+		{
+			return _dataStructureXML
+		}
+		
+		public function set dataStructureXML(dataXML:XML):void
+		{
+			_dataStructureXML = dataXML
+		}
+		
+		/** Finds the inputs for a given dateTime, floor and zone (will only match by the hour) */
 		public function getLongTermInputs(dateTime:Date, floorOfInterest:uint, zoneOfInterest:uint):LongTermValuesForShortTermSimVO
 		{				
 			Logger.debug("getLongTermInputs() dateTime: " + dateTime, this)
 			
 			var dataArrLength:int = dataArr[dateTimeID].length
-			var zoneDataArrLength:int = zoneDataArr.length			
+			var floorZoneDataArrLength:int = floorZoneDataArr.length			
 			
-			if (dataArrLength != zoneDataArrLength)
+			if (dataArrLength != floorZoneDataArrLength)
 			{
-				Logger.warn("dataArr and zoneDataArr are supposed to be same length but aren't. dataArr.length " + dataArrLength + " zoneDataArrLength: " + zoneDataArrLength, this)
+				Logger.warn("dataArr and zoneDataArr are supposed to be same length but aren't. dataArr.length " + dataArrLength + " zoneDataArrLength: " + floorZoneDataArrLength, this)
 			}
 					
 			if (dataArrLength == 0 ) return null
@@ -135,10 +157,10 @@ package com.mcquilleninteractive.learnhvac.model.data
 				
 				if (dateTime <= d1)
 				{					
-					var vo:LongTermValuesForShortTermSimVO = LongTermValuesForShortTermSimVO(zoneDataArr[i][floorOfInterest-1][zoneOfInterest-1])
+					var vo:LongTermValuesForShortTermSimVO = LongTermValuesForShortTermSimVO(floorZoneDataArr[i][floorOfInterest-1][zoneOfInterest-1])
 					if (vo==null)
 					{
-						Logger.error("getSparkInputs() have date for row " + i + " (" + d1.toUTCString() + " ) but there's no SparkInputVarsVO in zoneDataArr", this)
+						Logger.error("getLongTermInputs() have date for row " + i + " (" + d1.toUTCString() + " ) but there's no LongTermValuesForShortTermSimVO in floorZoneDataArrLength", this)
 						return null
 					}
 					else
@@ -254,29 +276,81 @@ package com.mcquilleninteractive.learnhvac.model.data
 		}
 		
 			
-		public function loadData(outputCSV:String, meterDataCSV:String = null):void
+		/** Returns an ArrayCollection containing the input names and values for the long-term simulation */
+		public function get inputListAC():ArrayCollection
 		{
-			/*  
-				Loads raw CSV output from E+ into structured format within this class 
-			*/
+			//create an arraycollection with all values from memento for display in Analysis explorer
+			if (energyPlusInputsMemento==null)
+			{
+				return null
+			}
+				
+			var ac:ArrayCollection = new ArrayCollection()
+			ac.addItem({name:"City",value:energyPlusInputsMemento.city})
+			ac.addItem({name:"Region",value:energyPlusInputsMemento.region})
+			ac.addItem({name:"Building length",value:energyPlusInputsMemento.buildingLength})
+			ac.addItem({name:"Building width",value:energyPlusInputsMemento.buildingWidth})
+			ac.addItem({name:"Story height",value:energyPlusInputsMemento.storyHeight})
+			ac.addItem({name:"Floor of interest",value:energyPlusInputsMemento.floorOfInterest})
 			
+			
+			ac.addItem({name:"Window type", value:energyPlusInputsMemento.windowType})
+			ac.addItem({name:"Win. ratio West", value:energyPlusInputsMemento.windowRatioWest})
+			ac.addItem({name:"Win. ratio East", value:energyPlusInputsMemento.windowRatioEast})
+			ac.addItem({name:"Win. ratio North", value:energyPlusInputsMemento.windowRatioNorth})
+			ac.addItem({name:"Win. ratio South", value:energyPlusInputsMemento.windowRatioSouth})
+				
+			ac.addItem({name:"Equipment peak load",value:energyPlusInputsMemento.equipPeakLoad})
+			ac.addItem({name:"Lighting peak load",value:energyPlusInputsMemento.lightingPeakLoad})
+			ac.addItem({name:"Area per person",value:energyPlusInputsMemento.areaPerPerson})
+			ac.addItem({name:"Zone cooling SP",value:energyPlusInputsMemento.zoneCoolingSetpointTemp})
+			ac.addItem({name:"Zone heating SP",value:energyPlusInputsMemento.zoneHeatingSetpointTemp})
+			ac.addItem({name:"Min. VAV damper pos.",value:energyPlusInputsMemento.vavMinFlwRatio})
+			ac.addItem({name:"Room sensible heat gain", value:energyPlusInputsMemento.rmQSens})
+				
+				
+			/*
+			ac.addItem({name:"Heating coil UA", value:energyPlusInputsMemento.hcUA})
+			ac.addItem({name:"Cooling coil UA", value:energyPlusInputsMemento.ccUA})
+			ac.addItem({name:"VAV heating coil UA", value:energyPlusInputsMemento.vavHcUA})
+			*/
+				
+			
+				
+			return ac			
+		}
+		
+		/**
+		 *  Loads raw CSV output from E+ into structured format within this class 
+		 *  
+		 *  @param outCSV - a string with the entire contents of the eplusout.csv
+		 *  @param meterCSV - a string with the entire contents of the eplusmeter.csv
+		 * 
+		*/
+		public function loadData(outCSV:String, meterCSV:String = null):void
+		{
+						
 			Logger.debug(" loadBasicOutput()", this)
 			
 			//make sure data holders are clear
 			dataArr = []			
 						
-			//keep string for later saving
-			this.outputCSV = outputCSV
+			_outputCSV = outCSV
+			_meterDataCSV = meterCSV
 					
 			var parseErrors:Boolean = false
-			var rowsArr:Array = outputCSV.split("\n")
+			var rowsArr:Array = _outputCSV.split("\n")
+				
+			//remove the last row, because its hour "24" will look like the next day to actionscript
+			//so just kill that last hour
+			rowsArr.pop()
 			
 			var rowsLen:Number = rowsArr.length 
 			if (rowsLen<1)
 			{
 				throw new EPlusParseError("No rows found in output.csv", EPlusParseError.NO_DATA_ERROR)
 			}
-			
+			Logger.debug("parsing "+ rowsArr.length + " rows of E+ data",this)
 			//Create an entry in our hash for each variable as it's listed on first line
 			var varNamesArr:Array = rowsArr.shift().split(",")
 			Logger.debug("varNamesArr: " + varNamesArr, this)
@@ -294,101 +368,84 @@ package com.mcquilleninteractive.learnhvac.model.data
 						
 			rowsLen = rowsLen-2 //we shifted off first row above, and we are starting from 0 index 			
 			
-			//setup a quick reference from the indices of columns that relate to the SparkInputVarsVOs to the actual VO objects
-			//This will speed up the process below when we step through each row (rather than parsing names on each row to find the relevant variables)
-			var zoneColLookUpArr:Array = createZoneInfoLookupArr(varNamesArr)
+			var floorZoneLookupArr:Array = createFloorZoneLookupArr(varNamesArr)
 					
-			// Now start at next line in CSV and grab values, placing each in appropriate hash								
-			// Start at row 1 so we skip the var names
 			var row:String
 			var valsArr:Array
-			zoneDataArr = new Array(rowsLen)
+			floorZoneDataArr = new Array(rowsLen)
+								
 			for (var rowIndex:Number=0; rowIndex<rowsLen; rowIndex++)
-			{
-				
-				//create the VO that will be used by SPARK for this date...this VO does the translation from SI to IP if needed
-				zoneDataArr[rowIndex] = new Array(3) //three floors
+			{				
+												
+				//parse data
+				row = rowsArr.shift()
+				valsArr = row.split(",")					
+					
+				var numCols:Number = valsArr.length
+									
+				//we need to capture temp and humidity right away, so hard-code these
+				var dateInEpochSecs:Number = Date.parse(parseDateString(valsArr[0]))					
+				dataArr[dateTimeID].push(dateInEpochSecs)
+				var tAirOut:Number = valsArr[1]
+				dataArr[varNamesArr[1]].push(tAirOut)
+				var relativeHumidity:Number = valsArr[2]
+				dataArr[varNamesArr[2]].push(relativeHumidity)
+					
+				//build floor/zone array for this line
+				floorZoneDataArr[rowIndex] = new Array(3) //three floors
 				for (var j:uint=0;j<3;j++)
 				{
-					zoneDataArr[rowIndex][j] = new Array(5) //five zones
+					floorZoneDataArr[rowIndex][j] = new Array(5) //five zones
 					for (var k:uint=0;k<5;k++)
 					{
-						zoneDataArr[rowIndex][j][k] = new LongTermValuesForShortTermSimVO()
+						var vo:LongTermValuesForShortTermSimVO = new LongTermValuesForShortTermSimVO()
+						vo.dateInEpochSecs = dateInEpochSecs
+						floorZoneDataArr[rowIndex][j][k] = vo
 					}
-				}		
-								
-				//grab next line and parse into a value array
-				row = rowsArr.shift()
-				valsArr = row.split(",")
-										
-				//loop through values and assign to appropriate array in hash											
-				var cols:Number = valsArr.length
-				
-				var tAirOut:Number = 0
-				var twAirOut:Number = 0
-				
-				for (var col:Number=0; col<cols; col++)
-				{	
-					//read in every value as a number except the first, which is Date/Time
-					if (col==0)
-					{					
-						var dateInEpochSecs:Number = Date.parse(parseDateString(valsArr[0]))					
-						dataArr[dateTimeID].push(dateInEpochSecs)
-					} 				
-					else 
-					{
-						
-						// store value in dataArr
-						var val:Number = Number(valsArr[col])	
-						var columnName:String = varNamesArr[col]
-						
-						if (col==1) tAirOut = val
-						if (col==2) twAirOut = val						
-										
-						if (dataArr[columnName]!=undefined) 
-						{
-							dataArr[columnName].push(val)
-						}			
-						
-						if (col<3) continue
-						
-						// now, check if this column is related to a SparkInputVarsVO, 
-						// if so, add value to VO via lookup
-						if (zoneColLookUpArr[col]!=null)
-						{
-							//object has properies {floor: , zone: , voVarName: }
-							var obj:Object = zoneColLookUpArr[col]
-							var vo:LongTermValuesForShortTermSimVO = zoneDataArr[rowIndex][obj.floor-1][obj.zone-1]
-							vo.setValue(obj.voVarName, val)
-							vo.rowIndex = rowIndex
-							vo._tAirOut = tAirOut
-							vo._twAirOut = twAirOut
-							
-						}
-						
-						
-						
-					}						
+				}			
 					
+				
+				for (var col:Number=3; col<numCols; col++)
+				{	
+					// store value in dataArr
+					var val:Number = Number(valsArr[col])	
+					var columnName:String = varNamesArr[col]	
+																			
+					if (dataArr[columnName]!=undefined) 
+					{
+						dataArr[columnName].push(val)
+					}			
+												
+					// now, check if this column is related to a LongTermValuesForShortTermSimVO, 
+					// if so, add value to VO via lookup
+					if (floorZoneLookupArr[col]!=null) 
+					{
+						var obj:Object = floorZoneLookupArr[col]
+						var vo:LongTermValuesForShortTermSimVO = floorZoneDataArr[rowIndex][obj.floor-1][obj.zone-1]
+						vo.setValue(obj.voVarName, val)
+						vo.rowIndex = rowIndex
+						vo._tAirOut = tAirOut
+						vo._rhOutside = relativeHumidity
+						
+					}								
 				}
-								
 			}
 			
 			//now load meter data			
-			if (meterDataCSV=="")
+			if (_meterDataCSV=="")
 			{
-				Logger.warn("meterDataCSV is empty", this)
+				Logger.warn("_meterDataCSV is empty", this)
 			}
 			else
 			{			
-				parseMeterLines(meterDataCSV)
+				parseMeterLines(_meterDataCSV)
 			}
 								
 			//keep a record of how parsing went										
 			dataLoaded = !parseErrors
 			
 			//create a basic structure XML doc for the tree control
-			dataXML = createBaseXML()
+			_dataStructureXML = createBaseXML()
 			len = varNamesArr.length
 			for (var index:Number=0;index<len;index++)
 			{
@@ -405,7 +462,7 @@ package com.mcquilleninteractive.learnhvac.model.data
 					var floorNumber:uint = uint(shortName.charAt(5))
 					var zoneNumber:uint = 5
 					
-					dataXML.Campus.Building.Floor[floorNumber-1].Zone[zoneNumber-1].appendChild(dataPoint)
+					_dataStructureXML.Campus.Building.Floor[floorNumber-1].Zone[zoneNumber-1].appendChild(dataPoint)
 				}
 				else if (shortName.indexOf("PERIM-")==0)
 				{
@@ -428,17 +485,17 @@ package com.mcquilleninteractive.learnhvac.model.data
 							Logger.error("Unrecognized zone direction in EPlus output. shortName.charAt(8): " + shortName.charAt(8), this)
 							zoneNumber = 1				
 					}					
-					dataXML.Campus.Building.Floor[floorNumber-1].Zone[zoneNumber-1].appendChild(dataPoint)
+					_dataStructureXML.Campus.Building.Floor[floorNumber-1].Zone[zoneNumber-1].appendChild(dataPoint)
 				}
 				else
 				{					
-					dataXML.Campus.Building.appendChild(dataPoint)
+					_dataStructureXML.Campus.Building.appendChild(dataPoint)
 				}
 			}
 			
 		}
 		
-		private function parseMeterLines(meterDataCSV:String):void
+		protected function parseMeterLines(meterDataCSV:String):void
 		{
 			Logger.debug("parseMeterLines()", this)
 			//parse meter output lines and add to dataArr
@@ -526,8 +583,6 @@ package com.mcquilleninteractive.learnhvac.model.data
 			hourlyMeterDataAC.refresh()		
 			monthlyMeterDataAC.refresh()
 			
-			Logger.debug("parseMeterLines() hourlyMeterDataAC :" + hourlyMeterDataAC.length, this)
-			Logger.debug("parseMeterLines() monthlyMeterDataAC:" + monthlyMeterDataAC.length, this)
 			var obj:Object = hourlyMeterDataAC.getItemAt(0)
 			for (var s:String in obj)
 			{
@@ -535,7 +590,7 @@ package com.mcquilleninteractive.learnhvac.model.data
 			}
 		}
 		
-		private function parseDateString(s:String, returnDateObj:Boolean=false):Object
+		protected function parseDateString(s:String, returnDateObj:Boolean=false):Object
 		{
 			s = s.slice(1) //slice off first space
 			if (s.indexOf("  ")!=-1)
@@ -547,7 +602,7 @@ package com.mcquilleninteractive.learnhvac.model.data
 				a = s.split(" ")
 			}
 
-			var dateString:String = a[0]+"/" + currYear+ " " + a[1]
+			var dateString:String = a[0]+"/" + _currYear+ " " + a[1]
 			if (returnDateObj)
 			{
 				return new Date(dateString)	
@@ -557,7 +612,7 @@ package com.mcquilleninteractive.learnhvac.model.data
 		
 		
 		/** returns a number 0-11 when given an EnergyPlus Meter data date */
-		private function getMonthFromDate(s:String):Number
+		protected function getMonthFromDate(s:String):Number
 		{
 			var month:Number = Number(s.slice(1,3)) //slice off first space
 			if (isNaN(month))
@@ -586,21 +641,29 @@ package com.mcquilleninteractive.learnhvac.model.data
 			return ""
 		}
 		
-		public function getEPlusCSV():String
+		public function get ePlusCSV():String
 		{
-			return outputCSV
+			return _outputCSV
 		}
 		
-		public function getStartDateTime():String
+		public function get startDateTimeString():String
 		{
-			var startDateTime:Date = new Date(dataArr[dateTimeID][0])
+			var dateArr:Array = dataArr[dateTimeID]				
+			var startDateTime:Date = new Date(dateArr[0])
+			
+			Logger.debug("getStartDateTime() dateArr.length: " + dateArr.length + " first date: " + startDateTime.month + " " + startDateTime.date, this)
+			Logger.debug("DateUtil.formatDateTime(stopDateTime) " + DateUtil.formatDateTime(startDateTime), this)
+				
 			return DateUtil.formatDateTime(startDateTime)
 		}
 		
-		public function getStopDateTime():String
+		public function get stopDateTimeString():String
 		{
 			var dateArr:Array = dataArr[dateTimeID]
-			var stopDateTime:Date = new Date(dateArr[dateArr.length-1])
+			var lastIndex:uint = dateArr.length-1
+			var stopDateTime:Date = new Date(dateArr[lastIndex])
+			Logger.debug("getStopDateTime() dateArr.length: " + dateArr.length + " last date: " + stopDateTime.month + " " + stopDateTime.date, this)
+			Logger.debug("DateUtil.formatDateTime(stopDateTime) " + DateUtil.formatDateTime(stopDateTime), this)
 			return DateUtil.formatDateTime(stopDateTime)
 		
 		}
@@ -612,9 +675,9 @@ package com.mcquilleninteractive.learnhvac.model.data
 		}
 		
 		
-		protected function createZoneInfoLookupArr(varNamesArr:Array):Array
+		protected function createFloorZoneLookupArr(varNamesArr:Array):Array
 		{
-			var zoneColLookUpArr:Array = new Array(colsLen)
+			var floorZoneLookupArr:Array = new Array(colsLen)
 			var colsLen:uint = varNamesArr.length
 			
 			for (var i:uint=1;i<colsLen;i++) //skip the dateTime column
@@ -658,6 +721,7 @@ package com.mcquilleninteractive.learnhvac.model.data
 					}	
 					
 					var varName:String = ""
+					//if this column has one of the following names, add to lookup array
 					if (colName.indexOf("Zone People Total Heat Gain")!=-1) 
 					{
 						varName = "_peopleHeatGain"
@@ -673,13 +737,13 @@ package com.mcquilleninteractive.learnhvac.model.data
 					
 					if (varName !="")
 					{
-						zoneColLookUpArr[i] = {floor:floorNumber, zone:zoneNumber, voVarName:varName }
+						floorZoneLookupArr[i] = {floor:floorNumber, zone:zoneNumber, voVarName:varName }
 					}
 					
 				}
 			}	
 				
-			return zoneColLookUpArr	
+			return floorZoneLookupArr	
 				
 		}
 		

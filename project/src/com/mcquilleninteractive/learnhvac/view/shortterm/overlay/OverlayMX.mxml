@@ -55,12 +55,36 @@
 		]]>
 	</mx:Script>	
 	
-	<mx:Label id="lblSYSTAirDB_Title" text="Outside Air Dry Bulb Temp: "  styleName="overlayTitle"
-					 x="100" y="90" width="150" textAlign="right"/>
-	<overlay:ValueDisplayLabel id="lblSYSTAirDB" text="0" 
-		sysVarName="SYSTAirDB"
-		styleName="overlayValue"
-					 x="255" y="90"  textAlign="left" width="107"/>
+	<mx:Label id="lblSYSTAirDB_Title" 
+			  	text="Outside Air Dry Bulb Temp: "  
+			  	styleName="overlayTitle"
+				x="100" y="90" 
+				width="150" 
+				textAlign="right"/>
+	<overlay:ValueDisplayLabel id="lblSYSTAirDB" 
+				text="0" 
+				sysVarName="SYSTAirDB"
+				styleName="overlayValue"
+				x="255" y="90" 
+				textAlign="left"
+				width="107"/>
+	
+	
+	<mx:Label 	id="lblSYSRHOutside_Title"
+				text="Rel. Humidity: "  
+				toolTip="Outdoor Air Relative Humidity"
+				styleName="overlayTitle" 
+				textAlign="right"
+				width="150" 
+				x="100" y="105" />
+	
+	<overlay:ValueDisplayLabel 	
+		id="lblSYSRHOutside" 
+		sysVarName="SYSRHOutside"
+		text="0" 
+		styleName="overlayValue" 
+		toolTip="Outdoor Air Relative Humidity"
+		x="255" y="105" />
 	
 	<!--				
 	<mx:Label id="lblMXTExhaust_Title" text="Exhaust Air&#13;Temp: "  styleName="overlayTitle"
@@ -71,6 +95,8 @@
 					textAlign="right"
 					 />
 	-->				
+	
+	
 	
 	<mx:Label id="lblMXExDampPos_Title" 
 		text="Damper&#13;position: " 

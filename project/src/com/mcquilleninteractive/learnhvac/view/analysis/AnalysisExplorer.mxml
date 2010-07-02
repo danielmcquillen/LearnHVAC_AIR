@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"  
+		  xmlns:analysis="com.mcquilleninteractive.learnhvac.view.analysis.*" 
+		  xmlns:graphing="com.mcquilleninteractive.learnhvac.view.graphing.*"
+		  xmlns:head="com.mcquilleninteractive.learnhvac.view.layout.*"
+		  styleName="glassPods"	
+			xmlns:myComps="*"
+			creationComplete="onCC()"
+			>
+
+	 	<mx:Script>
+	 		<![CDATA[
+	 		import com.mcquilleninteractive.learnhvac.model.data.*
+	 		import com.mcquilleninteractive.learnhvac.model.ApplicationModel	
+	 		import com.mcquilleninteractive.learnhvac.model.LongTermSimulationDataModel	
+	 		import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationDataModel
+	 		import com.mcquilleninteractive.learnhvac.util.Logger
+			import mx.collections.XMLListCollection
+			import com.mcquilleninteractive.learnhvac.event.ScenarioDataLoadedEvent	
+			import mx.managers.DragManager
+			import mx.events.DragEvent
+			
+			
+			public function onCC():void
+			{
+				//shortTermRun1.setType(ShortTermSimulationDataModel.RUN_1)
+				//shortTermRun2.setType(ShortTermSimulationDataModel.RUN_2)
+			}
+			
+			
+			[Mediate(event="ScenarioDataLoadedEvent.SHORT_TERM_SYSVARS_LOADED")]
+			public function onModelicaDataParsed(event:ScenarioDataLoadedEvent):void
+			{				
+				var graphDataModel:IGraphDataModel = event.graphDataModel
+				
+				//for now we're just expecting "run1" and "run2"
+				//but later we might want to support multiple models
+				
+				switch(event.graphDataModelID)
+				{
+					case ShortTermSimulationDataModel.RUN_1:
+						shortTermRun1.loadData(graphDataModel)
+						break
+					case ShortTermSimulationDataModel.RUN_2:
+						shortTermRun2.loadData(graphDataModel)
+						break
+				}	
+				
+			}
+			
+			
+			[Mediate(event="ScenarioDataLoadedEvent.ENERGY_PLUS_DATA_PARSED")]
+			public function onEPlusDataParsed(evt:ScenarioDataLoadedEvent):void
+			{
+				var event:ScenarioDataLoadedEvent = ScenarioDataLoadedEvent(evt)
+				var graphDataModel:IGraphDataModel = event.graphDataModel
+				
+				//for now we're just expecting "run1" and "run2"
+				//but later we might want to support multiple models
+				
+				switch(event.graphDataModelID)
+				{
+					case LongTermSimulationDataModel.RUN_1:
+						longTermRun1.loadData(graphDataModel)
+						break
+					case LongTermSimulationDataModel.RUN_2:
+						longTermRun2.loadData(graphDataModel)
+						break
+				}	
+				
+			}
+					
+				
+		 			
+	 		]]>
+	 	</mx:Script>
+	
+	
+		<head:GlassHeaders headerTitle="SIMULATION DATA"/>
+	
+	 	<mx:TabNavigator id="tabNav" height="100%" 
+						 width="100%" 
+						 creationPolicy="all" 
+						 backgroundColor="#FFFFFF"
+						 tabWidth="50"
+						 paddingLeft="0"
+						 paddingRight="0"
+						 paddingTop="0"
+						 styleName="tabNavigator">
+	 			
+	 		<analysis:AnalysisLongTermOutputView id="longTermRun1" 
+										 name="L1"
+										 toolTip="Long-term Simulation Run 1"
+										 title="Long-term Simulation Run 1"
+										 runID="{LongTermSimulationDataModel.RUN_1}"
+										 label="L1" 
+										 width="100%" height="100%"/>
+	 		<analysis:AnalysisLongTermOutputView id="longTermRun2" 
+										 toolTip="Long-term Simulation Run 2"
+										 title="Long-term Simulation Run 2"
+										 runID="{LongTermSimulationDataModel.RUN_2}"
+										 name="L2" 
+										 label="L2" 
+										 width="100%" height="100%"/>
+	 		<analysis:AnalysisShortTermOutputView id="shortTermRun1" 
+										 toolTip="Short-term Simulation Run 1" 
+										 title="Short-term Simulation Run 1"
+										 name="S1"
+										 runID="{ShortTermSimulationDataModel.RUN_1}"
+										 label="S1" 
+										 width="100%" height="100%"/>
+	 		<analysis:AnalysisShortTermOutputView id="shortTermRun2" 
+										 name="S2"
+										 runID="{ShortTermSimulationDataModel.RUN_2}"
+										 toolTip="Short-term Simulation Run 2" 
+										 title="Short-term Simulation Run 2"
+										 label="S2" 
+										 width="100%" height="100%"/>
+	 				
+	 	</mx:TabNavigator>
+	 	
+	 	
+</mx:VBox>

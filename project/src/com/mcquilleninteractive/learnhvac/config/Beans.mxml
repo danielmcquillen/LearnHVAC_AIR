@@ -10,38 +10,33 @@
 	<model:ScenarioLibraryModel id="scenarioLibraryModel" />
 	<model:GraphManager id="graphManager" />
 	<model:ScenarioModel id="scenarioModel" />
+	<model:ScenarioDataModel id="scenarioDataModel" />
 	<model:ShortTermSimulationModel id="shortTermSimulationModel" />
 	<model:ShortTermSimulationDataModel id="shortTermSimulationDataModel" />
 	<model:LongTermSimulationModel id="longTermSimulationModel" />
 	<model:LongTermSimulationDataModel id="longTermSimulationDataModel" />
 	<model:DefaultScenariosModel id="defaultScenariosModel" />
 	<model:UserModel id="userModel" />
+	<model:DialogManager id="dialogManager" />
 	
 	<controller:LoginController id="loginController" />
 	<controller:ApplicationController id="applicationController" />
 	<controller:ScenarioLibraryController id="scenarioLibraryController" />
 	<controller:ChartController id="chartController" />
+	<controller:ScenarioController id="scenarioController" />
+	<controller:ScenarioDataController id="scenarioDataController" />
 	<controller:ShortTermSimulationController id="shortTermSimulationController" />
 	<controller:LongTermSimulationController id="longTermSimulationController" />
 	
 
 	<business:ShortTermSimulationDelegate id="shortTermSimulationDelegate"/>
-	<!--
-	<business:ShortTermSimulationMockDelegate id="shortTermSimulationDelegate"/>
-	-->
 	<business:LongTermSimulationDelegate id="longTermSimulationDelegate"/>
 	<business:LocalScenarioDelegate id="localScenarioDelegate"/>
 	<business:RemoteScenarioDelegate id="remoteScenarioDelegate"/>
-	<business:UserDelegate id="userDelegate" />
-			
-	<mx:RemoteObject id="scenarioService" 
-		destination="ScenarioService"
-		showBusyCursor="true"
-		/>
-		
-	<mx:RemoteObject id="userService" 
-		destination="UserService" 
-		showBusyCursor="true"
+					
+	<mx:HTTPService id="scenarioService" 
+		 resultFormat="e4x"
+		 contentType="application/x-www-form-urlencoded"
 		/>
 		
 		
