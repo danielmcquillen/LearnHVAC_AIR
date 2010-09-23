@@ -18,7 +18,6 @@ package com.mcquilleninteractive.learnhvac.controller
 	import com.mcquilleninteractive.learnhvac.util.HTMLToolTip;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
-	import flash.data.EncryptedLocalStore;
 	import flash.events.Event;
 	import flash.filesystem.*;
 	import flash.system.Capabilities;
@@ -61,21 +60,18 @@ package com.mcquilleninteractive.learnhvac.controller
 			Swiz.dispatchEvent(evt)
 								
 			//if this is first run, copy helper files to working directories
-			var ba:ByteArray = EncryptedLocalStore.getItem("lastInstalledVersion")	
+			var version:String = applicationModel.installedVersion	
 			
 			if (ApplicationModel.alwaysFirstRun)
 			{
-				ba = null
+				version = null
 			}
 				
-			if (ba==null || ba.readUTFBytes(ba.bytesAvailable)!=AboutInfo.applicationVersion)
+			if (version !=AboutInfo.applicationVersion)
 			{
 				Logger.debug("New version installed ... now copying helper files...",this)
 				copyHelperFiles()		
-				//record the latest version number
-				ba = new ByteArray()
-				ba.writeUTFBytes(AboutInfo.applicationVersion)
-				EncryptedLocalStore.setItem("lastInstalledVersion", ba)		
+				applicationModel.installedVersion = AboutInfo.applicationVersion
 			}
 			
 			
@@ -312,6 +308,10 @@ package com.mcquilleninteractive.learnhvac.controller
 			Logger.debug("intercepting close ",this)	
 			//TODO: kill running modelica or E+ processes			
 		}
+		
+		
+		
+		
 		
 
 

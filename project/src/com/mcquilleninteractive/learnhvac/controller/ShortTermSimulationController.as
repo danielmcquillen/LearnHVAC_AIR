@@ -105,7 +105,6 @@ package com.mcquilleninteractive.learnhvac.controller
 		[Mediate(event="ShortTermSimulationEvent.SIM_UPDATE")]	
 		public function update(event:ShortTermSimulationEvent):void
 		{
-			Logger.debug("update setting timeStep to : " + event.timeStep,this)
 			//update the timestep
 			delegate.timeStep = event.timeStep
 			
@@ -131,7 +130,6 @@ package com.mcquilleninteractive.learnhvac.controller
 		[Mediate(event="ResetInputsEvent.RESET_SHORT_TERM_INPUTS_TO_INITIAL_VALUES")]
 		public function onResetInputsToInitialValues(event:ResetInputsEvent):void
 		{	
-			Logger.debug("onResetInputsToInitialValues()",this)
 				
 			//cycle through all input systemvariables and reset value to initial value
 			for each (var sysNode:SystemNodeModel in scenarioModel.sysNodesAC)

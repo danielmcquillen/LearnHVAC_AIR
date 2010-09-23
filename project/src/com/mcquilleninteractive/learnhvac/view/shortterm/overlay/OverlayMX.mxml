@@ -44,7 +44,8 @@
 			{																												
 				//set visibility of labels	
 				var varArr:Array = ["SYSTAirDB","MXTAirRet","MXTAirMix",
-									"MXIntDampPos","MXRtnDampPos","MXExDampPos"]
+									"MXIntDampPos","MXRtnDampPos","MXExDampPos",
+									"MXMARH"]
 				
 				setLabels(varArr)
 						
@@ -145,18 +146,51 @@
 								
 								
 					
-	<mx:Label id="lblMXTAirRet_Title" text="Return Air Temp: " styleName="overlayTitle"
-					  x="72" y="440" textAlign="right" width="100" />
+	<mx:Label 	id="lblMXTAirRet_Title" 
+			  	text="Return Air Temp: " 
+			  	styleName="overlayTitle"
+				x="72" y="440" 
+				textAlign="right" 
+				width="100" />
 	<overlay:ValueDisplayLabel id="lblMXTAirRet" 
-		sysVarName="MXTAirRet"
-		text="0" styleName="overlayValue" 
-					  x="72" y="460"  textAlign="right" width="100"/>
+				sysVarName="MXTAirRet"
+				text="0" 
+				styleName="overlayValue" 
+				x="72" y="460"  
+				textAlign="right" 
+				width="100"/>
 					
-	<mx:Label id="lblMXTAirMix_Title" text="Mixed Air Temp: " styleName="overlayTitle"
-					   color="0x000000" x="455" y="297" textAlign="right"/>
+	<mx:Label id="lblMXTAirMix_Title" 
+			  	text="Mixed Air Temp: " 
+			  	styleName="overlayTitle"
+				color="0x000000" 
+				x="455" y="250" 
+				width="100"
+				textAlign="right"/>
 	<overlay:ValueDisplayLabel id="lblMXTAirMix"
-		sysVarName="MXTAirMix"
-		 text="0" styleName="overlayValue"
-					   color="0x000000" x="450" y="315"  textAlign="right"/>
+				sysVarName="MXTAirMix"
+		 		text="0" 
+				styleName="overlayValue"
+				color="0x000000" 
+				width="100"
+				textAlign="right"
+				x="450" y="270" />
+	
+	<mx:Label id="lblMXMARH_Title" 
+			  text="Mixed Air Rel. Humidity: " 
+			  toolTip="Mixed Air Relative Humidity"
+			  styleName="overlayTitle"
+			  color="0x000000" 
+			  x="405" y="300" 
+			  width="150"
+			  textAlign="right"/>
+	<overlay:ValueDisplayLabel id="lblMXMARH"
+							   sysVarName="MXMARH"
+							   text="0" 
+							   styleName="overlayValue"
+							   color="0x000000" 
+							   width="100"
+							   textAlign="right"
+							   x="450" y="320" />
 
 </overlay:OverlayBase>

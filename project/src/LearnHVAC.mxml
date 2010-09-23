@@ -90,7 +90,8 @@ the License.
 		/>
 
 	<mx:TraceTarget id="traceTarget"
-		level="{LogEventLevel.DEBUG}"
+		level="{LogEventLevel.INFO}"
+		 filters="{['learnhvac']}"
 		/>
 
 	<mx:Style source="assets/css/styles.css"/>

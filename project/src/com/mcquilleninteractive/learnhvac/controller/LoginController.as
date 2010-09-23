@@ -3,6 +3,7 @@ package com.mcquilleninteractive.learnhvac.controller
 	
 	import com.mcquilleninteractive.learnhvac.event.LoggedInEvent;
 	import com.mcquilleninteractive.learnhvac.event.LoginEvent;
+	import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
 	import com.mcquilleninteractive.learnhvac.model.UserModel;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	
@@ -27,8 +28,6 @@ package com.mcquilleninteractive.learnhvac.controller
 	public class LoginController extends AbstractController
 	{
 		
-		public static const LOGIN_URL:String = "http://v2.learnhvac.org/api/users/user.xml"
-			
 		public var _httpReturnStatus:uint = 0
 		
 		public function LoginController()
@@ -67,6 +66,7 @@ package com.mcquilleninteractive.learnhvac.controller
 				userModel.role = UserModel.ROLE_GUEST
 				userModel.loggedInAsGuest = true
 				Swiz.dispatchEvent(new LoggedInEvent(LoggedInEvent.LOGGED_IN))
+					
 			}
 			else
 			{
@@ -78,7 +78,9 @@ package com.mcquilleninteractive.learnhvac.controller
 				userModel.password = event.password
 				
 				_httpReturnStatus = 0
-				var request:URLRequest = new URLRequest(LOGIN_URL);
+				var request:URLRequest = new URLRequest(ApplicationModel.BASE_SERVICE_URL + "users/user.xml");
+				Logger.debug("Logging in to service: " + request.url, this)		
+					
 				request.method = URLRequestMethod.GET;
 				request.authenticate = false
 				var encoder : Base64Encoder = new Base64Encoder();

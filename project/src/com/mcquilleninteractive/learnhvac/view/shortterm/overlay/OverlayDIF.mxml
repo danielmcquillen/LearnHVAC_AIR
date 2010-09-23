@@ -65,27 +65,34 @@
 		]]>
 	</mx:Script>
 
-	<mx:Label id="lblFANAirFlw_Title" text="Entering Air Mass flow rate: " styleName="overlayTitle"
-					 x="156" y="25" />
+	<mx:Label 	id="lblFANAirFlw_Title" 
+			  	text="Entering Air Mass flow rate: " 
+			  	styleName="overlayTitle"
+				x="156" y="25" />
 	<overlay:ValueDisplayLabel id="lblFANAirFlw" 
-		sysVarName="FANAirFlw"
-		text="0" 
-		styleName="overlayValue"
-		x="157" y="45" />
-	<mx:Label id="lblVAVTAirLvg_Title" text="Entering Air Temp: " styleName="overlayTitle"
-					x="156" y="70" />
+				sysVarName="FANAirFlw"
+				text="0" 
+				styleName="overlayValue"
+				x="157" y="45" />
+	
+	<mx:Label id="lblVAVTAirLvg_Title" 
+			  	text="Entering Air Temp: " 
+			  	styleName="overlayTitle"
+				x="156" y="70" />
 	<overlay:ValueDisplayLabel id="lblVAVTAirLvg"
-		sysVarName="VAVTAirLvg"
-		text="0" 
-		styleName="overlayValue"
-		x="157" y="90" />
+				sysVarName="VAVTAirLvg"
+				text="0" 
+				styleName="overlayValue"
+				x="157" y="90" />
 
-	<mx:Label id="lblRMTemp_Title" text="Room Temp: " styleName="overlayTitle"
-					x="300" y="270" />
+	<mx:Label id="lblRMTemp_Title" 
+			  	text="Room Temp: " 
+				styleName="overlayTitle"					
+				x="300" y="270" />
 	<overlay:ValueDisplayLabel id="lblRMTemp" 
-		sysVarName="RMTemp"
-		text="0" 
-		styleName="overlayValue"
-		x="300" y="290" />
+				sysVarName="RMTemp"
+				text="0" 
+				styleName="overlayValue"
+				x="300" y="290" />
 
 	</overlay:OverlayBase>

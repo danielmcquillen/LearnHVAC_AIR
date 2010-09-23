@@ -105,14 +105,14 @@
 					
 					
 	<mx:Label id="lblHCTAirLvg_Title" 
-					x="370" y="117"
+					x="360" y="117"
 					text="Leaving Air Temp: " 
 					styleName="overlayTitle"
 					  />
 					  
 	<overlay:ValueDisplayLabel id="lblHCTAirLvg" 
 				sysVarName="HCTAirLvg"
-					x="370" y="137"
+					x="360" y="137"
 					text="0" 
 					styleName="overlayValue"
 					   />
@@ -120,26 +120,29 @@
 					   
 					   
 	<mx:Label id="lblHCTLiqEnt_Title" 
-					x="300" y="258" 
+					x="300" y="200" 
 					text="Entering Liq. Temp: " 
 					styleName="overlayTitle"
 					  />
 					  
 	<overlay:ValueDisplayLabel id="lblHCTLiqEnt" 
 					sysVarName="HCTLiqEnt"
-		 			x="300" y="278"
+		 			x="300" y="230"
 		 			text="0" 
 		 			styleName="overlayValue"
 					/>
-	
-	<mx:Label id="lblBOILiqFlw_Title" text="Entering Liq. Flow: " styleName="overlayTitle"
-			  x="385" y="320"/>
+
+	<mx:Label id="lblBOILiqFlw_Title" 
+			  text="Entering Liq. Flow: " 
+			  styleName="overlayTitle"
+			  x="300" y="270"/>
+
 	<overlay:ValueDisplayLabel id="lblBOILiqFlw" 							   
 							   sysVarName="BOILiqFlw"
 							   text="0" 
 							   precision="4"
 							   styleName="overlayValue"
-							   x="385" y="340" />
+							   x="300" y="290" />
 					
 					
 	<mx:Label id="lblHCTLiqLvg_Title" 

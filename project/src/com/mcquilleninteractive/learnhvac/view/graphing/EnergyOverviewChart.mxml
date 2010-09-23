@@ -42,7 +42,6 @@
 	    	
 	    	private function onCC():void
 	    	{
-	    		Logger.debug("#EnergyOverview: onCC() runID : " + _runID)
 	    		
 	    		//hash manages which lines are drawn on chart
 		    	_visibleFieldsArr = [ 	{fieldName:"lighting", enabled:true, color:ColorSetting.lightingColor},

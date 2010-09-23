@@ -190,19 +190,19 @@ package com.mcquilleninteractive.learnhvac.business
 		
 		public function openSocket():void
 		{
-			//try
-			//{				
+			try
+			{				
 				_serverSocket = new ServerSocket();
 				_serverSocket.addEventListener(Event.CONNECT, socketConnectHandler);
 				_serverSocket.bind(SOCKET_PORT)
 				_serverSocket.listen();				
-			//}
-			//catch (error:Error)
-			//{
-			//	var msg:String = "Error when opening socket server on " + SOCKET_PORT + " " + error
-			//	Logger.error(msg, this )
-			//	Alert.show(msg, "Socket Error");
-			//}			
+			}
+			catch (error:Error)
+			{
+				var msg:String = "Error when opening socket server on " + SOCKET_PORT + " " + error
+				Logger.error(msg, this )
+				Alert.show(msg, "Socket Error");
+			}			
 		}
 				
 		public function closeSocket():void
@@ -403,7 +403,7 @@ package com.mcquilleninteractive.learnhvac.business
 			{
 				var s:String = ""
 				s = "{" 
-				s += MODELICA_VERSION
+				s += MODELICA_VERSION + ","
 				s += FLAG_NORMAL_OPERATION+ ","
 				s += len + ","
 				s += "0," //never integers
@@ -416,8 +416,6 @@ package com.mcquilleninteractive.learnhvac.business
 				evt.inputsTrace = s
 				dispatchEvent(evt)
 								
-				Logger.debug("Input string: " + out, this);
-				Logger.debug("Inputs details :\n---------------------\n" + tr, this);
 			}
 			
 			var out:String = ""
@@ -430,6 +428,12 @@ package com.mcquilleninteractive.learnhvac.business
 			out += inputs
 			out += "\n"
 			
+			if (applicationModel.mTrace)
+			{				
+				Logger.debug("Inputs details :\n---------------------\n" + tr, this);
+				Logger.debug("Input string: " + out, this);
+			}
+				
 			
 			return out
 		}

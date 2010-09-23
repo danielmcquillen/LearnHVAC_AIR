@@ -45,7 +45,7 @@ package com.mcquilleninteractive.learnhvac.business
 		public function getRemoteScenarioList():AsyncToken
 		{
 			setHeader()						
-			scenarioService.url = ApplicationModel.baseServiceURL + "scenarios.xml"
+			scenarioService.url = ApplicationModel.BASE_SERVICE_URL + "scenarios.xml"
 			scenarioService.headers
 			return scenarioService.send();  
 		}
@@ -53,7 +53,7 @@ package com.mcquilleninteractive.learnhvac.business
 		public function getRemoteScenario( scenID:String, login:String ):AsyncToken
 		{
 			setHeader()	
-			scenarioService.url = ApplicationModel.baseServiceURL + "scenarios/" + scenID + ".xml"
+			scenarioService.url = ApplicationModel.BASE_SERVICE_URL + "scenarios/" + scenID + ".xml"
 			return scenarioService.send();  
 		}
 		

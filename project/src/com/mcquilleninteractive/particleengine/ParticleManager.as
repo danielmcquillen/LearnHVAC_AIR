@@ -64,7 +64,6 @@ package com.mcquilleninteractive.particleengine
 		
 		public function removeAllParticles():void
 		{
-			Logger.debug("#PM: removeAllParticles() called.")
 			for (var i:int = 0; i < allParticles.length; i++)
 			{
 				

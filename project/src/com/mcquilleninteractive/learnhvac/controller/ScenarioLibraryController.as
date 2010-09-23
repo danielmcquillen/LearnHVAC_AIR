@@ -22,6 +22,7 @@ package com.mcquilleninteractive.learnhvac.controller
 	import com.mcquilleninteractive.learnhvac.model.SystemNodeModel;
 	import com.mcquilleninteractive.learnhvac.model.SystemVariable;
 	import com.mcquilleninteractive.learnhvac.model.UserModel;
+	import com.mcquilleninteractive.learnhvac.util.AboutInfo;
 	import com.mcquilleninteractive.learnhvac.util.Logger;
 	import com.mcquilleninteractive.learnhvac.view.popups.SimulationModal;
 	import com.mcquilleninteractive.learnhvac.vo.ScenarioListItemVO;
@@ -183,8 +184,6 @@ package com.mcquilleninteractive.learnhvac.controller
 		
 		public function onRemoteScenarioListResult(re:ResultEvent) : void
 		{		
-			Logger.debug("onRemoteScenarioListResult() result: " + re.result,this );
-			
 			removeSimulationModal()
 			
 			if (re.result)
@@ -259,6 +258,7 @@ package com.mcquilleninteractive.learnhvac.controller
 				//build scenario model
 				Logger.debug("scenario received ok", this);
 								
+							
 				//convert result to XML
 				XML.ignoreWhitespace = true;
 				var scenXML:XML
@@ -274,13 +274,26 @@ package com.mcquilleninteractive.learnhvac.controller
 					return
 				}		
 				
+				//Make sure client version and scenario version match
+				var scenarioVersion:String = scenXML.client.version
+				if (scenarioVersion != AboutInfo.applicationVersion)
+				{					
+					//scenario and model are out of since
+					var msg:String = "Scenario version does not match client version.\nScenario version: " + scenarioVersion + "\nClient version:   " + AboutInfo.applicationVersion
+					Alert.show(msg, "Version mismatch")
+					Logger.error("error message: " + msg, this);
+					removeSimulationModal()
+					return					
+				}
+					
+				
 				//parse XML via delegate
 				var success:Boolean = populateScenarioModel(scenXML)				
 				if (success)
 				{
 					_simModal.message = SimulationModal.INITIALIZING
 					Logger.debug("Scenario " + scenarioModel.name + " loaded. Starting...",this)
-					scenarioModel.traceSystemVariables()
+					//scenarioModel.traceSystemVariables()
 					startScenario()
 				}
 				else
@@ -341,7 +354,7 @@ package com.mcquilleninteractive.learnhvac.controller
 			if (success)
 			{
 				Logger.debug("Default scenario loaded. Starting...",this)
-				scenarioModel.traceSystemVariables()
+				//scenarioModel.traceSystemVariables()
 				_simModal.message = SimulationModal.INITIALIZING
 				startScenario()
 			}

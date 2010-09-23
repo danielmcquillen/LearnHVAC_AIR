@@ -68,7 +68,7 @@ package com.mcquilleninteractive.learnhvac.util
 			
 			if (myLogger == null)
 			{
-				myLogger = Log.getLogger("COMFEN") 
+				myLogger = Log.getLogger("learnhvac") 
 				
 				//Flex Builder update broke this...gives sandbox error 11/20/08
 				//setup remote logging

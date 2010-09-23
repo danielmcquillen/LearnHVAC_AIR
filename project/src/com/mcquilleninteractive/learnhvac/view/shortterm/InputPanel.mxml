@@ -294,7 +294,6 @@
 				
 		public function areInputsValid():Boolean
 		{	
-			Logger.debug("areInputsValid()",this)
 			inputsErrorMsg = "" 
 			
 			// INPUT CHECKS

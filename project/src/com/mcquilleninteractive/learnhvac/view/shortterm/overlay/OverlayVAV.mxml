@@ -33,11 +33,13 @@
 			{
 											
 				//draw lines for UI niceness
+				
+				/* not showing a variable at this location right now
 				this.graphics.lineStyle(1,0xCCCCCC,1)
 				this.graphics.moveTo(375,295)
 				this.graphics.lineTo(375,240)
 				this.graphics.drawCircle(375,235,5)
-				
+				*/
 			}
 			
 			[Mediate(event="ScenarioLoadedEvent.SCENARIO_LOADED")]
@@ -48,7 +50,7 @@
 				
 				//set visibility of labels	
 				var varArr:Array = ["VAVDampPos","VAVTAirLvg","FANTAirLvg",
-									"FANAirFlw","FANAirFlw","VAVRhcPos"]
+									"FANAirFlw","FANAirFlw","VAVRhcPos","VAVSARH"]
 				
 				setLabels(varArr)				
 				
@@ -100,7 +102,10 @@
 		sysVarName="VAVDampPos"
 		color="0xFFFFFF" 
 		x="255" y="148" />
-			
+	
+	
+	
+
 	<mx:Label id="lblVAVTAirLvg_Title" 
 		text="Air Temp: " 
 		styleName="overlayTitle"
@@ -114,9 +119,29 @@
 		styleName="overlayValue" 
 		sysVarName="VAVTAirLvg"
 		color="0xFFFFFF" 
-		x="35" y="220" 
+		x="35" y="215" 
 		width="100" 
 		textAlign="right"/>
+	
+	<mx:Label id="lblVAVSARH_Title" 
+				text="Rel. Hum.: " 
+				styleName="overlayTitle"
+				toolTip="VAV box leaving air relative humidity"
+				color="0x00000" 
+				x="35" y="240"  
+				width="100" 
+				textAlign="right" />
+	<overlay:ValueDisplayLabel 
+				id="lblVAVSARH" 
+				text="0" 
+				styleName="overlayValue" 
+				sysVarName="VAVSARH"
+				color="0x000000" 
+				x="35" y="255" 
+				width="100" 
+				textAlign="right"
+			 
+				/>
 	
 	<!--
 	<mx:Label id="lblVAVTAirEnt_Title" 
@@ -183,7 +208,7 @@
 	-->
 		
 			
-	<mx:Label id="lblTEMP_Title" 
+	<mx:Label id="lblReheatCoil_Title" 
 		text="Reheat Coil" 
 		styleName="overlayTitle"
 		color="0xFFFFFF"

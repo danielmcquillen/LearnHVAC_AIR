@@ -203,7 +203,7 @@ package com.mcquilleninteractive.learnhvac.model
 		
 		public function resetAll():void
 		{
-			Logger.debug(": resetting.")
+			Logger.debug("resetAll().", this)
 			clearScenario()	
 		}
 		

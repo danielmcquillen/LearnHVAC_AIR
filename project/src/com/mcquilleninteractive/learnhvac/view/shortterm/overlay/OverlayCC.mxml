@@ -40,7 +40,7 @@
 				Logger.debug("scenarioLoaded()", this)	
 															//set visibility of labels							
 				var varArr:Array = ["CCTAirEnt","CCTAirLvg","CCTLiqEnt",
-									"CCTLiqLvg","CCPos","CHLLiqFlw"	]
+									"CCTLiqLvg","CCPos","CHLLiqFlw","CCLARH"	]
 									
 				setLabels(varArr)					
 			}
@@ -82,29 +82,59 @@
 	    color="0x000000"
 				/>	
 				
-	<mx:Label id="lblCCTAirEnt_Title" text="Entering Air Temp: " styleName="overlayTitle"
-			  x="130" y="120" width="150" textAlign="right"
+	<mx:Label id="lblCCTAirEnt_Title" 
+			  text="Entering Air Temp: " 
+			  styleName="overlayTitle"
+			  x="130" y="75" 
+			  width="150" 
+			  textAlign="right"
 			  />
 	<overlay:ValueDisplayLabel id="lblCCTAirEnt"
 		sysVarName="CCTAirEnt"
 		text="0"
 		styleName="overlayValue"
-		x="130" 
-		y="140" 
+		x="130" y="90" 
 		width="150" 
 		textAlign="right"
 			/>
+	
 					 
-	<mx:Label id="lblCCTAirLvg_Title" text="Leaving Air Temp: " styleName="overlayTitle"
-				x="500" y="150"/>
+	<mx:Label id="lblCCTAirLvg_Title" 
+			  text="Leaving Air Temp: " 
+			  styleName="overlayTitle"
+				x="500" y="130"/>
 	<overlay:ValueDisplayLabel id="lblCCTAirLvg"
-		sysVarName="CCTAirLvg"
-		text="0" 
-		styleName="overlayValue"
-		x="500" y="170" />
-					 
-	<mx:Label id="lblCCTLiqEnt_Title" text="Entering Liq. Temp: " styleName="overlayTitle"
-			x="385" y="278"/>
+				sysVarName="CCTAirLvg"
+				text="0" 
+				styleName="overlayValue"
+				x="500" y="150" />
+					 	
+	<mx:Label id="lblCCLARH_Title" 
+			  text="Leaving Air Rel. Humidity: " 
+			  styleName="overlayTitle"
+			  toolTip="Cooling coil leaving air relative humidity"
+			  x="500" y="180" 
+			  width="150" 
+			  textAlign="left"
+			  />
+	<overlay:ValueDisplayLabel id="lblCCLARH"
+							   sysVarName="CCLARH"
+							   text="0"
+							   styleName="overlayValue"
+							   x="500" 
+							   y="200" 
+							   width="150" 
+							   textAlign="left"
+							   />
+	
+	
+	
+	
+	
+	<mx:Label id="lblCCTLiqEnt_Title" 
+			  text="Entering Liq. Temp: " 
+			  styleName="overlayTitle"
+				x="385" y="278"/>
 	<overlay:ValueDisplayLabel id="lblCCTLiqEnt" 							   
 		sysVarName="CCTLiqEnt"
 		text="0" 

@@ -57,7 +57,7 @@
 				//set visibility of labels					
 				var varArr:Array = ["SYSTAirDB","SYSRHOutside","HCPos","CCPos",
 									"RMTemp","VAVTAirLvg","VAVDampPos",
-									"VAVRhcPos"	]
+									"VAVRhcPos", "RMRH"	]
 									
 				setLabels(varArr) 
 				return
@@ -209,7 +209,28 @@
 		text="84" 
 		styleName="overlayValue"
 		x="248" 
-		y="290" 
+		y="295" 
+		width="150" 
+		textAlign="right"/>
+	
+	
+	<mx:Label 
+		id="lblRMRH_Title" 
+		text="Rel. Humidity: " 
+		styleName="overlayTitle" 
+		x="150" 
+		y="275" 
+		width="150" 
+		toolTip="Relative Humidity"
+		textAlign="right" />
+	
+	<overlay:ValueDisplayLabel 	
+		id="lblRMRH" 
+		sysVarName="RMRH"
+		text="84" 
+		styleName="overlayValue"
+		x="148" 
+		y="295" 
 		width="150" 
 		textAlign="right"/>
 		

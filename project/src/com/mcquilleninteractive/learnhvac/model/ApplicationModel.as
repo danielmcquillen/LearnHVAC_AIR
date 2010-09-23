@@ -1,7 +1,9 @@
 package com.mcquilleninteractive.learnhvac.model
 {
+	import com.mcquilleninteractive.learnhvac.util.Logger;
+	
 	import flash.events.EventDispatcher;
-	import flash.filesystem.File;
+	import flash.filesystem.*;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -9,7 +11,7 @@ package com.mcquilleninteractive.learnhvac.model
 	public class ApplicationModel extends EventDispatcher
 	{
 		
-		public static const baseServiceURL:String = "http://app.learnhvac.org/api/"
+		public static const BASE_SERVICE_URL:String = "http://app.learnhvac.org/api/"
 		public static const baseStorageDirPath:String = "LearnHVAC/"
 					
 		// ATTRIBUTES FOR CONTROLLING TEST/MOCK MODE
@@ -47,7 +49,6 @@ package com.mcquilleninteractive.learnhvac.model
 				
 		// SERVER INFO
 		public var serverList:ArrayCollection
-		public var instructorSiteURL:String = "http://client.learnhvac.org/weborb"
 		
 		// PROXY PORT
 		public var proxyPort:String
@@ -110,11 +111,52 @@ package com.mcquilleninteractive.learnhvac.model
 				return "\u00B0C"
 			}
 		}
-		
 			
+		public function get installedVersion():String
+		{
+			
+			var f:File = File.applicationStorageDirectory.resolvePath("installedVersion.txt")
+			var version:String = ""
+			if (f.exists==false)
+			{
+				return ""
+			}
+			
+			try
+			{				
+				var stream:FileStream = new FileStream()
+				stream.open(f, FileMode.READ)
+				version = stream.readUTFBytes(stream.bytesAvailable)
+				stream.close()
+			}
+			catch(error:Error)
+			{
+				Logger.error("Couldn't read installedVersion.txt. Error: " + error, this)
+				//not a critical error
+				return ""
+			}
+			return version
+		}
+		
+		public function set installedVersion(version:String):void
+		{
+			var f:File = File.applicationStorageDirectory.resolvePath("installedVersion.txt")
+			try
+			{
+				var stream:FileStream = new FileStream()
+				stream.open(f, FileMode.WRITE)
+				stream.writeUTFBytes(version)
+				stream.close()
+			}
+			catch(error:Error)
+			{
+				Logger.error("Couldn't save installedVersion.txt. Error: " + error, this)
+				//not a critical error
+			}
+		}
 		
 		
-	}
-	
+	}	
+		
 }
 

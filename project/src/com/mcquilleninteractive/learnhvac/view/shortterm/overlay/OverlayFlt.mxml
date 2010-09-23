@@ -7,14 +7,14 @@
 	<mx:Script>
 		<![CDATA[
 						
-			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-            import com.mcquilleninteractive.learnhvac.util.Logger
-            import mx.controls.Label 
-            import com.mcquilleninteractive.learnhvac.model.SystemVariable
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.UnitsEvent;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			import com.mcquilleninteractive.learnhvac.model.SystemVariable;
+			import com.mcquilleninteractive.learnhvac.util.Logger;
 			
-   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
-			import com.mcquilleninteractive.learnhvac.event.UnitsEvent
+			import mx.controls.Label;
    			         			
 		    private var unitsFltpreDrop:String 
 		    
@@ -29,7 +29,11 @@
 			public function scenarioLoaded(event:ScenarioLoadedEvent):void
 			{																																			
 				//set visibility of labels	
-				_fltPDropVisible =scenarioModel.getSysVar("FLTPDrop").visible
+				var sysVar:SystemVariable = scenarioModel.getSysVar("FLTPDrop")
+				if (sysVar)
+				{
+					_fltPDropVisible = sysVar.visible
+				}
 			}
 			
 			

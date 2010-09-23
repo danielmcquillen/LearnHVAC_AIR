@@ -9,7 +9,7 @@ Modelica experiment file
 double experiment(7,1)
        0                   # StartTime    Time at which integration starts
                            #              (and linearization and trimming time)
-   86400                   # StopTime     Time at which integration stops
+  6.000000000000000E+006   # StopTime     Time at which integration stops
        0                   # Increment    Communication step size, if > 0
      500                   # nInterval    Number of communication intervals, if > 0
   1.000000000000000E-004   # Tolerance    Relative precision of signals for
@@ -42,7 +42,7 @@ double experiment(7,1)
 
 #    Method tuning parameters
 double method(27,1)
-       1                   # grid     type of communication time grid, defined by
+       3                   # grid     type of communication time grid, defined by
                            #          = 1: equidistant points ("Increment/nInterval")
                            #          = 2: vector of grid points ("tgrid")
                            #          = 3: variable step integrator (automatically)
@@ -54,7 +54,7 @@ double method(27,1)
                            #          grid = 4   runs forever (stopped by model)
        1                   # nt       Use every NT time instant, if grid = 3
        3                   # dense    1/2/3 restart/step/interpolate GRID points
-       1                   # evgrid   0/1 do not/save event points in comm. time grid
+       0                   # evgrid   0/1 do not/save event points in comm. time grid
        1                   # evu      0/1 U-discontinuity does not/trigger events
        0                   # evuord       U-discontinuity order to consider (0,1,...)
        0                   # error    0/1/2 One message/warning/error messages
@@ -86,13 +86,13 @@ double method(27,1)
 #    Output parameters
 int settings(13,1)
  0                         # lprec    0/1 do not/store result data in double
- 1                         # lx       0/1 do not/store x  (state variables)
- 1                         # lxd      0/1 do not/store xd (derivative of states)
+ 0                         # lx       0/1 do not/store x  (state variables)
+ 0                         # lxd      0/1 do not/store xd (derivative of states)
  1                         # lu       0/1 do not/store u  (input     signals)
  1                         # ly       0/1 do not/store y  (output    signals)
  0                         # lz       0/1 do not/store z  (indicator signals)
- 1                         # lw       0/1 do not/store w  (auxiliary signals)
- 1                         # la       0/1 do not/store a  (alias     signals)
+ 0                         # lw       0/1 do not/store w  (auxiliary signals)
+ 0                         # la       0/1 do not/store a  (alias     signals)
  0                         # lperf    0/1 do not/store performance indicators
  0                         # levent   0/1 do not/store event point
  1                         # lres     0/1 do not/store results on result file
@@ -102,7 +102,7 @@ int settings(13,1)
 
 
 #    Names of initial variables
-char initialName(2924,69)
+char initialName(3102,69)
 system.p_ambient
 system.T_ambient
 system.g
@@ -480,6 +480,8 @@ MB.port_Exh.p
 MB.port_Ret.m_flow
 MB.port_Ret.h_outflow
 MB.port_Ret.Xi_outflow[1]
+MB.port_Sup.h_outflow
+MB.port_Sup.Xi_outflow[1]
 MB.add.u1
 MB.add.k1
 MB.add.k2
@@ -670,6 +672,12 @@ sFCtrl.limPID.revAct
 sFCtrl.max.u2
 sFCtrl.max.y
 sFCtrl.const1.k
+sFCtrl.firstOrder.k
+sFCtrl.firstOrder.T
+sFCtrl.firstOrder.initType
+sFCtrl.firstOrder.y_start
+sFCtrl.firstOrder.y
+sFCtrl.firstOrder.der(y)
 Tmix.allowFlowReversal
 Tmix.port_a.h_outflow
 Tmix.port_a.Xi_outflow[1]
@@ -758,6 +766,7 @@ CC.state_b1_inflow.T
 CC.state_a2_inflow.T
 CC.state_a2_inflow.X[2]
 CC.state_b2_inflow.T
+CC.state_b2_inflow.X[1]
 CC.state_b2_inflow.X[2]
 CC.computeFlowResistance1
 CC.from_dp1
@@ -1976,6 +1985,7 @@ Chi.X_in_internal[1]
 Tsa.allowFlowReversal
 Tsa.port_a.h_outflow
 Tsa.port_a.Xi_outflow[1]
+Tsa.port_b.h_outflow
 Tsa.port_b.Xi_outflow[1]
 Tsa.port_a_exposesState
 Tsa.port_b_exposesState
@@ -2192,6 +2202,8 @@ tUCtrl.firstOrder1.initType
 tUCtrl.firstOrder1.y_start
 tUCtrl.firstOrder1.y
 tUCtrl.firstOrder1.der(y)
+tUCtrl.const1.k
+tUCtrl.const2.k
 pressure.port.m_flow
 pressure.port.h_outflow
 pressure.port.Xi_outflow[1]
@@ -2376,11 +2388,7 @@ hCCtrl.const.k
 hCCtrl.add.k1
 hCCtrl.add.k2
 hCCtrl.const1.k
-hCCtrl.and1.y
-hCCtrl.lessEqual.u2
-hCCtrl.lessEqual.y
 hCCtrl.const2.k
-hCCtrl.const3.k
 FilDp.port_a.m_flow
 FilDp.port_a.p
 FilDp.port_a.h_outflow
@@ -2612,6 +2620,11 @@ socketComm.cliBCVTB.flaDblWri[29]
 socketComm.cliBCVTB.flaDblWri[30]
 socketComm.cliBCVTB.flaDblWri[31]
 socketComm.cliBCVTB.flaDblWri[32]
+socketComm.cliBCVTB.flaDblWri[33]
+socketComm.cliBCVTB.flaDblWri[34]
+socketComm.cliBCVTB.flaDblWri[35]
+socketComm.cliBCVTB.flaDblWri[36]
+socketComm.cliBCVTB.flaDblWri[37]
 socketComm.cliBCVTB.uStart[1]
 socketComm.cliBCVTB.uStart[2]
 socketComm.cliBCVTB.uStart[3]
@@ -2644,6 +2657,11 @@ socketComm.cliBCVTB.uStart[29]
 socketComm.cliBCVTB.uStart[30]
 socketComm.cliBCVTB.uStart[31]
 socketComm.cliBCVTB.uStart[32]
+socketComm.cliBCVTB.uStart[33]
+socketComm.cliBCVTB.uStart[34]
+socketComm.cliBCVTB.uStart[35]
+socketComm.cliBCVTB.uStart[36]
+socketComm.cliBCVTB.uStart[37]
 socketComm.cliBCVTB.yRFixed[1]
 socketComm.cliBCVTB.yRFixed[2]
 socketComm.cliBCVTB.yRFixed[3]
@@ -2719,6 +2737,11 @@ socketComm.cliBCVTB.uR[29]
 socketComm.cliBCVTB.uR[30]
 socketComm.cliBCVTB.uR[31]
 socketComm.cliBCVTB.uR[32]
+socketComm.cliBCVTB.uR[33]
+socketComm.cliBCVTB.uR[34]
+socketComm.cliBCVTB.uR[35]
+socketComm.cliBCVTB.uR[36]
+socketComm.cliBCVTB.uR[37]
 socketComm.cliBCVTB.yR[1]
 socketComm.cliBCVTB.yR[2]
 socketComm.cliBCVTB.yR[3]
@@ -2798,6 +2821,11 @@ socketComm.cliBCVTB._uStart[29]
 socketComm.cliBCVTB._uStart[30]
 socketComm.cliBCVTB._uStart[31]
 socketComm.cliBCVTB._uStart[32]
+socketComm.cliBCVTB._uStart[33]
+socketComm.cliBCVTB._uStart[34]
+socketComm.cliBCVTB._uStart[35]
+socketComm.cliBCVTB._uStart[36]
+socketComm.cliBCVTB._uStart[37]
 socketComm.cliBCVTB.flaWri
 socketComm.cliBCVTB.uRInt[1]
 socketComm.cliBCVTB.der(uRInt[1])
@@ -2863,6 +2891,16 @@ socketComm.cliBCVTB.uRInt[31]
 socketComm.cliBCVTB.der(uRInt[31])
 socketComm.cliBCVTB.uRInt[32]
 socketComm.cliBCVTB.der(uRInt[32])
+socketComm.cliBCVTB.uRInt[33]
+socketComm.cliBCVTB.der(uRInt[33])
+socketComm.cliBCVTB.uRInt[34]
+socketComm.cliBCVTB.der(uRInt[34])
+socketComm.cliBCVTB.uRInt[35]
+socketComm.cliBCVTB.der(uRInt[35])
+socketComm.cliBCVTB.uRInt[36]
+socketComm.cliBCVTB.der(uRInt[36])
+socketComm.cliBCVTB.uRInt[37]
+socketComm.cliBCVTB.der(uRInt[37])
 socketComm.cliBCVTB.uRIntPre[1]
 socketComm.cliBCVTB.uRIntPre[2]
 socketComm.cliBCVTB.uRIntPre[3]
@@ -2895,6 +2933,11 @@ socketComm.cliBCVTB.uRIntPre[29]
 socketComm.cliBCVTB.uRIntPre[30]
 socketComm.cliBCVTB.uRIntPre[31]
 socketComm.cliBCVTB.uRIntPre[32]
+socketComm.cliBCVTB.uRIntPre[33]
+socketComm.cliBCVTB.uRIntPre[34]
+socketComm.cliBCVTB.uRIntPre[35]
+socketComm.cliBCVTB.uRIntPre[36]
+socketComm.cliBCVTB.uRIntPre[37]
 socketComm.cliBCVTB.uRWri[1]
 socketComm.cliBCVTB.uRWri[2]
 socketComm.cliBCVTB.uRWri[3]
@@ -2927,11 +2970,146 @@ socketComm.cliBCVTB.uRWri[29]
 socketComm.cliBCVTB.uRWri[30]
 socketComm.cliBCVTB.uRWri[31]
 socketComm.cliBCVTB.uRWri[32]
+socketComm.cliBCVTB.uRWri[33]
+socketComm.cliBCVTB.uRWri[34]
+socketComm.cliBCVTB.uRWri[35]
+socketComm.cliBCVTB.uRWri[36]
+socketComm.cliBCVTB.uRWri[37]
 socketComm.timeStep
 socketComm.add.k1
 socketComm.add.k2
 socketComm.const.k
 socketComm.const1.k
+socketComm.gain.k
+socketComm.gain1.k
+socketComm.gain2.k
+socketComm.gain3.k
+socketComm.gain4.k
+MXRH.port.m_flow
+MXRH.port.h_outflow
+MXRH.port.Xi_outflow[1]
+MXRH.med.Xi[1]
+MXRH.med.h
+MXRH.med.d
+MXRH.med.T
+MXRH.med.X[2]
+MXRH.med.u
+MXRH.med.R
+MXRH.med.MM
+MXRH.med.preferredMediumStates
+MXRH.med.standardOrderComponents
+MXRH.med.T_degC
+MXRH.med.p_bar
+MXRH.med.x_water
+MXRH.med.phi
+MXRH.med.MMX[1]
+MXRH.med.MMX[2]
+MXRH.med.X_air
+MXRH.med.X_sat
+MXRH.med.x_sat
+MXRH.med.p_steam_sat
+MXRH.med.pStp
+MXRH.med.dStp
+RARH.port.m_flow
+RARH.port.h_outflow
+RARH.port.Xi_outflow[1]
+RARH.med.Xi[1]
+RARH.med.h
+RARH.med.d
+RARH.med.T
+RARH.med.X[2]
+RARH.med.u
+RARH.med.R
+RARH.med.MM
+RARH.med.preferredMediumStates
+RARH.med.standardOrderComponents
+RARH.med.T_degC
+RARH.med.p_bar
+RARH.med.x_water
+RARH.med.phi
+RARH.med.MMX[1]
+RARH.med.MMX[2]
+RARH.med.X_air
+RARH.med.X_sat
+RARH.med.x_sat
+RARH.med.p_steam_sat
+RARH.med.pStp
+RARH.med.dStp
+LARH.port.m_flow
+LARH.port.h_outflow
+LARH.port.Xi_outflow[1]
+LARH.med.Xi[1]
+LARH.med.h
+LARH.med.d
+LARH.med.T
+LARH.med.X[2]
+LARH.med.u
+LARH.med.R
+LARH.med.MM
+LARH.med.preferredMediumStates
+LARH.med.standardOrderComponents
+LARH.med.T_degC
+LARH.med.p_bar
+LARH.med.x_water
+LARH.med.phi
+LARH.med.MMX[1]
+LARH.med.MMX[2]
+LARH.med.X_air
+LARH.med.X_sat
+LARH.med.x_sat
+LARH.med.p_steam_sat
+LARH.med.pStp
+LARH.med.dStp
+VAVOuRH.port.m_flow
+VAVOuRH.port.h_outflow
+VAVOuRH.port.Xi_outflow[1]
+VAVOuRH.med.Xi[1]
+VAVOuRH.med.h
+VAVOuRH.med.d
+VAVOuRH.med.T
+VAVOuRH.med.X[2]
+VAVOuRH.med.u
+VAVOuRH.med.R
+VAVOuRH.med.MM
+VAVOuRH.med.preferredMediumStates
+VAVOuRH.med.standardOrderComponents
+VAVOuRH.med.T_degC
+VAVOuRH.med.p_bar
+VAVOuRH.med.x_water
+VAVOuRH.med.phi
+VAVOuRH.med.MMX[1]
+VAVOuRH.med.MMX[2]
+VAVOuRH.med.X_air
+VAVOuRH.med.X_sat
+VAVOuRH.med.x_sat
+VAVOuRH.med.p_steam_sat
+VAVOuRH.med.pStp
+VAVOuRH.med.dStp
+FanOutRH.port.m_flow
+FanOutRH.port.h_outflow
+FanOutRH.port.Xi_outflow[1]
+FanOutRH.med.Xi[1]
+FanOutRH.med.h
+FanOutRH.med.d
+FanOutRH.med.T
+FanOutRH.med.X[2]
+FanOutRH.med.u
+FanOutRH.med.R
+FanOutRH.med.MM
+FanOutRH.med.preferredMediumStates
+FanOutRH.med.standardOrderComponents
+FanOutRH.med.T_degC
+FanOutRH.med.p_bar
+FanOutRH.med.x_water
+FanOutRH.med.phi
+FanOutRH.med.MMX[1]
+FanOutRH.med.MMX[2]
+FanOutRH.med.X_air
+FanOutRH.med.X_sat
+FanOutRH.med.x_sat
+FanOutRH.med.p_steam_sat
+FanOutRH.med.pStp
+FanOutRH.med.dStp
 mBCtrl.limPID.addI.k1
 mBCtrl.limPID.addI.k2
 mBCtrl.limPID.addI.k3
@@ -3028,7 +3206,7 @@ tUFault.TUFBus.ChwsT
 tUFault.TUFBus.HwsT
 tUFault.TUFBus.VAVFlw_nominal
 
-double initialValue(2924,6)
+double initialValue(3102,6)
  -1  1.013250000000000E+005       0                  1.000000000000000E+100
   1   280   # system.p_ambient
  -1  2.931500000000000E+002       0                  1.000000000000000E+100
@@ -3783,6 +3961,10 @@ double initialValue(2924,6)
   6   260   # MB.port_Ret.h_outflow
   0       0                       0                       1                
   6   260   # MB.port_Ret.Xi_outflow[1]
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   260   # MB.port_Sup.h_outflow
+  0       0                       0                       1                
+  6   260   # MB.port_Sup.Xi_outflow[1]
   0       0                       0                       0                
   6   320   # MB.add.u1
  -1       1                       0                       0                
@@ -3803,7 +3985,7 @@ double initialValue(2924,6)
   1   280   # VRoo
  -1     200                       0                       0                
   1   280   # UA
- -1    5000                       0                       0                
+ -1    8000                       0                       0                
   1   280   # Q_sen_nominal
  -1       2                       0                       0                
   1   280   # V_fan_nominal
@@ -3837,7 +4019,7 @@ double initialValue(2924,6)
   1   280   # Q_rhc_nominal
   0      87                       0                       0                
   6   256   # dp_rhc_nominal
- -1  8.010000000000001E-001       0                       0                
+ -1  1.000000000000000E-001       0                       0                
   1   280   # m_w_hc_nominal
   0  2.860000000000000E+001       0                       0                
   6   256   # dp_a_hc_nominal
@@ -3953,7 +4135,7 @@ double initialValue(2924,6)
   6   257   # SupF.show_V_flow
   0       1                       0                       0                
   6   257   # SupF.show_T
-  0       0                 -100000                  100000                
+  0       0                       0                  100000                
   6   288   # SupF.m_flow
   0       0                       0                       0                
   6   256   # SupF.dp
@@ -4159,10 +4341,22 @@ double initialValue(2924,6)
   6  1280   # sFCtrl.limPID.revAct
   0       0                       0                       0                
   6   320   # sFCtrl.max.u2
-  0       0                       0                       1                
+  0       0                       0                       0                
   6   256   # sFCtrl.max.y
  -1     100                       0                       0                
   1   280   # sFCtrl.const1.k
+ -1       1                       0                       0                
+  1   280   # sFCtrl.firstOrder.k
+ -1       1                       0                       0                
+  1   280   # sFCtrl.firstOrder.T
+  0       1                       1                       4                
+  6   258   # sFCtrl.firstOrder.initType
+ -1       0                       0                       0                
+  1   280   # sFCtrl.firstOrder.y_start
+ -1       0                       0                       1                
+  2   272   # sFCtrl.firstOrder.y
+  0       0                       0                       0                
+  3   256   # sFCtrl.firstOrder.der(y)
   0       1                       0                       0                
   6   257   # Tmix.allowFlowReversal
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
@@ -4339,6 +4533,8 @@ double initialValue(2924,6)
   6  1280   # CC.state_a2_inflow.X[2]
   0     300                       1                   10000                
   6  1280   # CC.state_b2_inflow.T
+  0       0                       0                       1                
+  6  1280   # CC.state_b2_inflow.X[1]
   0       0                       0                       1                
   6  1280   # CC.state_b2_inflow.X[2]
   0       0                       0                       0                
@@ -6775,6 +6971,8 @@ double initialValue(2924,6)
   6   260   # Tsa.port_a.h_outflow
   0       0                       0                       1                
   6   260   # Tsa.port_a.Xi_outflow[1]
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   260   # Tsa.port_b.h_outflow
   0       0                       0                       1                
   6   260   # Tsa.port_b.Xi_outflow[1]
  -1       0                       0                       0                
@@ -6807,7 +7005,7 @@ double initialValue(2924,6)
   6   256   # gain.k
   0       0                       0                       0                
   6   256   # gain.u
-  0       1                       0                       0                
+  0       0                       0                       0                
   6   257   # TB.allowFlowReversal
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
   6   260   # TB.port_b.h_outflow
@@ -6927,7 +7125,7 @@ double initialValue(2924,6)
   1   280   # tUCtrl.dmprPI.Td
  -1       1                       0                       0                
   1   280   # tUCtrl.dmprPI.yMax
- -1  1.000000000000000E-002       0                       0                
+ -1  1.000000000000000E-001       0                       0                
   1   280   # tUCtrl.dmprPI.yMin
  -1       1                       0                  1.000000000000000E+100
   1   280   # tUCtrl.dmprPI.wp
@@ -7172,7 +7370,7 @@ double initialValue(2924,6)
   0       0                       0                       0                
   3   256   # tUCtrl.TBFPI.integrator.der(y)
   0       1                       0                       0                
-  6   320   # tUCtrl.TBFPI.integrator.k
+  6   256   # tUCtrl.TBFPI.integrator.k
  -1       1                       0                       0                
   1   280   # tUCtrl.TBFPI.const.k
   0       0                       0                       0                
@@ -7207,6 +7405,10 @@ double initialValue(2924,6)
   2   272   # tUCtrl.firstOrder1.y
   0       0                       0                       0                
   3   256   # tUCtrl.firstOrder1.der(y)
+ -1       1                       0                       0                
+  1   280   # tUCtrl.const1.k
+ -1      60                       0                       0                
+  1   280   # tUCtrl.const2.k
   0       0                       0                  100000                
   6   388   # pressure.port.m_flow
   0       0                 -1.000000000000000E+008  1.000000000000000E+008
@@ -7575,16 +7777,8 @@ double initialValue(2924,6)
   1   280   # hCCtrl.add.k2
  -1       1                       0                       0                
   1   280   # hCCtrl.const1.k
-  0       0                       0                       0                
-  6   321   # hCCtrl.and1.y
-  0       0                       0                       0                
-  6   320   # hCCtrl.lessEqual.u2
-  0       0                       0                       0                
-  6   321   # hCCtrl.lessEqual.y
  -1  2.731500000000000E+002       0                       0                
   1   280   # hCCtrl.const2.k
- -1     100                       0                       0                
-  1   280   # hCCtrl.const3.k
   0       0                       0                  100000                
   6   388   # FilDp.port_a.m_flow
   0  1.013250000000000E+005       0                  1.000000000000000E+008
@@ -7701,7 +7895,7 @@ double initialValue(2924,6)
   1   280   # hCFault.greaterThreshold4.threshold
   0       0                       0                       0                
   6   321   # hCFault.greaterThreshold4.y
- -1  8.000000000000000E-001       0                       0                
+ -1  6.000000000000000E-001       0                       0                
   1   280   # hCFault.HC_eps1.k
   0       0                       0                       0                
   6   320   # hCFault.product1.u1
@@ -7979,7 +8173,7 @@ double initialValue(2924,6)
   6   257   # socketComm.cliBCVTB.activateInterface
   0       0                       0                       0                
   6   256   # socketComm.cliBCVTB.timeStep
-  0      32                       0                  1.000000000000000E+100
+  0      37                       0                  1.000000000000000E+100
   6   258   # socketComm.cliBCVTB.nDblWri
   0      43                       0                  1.000000000000000E+100
   6   258   # socketComm.cliBCVTB.nDblRea
@@ -8047,6 +8241,16 @@ double initialValue(2924,6)
   1   282   # socketComm.cliBCVTB.flaDblWri[31]
  -1       0                       0                       0                
   1   282   # socketComm.cliBCVTB.flaDblWri[32]
+ -1       0                       0                       0                
+  1   282   # socketComm.cliBCVTB.flaDblWri[33]
+ -1       0                       0                       0                
+  1   282   # socketComm.cliBCVTB.flaDblWri[34]
+ -1       0                       0                       0                
+  1   282   # socketComm.cliBCVTB.flaDblWri[35]
+ -1       0                       0                       0                
+  1   282   # socketComm.cliBCVTB.flaDblWri[36]
+ -1       0                       0                       0                
+  1   282   # socketComm.cliBCVTB.flaDblWri[37]
  -1      20                       0                       0                
   1   280   # socketComm.cliBCVTB.uStart[1]
  -1       0                       0                       0                
@@ -8111,6 +8315,16 @@ double initialValue(2924,6)
   1   280   # socketComm.cliBCVTB.uStart[31]
  -1      20                       0                       0                
   1   280   # socketComm.cliBCVTB.uStart[32]
+ -1      50                       0                       0                
+  1   280   # socketComm.cliBCVTB.uStart[33]
+ -1      50                       0                       0                
+  1   280   # socketComm.cliBCVTB.uStart[34]
+ -1      50                       0                       0                
+  1   280   # socketComm.cliBCVTB.uStart[35]
+ -1      50                       0                       0                
+  1   280   # socketComm.cliBCVTB.uStart[36]
+ -1      50                       0                       0                
+  1   280   # socketComm.cliBCVTB.uStart[37]
   0       0                       0                       0                
   6   256   # socketComm.cliBCVTB.yRFixed[1]
   0       0                       0                       0                
@@ -8261,6 +8475,16 @@ double initialValue(2924,6)
   6   256   # socketComm.cliBCVTB.uR[31]
   0       0                       0                  1.000000000000000E+100
   6   256   # socketComm.cliBCVTB.uR[32]
+  0       0                       0                  1.000000000000000E+100
+  6   256   # socketComm.cliBCVTB.uR[33]
+  0       0                       0                  1.000000000000000E+100
+  6   256   # socketComm.cliBCVTB.uR[34]
+  0       0                       0                  1.000000000000000E+100
+  6   256   # socketComm.cliBCVTB.uR[35]
+  0       0                       0                  1.000000000000000E+100
+  6   256   # socketComm.cliBCVTB.uR[36]
+  0       0                       0                  1.000000000000000E+100
+  6   256   # socketComm.cliBCVTB.uR[37]
   0       0                       0                       0                
   6   320   # socketComm.cliBCVTB.yR[1]
   0       0                       0                       0                
@@ -8420,6 +8644,16 @@ double initialValue(2924,6)
   0       0                       0                       0                
   6  1280   # socketComm.cliBCVTB._uStart[32]
   0       0                       0                       0                
+  6  1280   # socketComm.cliBCVTB._uStart[33]
+  0       0                       0                       0                
+  6  1280   # socketComm.cliBCVTB._uStart[34]
+  0       0                       0                       0                
+  6  1280   # socketComm.cliBCVTB._uStart[35]
+  0       0                       0                       0                
+  6  1280   # socketComm.cliBCVTB._uStart[36]
+  0       0                       0                       0                
+  6  1280   # socketComm.cliBCVTB._uStart[37]
+  0       0                       0                       0                
   6  1282   # socketComm.cliBCVTB.flaWri
  -1       0                       0                       0                
   2  1296   # socketComm.cliBCVTB.uRInt[1]
@@ -8549,6 +8783,26 @@ double initialValue(2924,6)
   2  1296   # socketComm.cliBCVTB.uRInt[32]
   0       0                       0                       0                
   3  1280   # socketComm.cliBCVTB.der(uRInt[32])
+ -1       0                       0                       0                
+  2  1296   # socketComm.cliBCVTB.uRInt[33]
+  0       0                       0                       0                
+  3  1280   # socketComm.cliBCVTB.der(uRInt[33])
+ -1       0                       0                       0                
+  2  1296   # socketComm.cliBCVTB.uRInt[34]
+  0       0                       0                       0                
+  3  1280   # socketComm.cliBCVTB.der(uRInt[34])
+ -1       0                       0                       0                
+  2  1296   # socketComm.cliBCVTB.uRInt[35]
+  0       0                       0                       0                
+  3  1280   # socketComm.cliBCVTB.der(uRInt[35])
+ -1       0                       0                       0                
+  2  1296   # socketComm.cliBCVTB.uRInt[36]
+  0       0                       0                       0                
+  3  1280   # socketComm.cliBCVTB.der(uRInt[36])
+ -1       0                       0                       0                
+  2  1296   # socketComm.cliBCVTB.uRInt[37]
+  0       0                       0                       0                
+  3  1280   # socketComm.cliBCVTB.der(uRInt[37])
   0       0                       0                       0                
   6  1344   # socketComm.cliBCVTB.uRIntPre[1]
   0       0                       0                       0                
@@ -8614,6 +8868,16 @@ double initialValue(2924,6)
   0       0                       0                       0                
   6  1344   # socketComm.cliBCVTB.uRIntPre[32]
   0       0                       0                       0                
+  6  1344   # socketComm.cliBCVTB.uRIntPre[33]
+  0       0                       0                       0                
+  6  1344   # socketComm.cliBCVTB.uRIntPre[34]
+  0       0                       0                       0                
+  6  1344   # socketComm.cliBCVTB.uRIntPre[35]
+  0       0                       0                       0                
+  6  1344   # socketComm.cliBCVTB.uRIntPre[36]
+  0       0                       0                       0                
+  6  1344   # socketComm.cliBCVTB.uRIntPre[37]
+  0       0                       0                       0                
   6   320   # socketComm.cliBCVTB.uRWri[1]
   0       0                       0                       0                
   6   320   # socketComm.cliBCVTB.uRWri[2]
@@ -8677,6 +8941,16 @@ double initialValue(2924,6)
   6   320   # socketComm.cliBCVTB.uRWri[31]
   0       0                       0                       0                
   6   320   # socketComm.cliBCVTB.uRWri[32]
+  0       0                       0                       0                
+  6   320   # socketComm.cliBCVTB.uRWri[33]
+  0       0                       0                       0                
+  6   320   # socketComm.cliBCVTB.uRWri[34]
+  0       0                       0                       0                
+  6   320   # socketComm.cliBCVTB.uRWri[35]
+  0       0                       0                       0                
+  6   320   # socketComm.cliBCVTB.uRWri[36]
+  0       0                       0                       0                
+  6   320   # socketComm.cliBCVTB.uRWri[37]
  -1      60                       0                       0                
   1   280   # socketComm.timeStep
  -1       1                       0                       0                
@@ -8687,6 +8961,266 @@ double initialValue(2924,6)
   1   280   # socketComm.const.k
  -1     100                       0                       0                
   1   280   # socketComm.const1.k
+ -1     100                       0                       0                
+  1   280   # socketComm.gain.k
+ -1     100                       0                       0                
+  1   280   # socketComm.gain1.k
+ -1     100                       0                       0                
+  1   280   # socketComm.gain2.k
+ -1     100                       0                       0                
+  1   280   # socketComm.gain3.k
+ -1     100                       0                       0                
+  1   280   # socketComm.gain4.k
+  0       0                       0                  100000                
+  6   388   # MXRH.port.m_flow
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   260   # MXRH.port.h_outflow
+  0       0                       0                       1                
+  6   260   # MXRH.port.Xi_outflow[1]
+  0  1.000000000000000E-002       0                       1                
+  6   256   # MXRH.med.Xi[1]
+  0       0                       0                       0                
+  6   256   # MXRH.med.h
+  0       1                       0                  100000                
+  6   256   # MXRH.med.d
+  0     300                       1                   10000                
+  6   288   # MXRH.med.T
+  0  9.900000000000000E-001       0                       1                
+  6   256   # MXRH.med.X[2]
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   256   # MXRH.med.u
+  0    1000                       0                  1.000000000000000E+006
+  6   256   # MXRH.med.R
+  0  3.200000000000000E-002  1.000000000000000E-003  2.500000000000000E-001
+  6   256   # MXRH.med.MM
+  0       0                       0                       0                
+  6   257   # MXRH.med.preferredMediumStates
+  0       1                       0                       0                
+  6   257   # MXRH.med.standardOrderComponents
+  0       0                       0                       0                
+  6   256   # MXRH.med.T_degC
+  0       0                       0                       0                
+  6   256   # MXRH.med.p_bar
+  0       0                       0                       1                
+  6   256   # MXRH.med.x_water
+  0       0                       0                       0                
+  6   256   # MXRH.med.phi
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # MXRH.med.MMX[1]
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # MXRH.med.MMX[2]
+  0       0                       0                       1                
+  6  1280   # MXRH.med.X_air
+  0       0                       0                       1                
+  6  1280   # MXRH.med.X_sat
+  0       0                       0                       1                
+  6  1280   # MXRH.med.x_sat
+  0  100000                       0                  1.000000000000000E+008
+  6  1280   # MXRH.med.p_steam_sat
+  0  1.013250000000000E+005       0                  1.000000000000000E+008
+  6  1280   # MXRH.med.pStp
+  0  1.200000000000000E+000       0                  100000                
+  6  1280   # MXRH.med.dStp
+  0       0                       0                  100000                
+  6   388   # RARH.port.m_flow
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   260   # RARH.port.h_outflow
+  0       0                       0                       1                
+  6   260   # RARH.port.Xi_outflow[1]
+  0  1.000000000000000E-002       0                       1                
+  6   256   # RARH.med.Xi[1]
+  0       0                       0                       0                
+  6   256   # RARH.med.h
+  0       1                       0                  100000                
+  6   256   # RARH.med.d
+  0     300                       1                   10000                
+  6   288   # RARH.med.T
+  0  9.900000000000000E-001       0                       1                
+  6   256   # RARH.med.X[2]
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   256   # RARH.med.u
+  0    1000                       0                  1.000000000000000E+006
+  6   256   # RARH.med.R
+  0  3.200000000000000E-002  1.000000000000000E-003  2.500000000000000E-001
+  6   256   # RARH.med.MM
+  0       0                       0                       0                
+  6   257   # RARH.med.preferredMediumStates
+  0       1                       0                       0                
+  6   257   # RARH.med.standardOrderComponents
+  0       0                       0                       0                
+  6   256   # RARH.med.T_degC
+  0       0                       0                       0                
+  6   256   # RARH.med.p_bar
+  0       0                       0                       1                
+  6   256   # RARH.med.x_water
+  0       0                       0                       0                
+  6   256   # RARH.med.phi
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # RARH.med.MMX[1]
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # RARH.med.MMX[2]
+  0       0                       0                       1                
+  6  1280   # RARH.med.X_air
+  0       0                       0                       1                
+  6  1280   # RARH.med.X_sat
+  0       0                       0                       1                
+  6  1280   # RARH.med.x_sat
+  0  100000                       0                  1.000000000000000E+008
+  6  1280   # RARH.med.p_steam_sat
+  0  1.013250000000000E+005       0                  1.000000000000000E+008
+  6  1280   # RARH.med.pStp
+  0  1.200000000000000E+000       0                  100000                
+  6  1280   # RARH.med.dStp
+  0       0                       0                  100000                
+  6   388   # LARH.port.m_flow
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   260   # LARH.port.h_outflow
+  0       0                       0                       1                
+  6   260   # LARH.port.Xi_outflow[1]
+  0  1.000000000000000E-002       0                       1                
+  6   256   # LARH.med.Xi[1]
+  0       0                       0                       0                
+  6   256   # LARH.med.h
+  0       1                       0                  100000                
+  6   256   # LARH.med.d
+  0     300                       1                   10000                
+  6   288   # LARH.med.T
+  0  9.900000000000000E-001       0                       1                
+  6   256   # LARH.med.X[2]
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   256   # LARH.med.u
+  0    1000                       0                  1.000000000000000E+006
+  6   256   # LARH.med.R
+  0  3.200000000000000E-002  1.000000000000000E-003  2.500000000000000E-001
+  6   256   # LARH.med.MM
+  0       0                       0                       0                
+  6   257   # LARH.med.preferredMediumStates
+  0       1                       0                       0                
+  6   257   # LARH.med.standardOrderComponents
+  0       0                       0                       0                
+  6   256   # LARH.med.T_degC
+  0       0                       0                       0                
+  6   256   # LARH.med.p_bar
+  0       0                       0                       1                
+  6   256   # LARH.med.x_water
+  0       0                       0                       0                
+  6   256   # LARH.med.phi
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # LARH.med.MMX[1]
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # LARH.med.MMX[2]
+  0       0                       0                       1                
+  6  1280   # LARH.med.X_air
+  0       0                       0                       1                
+  6  1280   # LARH.med.X_sat
+  0       0                       0                       1                
+  6  1280   # LARH.med.x_sat
+  0  100000                       0                  1.000000000000000E+008
+  6  1280   # LARH.med.p_steam_sat
+  0  1.013250000000000E+005       0                  1.000000000000000E+008
+  6  1280   # LARH.med.pStp
+  0  1.200000000000000E+000       0                  100000                
+  6  1280   # LARH.med.dStp
+  0       0                       0                  100000                
+  6   388   # VAVOuRH.port.m_flow
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   260   # VAVOuRH.port.h_outflow
+  0       0                       0                       1                
+  6   260   # VAVOuRH.port.Xi_outflow[1]
+  0  1.000000000000000E-002       0                       1                
+  6   256   # VAVOuRH.med.Xi[1]
+  0       0                       0                       0                
+  6   256   # VAVOuRH.med.h
+  0       1                       0                  100000                
+  6   256   # VAVOuRH.med.d
+  0     300                       1                   10000                
+  6   288   # VAVOuRH.med.T
+  0  9.900000000000000E-001       0                       1                
+  6   256   # VAVOuRH.med.X[2]
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   256   # VAVOuRH.med.u
+  0    1000                       0                  1.000000000000000E+006
+  6   256   # VAVOuRH.med.R
+  0  3.200000000000000E-002  1.000000000000000E-003  2.500000000000000E-001
+  6   256   # VAVOuRH.med.MM
+  0       0                       0                       0                
+  6   257   # VAVOuRH.med.preferredMediumStates
+  0       1                       0                       0                
+  6   257   # VAVOuRH.med.standardOrderComponents
+  0       0                       0                       0                
+  6   256   # VAVOuRH.med.T_degC
+  0       0                       0                       0                
+  6   256   # VAVOuRH.med.p_bar
+  0       0                       0                       1                
+  6   256   # VAVOuRH.med.x_water
+  0       0                       0                       0                
+  6   256   # VAVOuRH.med.phi
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # VAVOuRH.med.MMX[1]
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # VAVOuRH.med.MMX[2]
+  0       0                       0                       1                
+  6  1280   # VAVOuRH.med.X_air
+  0       0                       0                       1                
+  6  1280   # VAVOuRH.med.X_sat
+  0       0                       0                       1                
+  6  1280   # VAVOuRH.med.x_sat
+  0  100000                       0                  1.000000000000000E+008
+  6  1280   # VAVOuRH.med.p_steam_sat
+  0  1.013250000000000E+005       0                  1.000000000000000E+008
+  6  1280   # VAVOuRH.med.pStp
+  0  1.200000000000000E+000       0                  100000                
+  6  1280   # VAVOuRH.med.dStp
+  0       0                       0                  100000                
+  6   388   # FanOutRH.port.m_flow
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   260   # FanOutRH.port.h_outflow
+  0       0                       0                       1                
+  6   260   # FanOutRH.port.Xi_outflow[1]
+  0  1.000000000000000E-002       0                       1                
+  6   256   # FanOutRH.med.Xi[1]
+  0       0                       0                       0                
+  6   256   # FanOutRH.med.h
+  0       1                       0                  100000                
+  6   256   # FanOutRH.med.d
+  0     300                       1                   10000                
+  6   288   # FanOutRH.med.T
+  0  9.900000000000000E-001       0                       1                
+  6   256   # FanOutRH.med.X[2]
+  0       0                 -1.000000000000000E+008  1.000000000000000E+008
+  6   256   # FanOutRH.med.u
+  0    1000                       0                  1.000000000000000E+006
+  6   256   # FanOutRH.med.R
+  0  3.200000000000000E-002  1.000000000000000E-003  2.500000000000000E-001
+  6   256   # FanOutRH.med.MM
+  0       0                       0                       0                
+  6   257   # FanOutRH.med.preferredMediumStates
+  0       1                       0                       0                
+  6   257   # FanOutRH.med.standardOrderComponents
+  0       0                       0                       0                
+  6   256   # FanOutRH.med.T_degC
+  0       0                       0                       0                
+  6   256   # FanOutRH.med.p_bar
+  0       0                       0                       1                
+  6   256   # FanOutRH.med.x_water
+  0       0                       0                       0                
+  6   256   # FanOutRH.med.phi
+  0  1.801528000000000E-002       0                  1.000000000000000E+100
+  6  1280   # FanOutRH.med.MMX[1]
+  0  2.896511590000000E-002       0                  1.000000000000000E+100
+  6  1280   # FanOutRH.med.MMX[2]
+  0       0                       0                       1                
+  6  1280   # FanOutRH.med.X_air
+  0       0                       0                       1                
+  6  1280   # FanOutRH.med.X_sat
+  0       0                       0                       1                
+  6  1280   # FanOutRH.med.x_sat
+  0  100000                       0                  1.000000000000000E+008
+  6  1280   # FanOutRH.med.p_steam_sat
+  0  1.013250000000000E+005       0                  1.000000000000000E+008
+  6  1280   # FanOutRH.med.pStp
+  0  1.200000000000000E+000       0                  100000                
+  6  1280   # FanOutRH.med.dStp
   0       0                       0                       0                
   6   256   # mBCtrl.limPID.addI.k1
   0       0                       0                       0                
@@ -8927,7 +9461,7 @@ double initialValue(2924,6)
 #   nominal value (and maybe minimum and maximum values given in 
 #   column 3 and 4). If these values are zero, scale(i)=1 is used).
 #
-char initialDescription(2924,124)
+char initialDescription(3102,124)
 Default ambient pressure [Pa|bar]
 Default ambient temperature [K|degC]
 Constant gravity acceleration [m/s2]
@@ -9305,6 +9839,8 @@ Thermodynamic pressure in the connection point [Pa|bar]
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
 Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 Connector of Real input signal 1
 Gain of upper input
 Gain of lower input
@@ -9493,8 +10029,14 @@ Connector of Real input signal 1
 Set to true to enable reverse action (such as for a cooling coil controller)
 
 Connector of Real input signal 2
-Connector of Real output signal [1]
+Connector of Real output signal
 Constant output value
+Gain
+Time Constant [s]
+Type of initialization (1: no init, 2: steady state, 3/4: initial output)
+Initial or guess value of output (= state) [1]
+Connector of Real output signal [1]
+der(Connector of Real output signal) [s-1]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
 Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
@@ -9583,6 +10125,7 @@ Temperature of medium [K|degC]
 Temperature of medium [K|degC]
 Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
 =true, compute flow resistance. Set to false to assume no friction
 = true, use m_flow = f(dp) else dp = f(m_flow)
@@ -10801,6 +11344,7 @@ Needed to connect to conditional connector [1]
 = true to allow flow reversal, false restricts to design direction (port_a -> port_b)
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
 Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
 Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
 = true if port_a exposes the state of a fluid volume
 = true if port_b.p exposes the state of a fluid volume
@@ -11017,6 +11561,8 @@ Type of initialization (1: no init, 2: steady state, 3/4: initial output)
 Initial or guess value of output (= state)
 Connector of Real output signal
 der(Connector of Real output signal)
+Constant output value
+Constant output value
 Mass flow rate from the connection point into the component [kg/s]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
 Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
@@ -11201,11 +11747,7 @@ Constant output value
 Gain of upper input [1]
 Gain of lower input
 Constant output value
-Connector of Boolean output signal
-Connector of second Boolean input signal
-Connector of Boolean output signal
 Constant output value [K]
-Constant output value
 Mass flow rate from the connection point into the component [kg/s]
 Thermodynamic pressure in the connection point [Pa|bar]
 Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
@@ -11437,6 +11979,16 @@ Flag for double values (0: use current value, 1: use average over interval, 2: u
 Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
 Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
 Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
+Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
+Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
+Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
+Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
+Flag for double values (0: use current value, 1: use average over interval, 2: use integral over interval)
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
@@ -11544,6 +12096,11 @@ Real inputs to be sent to the BCVTB [K]
 Real inputs to be sent to the BCVTB [K]
 Real inputs to be sent to the BCVTB [K]
 Real inputs to be sent to the BCVTB [K]
+Real inputs to be sent to the BCVTB
+Real inputs to be sent to the BCVTB
+Real inputs to be sent to the BCVTB
+Real inputs to be sent to the BCVTB
+Real inputs to be sent to the BCVTB
 Real outputs received from the BCVTB
 Real outputs received from the BCVTB [K]
 Real outputs received from the BCVTB [K]
@@ -11591,6 +12148,11 @@ Flag received from BCVTB
 Current simulation time received from the BCVTB [s]
 Return value from the BSD socket data exchange
 Socket file descripter, or a negative value if an error occured
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
+Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
 Initial input signal, used during first data transfer with BCVTB
@@ -11688,6 +12250,16 @@ Value of integral
 der(Value of integral)
 Value of integral
 der(Value of integral)
+Value of integral
+der(Value of integral)
+Value of integral
+der(Value of integral)
+Value of integral
+der(Value of integral)
+Value of integral
+der(Value of integral)
+Value of integral
+der(Value of integral)
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
@@ -11720,6 +12292,16 @@ Value of integral at previous sampling instance
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
 Value of integral at previous sampling instance
+Value of integral at previous sampling instance
+Value of integral at previous sampling instance
+Value of integral at previous sampling instance
+Value of integral at previous sampling instance
+Value of integral at previous sampling instance
+Value to be sent to the interface
+Value to be sent to the interface
+Value to be sent to the interface
+Value to be sent to the interface
+Value to be sent to the interface
 Value to be sent to the interface
 Value to be sent to the interface
 Value to be sent to the interface
@@ -11757,6 +12339,136 @@ Gain of upper input
 Gain of lower input
 Constant output value
 Constant output value
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Mass flow rate from the connection point into the component [kg/s]
+Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Structurally independent mass fractions [1]
+Specific enthalpy of medium [J/kg]
+Density of medium [kg/m3|g/cm3]
+Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Specific internal energy of medium [J/kg]
+Gas constant (of mixture if applicable) [J/(kg.K)]
+Molar mass (of mixture or single fluid) [kg/mol]
+= true if StateSelect.prefer shall be used for the independent property variables of the medium
+if true, and reducedX = true, the last element of X will be computed from the other ones
+Temperature of medium in [degC] [degC;]
+Absolute pressure of medium in [bar] [bar]
+Mass of total water/mass of dry air [kg/kg]
+Relative humidity
+Molar masses of components [kg/mol]
+Molar masses of components [kg/mol]
+Mass fraction of air [kg/kg]
+Steam water mass fraction of saturation boundary in kg_water/kg_moistair [kg/kg]
+Steam water mass content of saturation boundary in kg_water/kg_dryair [kg/kg]
+Partial saturation pressure of steam [Pa|bar]
+Pressure for which dStp is defined [Pa|bar]
+Fluid density at pressure pStp [kg/m3|g/cm3]
+Mass flow rate from the connection point into the component [kg/s]
+Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Structurally independent mass fractions [1]
+Specific enthalpy of medium [J/kg]
+Density of medium [kg/m3|g/cm3]
+Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Specific internal energy of medium [J/kg]
+Gas constant (of mixture if applicable) [J/(kg.K)]
+Molar mass (of mixture or single fluid) [kg/mol]
+= true if StateSelect.prefer shall be used for the independent property variables of the medium
+if true, and reducedX = true, the last element of X will be computed from the other ones
+Temperature of medium in [degC] [degC;]
+Absolute pressure of medium in [bar] [bar]
+Mass of total water/mass of dry air [kg/kg]
+Relative humidity
+Molar masses of components [kg/mol]
+Molar masses of components [kg/mol]
+Mass fraction of air [kg/kg]
+Steam water mass fraction of saturation boundary in kg_water/kg_moistair [kg/kg]
+Steam water mass content of saturation boundary in kg_water/kg_dryair [kg/kg]
+Partial saturation pressure of steam [Pa|bar]
+Pressure for which dStp is defined [Pa|bar]
+Fluid density at pressure pStp [kg/m3|g/cm3]
+Mass flow rate from the connection point into the component [kg/s]
+Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Structurally independent mass fractions [1]
+Specific enthalpy of medium [J/kg]
+Density of medium [kg/m3|g/cm3]
+Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Specific internal energy of medium [J/kg]
+Gas constant (of mixture if applicable) [J/(kg.K)]
+Molar mass (of mixture or single fluid) [kg/mol]
+= true if StateSelect.prefer shall be used for the independent property variables of the medium
+if true, and reducedX = true, the last element of X will be computed from the other ones
+Temperature of medium in [degC] [degC;]
+Absolute pressure of medium in [bar] [bar]
+Mass of total water/mass of dry air [kg/kg]
+Relative humidity
+Molar masses of components [kg/mol]
+Molar masses of components [kg/mol]
+Mass fraction of air [kg/kg]
+Steam water mass fraction of saturation boundary in kg_water/kg_moistair [kg/kg]
+Steam water mass content of saturation boundary in kg_water/kg_dryair [kg/kg]
+Partial saturation pressure of steam [Pa|bar]
+Pressure for which dStp is defined [Pa|bar]
+Fluid density at pressure pStp [kg/m3|g/cm3]
+Mass flow rate from the connection point into the component [kg/s]
+Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Structurally independent mass fractions [1]
+Specific enthalpy of medium [J/kg]
+Density of medium [kg/m3|g/cm3]
+Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Specific internal energy of medium [J/kg]
+Gas constant (of mixture if applicable) [J/(kg.K)]
+Molar mass (of mixture or single fluid) [kg/mol]
+= true if StateSelect.prefer shall be used for the independent property variables of the medium
+if true, and reducedX = true, the last element of X will be computed from the other ones
+Temperature of medium in [degC] [degC;]
+Absolute pressure of medium in [bar] [bar]
+Mass of total water/mass of dry air [kg/kg]
+Relative humidity
+Molar masses of components [kg/mol]
+Molar masses of components [kg/mol]
+Mass fraction of air [kg/kg]
+Steam water mass fraction of saturation boundary in kg_water/kg_moistair [kg/kg]
+Steam water mass content of saturation boundary in kg_water/kg_dryair [kg/kg]
+Partial saturation pressure of steam [Pa|bar]
+Pressure for which dStp is defined [Pa|bar]
+Fluid density at pressure pStp [kg/m3|g/cm3]
+Mass flow rate from the connection point into the component [kg/s]
+Specific thermodynamic enthalpy close to the connection point if m_flow < 0 [J/kg]
+Independent mixture mass fractions m_i/m close to the connection point if m_flow < 0 [kg/kg]
+Structurally independent mass fractions [1]
+Specific enthalpy of medium [J/kg]
+Density of medium [kg/m3|g/cm3]
+Temperature of medium [K|degC]
+Mass fractions (= (component mass)/total mass  m_i/m) [kg/kg]
+Specific internal energy of medium [J/kg]
+Gas constant (of mixture if applicable) [J/(kg.K)]
+Molar mass (of mixture or single fluid) [kg/mol]
+= true if StateSelect.prefer shall be used for the independent property variables of the medium
+if true, and reducedX = true, the last element of X will be computed from the other ones
+Temperature of medium in [degC] [degC;]
+Absolute pressure of medium in [bar] [bar]
+Mass of total water/mass of dry air [kg/kg]
+Relative humidity
+Molar masses of components [kg/mol]
+Molar masses of components [kg/mol]
+Mass fraction of air [kg/kg]
+Steam water mass fraction of saturation boundary in kg_water/kg_moistair [kg/kg]
+Steam water mass content of saturation boundary in kg_water/kg_dryair [kg/kg]
+Partial saturation pressure of steam [Pa|bar]
+Pressure for which dStp is defined [Pa|bar]
+Fluid density at pressure pStp [kg/m3|g/cm3]
 Gain of upper input
 Gain of middle input
 Gain of lower input
