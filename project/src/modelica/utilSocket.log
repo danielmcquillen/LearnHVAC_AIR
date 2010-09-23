@@ -1,5 +1,0 @@
-utilSocket: Establishing socket based on file socket.cfg.
-Socket port number = 3001.
-WinSock DLL is acceptable.
-Socket opened, sockfd = 1928.
-ERROR when connecting to socket: WSAGetLastError = 10061
