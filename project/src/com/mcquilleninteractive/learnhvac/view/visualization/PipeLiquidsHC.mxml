@@ -106,6 +106,7 @@
 			
 			public function setTLiqEnt(value:Number):void
 			{
+				if (isNaN(value)) return
 				if (!_active) return				
 				liquidsHC.setTemp(value, 0)
 				liquidsHC.setTemp(value, 1)
@@ -113,6 +114,7 @@
 					
 			public function setTLiqbypass(value:Number):void
 			{
+				if (isNaN(value)) return
 				if (!_active) return				
 				liquidsHC.setTemp(value, 2)
 			}
@@ -120,18 +122,23 @@
 			public function setTLiqLvg(value:Number):void
 			{
 				
+				if (isNaN(value)) return
 				if (!_active) return			
 				liquidsHC.setTemp(value, 3)
 			}
 			
 			public function setTLiqLvgValve(value:Number):void
 			{
+				if (isNaN(value)) return
+					
+					
 				if (!_active) return
-				liquidsHC.setTemp(value, 4)
+				liquidsHC.setTemp(value, 4)                                                                                                                                                         
 			}
 						
 			public function setmLiqEnt(value:Number):void
 			{
+				if (isNaN(value)) return
 				value = value * 10000
 				if (!_active) return						
 				liquidsHC.setFlow(value, 0)
@@ -146,6 +153,6 @@
 		]]>
 	</mx:Script>
 	
-	<myComps:LiquidsHC id="liquidsHC" />
+	<myComps:HCPipes id="liquidsHC" />
 	
 </mx:Canvas>

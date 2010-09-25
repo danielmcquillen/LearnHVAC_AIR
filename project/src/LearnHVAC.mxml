@@ -90,7 +90,7 @@ the License.
 		/>
 
 	<mx:TraceTarget id="traceTarget"
-		level="{LogEventLevel.INFO}"
+		level="{LogEventLevel.DEBUG}"
 		 filters="{['learnhvac']}"
 		/>
 

@@ -40,7 +40,7 @@
 			import mx.managers.PopUpManager;
 			
 			import org.swizframework.Swiz;
-          	
+			
 			
 			[Autowire]
 			public var userModel:UserModel
@@ -294,7 +294,7 @@
        					styleName="btnNavIcon"		    
 			    		toolTip="Open debug window"
 						icon="{BugIcon}"
-						visible="{userModel.role!='student'}"
+						visible="{userModel.role!='student' || applicationModel.showDebug}"
 						click="onDebug()" 	
 				/>
 		

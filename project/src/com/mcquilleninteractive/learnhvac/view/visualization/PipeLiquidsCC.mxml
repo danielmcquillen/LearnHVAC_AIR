@@ -16,15 +16,18 @@
 			// 		 This isn't as efficiency but since we're only doing this a couple times 
 			//       per update the cost shouldn't be too significant
 		
-			import flash.geom.ColorTransform
-			import com.mcquilleninteractive.learnhvac.util.Logger
-			import mx.binding.utils.BindingUtils
-			import com.mcquilleninteractive.learnhvac.model.ApplicationModel
-			import com.mcquilleninteractive.learnhvac.model.ScenarioModel
-			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel
-			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent
-   			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent
-			import org.swizframework.Swiz
+			import com.mcquilleninteractive.learnhvac.event.ScenarioLoadedEvent;
+			import com.mcquilleninteractive.learnhvac.event.ShortTermSimulationEvent;
+			import com.mcquilleninteractive.learnhvac.model.ApplicationModel;
+			import com.mcquilleninteractive.learnhvac.model.ScenarioModel;
+			import com.mcquilleninteractive.learnhvac.model.ShortTermSimulationModel;
+			import com.mcquilleninteractive.learnhvac.util.Logger;
+			
+			import flash.geom.ColorTransform;
+			
+			import mx.binding.utils.BindingUtils;
+			
+			import org.swizframework.Swiz;
 			
 			[Autowire]
 			[Bindable]
@@ -38,8 +41,10 @@
 			
 			public function onCreationComplete():void
 			{		
+			
 			}
 			
+		
 			
 			
 			[Mediate(event="ShortTermSimulationEvent.SIM_STARTED")]
@@ -72,6 +77,7 @@
 					setmLiqEnt(scenarioModel.getSysVar("CHLLiqFlw").baseSIValue	)			
 				}
 				catch(error:Error)
+					
 				{
 					Logger.error("Error getting variables for CC: " + error, this)
 				}
@@ -94,13 +100,14 @@
 				else
 				{
 					//turn off component, no longer visible
-					liquidsCC.turnAllPipesOff()
+					liquidsCC.turnAllPipesOff()	
 				}
 			}
 					
 					
 			public function setTLiqEntValve(value:Number):void
 			{
+				if (isNaN(value))return
 				if (!_active) return				
 				liquidsCC.setTemp(value, 0)
 				liquidsCC.setTemp(value, 1)
@@ -108,18 +115,17 @@
 					
 			public function setTLiqLvg(value:Number):void
 			{
-				if (!_active) return
-									
+				if (isNaN(value))return
+				if (!_active) return									
 				liquidsCC.setTemp(value, 2)
 				liquidsCC.setTemp(value, 3)
 			}
 					
 			public function setmLiqEnt(value:Number):void
 			{
-				//we need to adjust becuase the value is so low between 0 and .0013
+				if (isNaN(value))return
+				//we need to adjust becuase the value is so low  between 0 and .0013
 				value = value * 10000
-					
-				if (!_active) return						
 				liquidsCC.setFlow(value, 0)
 				liquidsCC.setFlow(value, 1)
 				liquidsCC.setFlow(value, 2)
@@ -131,6 +137,6 @@
 		]]>
 	</mx:Script>
 	
-	<myComps:LiquidsCC id="liquidsCC" />
+	<myComps:CCPipes id="liquidsCC" />
 	
 </mx:Canvas>

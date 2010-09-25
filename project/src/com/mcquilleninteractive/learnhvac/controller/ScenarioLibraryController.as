@@ -407,6 +407,7 @@ package com.mcquilleninteractive.learnhvac.controller
 			
 			Logger.debug("popuplateScenarioModel", this);
 											
+			applicationModel.showDebug = (scenXML.studentDebugAccess == "true")
 			
 			//get scenario meta-information
 			scenarioModel.id = scenXML.id
@@ -415,28 +416,23 @@ package com.mcquilleninteractive.learnhvac.controller
 			scenarioModel.shortDescription  = scenXML.shortDescription
 			scenarioModel.description  = scenXML.description
 			scenarioModel.goal = scenXML.goal
+			
 			//scenarioModel.thumbnailURL = scenXML.@thumbnailURL 
 			
 			
 			//get longterm date info
 			try
 			{
-				var startDate:Date = new Date()				
-				var start:String = scenXML.longtermStartDate
-				var startM:Number = Number(start.split("/")[0]) - 1
-				var startD:Number = Number(start.split("/")[1])
-				startDate.month = startM
-				startDate.date = startD					
+				var startDate:Date = new Date()											
+				startDate.month = scenXML.longtermStartDate.month - 1
+				startDate.date = scenXML.longtermStartDate.date					
 				longTermSimulationModel.startDate = startDate
 				
-				var stopDate:Date = new Date()
-				var stop:String = scenXML.longtermStopDate
-				var stopM:Number = Number(stop.split("/")[0]) - 1
-				var stopD:Number = Number(stop.split("/")[1])
-				stopDate.month = stopM
-				stopDate.date = stopD
+				var stopDate:Date = new Date()				
+				stopDate.month = scenXML.longtermStopDate.month - 1
+				stopDate.date = scenXML.longtermStopDate.date
 				longTermSimulationModel.stopDate = stopDate
-						
+							
 				scenarioModel.allowLongTermDateChange  = (scenXML.allowLongTermDateChange  == "true")
 			}
 			catch(err:Error)
@@ -448,7 +444,11 @@ package com.mcquilleninteractive.learnhvac.controller
 			//get realtime datetime info
 			try
 			{	
-				var d:Date = new Date(scenXML.realtimeStartDateTime.toString())
+				var d:Date = new Date()
+				d.month = scenXML.realtimeStartDateTime.month - 1
+				d.date = scenXML.realtimeStartDateTime.date 
+				d.hours = scenXML.realtimeStartDateTime.hour
+				d.minutes = scenXML.realtimeStartDateTime.minute
 				Logger.debug("setting shortTermSim realtime_start_datetime: " + d, this);
 				scenarioModel.setRealTimeStartDate(d)
 						

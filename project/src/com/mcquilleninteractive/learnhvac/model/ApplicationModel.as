@@ -59,7 +59,7 @@ package com.mcquilleninteractive.learnhvac.model
 		public var simBtnEnabled:Boolean = false
 		public var bldgSetupEnabled:Boolean = false
 		public var showFramesPerSecondBar:Boolean = false
-		public var debug:Boolean = false
+		public var showDebug:Boolean = false
 		
 		// Vars for managing communication with SPARK
 		public static var ANIMATION_SPEED_FULL:String = "full"

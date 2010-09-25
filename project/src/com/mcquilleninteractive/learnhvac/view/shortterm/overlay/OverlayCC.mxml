@@ -69,7 +69,7 @@
 				width="120" 
 				text="Valve Pos: " 
 				styleName="overlayTitle"
-			    color="0x000000"
+			    color="0xFFFFFF"
 				/>
 			
 	<overlay:ValueDisplayLabel id="lblCCPos" 
@@ -79,7 +79,7 @@
 		text="0" 
 		styleName="overlayValue" 
 		textAlign="right"
-	    color="0x000000"
+	    color="0xFFFFFF"
 				/>	
 				
 	<mx:Label id="lblCCTAirEnt_Title" 
